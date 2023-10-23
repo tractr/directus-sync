@@ -1,5 +1,20 @@
 import { defineEndpoint } from '@directus/extensions-sdk';
+import {IdMapper} from "./database/id-mapper";
 
-export default defineEndpoint((router) => {
+export default defineEndpoint(async (router, { database }) => {
+
+	const idMapper = new IdMapper(database);
+	await idMapper.init();
+
+	router.get('/tables/{table}/sync_id/{sync_id}', async (req, res) => {
+		// Ensure user is authenticated and is admin
+		if (!req.user || !req.user.admin) {
+			return res.sendStatus(403);
+		}
+
+		const { table, sync_id } = req.params as { table: string; sync_id: string };
+		const local_id = await idMapper.getLocalId(table, sync_id);
+		res.send({ local_id });
+	}
 	router.get('/', (_req, res) => res.send('Hello, World!'));
 });
