@@ -47,27 +47,27 @@ describe('IdMapper', () => {
 
   it('should add an id map and retrieve it from local id or sync id', async () => {
     await idMapper.init();
-    await idMapper.add('directus_hooks', 'sync_id_1', 'local_id_1');
-    await idMapper.add('directus_hooks', 'sync_id_2', 'local_id_2');
-    await idMapper.add('directus_users', 'sync_id_3', 'local_id_3');
+    const newSyncId1 = await idMapper.add('directus_hooks', 'local_id_1');
+    const newSyncId2 = await idMapper.add('directus_hooks', 'local_id_2');
+    const newSyncId3 = await idMapper.add('directus_users', 'local_id_3');
 
-    const localId1 = await idMapper.getLocalId('directus_hooks', 'sync_id_1');
+    const localId1 = await idMapper.getLocalId('directus_hooks', newSyncId1);
     expect(localId1).toBe('local_id_1');
 
-    const localId2 = await idMapper.getLocalId('directus_hooks', 'sync_id_2');
+    const localId2 = await idMapper.getLocalId('directus_hooks', newSyncId2);
     expect(localId2).toBe('local_id_2');
 
-    const localId3 = await idMapper.getLocalId('directus_users', 'sync_id_3');
+    const localId3 = await idMapper.getLocalId('directus_users', newSyncId3);
     expect(localId3).toBe('local_id_3');
 
     const syncId1 = await idMapper.getSyncId('directus_hooks', 'local_id_1');
-    expect(syncId1).toBe('sync_id_1');
+    expect(syncId1).toBe(newSyncId1);
 
     const syncId2 = await idMapper.getSyncId('directus_hooks', 'local_id_2');
-    expect(syncId2).toBe('sync_id_2');
+    expect(syncId2).toBe(newSyncId2);
 
     const syncId3 = await idMapper.getSyncId('directus_users', 'local_id_3');
-    expect(syncId3).toBe('sync_id_3');
+    expect(syncId3).toBe(newSyncId3);
 
     // Count the number of rows in the table
     const count: { 'count(*)': number }[] = await database(
@@ -82,16 +82,16 @@ describe('IdMapper', () => {
 
   it('should remove entries by local id and sync id', async () => {
     await idMapper.init();
-    await idMapper.add('directus_hooks', 'sync_id_1', 'local_id_1');
-    await idMapper.add('directus_hooks', 'sync_id_2', 'local_id_2');
-    await idMapper.add('directus_users', 'sync_id_3', 'local_id_3');
+    const newSyncId1 = await idMapper.add('directus_hooks', 'local_id_1');
+    await idMapper.add('directus_hooks', 'local_id_2');
+    const newSyncId3 = await idMapper.add('directus_users', 'local_id_3');
 
-    await idMapper.removeBySyncId('directus_hooks', 'sync_id_1');
+    await idMapper.removeBySyncId('directus_hooks', newSyncId1);
 
     await expect(
-      idMapper.getLocalId('directus_hooks', 'sync_id_1'),
+      idMapper.getLocalId('directus_hooks', newSyncId1),
     ).rejects.toThrow(
-      'No local id found for table directus_hooks and sync id sync_id_1',
+      `No local id found for table directus_hooks and sync id ${newSyncId1}`,
     );
     await expect(
       idMapper.getSyncId('directus_hooks', 'local_id_1'),
@@ -99,11 +99,11 @@ describe('IdMapper', () => {
       'No sync id found for table directus_hooks and local id local_id_1',
     );
 
-    await idMapper.removeBySyncId('directus_users', 'sync_id_3');
+    await idMapper.removeBySyncId('directus_users', newSyncId3);
     await expect(
-      idMapper.getLocalId('directus_users', 'sync_id_3'),
+      idMapper.getLocalId('directus_users', newSyncId3),
     ).rejects.toThrow(
-      'No local id found for table directus_users and sync id sync_id_3',
+      `No local id found for table directus_users and sync id ${newSyncId3}`,
     );
     await expect(
       idMapper.getSyncId('directus_users', 'local_id_3'),
@@ -112,7 +112,7 @@ describe('IdMapper', () => {
     );
 
     // Remove twice should not throw error
-    await idMapper.removeBySyncId('directus_hooks', 'sync_id_1');
+    await idMapper.removeBySyncId('directus_hooks', newSyncId1);
 
     // Count the number of rows in the table
     const count: { 'count(*)': number }[] = await database(
@@ -123,6 +123,17 @@ describe('IdMapper', () => {
       throw new Error('Count should be defined');
     }
     expect(count[0]['count(*)']).toBe(1);
+  });
+
+  it('should returns all entries for a table', async () => {
+    await idMapper.init();
+    const newSyncId1 = await idMapper.add('directus_hooks', 'local_id_1');
+    const newSyncId2 = await idMapper.add('directus_hooks', 'local_id_2');
+    await idMapper.add('directus_users', 'local_id_3');
+
+    const entries = await idMapper.getAll('directus_hooks');
+    expect(entries.find((e) => e.sync_id === newSyncId1)).toBeDefined();
+    expect(entries.find((e) => e.sync_id === newSyncId2)).toBeDefined();
   });
 
   it('should throw error if the local id is not found', async () => {
@@ -141,10 +152,8 @@ describe('IdMapper', () => {
 
   it('should throw error if entry is added twice', async () => {
     await idMapper.init();
-    await idMapper.add('directus_hooks', 'sync_id_1', 'local_id_1');
-    await expect(
-      idMapper.add('directus_hooks', 'sync_id_1', 'local_id_1'),
-    ).rejects.toThrow(
+    await idMapper.add('directus_hooks', 'local_id_1');
+    await expect(idMapper.add('directus_hooks', 'local_id_1')).rejects.toThrow(
       'UNIQUE constraint failed: directus_sync_id_map.table, directus_sync_id_map.local_id',
     );
   });

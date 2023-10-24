@@ -1,6 +1,5 @@
 import { Knex } from 'knex';
-
-type PrimaryKeyType = 'integer' | 'string';
+import { randomUUID } from 'crypto';
 
 export type IdMap = {
   table: string;
@@ -11,10 +10,6 @@ export type IdMap = {
 
 export class IdMapper {
   protected readonly tableName = 'directus_sync_id_map';
-
-  protected readonly directusTablePrefix = 'directus_';
-
-  protected tablePrimaryKeys: Record<string, PrimaryKeyType> | undefined;
 
   constructor(protected readonly database: Knex) {}
 
@@ -77,18 +72,23 @@ export class IdMapper {
   }
 
   /**
+   * Get all entries for the given table
+   */
+  async getAll(table: string): Promise<IdMap[]> {
+    return this.database(this.tableName).where({ table });
+  }
+
+  /**
    * Adds a new entry to the id map
    */
-  async add(
-    table: string,
-    syncId: string,
-    localId: number | string,
-  ): Promise<void> {
+  async add(table: string, localId: number | string): Promise<string> {
+    const syncId = randomUUID();
     await this.database(this.tableName).insert({
       table,
       sync_id: syncId,
       local_id: localId,
     });
+    return syncId;
   }
 
   /**
