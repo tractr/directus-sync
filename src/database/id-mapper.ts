@@ -20,11 +20,12 @@ export class IdMapper {
   async init(): Promise<boolean> {
     if (!(await this.database.schema.hasTable(this.tableName))) {
       await this.database.schema.createTable(this.tableName, (table) => {
+        table.increments('id').primary();
         table.string('table').notNullable();
         table.string('sync_id').notNullable();
         table.string('local_id').notNullable();
         table.timestamp('created_at').defaultTo(this.database.fn.now());
-        table.primary(['table', 'sync_id']);
+        table.unique(['table', 'sync_id']);
         table.unique(['table', 'local_id']);
         table.index(['created_at']);
       });

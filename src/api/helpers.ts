@@ -1,25 +1,18 @@
-import { createError } from '@directus/errors';
 import { ZodSchema } from 'zod';
+import createError, { HttpError, isHttpError } from 'http-errors';
 
 /**
  * Helpers to ensure the user is an admin
  */
-export function ensureIsAdmin(req: any) {
+export function ensureIsAdminHandler(req: any, _res: any, next: any) {
   const { accountability } = req;
   if (accountability?.user == null) {
-    throw createError(
-      'Unauthorized',
-      'You must be logged in to access this.',
-      401,
-    );
+    return next(createError(401, 'You must be logged in to access this.'));
   }
   if (!accountability.admin) {
-    throw createError(
-      'Forbidden',
-      'You do not have permission to access this.',
-      403,
-    );
+    return next(createError(403, 'You do not have permission to access this.'));
   }
+  next();
 }
 
 /**
@@ -33,6 +26,39 @@ export function validateInput<T extends ZodSchema>(
     return zodSchema.parse(params);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
-    throw createError('Bad Request', message, 400);
+    throw createError(400, message);
   }
+}
+
+/**
+ * Error handler for express
+ */
+export function errorHandler(err: any, _req: any, res: any, next: any) {
+  if (res.headersSent) {
+    return next(err);
+  }
+  const { statusCode, message } = err as HttpError;
+  res.status(statusCode || 500);
+  res.json({
+    message,
+  });
+}
+
+/**
+ * Helper to log errors using pino
+ */
+export function logError(logger: any) {
+  return function (err: any, _req: any, _res: any, next: any) {
+    if (isHttpError(err)) {
+      // Log only 5xx errors
+      if (err.statusCode < 500) {
+        return next(err);
+      }
+      const { message, statusCode } = err;
+      logger.error(`${statusCode}: ${message}`);
+    } else {
+      logger.error(err.message || err);
+    }
+    next(err);
+  };
 }

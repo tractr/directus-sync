@@ -1,5 +1,5 @@
 {
-  "name": "directus-extension-directus-sync",
+  "name": "directus-extension-sync",
   "description": "Please enter a description for your extension",
   "icon": "extension",
   "version": "1.0.0",
@@ -23,11 +23,12 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@directus/errors": "^0.2.0",
     "@directus/extensions-sdk": "10.1.13",
     "@directus/random": "^0.2.3",
+    "@types/http-errors": "^2.0.3",
     "@types/jest": "^29.5.6",
     "@types/node": "^20.8.7",
+    "http-errors": "^2.0.0",
     "jest": "^29.7.0",
     "prettier": "^3.0.3",
     "sqlite3": "^5.1.6",
