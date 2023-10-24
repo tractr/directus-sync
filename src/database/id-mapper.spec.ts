@@ -30,10 +30,15 @@ describe('IdMapper', () => {
   });
 
   it('should create table if initialized', async () => {
-    await idMapper.init();
+    const created = await idMapper.init();
     const tableName = idMapper.getTableName();
     const hasTable = await database.schema.hasTable(tableName);
     expect(hasTable).toBe(true);
+    expect(created).toBe(true);
+
+    // Should not create table if already initialized
+    const created2 = await idMapper.init();
+    expect(created2).toBe(false);
   });
 
   it('should get table name', async () => {
@@ -105,6 +110,9 @@ describe('IdMapper', () => {
     ).rejects.toThrow(
       'No sync id found for table directus_users and local id local_id_3',
     );
+
+    // Remove twice should not throw error
+    await idMapper.removeBySyncId('directus_hooks', 'sync_id_1');
 
     // Count the number of rows in the table
     const count: { 'count(*)': number }[] = await database(

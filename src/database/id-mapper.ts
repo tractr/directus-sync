@@ -20,8 +20,9 @@ export class IdMapper {
 
   /**
    * Init the id mapper by creating the table if it doesn't exist
+   * returns true if the table was created, false if it already existed
    */
-  async init() {
+  async init(): Promise<boolean> {
     if (!(await this.database.schema.hasTable(this.tableName))) {
       await this.database.schema.createTable(this.tableName, (table) => {
         table.string('table').notNullable();
@@ -32,7 +33,9 @@ export class IdMapper {
         table.unique(['table', 'local_id']);
         table.index(['created_at']);
       });
+      return true;
     }
+    return false;
   }
 
   /**
