@@ -1,5 +1,5 @@
-import { ZodSchema } from 'zod';
-import createError, { HttpError, isHttpError } from 'http-errors';
+import {ZodError, ZodSchema} from 'zod';
+import createError, { isHttpError } from 'http-errors';
 
 /**
  * Helpers to ensure the user is an admin
@@ -25,7 +25,9 @@ export function validateInput<T extends ZodSchema>(
   try {
     return zodSchema.parse(params);
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
+    const message = error instanceof ZodError ?
+        error.issues.map(e => `[${e.path.join(',')}] ${e.message}`).join('. ')
+        : error.message;
     throw createError(400, message);
   }
 }
@@ -37,11 +39,12 @@ export function errorHandler(err: any, _req: any, res: any, next: any) {
   if (res.headersSent) {
     return next(err);
   }
-  const { statusCode, message } = err as HttpError;
-  res.status(statusCode || 500);
-  res.json({
-    message,
-  });
+  if (isHttpError(err)) {
+    res.status(err.statusCode);
+  } else {
+    res.status(500);
+  }
+  res.json({ message: err.message });
 }
 
 /**

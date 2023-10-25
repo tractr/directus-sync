@@ -2,6 +2,7 @@ import { Knex } from 'knex';
 import { randomUUID } from 'crypto';
 
 export type IdMap = {
+  id: number;
   table: string;
   sync_id: string;
   local_id: string;
@@ -44,32 +45,21 @@ export class IdMapper {
   /**
    * Returns the local key for the given table and sync id
    */
-  async getLocalId(table: string, syncId: string): Promise<string> {
+  async getBySyncId(table: string, syncId: string): Promise<IdMap | null> {
     const result: IdMap = await this.database(this.tableName)
       .where({ table, sync_id: syncId })
       .first();
-    if (!result) {
-      throw new Error(
-        `No local id found for table ${table} and sync id ${syncId}`,
-      );
-    }
-    // Map the local id to the correct type
-    return result.local_id;
+    return result || null;
   }
 
   /**
    * Returns the sync id for the given table and local id
    */
-  async getSyncId(table: string, localId: string): Promise<string> {
+  async getByLocalId(table: string, localId: string | number): Promise<IdMap | null> {
     const result: IdMap = await this.database(this.tableName)
       .where({ table, local_id: localId })
       .first();
-    if (!result) {
-      throw new Error(
-        `No sync id found for table ${table} and local id ${localId}`,
-      );
-    }
-    return result.sync_id;
+    return result || null;
   }
 
   /**
