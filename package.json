@@ -24,7 +24,6 @@
   },
   "devDependencies": {
     "@directus/extensions-sdk": "10.1.13",
-    "@directus/random": "^0.2.3",
     "@types/http-errors": "^2.0.3",
     "@types/jest": "^29.5.6",
     "@types/node": "^20.8.7",
