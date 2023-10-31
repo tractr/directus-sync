@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@directus/sdk": "^12.0.1",
+    "axios": "^1.6.0",
     "deep-object-diff": "^1.1.9",
     "dotenv": "^16.3.1",
     "pino": "^8.16.1",
