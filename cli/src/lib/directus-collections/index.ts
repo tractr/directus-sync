@@ -1,2 +1,2 @@
-export * from './directus-collection.js';
-export * from './webhooks-collection.js';
+export * from './directus-collection';
+export * from './webhooks-collection';

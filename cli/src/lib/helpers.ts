@@ -1,7 +1,7 @@
 import RootPath from 'app-root-path';
 import {existsSync, mkdirSync} from 'fs';
-import {logStep} from './logger.js';
 import * as Path from 'path';
+import {logger} from "./logger";
 
 /**
  * Get the path to the root of the project
@@ -23,11 +23,11 @@ export function createDumpFolders() {
         getDumpFilesPaths();
 
     if (!existsSync(dumpDirPath)) {
-        logStep('Create dump folder');
+        logger.info('Create dump folder');
         mkdirSync(dumpDirPath, {recursive: true});
     }
     if (!existsSync(directusDumpPath)) {
-        logStep('Create directus dump folder');
+        logger.info('Create directus dump folder');
         mkdirSync(directusDumpPath, {recursive: true});
     }
 }

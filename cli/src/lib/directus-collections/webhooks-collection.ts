@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import {createWebhook, deleteWebhook, DirectusWebhook, Query, readWebhooks, updateWebhook,} from '@directus/sdk';
-import {DirectusCollection} from './directus-collection.js';
+import {DirectusCollection} from './directus-collection';
 
 /**
  * This class is responsible for merging the data from a dump to a target table.

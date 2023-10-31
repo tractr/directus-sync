@@ -1,3 +1,4 @@
-export * from './logger.js';
-export * from './helpers.js';
-export * from './directus-collections/index.js';
+export * from './logger';
+export * from './helpers';
+export * from './directus-collections';
+export * from './migration-client';

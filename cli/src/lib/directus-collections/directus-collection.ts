@@ -1,11 +1,11 @@
 import 'dotenv/config';
-import {getDumpFilesPaths} from '../helpers.js';
+import {getDumpFilesPaths} from '../helpers';
 import path from 'path';
 import {Query, RestCommand} from '@directus/sdk';
-import {MigrationClient} from '../migration-client.js';
+import {MigrationClient} from '../migration-client';
 import {readFileSync, writeFileSync} from 'fs';
-import {logInfo, logMessage, logMessageWithObject} from '../logger.js';
 import {diff} from 'deep-object-diff';
+import {logger} from "../logger";
 
 type DirectusId = number | string;
 type DirectusBaseType = {
@@ -46,7 +46,7 @@ export abstract class DirectusCollection<
         const directus = await MigrationClient.get();
         const items = await directus.request(this.getQueryCommand({}));
         writeFileSync(this.filePath, JSON.stringify(items, null, 2));
-        this.log(`Dumped ${items.length} items.`);
+        this.debug(`Dumped ${items.length} items.`);
     }
 
     async plan() {
@@ -55,22 +55,22 @@ export abstract class DirectusCollection<
 
         this.info(`To create: ${toCreate.length} item(s)`);
         for (const item of toCreate) {
-            this.log(`Will create item`, item);
+            this.debug(`Will create item`, item);
         }
 
         this.info(`To update: ${toUpdate.length} item(s)`);
         for (const {targetItem, diffItem} of toUpdate) {
-            this.log(`Will update item (id: ${targetItem.id})`, diffItem);
+            this.debug(`Will update item (id: ${targetItem.id})`, diffItem);
         }
 
         this.info(`To delete: ${toDelete.length} item(s)`);
         for (const item of toDelete) {
-            this.log(`Will delete item (id: ${item.id})`, item);
+            this.debug(`Will delete item (id: ${item.id})`, item);
         }
 
         this.info(`Unchanged: ${unchanged.length} item(s)`);
         for (const item of unchanged) {
-            this.log(`Item ${item.id} is unchanged`);
+            this.debug(`Item ${item.id} is unchanged`);
         }
     }
 
@@ -90,16 +90,16 @@ export abstract class DirectusCollection<
         }
     }
 
-    protected log(message: string, object?: object) {
+    protected debug(message: string, object?: object) {
         if (object) {
-            logMessageWithObject(`[${this.name}] ${message}`, object);
+            logger.debug(`[${this.name}] ${message}`, object);
         } else {
-            logMessage(`[${this.name}] ${message}`);
+            logger.debug(`[${this.name}] ${message}`);
         }
     }
 
     protected info(message: string) {
-        logInfo(`[${this.name}] ${message}`);
+        logger.info(`[${this.name}] ${message}`);
     }
 
     protected abstract getQueryCommand(
@@ -221,7 +221,7 @@ export abstract class DirectusCollection<
         const directus = await MigrationClient.get();
         for (const sourceItem of toCreate) {
             await directus.request(this.getInsertCommand(sourceItem));
-            this.log(`Created item`, sourceItem);
+            this.debug(`Created item`, sourceItem);
         }
         this.info(`Created ${toCreate.length} items`);
     }
@@ -232,7 +232,7 @@ export abstract class DirectusCollection<
             await directus.request(
                 this.getUpdateCommand(sourceItem, targetItem, diffItem),
             );
-            this.log(`Updated ${targetItem.id}`, diffItem);
+            this.debug(`Updated ${targetItem.id}`, diffItem);
         }
         this.info(`Updated ${toUpdate.length} items`);
     }
@@ -241,7 +241,7 @@ export abstract class DirectusCollection<
         const directus = await MigrationClient.get();
         for (const targetItem of toDelete) {
             await directus.request(this.getDeleteCommand(targetItem));
-            this.log(`Deleted ${targetItem.id}`, targetItem);
+            this.debug(`Deleted ${targetItem.id}`, targetItem);
         }
         this.info(`Deleted ${toDelete.length} items`);
     }
