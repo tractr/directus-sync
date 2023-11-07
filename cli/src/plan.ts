@@ -1,12 +1,18 @@
-import {createDumpFolders, logEndAndClose, logErrorAndStop, MigrationClient, WebhooksCollection,} from './lib';
+import {
+  createDumpFolders,
+  logEndAndClose,
+  logErrorAndStop,
+  MigrationClient,
+  WebhooksCollection,
+} from './lib';
 
 async function run() {
-    createDumpFolders();
+  createDumpFolders();
 
-    const webhooks = new WebhooksCollection('webhooks');
-    await webhooks.plan();
+  const webhooks = new WebhooksCollection('webhooks');
+  await webhooks.plan();
 
-    await MigrationClient.close();
+  await MigrationClient.close();
 }
 
 run().then(logEndAndClose).catch(logErrorAndStop);

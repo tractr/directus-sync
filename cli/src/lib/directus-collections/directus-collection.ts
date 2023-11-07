@@ -55,7 +55,7 @@ export abstract class DirectusCollection<
    */
   async dump() {
     const directus = await MigrationClient.get();
-    const items = await directus.request(this.getQueryCommand({}));
+    const items = await directus.request(this.getQueryCommand({ limit: -1 }));
     const mappedItems = await this.mapIdsOfItems(items);
     writeFileSync(this.filePath, JSON.stringify(mappedItems, null, 2));
     this.debug(`Dumped ${mappedItems.length} items.`);
@@ -63,7 +63,13 @@ export abstract class DirectusCollection<
 
   async plan() {
     // Get the diff between the dump and the target table and log it
-    const { toCreate, toUpdate, toDelete, unchanged } = await this.getDiff();
+    const { toCreate, toUpdate, toDelete, unchanged, dangling } =
+      await this.getDiff();
+
+    this.info(`Dangling id maps: ${dangling.length} item(s)`);
+    for (const idMap of dangling) {
+      this.debug(`Will remove dangling id map`, idMap);
+    }
 
     this.info(`To create: ${toCreate.length} item(s)`);
     for (const item of toCreate) {
@@ -90,7 +96,11 @@ export abstract class DirectusCollection<
    * Merge the data from the dump to the target table
    */
   async restore() {
-    const { toCreate, toUpdate, toDelete } = await this.getDiff();
+    const { toCreate, toUpdate, toDelete, dangling } = await this.getDiff();
+    // All dangling items should be deleted first
+    await this.checkDanglingAndDeleteOverlap(dangling, toDelete);
+    await this.removeDangling(dangling);
+
     if (this.enableCreate) {
       await this.create(toCreate);
     }
@@ -112,6 +122,10 @@ export abstract class DirectusCollection<
 
   protected info(message: string) {
     logger.info(`[${this.name}] ${message}`);
+  }
+
+  protected error(message: string) {
+    logger.error(`[${this.name}] ${message}`);
   }
 
   /**
@@ -205,10 +219,13 @@ export abstract class DirectusCollection<
       }
     }
 
-    // All data that are not in toUpdate or unchanged should be in toDelete
-    const toDelete = await this.getIdsToDelete(unchanged, toUpdate);
+    // Get manually deleted ids
+    const dangling = await this.getDanglingIds();
 
-    return { toCreate, toUpdate, toDelete, unchanged };
+    // All data that are not in toUpdate or unchanged should be in toDelete
+    const toDelete = await this.getIdsToDelete(unchanged, toUpdate, dangling);
+
+    return { toCreate, toUpdate, toDelete, unchanged, dangling };
   }
 
   /**
@@ -220,10 +237,49 @@ export abstract class DirectusCollection<
     const directus = await MigrationClient.get();
     const idMap = await this.idMapper.getBySyncId(sourceItem._syncId);
     if (idMap) {
-      const targetItem = await directus.request(this.getByIdCommand(idMap.id));
-      return { ...targetItem, _syncId: sourceItem._syncId };
+      const targetItem = await directus
+        .request(this.getByIdCommand(idMap.id))
+        .catch(() => {
+          logger.warn(
+            `Could not find item with id ${idMap.id} in table ${this.name}`,
+          );
+          return undefined;
+        });
+      if (targetItem) {
+        return { ...targetItem, _syncId: sourceItem._syncId };
+      }
     }
     return undefined;
+  }
+
+  /**
+   * This method will also test every item with the local id from the id mapper.
+   * This should be used to find items that were deleted manually and clean up the sync id map.
+   */
+  protected async getDanglingIds() {
+    const directus = await MigrationClient.get();
+    const allIdsMap = await this.idMapper.getAll();
+
+    // Find all items that are in the ids map
+    const localIds = allIdsMap.map((item) => item.local_id);
+    const existingIds = localIds.length
+      ? await directus.request<{ id: DirectusId }[]>(
+          this.getQueryCommand({
+            filter: {
+              id: {
+                _in: localIds,
+              },
+            },
+            limit: -1,
+            fields: ['id'],
+          }),
+        )
+      : [];
+    return allIdsMap.filter((item) => {
+      return !existingIds.find(
+        (existing) => existing.id.toString() === item.local_id,
+      );
+    });
   }
 
   /**
@@ -233,13 +289,39 @@ export abstract class DirectusCollection<
   protected async getIdsToDelete(
     unchanged: WithSyncId<DirectusType>[],
     toUpdate: UpdateItem<DirectusType>[],
+    dangling: IdMap[],
   ) {
+    const allIdsMap = await this.idMapper.getAll();
+
     const toUpdateIds = toUpdate.map(({ targetItem }) => targetItem._syncId);
     const unchangedIds = unchanged.map(({ _syncId }) => _syncId);
-    const toKeepIds = [...toUpdateIds, ...unchangedIds];
-    return (await this.idMapper.getAll()).filter(
-      (item) => !toKeepIds.includes(item.sync_id),
-    );
+    const danglingIds = dangling.map(({ sync_id }) => sync_id);
+    const toKeepIds = [...toUpdateIds, ...unchangedIds, ...danglingIds];
+
+    return allIdsMap.filter((item) => !toKeepIds.includes(item.sync_id));
+  }
+
+  /**
+   * This method ensure there is no dangling ids that are also in the toDelete list.
+   * Throws an error if there is.
+   */
+  protected async checkDanglingAndDeleteOverlap(
+    dangling: IdMap[],
+    toDelete: IdMap[],
+  ) {
+    // Ensure that dangling items are not in toDelete
+    const danglingToDelete = dangling.filter((danglingItem) => {
+      return toDelete.find((item) => item.sync_id === danglingItem.sync_id);
+    });
+    for (const danglingItem of danglingToDelete) {
+      // Log an error if the dangling item is in toDelete
+      this.error(`Dangling item is in toDelete: ${danglingItem.sync_id}`);
+    }
+    if (danglingToDelete.length > 0) {
+      throw new Error(
+        `Found ${danglingToDelete.length} dangling items that are also in toDelete`,
+      );
+    }
   }
 
   /**
@@ -310,5 +392,17 @@ export abstract class DirectusCollection<
       });
     }
     this.info(`Deleted ${toDelete.length} items`);
+  }
+
+  protected async removeDangling(dangling: IdMap[]) {
+    for (const danglingItem of dangling) {
+      // Delete entry in the id mapper
+      await this.idMapper.removeBySyncId(danglingItem.sync_id);
+      this.debug(`Deleted id map`, {
+        syncId: danglingItem.sync_id,
+        localId: danglingItem.id,
+      });
+    }
+    this.info(`Deleted ${dangling.length} dangling items`);
   }
 }

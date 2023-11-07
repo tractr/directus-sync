@@ -6,7 +6,7 @@ import {
   rest,
   RestClient,
 } from '@directus/sdk';
-import {logger} from "./logger";
+import { logger } from './logger';
 
 export class MigrationClient {
   protected static instance: MigrationClient;
