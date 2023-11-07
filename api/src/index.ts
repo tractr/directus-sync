@@ -27,7 +27,7 @@ export default defineEndpoint(async (router, { database, logger }) => {
       );
       const idMap = await idMapper.getBySyncId(table, sync_id);
       if (idMap === null) {
-        return next( (404, 'No id map found'));
+        return next(createError(404, 'No id map found'));
       }
       res.status(200);
       res.json(idMap);
@@ -69,17 +69,21 @@ export default defineEndpoint(async (router, { database, logger }) => {
 
   router.post('/table/:table', async (req, res, next) => {
     try {
-      const { table, local_id } = validateInput(
-          { ...req.params, ...req.body },
-        z.object({ table: z.string(), local_id: z.string().or(z.number()) }),
+      const { table, local_id, sync_id } = validateInput(
+        { ...req.params, ...req.body },
+        z.object({
+          table: z.string(),
+          local_id: z.string().or(z.number()),
+          sync_id: z.string().optional(),
+        }),
       );
       // Check if the local id exists
       const existing = await idMapper.getByLocalId(table, local_id);
-        if (existing !== null) {
-            return next(createError(409, 'Local id already exists'));
-        }
-      const sync_id = await idMapper.add(table, local_id);
-      res.json({ sync_id });
+      if (existing !== null) {
+        return next(createError(409, 'Local id already exists'));
+      }
+      const final_sync_id = await idMapper.add(table, local_id, sync_id);
+      res.json({ sync_id: final_sync_id });
       res.status(201);
     } catch (e) {
       next(e);
@@ -93,7 +97,7 @@ export default defineEndpoint(async (router, { database, logger }) => {
         z.object({ table: z.string(), sync_id: z.string() }),
       );
       await idMapper.removeBySyncId(table, sync_id);
-      res.status(204);
+      res.status(204).send();
     } catch (e) {
       next(e);
     }
@@ -106,7 +110,7 @@ export default defineEndpoint(async (router, { database, logger }) => {
         z.object({ table: z.string(), local_id: z.string() }),
       );
       await idMapper.removeByLocalId(table, local_id);
-      res.status(204);
+      res.status(204).send();
     } catch (e) {
       next(e);
     }

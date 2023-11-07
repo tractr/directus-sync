@@ -167,4 +167,16 @@ describe('IdMapper', () => {
       'UNIQUE constraint failed: directus_sync_id_map.table, directus_sync_id_map.local_id',
     );
   });
+
+  it('should be able to force sync id on creation', async () => {
+    await idMapper.init();
+    const newSyncId1 = await idMapper.add(
+      'directus_hooks',
+      'local_id_1',
+      'sync_id_1',
+    );
+    expect(newSyncId1).toBe('sync_id_1');
+    const idMap1 = await idMapper.getBySyncId('directus_hooks', 'sync_id_1');
+    expect(idMap1).toBeDefined();
+  });
 });

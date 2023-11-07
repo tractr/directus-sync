@@ -1,56 +1,64 @@
 import 'dotenv/config';
-import {createWebhook, deleteWebhook, DirectusWebhook, Query, readWebhooks, updateWebhook,} from '@directus/sdk';
-import {DirectusCollection} from './directus-collection';
-import {IdMapperClient} from "./id-mapper-client";
+import {
+  createWebhook,
+  deleteWebhook,
+  DirectusWebhook,
+  Query,
+  readWebhook,
+  readWebhooks,
+  updateWebhook,
+} from '@directus/sdk';
+import {
+  DirectusCollection,
+  WithoutId,
+  WithSyncId,
+} from './directus-collection';
+import { IdMapperClient } from './id-mapper-client';
 
 /**
  * This class is responsible for merging the data from a dump to a target table.
  * It creates new data, updates existing data and deletes data that is not present in the dump.
  */
 export class WebhooksCollection extends DirectusCollection<
-    DirectusWebhook<object>
+  DirectusWebhook<object>
 > {
-    protected readonly enableCreate = true;
-    protected readonly enableUpdate = true;
-    protected readonly enableDelete = true;
+  protected readonly enableCreate = true;
+  protected readonly enableUpdate = true;
+  protected readonly enableDelete = true;
 
-    protected createIdMapperClient() {
-        return new IdMapperClient('webhooks');
-    }
+  protected createIdMapperClient() {
+    return new IdMapperClient('webhooks');
+  }
 
-    protected getDataMapper(): (
-        data: DirectusWebhook<object>,
-    ) => DirectusWebhook<object> {
-        return function (p1: DirectusWebhook<object>) {
-            return p1;
-        };
-    }
+  protected getDataMapper(): (
+    data: WithSyncId<DirectusWebhook<object>>,
+  ) => WithSyncId<DirectusWebhook<object>> {
+    return function (p1: WithSyncId<DirectusWebhook<object>>) {
+      return p1;
+    };
+  }
 
-    protected getDeleteCommand(item: DirectusWebhook<object>) {
-        return deleteWebhook(item.id);
-    }
+  protected getByIdCommand(id: number) {
+    return readWebhook(id);
+  }
 
-    protected getInsertCommand(item: DirectusWebhook<object>) {
-        return createWebhook(item);
-    }
+  protected getDeleteCommand(id: number) {
+    return deleteWebhook(id);
+  }
 
-    protected getMatchingItemCommand(item: DirectusWebhook<object>) {
-        return readWebhooks({
-            filter: {
-                _and: [{method: {_eq: item.method}}, {url: {_eq: item.url}}],
-            },
-        });
-    }
+  protected getInsertCommand(item: DirectusWebhook<object>) {
+    return createWebhook(item);
+  }
 
-    protected getQueryCommand(query: Query<DirectusWebhook<object>, object>) {
-        return readWebhooks(query);
-    }
+  protected getQueryCommand(query: Query<DirectusWebhook<object>, object>) {
+    return readWebhooks(query);
+  }
 
-    protected getUpdateCommand(
-        _sourceItem: DirectusWebhook<object>,
-        targetItem: DirectusWebhook<object>,
-        diffItem: Partial<DirectusWebhook<object>>,
-    ) {
-        return updateWebhook(targetItem.id, diffItem);
-    }
+  protected getUpdateCommand(
+    _sourceItem: DirectusWebhook<object>,
+    targetItem: DirectusWebhook<object>,
+    diffItem: Partial<WithoutId<DirectusWebhook<object>>>,
+  ) {
+    return updateWebhook(targetItem.id, diffItem);
+  }
 }

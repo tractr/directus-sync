@@ -55,7 +55,10 @@ export class IdMapper {
   /**
    * Returns the sync id for the given table and local id
    */
-  async getByLocalId(table: string, localId: string | number): Promise<IdMap | null> {
+  async getByLocalId(
+    table: string,
+    localId: string | number,
+  ): Promise<IdMap | null> {
     const result: IdMap = await this.database(this.tableName)
       .where({ table, local_id: localId })
       .first();
@@ -71,15 +74,21 @@ export class IdMapper {
 
   /**
    * Adds a new entry to the id map
+   * Generates a new sync id if not provided.
+   * Sync id will be provided when restoring data, and not provided when backing up data.
    */
-  async add(table: string, localId: number | string): Promise<string> {
-    const syncId = randomUUID();
+  async add(
+    table: string,
+    localId: number | string,
+    syncId?: string,
+  ): Promise<string> {
+    const finalSyncId = syncId || randomUUID();
     await this.database(this.tableName).insert({
       table,
-      sync_id: syncId,
+      sync_id: finalSyncId,
       local_id: localId,
     });
-    return syncId;
+    return finalSyncId;
   }
 
   /**
