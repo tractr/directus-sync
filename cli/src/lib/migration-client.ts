@@ -6,6 +6,7 @@ import {
   rest,
   RestClient,
 } from '@directus/sdk';
+import {logger} from "./logger";
 
 export class MigrationClient {
   protected static instance: MigrationClient;
@@ -15,6 +16,8 @@ export class MigrationClient {
     AuthenticationClient<any>;
 
   protected isLogged = false;
+
+  protected refreshToken: string | undefined;
 
   protected constructor() {
     this.client = this.createClient();
@@ -29,17 +32,26 @@ export class MigrationClient {
   }
 
   protected async login() {
-    const { DIRECTUS_EMAIL, DIRECTUS_PASSWORD } = process.env;
-    if (!DIRECTUS_EMAIL || !DIRECTUS_PASSWORD) {
+    const { DIRECTUS_EMAIL, DIRECTUS_PASSWORD, DIRECTUS_TOKEN } = process.env;
+    if (DIRECTUS_EMAIL && DIRECTUS_PASSWORD) {
+      const token = await this.client.login(DIRECTUS_EMAIL, DIRECTUS_PASSWORD);
+      this.refreshToken = token.refresh_token || undefined;
+      this.client.setToken(token.access_token);
+    } else if (DIRECTUS_TOKEN) {
+      this.client.setToken(DIRECTUS_TOKEN);
+    } else {
       throw new Error('Missing Directus credentials');
     }
-    const token = await this.client.login(DIRECTUS_EMAIL, DIRECTUS_PASSWORD);
-    this.client.setToken(token.access_token);
     this.isLogged = true;
   }
 
   protected async logout() {
-    await this.client.logout().catch(() => null);
+    if (this.refreshToken) {
+      this.client.setToken(this.refreshToken);
+      await this.client.logout().catch((error) => {
+        logger.warn(error);
+      });
+    }
     this.isLogged = false;
   }
 

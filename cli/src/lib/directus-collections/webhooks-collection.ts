@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import {createWebhook, deleteWebhook, DirectusWebhook, Query, readWebhooks, updateWebhook,} from '@directus/sdk';
 import {DirectusCollection} from './directus-collection';
+import {IdMapperClient} from "./id-mapper-client";
 
 /**
  * This class is responsible for merging the data from a dump to a target table.
@@ -12,6 +13,10 @@ export class WebhooksCollection extends DirectusCollection<
     protected readonly enableCreate = true;
     protected readonly enableUpdate = true;
     protected readonly enableDelete = true;
+
+    protected createIdMapperClient() {
+        return new IdMapperClient('webhooks');
+    }
 
     protected getDataMapper(): (
         data: DirectusWebhook<object>,

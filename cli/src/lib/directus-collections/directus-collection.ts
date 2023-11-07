@@ -6,13 +6,17 @@ import {MigrationClient} from '../migration-client';
 import {readFileSync, writeFileSync} from 'fs';
 import {diff} from 'deep-object-diff';
 import {logger} from "../logger";
+import {IdMapperClient} from "./id-mapper-client";
 
-type DirectusId = number | string;
-type DirectusBaseType = {
+export type DirectusId = number | string;
+export type DirectusBaseType = {
     id: DirectusId;
 };
-type NoId<T extends DirectusBaseType> = Omit<T, 'id'>;
-type UpdateItem<T> = {
+export type WithoutId<T extends DirectusBaseType> = Omit<T, 'id'>;
+export type WithSyncId<T extends DirectusBaseType> = WithoutId<T> & {
+    _syncId: string;
+};
+export type UpdateItem<T> = {
     sourceItem: T;
     targetItem: T;
     diffItem: Partial<T>;
@@ -28,13 +32,16 @@ export abstract class DirectusCollection<
     protected readonly dumpPath: string;
     protected readonly filePath: string;
 
-    protected readonly fieldsToIgnore: (keyof DirectusType)[] = ['id'];
+    protected readonly fieldsToIgnore: (keyof DirectusType | keyof WithSyncId<DirectusType>)[] = ['id', '_syncId'];
 
     protected abstract readonly enableCreate: boolean;
     protected abstract readonly enableUpdate: boolean;
     protected abstract readonly enableDelete: boolean;
 
+    protected readonly idMapper: IdMapperClient;
+
     constructor(protected readonly name: string) {
+        this.idMapper = this.createIdMapperClient();
         this.dumpPath = getDumpFilesPaths().directusDumpPath;
         this.filePath = path.join(this.dumpPath, `${this.name}.json`);
     }
@@ -45,8 +52,9 @@ export abstract class DirectusCollection<
     async dump() {
         const directus = await MigrationClient.get();
         const items = await directus.request(this.getQueryCommand({}));
-        writeFileSync(this.filePath, JSON.stringify(items, null, 2));
-        this.debug(`Dumped ${items.length} items.`);
+        const mappedItems = await this.mapIdsOfItems(items);
+        writeFileSync(this.filePath, JSON.stringify(mappedItems, null, 2));
+        this.debug(`Dumped ${mappedItems.length} items.`);
     }
 
     async plan() {
@@ -102,9 +110,32 @@ export abstract class DirectusCollection<
         logger.info(`[${this.name}] ${message}`);
     }
 
+    /**
+     * For each item, try to get the mapped id if exists from the idMapper, or create it if not.
+     */
+    protected async mapIdsOfItems<T extends DirectusBaseType>(items: T[]): Promise<WithSyncId<T>[]> {
+        const output: WithSyncId<T>[] = [];
+        for (const item of items) {
+            const {id, ...rest} = item;
+            const syncId = await this.idMapper.getByLocalId(id);
+            if (syncId) {
+                output.push({...rest, _syncId: syncId.sync_id});
+            } else {
+                const newSyncId = await this.idMapper.create(id);
+                output.push({...rest, _syncId: newSyncId});
+            }
+        }
+        return output;
+    }
+
     protected abstract getQueryCommand(
         query: Query<DirectusType, object>,
     ): RestCommand<DirectusType[], object>;
+
+
+    protected abstract getByIdCommand(
+        id: DirectusId,
+    ): RestCommand<DirectusType, object>;
 
     /**
      * Returns a command that allow to match items between source and target data.
@@ -115,7 +146,7 @@ export abstract class DirectusCollection<
     ): RestCommand<DirectusType[], object>;
 
     protected abstract getInsertCommand(
-        item: NoId<DirectusType>,
+        item: WithoutId<DirectusType>,
     ): RestCommand<DirectusType, object>;
 
     protected abstract getUpdateCommand(
@@ -128,20 +159,25 @@ export abstract class DirectusCollection<
         item: DirectusType,
     ): RestCommand<DirectusType, object>;
 
-    protected abstract getDataMapper(): (data: DirectusType) => DirectusType;
+    protected abstract getDataMapper(): (data: WithSyncId<DirectusType>) => WithSyncId<DirectusType>;
 
     /**
      * Returns the source data from the dump file, using readFileSync
      * and passes it through the data transformer.
      * @protected
      */
-    protected getSourceData(): DirectusType[] {
+    protected getSourceData(): WithSyncId<DirectusType>[] {
         const mapper = this.getDataMapper();
         const data = JSON.parse(
             String(readFileSync(this.filePath)),
-        ) as DirectusType[];
+        ) as WithSyncId<DirectusType>[];
         return data.map(mapper);
     }
+
+    /**
+     * Create id mapper client
+     */
+    protected abstract createIdMapperClient(): IdMapperClient;
 
     /**
      * Returns the diff between the dump and the target table.
@@ -150,15 +186,13 @@ export abstract class DirectusCollection<
         const sourceData = this.getSourceData();
         const directus = await MigrationClient.get();
 
-        const toCreate: NoId<DirectusType>[] = [];
-        const toUpdate: UpdateItem<DirectusType>[] = [];
-        const unchanged: DirectusType[] = [];
+        const toCreate: WithSyncId<DirectusType>[] = [];
+        const toUpdate: UpdateItem<WithSyncId<DirectusType>>[] = [];
+        const unchanged: WithSyncId<DirectusType>[] = [];
 
         for (const sourceItem of sourceData) {
-            // Take only the first item
-            const [targetItem] = await directus.request(
-                this.getMatchingItemCommand(sourceItem),
-            );
+            // Existing item from idMapper
+            const targetItem = await this.getTargetItem(sourceItem);
             if (targetItem) {
                 const {hasDiff, diffObject} = await this.getDiffBetweenItems(
                     sourceItem,
@@ -170,9 +204,7 @@ export abstract class DirectusCollection<
                     unchanged.push(targetItem);
                 }
             } else {
-                // Omit the id field
-                const {id, ...item} = sourceItem;
-                toCreate.push(item);
+                toCreate.push(sourceItem);
             }
         }
 
@@ -188,6 +220,21 @@ export abstract class DirectusCollection<
             : await directus.request(this.getQueryCommand({}));
 
         return {toCreate, toUpdate, toDelete, unchanged};
+    }
+
+    /**
+     * Get the target item from the idMapper then from the target table
+     */
+    protected async getTargetItem(sourceItem: WithSyncId<DirectusType>): Promise<WithSyncId<DirectusType> | undefined> {
+        const directus = await MigrationClient.get();
+        const idMap = await this.idMapper.getBySyncId(sourceItem._syncId);
+        if (idMap) {
+            const targetItem = await directus.request(
+                this.getByIdCommand(targetItem.id),
+            )
+            const { id, ...rest } = targetItem;
+            return { ...rest, _syncId: sourceItem._syncId };
+        }
     }
 
     /**
@@ -217,7 +264,7 @@ export abstract class DirectusCollection<
         };
     }
 
-    protected async create(toCreate: NoId<DirectusType>[]) {
+    protected async create(toCreate: WithoutId<DirectusType>[]) {
         const directus = await MigrationClient.get();
         for (const sourceItem of toCreate) {
             await directus.request(this.getInsertCommand(sourceItem));
