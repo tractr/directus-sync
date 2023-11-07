@@ -4,7 +4,6 @@ import {
   deleteWebhook,
   DirectusWebhook,
   Query,
-  readWebhook,
   readWebhooks,
   updateWebhook,
 } from '@directus/sdk';
@@ -26,6 +25,8 @@ export class WebhooksCollection extends DirectusCollection<
   protected readonly enableUpdate = true;
   protected readonly enableDelete = true;
 
+  protected readonly name = 'webhooks';
+
   protected createIdMapperClient() {
     return new IdMapperClient('webhooks');
   }
@@ -36,10 +37,6 @@ export class WebhooksCollection extends DirectusCollection<
     return function (p1: WithSyncId<DirectusWebhook<object>>) {
       return p1;
     };
-  }
-
-  protected getByIdCommand(id: number) {
-    return readWebhook(id);
   }
 
   protected getDeleteCommand(id: number) {

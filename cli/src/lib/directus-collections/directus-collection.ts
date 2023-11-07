@@ -42,9 +42,11 @@ export abstract class DirectusCollection<
   protected abstract readonly enableUpdate: boolean;
   protected abstract readonly enableDelete: boolean;
 
+  protected abstract readonly name: string;
+
   protected readonly idMapper: IdMapperClient;
 
-  constructor(protected readonly name: string) {
+  constructor() {
     this.idMapper = this.createIdMapperClient();
     this.dumpPath = getDumpFilesPaths().directusDumpPath;
     this.filePath = path.join(this.dumpPath, `${this.name}.json`);
@@ -151,10 +153,6 @@ export abstract class DirectusCollection<
     query: Query<DirectusType, object>,
   ): RestCommand<DirectusType[], object>;
 
-  protected abstract getByIdCommand(
-    id: DirectusId,
-  ): RestCommand<DirectusType, object>;
-
   protected abstract getInsertCommand(
     item: WithoutId<DirectusType>,
   ): RestCommand<DirectusType, object>;
@@ -238,7 +236,8 @@ export abstract class DirectusCollection<
     const idMap = await this.idMapper.getBySyncId(sourceItem._syncId);
     if (idMap) {
       const targetItem = await directus
-        .request(this.getByIdCommand(idMap.id))
+        .request(this.getQueryCommand({ filter: { id: idMap.id } }))
+        .then((items) => items[0])
         .catch(() => {
           logger.warn(
             `Could not find item with id ${idMap.id} in table ${this.name}`,

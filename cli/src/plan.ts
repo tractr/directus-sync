@@ -3,14 +3,16 @@ import {
   logEndAndClose,
   logErrorAndStop,
   MigrationClient,
-  WebhooksCollection,
 } from './lib';
+import { loadCollections } from './lib/loader';
 
 async function run() {
   createDumpFolders();
 
-  const webhooks = new WebhooksCollection('webhooks');
-  await webhooks.plan();
+  const collections = loadCollections();
+  for (const collection of collections) {
+    await collection.plan();
+  }
 
   await MigrationClient.close();
 }
