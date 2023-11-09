@@ -12,9 +12,7 @@ import { ROLES_COLLECTION } from './constants';
 import { RolesDataMapper } from './data-mapper';
 
 @Service()
-export class RolesCollection extends DirectusCollection<
-  DirectusRole<object>
-> {
+export class RolesCollection extends DirectusCollection<DirectusRole<object>> {
   protected readonly enableCreate = true;
   protected readonly enableUpdate = true;
   protected readonly enableDelete = true;

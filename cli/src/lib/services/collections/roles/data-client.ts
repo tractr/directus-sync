@@ -11,9 +11,7 @@ import { Service } from 'typedi';
 import { MigrationClient } from '../../migration-client';
 
 @Service()
-export class RolesDataClient extends DataClient<
-  DirectusRole<object>
-> {
+export class RolesDataClient extends DataClient<DirectusRole<object>> {
   constructor(migrationClient: MigrationClient) {
     super(migrationClient);
   }
@@ -22,9 +20,7 @@ export class RolesDataClient extends DataClient<
     return deleteRole(itemId);
   }
 
-  protected getInsertCommand(
-    item: WithoutIdAndSyncId<DirectusRole<object>>,
-  ) {
+  protected getInsertCommand(item: WithoutIdAndSyncId<DirectusRole<object>>) {
     return createRole(item);
   }
 

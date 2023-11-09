@@ -1,14 +1,15 @@
 import {
+  FlowsCollection,
   MigrationClient,
+  OperationsCollection,
+  PermissionsCollection,
+  RolesCollection,
   SettingsCollection,
   WebhooksCollection,
 } from './services';
 import { createDumpFolders, getDumpFilesPaths } from './helpers';
 import { Container } from 'typedi';
 import Logger from 'pino';
-import { OperationsCollection } from './services/collections/operations';
-import { FlowsCollection } from './services/collections/flows';
-import {RolesCollection} from "./services/collections/roles";
 
 export async function initContext() {
   // Define the logger
@@ -43,5 +44,6 @@ export function loadCollections() {
     Container.get(FlowsCollection),
     Container.get(OperationsCollection),
     Container.get(RolesCollection),
+    Container.get(PermissionsCollection),
   ];
 }

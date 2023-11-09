@@ -10,9 +10,7 @@ import { getChildLogger } from '../../../helpers';
 import { RolesDataMapper } from './data-mapper';
 
 @Service()
-export class RolesDataDiffer extends DataDiffer<
-  DirectusRole<object>
-> {
+export class RolesDataDiffer extends DataDiffer<DirectusRole<object>> {
   constructor(
     @Inject('logger') baseLogger: pino.Logger,
     dataLoader: RolesDataLoader,

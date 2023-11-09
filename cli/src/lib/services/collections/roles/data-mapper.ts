@@ -7,15 +7,10 @@ import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
 
 @Service()
-export class RolesDataMapper extends DataMapper<
-  DirectusRole<object>
-> {
+export class RolesDataMapper extends DataMapper<DirectusRole<object>> {
   protected usersFields: StrictField<DirectusRole<object>>[] = [];
-  protected fieldsToIgnore: Field<DirectusRole<object>>[] = [
-      'users',
-  ];
-  protected idMappers: IdMappers<DirectusRole<object>> = {
-  };
+  protected fieldsToIgnore: Field<DirectusRole<object>>[] = ['users'];
+  protected idMappers: IdMappers<DirectusRole<object>> = {};
 
   constructor(
     @Inject('logger') baseLogger: pino.Logger,

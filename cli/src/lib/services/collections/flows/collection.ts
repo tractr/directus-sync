@@ -44,10 +44,10 @@ export class FlowsCollection extends DirectusCollection<DirectusFlow<object>> {
   ): Promise<boolean> {
     const shouldRetry = toCreate.length > 0;
     const toCreateWithoutOperations = toCreate.map((flow) => {
-        return {
-            ...flow,
-            operation: null,
-        };
+      return {
+        ...flow,
+        operation: null,
+      };
     });
     await super.create(toCreateWithoutOperations);
     return shouldRetry;
