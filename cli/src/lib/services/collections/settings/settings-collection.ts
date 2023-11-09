@@ -5,12 +5,9 @@ import {
   readSettings,
   updateSettings,
 } from '@directus/sdk';
-import {
-  DirectusCollection,
-  WithoutId,
-  WithSyncId,
-} from './directus-collection';
-import { IdMapperClient } from './id-mapper-client';
+import { DirectusCollection } from '../base/directus-collection';
+import { IdMapperClient } from '../base/id-mapper-client';
+import { WithoutId, WithSyncId } from '../base';
 
 /**
  * This class is responsible for merging the data from a dump to a target table.

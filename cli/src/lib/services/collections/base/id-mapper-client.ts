@@ -8,7 +8,7 @@ export type IdMap = {
   created_at: Date;
 };
 
-export class IdMapperClient {
+export abstract class IdMapperClient {
   protected readonly extensionUri = '/directus-extension-sync';
 
   constructor(protected readonly table: string) {}

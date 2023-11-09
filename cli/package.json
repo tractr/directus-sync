@@ -32,6 +32,8 @@
     "http-errors": "^2.0.0",
     "node-fetch": "^3.3.2",
     "pino": "^8.16.1",
-    "pino-pretty": "^10.2.3"
+    "pino-pretty": "^10.2.3",
+    "reflect-metadata": "^0.1.13",
+    "typedi": "^0.10.0"
   }
 }

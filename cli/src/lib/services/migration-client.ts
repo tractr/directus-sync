@@ -6,11 +6,11 @@ import {
   rest,
   RestClient,
 } from '@directus/sdk';
-import { logger } from './logger';
+import { Inject, Service } from 'typedi';
+import pino from 'pino';
 
+@Service()
 export class MigrationClient {
-  protected static instance: MigrationClient;
-
   protected readonly client: DirectusClient<any> &
     RestClient<any> &
     AuthenticationClient<any>;
@@ -19,7 +19,7 @@ export class MigrationClient {
 
   protected refreshToken: string | undefined;
 
-  protected constructor() {
+  constructor(@Inject('logger') protected readonly logger: pino.Logger) {
     this.client = this.createClient();
   }
 
@@ -29,6 +29,13 @@ export class MigrationClient {
       throw new Error('Missing Directus URL');
     }
     return createDirectus(DIRECTUS_URL).with(rest()).with(authentication());
+  }
+
+  async getClient() {
+    if (!this.isLogged) {
+      await this.login();
+    }
+    return this.client;
   }
 
   protected async login() {
@@ -45,35 +52,13 @@ export class MigrationClient {
     this.isLogged = true;
   }
 
-  protected async logout() {
-    if (this.refreshToken) {
+  async logout() {
+    if (this.refreshToken && this.isLogged) {
       this.client.setToken(this.refreshToken);
       await this.client.logout().catch((error) => {
-        logger.warn(error);
+        this.logger.warn(error);
       });
     }
     this.isLogged = false;
-  }
-
-  protected static getInstance() {
-    if (!MigrationClient.instance) {
-      MigrationClient.instance = new MigrationClient();
-    }
-    return MigrationClient.instance;
-  }
-
-  static async get() {
-    const instance = MigrationClient.getInstance();
-    if (!instance.isLogged) {
-      await instance.login();
-    }
-    return MigrationClient.getInstance().client;
-  }
-
-  static async close() {
-    const instance = MigrationClient.getInstance();
-    if (instance.isLogged) {
-      await instance.logout();
-    }
   }
 }

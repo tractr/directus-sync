@@ -16,7 +16,7 @@ export function ensureIsAdminHandler(req: any, _res: any, next: any) {
 }
 
 /**
- * Extract params from a request and
+ * Extract params from a query and
  */
 export function validateInput<T extends ZodSchema>(
   params: Record<string, any>,

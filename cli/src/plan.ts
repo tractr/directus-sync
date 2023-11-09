@@ -1,20 +1,21 @@
+import 'reflect-metadata';
 import {
-  createDumpFolders,
   logEndAndClose,
   logErrorAndStop,
-  MigrationClient,
+  loadCollections,
+  initContext,
+  disposeContext,
 } from './lib';
-import { loadCollections } from './lib/loader';
 
 async function run() {
-  createDumpFolders();
-
   const collections = loadCollections();
   for (const collection of collections) {
     await collection.plan();
   }
-
-  await MigrationClient.close();
 }
 
-run().then(logEndAndClose).catch(logErrorAndStop);
+initContext()
+  .then(run)
+  .catch(logErrorAndStop)
+  .then(disposeContext)
+  .then(logEndAndClose);

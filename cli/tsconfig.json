@@ -4,6 +4,8 @@
     "lib": ["ES2019", "DOM"],
     "moduleResolution": "node",
     "strict": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
     "noImplicitAny": true,
