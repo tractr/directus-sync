@@ -8,6 +8,7 @@ import { Container } from 'typedi';
 import Logger from 'pino';
 import { OperationsCollection } from './services/collections/operations';
 import { FlowsCollection } from './services/collections/flows';
+import {RolesCollection} from "./services/collections/roles";
 
 export async function initContext() {
   // Define the logger
@@ -41,5 +42,6 @@ export function loadCollections() {
     Container.get(WebhooksCollection),
     Container.get(FlowsCollection),
     Container.get(OperationsCollection),
+    Container.get(RolesCollection),
   ];
 }
