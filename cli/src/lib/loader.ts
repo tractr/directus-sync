@@ -34,6 +34,8 @@ export async function disposeContext() {
 }
 
 export function loadCollections() {
+  // The order of the collections is important
+  // The collections are populated in the same order
   return [
     Container.get(SettingsCollection),
     Container.get(WebhooksCollection),

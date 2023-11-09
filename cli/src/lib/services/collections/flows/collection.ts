@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { DirectusFlow } from '@directus/sdk';
-import { DirectusCollection } from '../base';
+import { DirectusCollection, WithSyncIdAndWithoutId } from '../base';
 import pino from 'pino';
 import { Inject, Service } from 'typedi';
 import { FlowsDataLoader } from './data-loader';
@@ -33,5 +33,23 @@ export class FlowsCollection extends DirectusCollection<DirectusFlow<object>> {
       dataMapper,
       idMapper,
     );
+  }
+
+  /**
+   * Override the methods in order to break dependency cycle between flows and operations
+   * Always create new flows without reference to operations. Then update the flow once the operations are created.
+   */
+  protected async create(
+    toCreate: WithSyncIdAndWithoutId<DirectusFlow<object>>[],
+  ): Promise<boolean> {
+    const shouldRetry = toCreate.length > 0;
+    const toCreateWithoutOperations = toCreate.map((flow) => {
+        return {
+            ...flow,
+            operation: null,
+        };
+    });
+    await super.create(toCreateWithoutOperations);
+    return shouldRetry;
   }
 }

@@ -91,20 +91,31 @@ export abstract class DirectusCollection<
    * Merge the data from the dump to the target table
    */
   async restore() {
-    const { toCreate, toUpdate, toDelete, dangling } =
-      await this.dataDiffer.getDiff();
-    // All dangling items should be deleted first
-    await this.removeDangling(dangling);
+    let shouldRetryCreate = false;
+    let shouldRetryUpdate = false;
+    const { toCreate, toUpdate, toDelete } = await this.dataDiffer.getDiff();
 
     if (this.enableCreate) {
-      await this.create(toCreate);
+      shouldRetryCreate = await this.create(toCreate);
     }
     if (this.enableUpdate) {
-      await this.update(toUpdate);
+      shouldRetryUpdate = await this.update(toUpdate);
     }
     if (this.enableDelete) {
       await this.delete(toDelete);
     }
+
+    // If there are items to retry, run the restore again
+    return shouldRetryCreate || shouldRetryUpdate;
+  }
+
+  /**
+   * Merge the data from the dump to the target table
+   */
+  async cleanUp() {
+    const { dangling } = await this.dataDiffer.getDiff();
+    // All dangling items should be deleted first
+    await this.removeDangling(dangling);
   }
 
   /**
@@ -135,26 +146,69 @@ export abstract class DirectusCollection<
     return items.map(({ id, ...rest }) => rest as WithoutId<T>);
   }
 
+  /**
+   * This method returns true if there are items to retry.
+   */
   protected async create(toCreate: WithSyncIdAndWithoutId<DirectusType>[]) {
+    const toRetry = [];
+
     for (const sourceItem of toCreate) {
-      const { _syncId, ...rest } = sourceItem;
+      // Try to map the sync id to the local id
+      const mappedItem = await this.dataMapper.mapSyncIdToLocalId(sourceItem);
+      if (!mappedItem) {
+        toRetry.push(sourceItem);
+        continue;
+      }
+
+      // If the id mapping was successful, create the item
+      const { _syncId, ...rest } = mappedItem;
       const newItem = await this.dataClient.create(
         rest as unknown as WithoutIdAndSyncId<DirectusType>,
       );
       this.logger.debug(sourceItem, `Created item`);
+
       // Create new entry in the id mapper
       const syncId = await this.idMapper.create(newItem.id, _syncId);
       this.logger.debug({ syncId, localId: newItem.id }, `Created id map`);
     }
+
+    // Log results
     this.logger.info(`Created ${toCreate.length} items`);
+    if (toRetry.length) {
+      this.logger.warn(
+        `Could not create ${toRetry.length} items. Must run again.`,
+      );
+    }
+    return toRetry.length > 0;
   }
 
+  /**
+   * This method returns true if there are items to retry.
+   */
   protected async update(toUpdate: UpdateItem<DirectusType>[]) {
+    const toRetry = [];
+
     for (const { targetItem, diffItem } of toUpdate) {
-      await this.dataClient.update(targetItem.id, diffItem);
+      // Try to map the sync id to the local id
+      const mappedDiffItem = await this.dataMapper.mapSyncIdToLocalId(diffItem);
+      if (!mappedDiffItem) {
+        toRetry.push(mappedDiffItem);
+        continue;
+      }
+
+      // If the id mapping was successful, update the item
+      await this.dataClient.update(targetItem.id, mappedDiffItem);
       this.logger.debug(diffItem, `Updated ${targetItem.id}`);
     }
+
+    // Log results
     this.logger.info(`Updated ${toUpdate.length} items`);
+    if (toRetry.length) {
+      this.logger.warn(
+        `Could not update ${toRetry.length} items. Must run again.`,
+      );
+    }
+    return toRetry.length > 0;
   }
 
   protected async delete(toDelete: IdMap[]) {

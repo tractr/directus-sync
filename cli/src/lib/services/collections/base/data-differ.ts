@@ -11,6 +11,7 @@ import { diff } from 'deep-object-diff';
 import { DataLoader } from './data-loader';
 import { DataClient } from './data-client';
 import pino from 'pino';
+import { DataMapper } from './data-mapper';
 
 export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
   protected readonly fieldsToIgnore: [
@@ -23,6 +24,7 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
     protected readonly logger: pino.Logger,
     protected readonly dataLoader: DataLoader<DirectusType>,
     protected readonly dataClient: DataClient<DirectusType>,
+    protected readonly dataMapper: DataMapper<DirectusType>,
     protected readonly idMapper: IdMapperClient,
   ) {}
 
@@ -82,7 +84,15 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
           return undefined;
         });
       if (targetItem) {
-        return { ...targetItem, _syncId: sourceItem._syncId };
+        const withSyncId = { ...targetItem, _syncId: sourceItem._syncId };
+        const [withMappedIds] =
+          await this.dataMapper.mapIdsToSyncIdAndRemoveIgnoredFields([
+            withSyncId,
+          ]);
+        return {
+          ...withMappedIds,
+          id: targetItem.id,
+        } as WithSyncId<DirectusType>;
       }
     }
     return undefined;

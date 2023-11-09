@@ -7,6 +7,7 @@ import { OperationsDataLoader } from './data-loader';
 import { OperationsDataClient } from './data-client';
 import { OperationsIdMapperClient } from './id-mapper-client';
 import { getChildLogger } from '../../../helpers';
+import { OperationsDataMapper } from './data-mapper';
 
 @Service()
 export class OperationsDataDiffer extends DataDiffer<
@@ -16,12 +17,14 @@ export class OperationsDataDiffer extends DataDiffer<
     @Inject('logger') baseLogger: pino.Logger,
     dataLoader: OperationsDataLoader,
     dataClient: OperationsDataClient,
+    dataMapper: OperationsDataMapper,
     idMapper: OperationsIdMapperClient,
   ) {
     super(
       getChildLogger(baseLogger, OPERATIONS_COLLECTION),
       dataLoader,
       dataClient,
+      dataMapper,
       idMapper,
     );
   }

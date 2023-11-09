@@ -1,11 +1,17 @@
 import { DataMapper } from '../base';
 import { DirectusWebhook } from '@directus/sdk';
-import { Service } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { MigrationClient } from '../../migration-client';
+import pino from 'pino';
+import { getChildLogger } from '../../../helpers';
+import { FLOWS_COLLECTION } from '../flows';
 
 @Service()
 export class WebhooksDataMapper extends DataMapper<DirectusWebhook<object>> {
-  constructor(migrationClient: MigrationClient) {
-    super(migrationClient);
+  constructor(
+    @Inject('logger') baseLogger: pino.Logger,
+    migrationClient: MigrationClient,
+  ) {
+    super(getChildLogger(baseLogger, FLOWS_COLLECTION), migrationClient);
   }
 }
