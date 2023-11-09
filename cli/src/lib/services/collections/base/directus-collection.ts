@@ -1,6 +1,12 @@
 import 'dotenv/config';
 import { IdMap, IdMapperClient } from './id-mapper-client';
-import { DirectusBaseType, UpdateItem, WithSyncId } from './interfaces';
+import {
+  DirectusBaseType,
+  UpdateItem,
+  WithoutId, WithoutIdAndSyncId,
+  WithSyncId,
+  WithSyncIdAndWithoutId,
+} from './interfaces';
 import { DataClient } from './data-client';
 import { DataLoader } from './data-loader';
 import { DataDiffer } from './data-differ';
@@ -31,7 +37,8 @@ export abstract class DirectusCollection<
   async dump() {
     const items = await this.dataClient.query({ limit: -1 });
     const mappedItems = await this.mapIdsOfItems(items);
-    this.dataLoader.saveData(mappedItems);
+    const itemsWithoutIds = this.removeIdsOfItems(mappedItems);
+    this.dataLoader.saveData(itemsWithoutIds);
     this.logger.debug(`Dumped ${mappedItems.length} items.`);
   }
 
@@ -105,12 +112,22 @@ export abstract class DirectusCollection<
     return output;
   }
 
-  protected async create(toCreate: WithSyncId<DirectusType>[]) {
+  /**
+   * Remove the id of the items
+   */
+  protected removeIdsOfItems<T extends DirectusBaseType>(
+    items: T[],
+  ): WithoutId<T>[] {
+    return items.map(({ id, ...rest }) => rest as WithoutId<T>);
+  }
+
+  protected async create(toCreate: WithSyncIdAndWithoutId<DirectusType>[]) {
     for (const sourceItem of toCreate) {
-      const newItem = await this.dataClient.create(sourceItem);
+      const { _syncId, ...rest } = sourceItem;
+      const newItem = await this.dataClient.create(rest as unknown as WithoutIdAndSyncId<DirectusType>);
       this.logger.debug(sourceItem, `Created item`);
       // Create new entry in the id mapper
-      const syncId = await this.idMapper.create(newItem.id, sourceItem._syncId);
+      const syncId = await this.idMapper.create(newItem.id, _syncId);
       this.logger.debug({ syncId, localId: newItem.id }, `Created id map`);
     }
     this.logger.info(`Created ${toCreate.length} items`);

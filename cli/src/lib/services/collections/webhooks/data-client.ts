@@ -1,4 +1,4 @@
-import { DataClient, WithoutId } from '../base';
+import { DataClient, WithoutIdAndSyncId } from '../base';
 import {
   createWebhook,
   deleteWebhook,
@@ -20,7 +20,9 @@ export class WebhooksDataClient extends DataClient<DirectusWebhook<object>> {
     return deleteWebhook(itemId);
   }
 
-  protected getInsertCommand(item: WithoutId<DirectusWebhook<object>>) {
+  protected getInsertCommand(
+    item: WithoutIdAndSyncId<DirectusWebhook<object>>,
+  ) {
     return createWebhook(item);
   }
 
@@ -30,7 +32,7 @@ export class WebhooksDataClient extends DataClient<DirectusWebhook<object>> {
 
   protected getUpdateCommand(
     itemId: number,
-    diffItem: Partial<WithoutId<DirectusWebhook<object>>>,
+    diffItem: Partial<WithoutIdAndSyncId<DirectusWebhook<object>>>,
   ) {
     return updateWebhook(itemId, diffItem);
   }

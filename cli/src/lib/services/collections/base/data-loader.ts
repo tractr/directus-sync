@@ -1,10 +1,7 @@
-import { DirectusBaseType, WithSyncId } from './interfaces';
+import { DirectusBaseType, WithSyncIdAndWithoutId } from './interfaces';
 import { readFileSync, writeFileSync } from 'fs';
 
 export abstract class DataLoader<DirectusType extends DirectusBaseType> {
-  // constructor(@Inject('directusDumpPath') protected readonly dumpPath: string) {
-  //   this.filePath = path.join(this.dumpPath, `${this.getName()}.json`);
-  // }
   constructor(protected readonly filePath: string) {}
 
   /**
@@ -13,9 +10,9 @@ export abstract class DataLoader<DirectusType extends DirectusBaseType> {
    * The default implementation returns the data as is.
    */
   protected getReadDataMapper(): (
-    data: WithSyncId<DirectusType>,
-  ) => WithSyncId<DirectusType> {
-    return function (p1: WithSyncId<DirectusType>) {
+    data: WithSyncIdAndWithoutId<DirectusType>,
+  ) => WithSyncIdAndWithoutId<DirectusType> {
+    return function (p1: WithSyncIdAndWithoutId<DirectusType>) {
       return p1;
     };
   }
@@ -26,9 +23,9 @@ export abstract class DataLoader<DirectusType extends DirectusBaseType> {
    * The default implementation returns the data as is.
    */
   protected getWriteDataMapper(): (
-    data: WithSyncId<DirectusType>,
-  ) => WithSyncId<DirectusType> {
-    return function (p1: WithSyncId<DirectusType>) {
+    data: WithSyncIdAndWithoutId<DirectusType>,
+  ) => WithSyncIdAndWithoutId<DirectusType> {
+    return function (p1: WithSyncIdAndWithoutId<DirectusType>) {
       return p1;
     };
   }
@@ -37,18 +34,18 @@ export abstract class DataLoader<DirectusType extends DirectusBaseType> {
    * Returns the source data from the dump file, using readFileSync
    * and passes it through the data transformer.
    */
-  getSourceData(): WithSyncId<DirectusType>[] {
+  getSourceData(): WithSyncIdAndWithoutId<DirectusType>[] {
     const mapper = this.getReadDataMapper();
     const data = JSON.parse(
       String(readFileSync(this.filePath)),
-    ) as WithSyncId<DirectusType>[];
+    ) as WithSyncIdAndWithoutId<DirectusType>[];
     return data.map(mapper);
   }
 
   /**
    * Save the data to the dump file. The data is passed through the data transformer.
    */
-  saveData(data: WithSyncId<DirectusType>[]) {
+  saveData(data: WithSyncIdAndWithoutId<DirectusType>[]) {
     const mapper = this.getWriteDataMapper();
     const mappedData = data.map(mapper);
     writeFileSync(this.filePath, JSON.stringify(mappedData, null, 2));

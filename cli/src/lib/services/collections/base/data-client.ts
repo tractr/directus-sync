@@ -2,8 +2,7 @@ import { Query, RestCommand } from '@directus/sdk';
 import {
   DirectusBaseType,
   DirectusId,
-  WithoutId,
-  WithSyncId,
+  WithoutIdAndSyncId,
 } from './interfaces';
 import { MigrationClient } from '../../migration-client';
 
@@ -18,12 +17,12 @@ export abstract class DataClient<DirectusType extends DirectusBaseType> {
   ): RestCommand<DirectusType[], object>;
 
   protected abstract getInsertCommand(
-    item: WithoutId<DirectusType>,
+    item: WithoutIdAndSyncId<DirectusType>,
   ): RestCommand<DirectusType, object>;
 
   protected abstract getUpdateCommand(
     itemId: DirectusId,
-    diffItem: Partial<WithoutId<DirectusType>>,
+    diffItem: Partial<WithoutIdAndSyncId<DirectusType>>,
   ): RestCommand<DirectusType, object>;
 
   protected abstract getDeleteCommand(
@@ -37,17 +36,31 @@ export abstract class DataClient<DirectusType extends DirectusBaseType> {
     query: Query<DirectusType, object>,
   ): Promise<T[]> {
     const directus = await this.migrationClient.getClient();
-    return await directus.request<T[]>(this.getQueryCommand(query));
+    const response = await directus.request<T | T[]>(
+      this.getQueryCommand(query),
+    );
+    // Some collections, such as settings, return a single object instead of an array or may return a fake item, without id.
+    if (Array.isArray(response)) {
+      return response;
+    } else {
+      if (!(response as DirectusType).id) {
+        return [];
+      }
+      return [response as T];
+    }
   }
 
   /**
    * Inserts data into the target collection using the rest API.
    * Remove the id and the syncId from the item before inserting it.
    */
-  async create(item: WithSyncId<DirectusType>): Promise<DirectusType> {
+  async create(
+    item: WithoutIdAndSyncId<DirectusType>,
+  ): Promise<DirectusType> {
     const directus = await this.migrationClient.getClient();
-    const { _syncId, id, ...rest } = item;
-    return await directus.request(this.getInsertCommand(rest));
+    return await directus.request(
+      this.getInsertCommand(item),
+    );
   }
 
   /**
@@ -56,7 +69,7 @@ export abstract class DataClient<DirectusType extends DirectusBaseType> {
    */
   async update(
     itemId: DirectusId,
-    diffItem: Partial<WithoutId<DirectusType>>,
+    diffItem: Partial<WithoutIdAndSyncId<DirectusType>>,
   ): Promise<DirectusType> {
     const directus = await this.migrationClient.getClient();
     return await directus.request(this.getUpdateCommand(itemId, diffItem));

@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 import {
+  disposeContext,
+  initContext,
+  loadCollections,
   logEndAndClose,
   logErrorAndStop,
-  loadCollections,
-  initContext,
-  disposeContext,
 } from './lib';
 
 async function run() {

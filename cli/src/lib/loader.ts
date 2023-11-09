@@ -1,7 +1,10 @@
-import { WebhooksCollection } from './services';
+import {
+  MigrationClient,
+  SettingsCollection,
+  WebhooksCollection,
+} from './services';
 import { createDumpFolders, getDumpFilesPaths } from './helpers';
 import { Container } from 'typedi';
-import { MigrationClient } from './services';
 import Logger from 'pino';
 
 export async function initContext() {
@@ -29,5 +32,5 @@ export async function disposeContext() {
 }
 
 export function loadCollections() {
-  return [Container.get(WebhooksCollection)];
+  return [Container.get(WebhooksCollection), Container.get(SettingsCollection)];
 }

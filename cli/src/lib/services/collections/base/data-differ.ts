@@ -2,8 +2,9 @@ import {
   DirectusBaseType,
   DirectusId,
   UpdateItem,
-  WithoutId,
+  WithoutIdAndSyncId,
   WithSyncId,
+  WithSyncIdAndWithoutId,
 } from './interfaces';
 import { IdMap, IdMapperClient } from './id-mapper-client';
 import { diff } from 'deep-object-diff';
@@ -31,7 +32,7 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
   async getDiff() {
     const sourceData = this.dataLoader.getSourceData();
 
-    const toCreate: WithSyncId<DirectusType>[] = [];
+    const toCreate: WithSyncIdAndWithoutId<DirectusType>[] = [];
     const toUpdate: UpdateItem<DirectusType>[] = [];
     const unchanged: WithSyncId<DirectusType>[] = [];
 
@@ -69,7 +70,7 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
    * Get the target item from the idMapper then from the target table
    */
   protected async getTargetItem(
-    sourceItem: WithSyncId<DirectusType>,
+    sourceItem: WithSyncIdAndWithoutId<DirectusType>,
   ): Promise<WithSyncId<DirectusType> | undefined> {
     const idMap = await this.idMapper.getBySyncId(sourceItem._syncId);
     if (idMap) {
@@ -163,7 +164,7 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
    * This is non-destructive, and non-deep.
    */
   protected async getDiffBetweenItems(
-    sourceItem: WithSyncId<DirectusType>,
+    sourceItem: WithSyncIdAndWithoutId<DirectusType>,
     targetItem: WithSyncId<DirectusType>,
   ) {
     const diffObject = diff(targetItem, sourceItem) as Partial<
@@ -174,12 +175,12 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
     }
     const diffFields = Object.keys(
       diffObject,
-    ) as (keyof WithoutId<DirectusType>)[];
+    ) as (keyof WithoutIdAndSyncId<DirectusType>)[];
 
     // Compute diff object from source item to avoid transforming the source fields
-    const sourceDiffObject = {} as Partial<WithoutId<DirectusType>>;
+    const sourceDiffObject = {} as Partial<WithoutIdAndSyncId<DirectusType>>;
     for (const field of diffFields) {
-      sourceDiffObject[field] = sourceItem[field];
+      sourceDiffObject[field] = (sourceItem as WithSyncId<DirectusType>)[field];
     }
 
     return {

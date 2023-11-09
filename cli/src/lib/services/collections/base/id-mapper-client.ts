@@ -60,10 +60,10 @@ export abstract class IdMapperClient {
     await this.fetch(`/table/${this.table}/local_id/${localId}`, 'DELETE');
   }
 
-  protected async fetch<T = any>(
+  protected async fetch<T = unknown>(
     uri: string,
     method: RequestInit['method'] = 'GET',
-    payload: any = undefined,
+    payload: unknown = undefined,
     options: RequestInit = {},
   ): Promise<T> {
     const { DIRECTUS_URL, DIRECTUS_TOKEN } = process.env;
