@@ -3,10 +3,10 @@ import { DirectusWebhook } from '@directus/sdk';
 import { DirectusCollection } from '../base';
 import pino from 'pino';
 import { Inject, Service } from 'typedi';
-import { WebhooksDataLoader } from './webhooks-data-loader';
-import { WebhooksDataClient } from './webhooks-data-client';
-import { WebhooksIdMapperClient } from './webhooks-id-mapper-client';
-import { WebhooksDataDiffer } from './webhooks-data-differ';
+import { WebhooksDataLoader } from './data-loader';
+import { WebhooksDataClient } from './data-client';
+import { WebhooksIdMapperClient } from './id-mapper-client';
+import { WebhooksDataDiffer } from './data-differ';
 import { getChildLogger } from '../../../helpers';
 import { WEBHOOKS_COLLECTION } from './constants';
 
