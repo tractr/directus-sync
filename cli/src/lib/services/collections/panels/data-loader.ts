@@ -5,9 +5,7 @@ import { PANELS_COLLECTION } from './constants';
 import path from 'path';
 
 @Service()
-export class PanelsDataLoader extends DataLoader<
-  DirectusPanel<object>
-> {
+export class PanelsDataLoader extends DataLoader<DirectusPanel<object>> {
   constructor(@Inject('directusDumpPath') dumpPath: string) {
     const filePath = path.join(dumpPath, `${PANELS_COLLECTION}.json`);
     super(filePath);

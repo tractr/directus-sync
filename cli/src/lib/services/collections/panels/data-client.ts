@@ -11,9 +11,7 @@ import { Service } from 'typedi';
 import { MigrationClient } from '../../migration-client';
 
 @Service()
-export class PanelsDataClient extends DataClient<
-  DirectusPanel<object>
-> {
+export class PanelsDataClient extends DataClient<DirectusPanel<object>> {
   constructor(migrationClient: MigrationClient) {
     super(migrationClient);
   }
@@ -22,9 +20,7 @@ export class PanelsDataClient extends DataClient<
     return deletePanel(itemId);
   }
 
-  protected getInsertCommand(
-    item: WithoutIdAndSyncId<DirectusPanel<object>>,
-  ) {
+  protected getInsertCommand(item: WithoutIdAndSyncId<DirectusPanel<object>>) {
     return createPanel(item);
   }
 

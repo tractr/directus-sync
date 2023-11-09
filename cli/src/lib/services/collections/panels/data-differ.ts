@@ -10,9 +10,7 @@ import { getChildLogger } from '../../../helpers';
 import { PanelsDataMapper } from './data-mapper';
 
 @Service()
-export class PanelsDataDiffer extends DataDiffer<
-  DirectusPanel<object>
-> {
+export class PanelsDataDiffer extends DataDiffer<DirectusPanel<object>> {
   constructor(
     @Inject('logger') baseLogger: pino.Logger,
     dataLoader: PanelsDataLoader,

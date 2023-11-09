@@ -1,17 +1,13 @@
-import { DataMapper, Field, IdMappers, StrictField } from '../base';
+import { DataMapper, Field, IdMappers } from '../base';
 import { DirectusPanel } from '@directus/sdk';
 import { Container, Inject, Service } from 'typedi';
-import { MigrationClient } from '../../migration-client';
 import { FLOWS_COLLECTION } from '../flows';
 import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
-import {DashboardsIdMapperClient} from "../dashboards";
+import { DashboardsIdMapperClient } from '../dashboards';
 
 @Service()
-export class PanelsDataMapper extends DataMapper<
-  DirectusPanel<object>
-> {
-  protected usersFields: StrictField<DirectusPanel<object>>[] = [];
+export class PanelsDataMapper extends DataMapper<DirectusPanel<object>> {
   protected fieldsToIgnore: Field<DirectusPanel<object>>[] = [
     'date_created',
     'user_created',
@@ -20,10 +16,7 @@ export class PanelsDataMapper extends DataMapper<
     dashboard: Container.get(DashboardsIdMapperClient),
   };
 
-  constructor(
-    @Inject('logger') baseLogger: pino.Logger,
-    migrationClient: MigrationClient,
-  ) {
-    super(getChildLogger(baseLogger, FLOWS_COLLECTION), migrationClient);
+  constructor(@Inject('logger') baseLogger: pino.Logger) {
+    super(getChildLogger(baseLogger, FLOWS_COLLECTION));
   }
 }

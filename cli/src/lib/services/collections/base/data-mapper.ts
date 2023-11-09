@@ -3,23 +3,11 @@ import {
   DirectusId,
   Field,
   IdMappers,
-  StrictField,
   WithSyncIdAndWithoutId,
 } from './interfaces';
-import { MigrationClient } from '../../migration-client';
 import pino from 'pino';
 
 export abstract class DataMapper<DT extends DirectusBaseType> {
-  /**
-   * The user placeholder.
-   */
-  protected readonly userPlaceholder = '_USER_';
-
-  /**
-   * Those fields will be replaced by the migration user id.
-   */
-  protected usersFields: StrictField<DT>[] = [];
-
   /**
    * These field will be ignored when comparing the data from the dump with the data from the target table.
    */
@@ -30,10 +18,7 @@ export abstract class DataMapper<DT extends DirectusBaseType> {
    */
   protected idMappers = {} as IdMappers<DT>;
 
-  constructor(
-    protected readonly logger: pino.Logger,
-    protected readonly migrationClient: MigrationClient,
-  ) {}
+  constructor(protected readonly logger: pino.Logger) {}
 
   /**
    * Returns the items with the ids mapped to the sync ids,
@@ -45,9 +30,7 @@ export abstract class DataMapper<DT extends DirectusBaseType> {
     const output: WithSyncIdAndWithoutId<DT>[] = [];
     for (const item of items) {
       const withoutFields = this.removeFieldsToIgnore(item);
-      const withPlaceholder =
-        this.replaceUsersFieldsWithPlaceholder(withoutFields);
-      const newItem = await this.mapLocalIdToSyncId(withPlaceholder);
+      const newItem = await this.mapLocalIdToSyncId(withoutFields);
       output.push(newItem);
     }
     return output;
@@ -62,25 +45,6 @@ export abstract class DataMapper<DT extends DirectusBaseType> {
     const newItem = { ...item };
     for (const field of this.fieldsToIgnore) {
       delete newItem[field as keyof typeof newItem];
-    }
-    return newItem;
-  }
-
-  /**
-   * Replace the users fields with a placeholder.
-   */
-  protected replaceUsersFieldsWithPlaceholder(
-    item: WithSyncIdAndWithoutId<DT>,
-  ): WithSyncIdAndWithoutId<DT> {
-    const newItem = { ...item };
-    for (const field of this.usersFields) {
-      if (Array.isArray(newItem[field])) {
-        newItem[field] = (newItem[field] as unknown[]).map(
-          () => this.userPlaceholder,
-        ) as any;
-      } else {
-        newItem[field] = this.userPlaceholder as any;
-      }
     }
     return newItem;
   }

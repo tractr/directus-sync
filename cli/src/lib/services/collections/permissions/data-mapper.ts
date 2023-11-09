@@ -1,7 +1,6 @@
-import { DataMapper, Field, IdMappers, StrictField } from '../base';
+import { DataMapper, Field, IdMappers } from '../base';
 import { DirectusPermission } from '@directus/sdk';
 import { Container, Inject, Service } from 'typedi';
-import { MigrationClient } from '../../migration-client';
 import { FLOWS_COLLECTION } from '../flows';
 import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
@@ -11,16 +10,12 @@ import { RolesIdMapperClient } from '../roles';
 export class PermissionsDataMapper extends DataMapper<
   DirectusPermission<object>
 > {
-  protected usersFields: StrictField<DirectusPermission<object>>[] = [];
   protected fieldsToIgnore: Field<DirectusPermission<object>>[] = [];
   protected idMappers: IdMappers<DirectusPermission<object>> = {
     role: Container.get(RolesIdMapperClient),
   };
 
-  constructor(
-    @Inject('logger') baseLogger: pino.Logger,
-    migrationClient: MigrationClient,
-  ) {
-    super(getChildLogger(baseLogger, FLOWS_COLLECTION), migrationClient);
+  constructor(@Inject('logger') baseLogger: pino.Logger) {
+    super(getChildLogger(baseLogger, FLOWS_COLLECTION));
   }
 }
