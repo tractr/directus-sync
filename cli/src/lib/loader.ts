@@ -6,6 +6,8 @@ import {
 import { createDumpFolders, getDumpFilesPaths } from './helpers';
 import { Container } from 'typedi';
 import Logger from 'pino';
+import {OperationsCollection} from "./services/collections/operations";
+import {FlowsCollection} from "./services/collections/flows";
 
 export async function initContext() {
   // Define the logger
@@ -32,5 +34,5 @@ export async function disposeContext() {
 }
 
 export function loadCollections() {
-  return [Container.get(WebhooksCollection), Container.get(SettingsCollection)];
+  return [Container.get(SettingsCollection), Container.get(WebhooksCollection), Container.get(FlowsCollection), Container.get(OperationsCollection)];
 }
