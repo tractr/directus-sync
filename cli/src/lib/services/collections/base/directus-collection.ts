@@ -116,6 +116,8 @@ export abstract class DirectusCollection<
     const { dangling } = await this.dataDiffer.getDiff();
     // All dangling items should be deleted first
     await this.removeDangling(dangling);
+    // Clear the id mapper cache
+    this.idMapper.clearCache();
   }
 
   /**

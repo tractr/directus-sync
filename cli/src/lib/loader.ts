@@ -1,7 +1,8 @@
 import {
+  DashboardsCollection,
   FlowsCollection,
   MigrationClient,
-  OperationsCollection,
+  OperationsCollection, PanelsCollection,
   PermissionsCollection,
   RolesCollection,
   SettingsCollection,
@@ -45,5 +46,7 @@ export function loadCollections() {
     Container.get(OperationsCollection),
     Container.get(RolesCollection),
     Container.get(PermissionsCollection),
+    Container.get(DashboardsCollection),
+    Container.get(PanelsCollection),
   ];
 }

@@ -5,3 +5,5 @@ export * from './webhooks';
 export * from './operations';
 export * from './roles';
 export * from './permissions';
+export * from './panels';
+export * from './dashboards';
