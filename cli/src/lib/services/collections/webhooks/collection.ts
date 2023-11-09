@@ -9,6 +9,7 @@ import { WebhooksIdMapperClient } from './id-mapper-client';
 import { WebhooksDataDiffer } from './data-differ';
 import { getChildLogger } from '../../../helpers';
 import { WEBHOOKS_COLLECTION } from './constants';
+import { WebhooksDataMapper } from './data-mapper';
 
 @Service()
 export class WebhooksCollection extends DirectusCollection<
@@ -23,6 +24,7 @@ export class WebhooksCollection extends DirectusCollection<
     dataDiffer: WebhooksDataDiffer,
     dataLoader: WebhooksDataLoader,
     dataClient: WebhooksDataClient,
+    dataMapper: WebhooksDataMapper,
     idMapper: WebhooksIdMapperClient,
   ) {
     super(
@@ -30,6 +32,7 @@ export class WebhooksCollection extends DirectusCollection<
       dataDiffer,
       dataLoader,
       dataClient,
+      dataMapper,
       idMapper,
     );
   }

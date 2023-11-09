@@ -9,6 +9,7 @@ import { OperationsIdMapperClient } from './id-mapper-client';
 import { OperationsDataDiffer } from './data-differ';
 import { getChildLogger } from '../../../helpers';
 import { OPERATIONS_COLLECTION } from './constants';
+import { OperationsDataMapper } from './data-mapper';
 
 @Service()
 export class OperationsCollection extends DirectusCollection<
@@ -23,6 +24,7 @@ export class OperationsCollection extends DirectusCollection<
     dataDiffer: OperationsDataDiffer,
     dataLoader: OperationsDataLoader,
     dataClient: OperationsDataClient,
+    dataMapper: OperationsDataMapper,
     idMapper: OperationsIdMapperClient,
   ) {
     super(
@@ -30,6 +32,7 @@ export class OperationsCollection extends DirectusCollection<
       dataDiffer,
       dataLoader,
       dataClient,
+      dataMapper,
       idMapper,
     );
   }

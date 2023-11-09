@@ -3,7 +3,8 @@ import { IdMap, IdMapperClient } from './id-mapper-client';
 import {
   DirectusBaseType,
   UpdateItem,
-  WithoutId, WithoutIdAndSyncId,
+  WithoutId,
+  WithoutIdAndSyncId,
   WithSyncId,
   WithSyncIdAndWithoutId,
 } from './interfaces';
@@ -11,6 +12,7 @@ import { DataClient } from './data-client';
 import { DataLoader } from './data-loader';
 import { DataDiffer } from './data-differ';
 import pino from 'pino';
+import { DataMapper } from './data-mapper';
 
 /**
  * This class is responsible for merging the data from a dump to a target table.
@@ -28,6 +30,7 @@ export abstract class DirectusCollection<
     protected readonly dataDiffer: DataDiffer<DirectusType>,
     protected readonly dataLoader: DataLoader<DirectusType>,
     protected readonly dataClient: DataClient<DirectusType>,
+    protected readonly dataMapper: DataMapper<DirectusType>,
     protected readonly idMapper: IdMapperClient,
   ) {}
 
@@ -40,6 +43,17 @@ export abstract class DirectusCollection<
     const itemsWithoutIds = this.removeIdsOfItems(mappedItems);
     this.dataLoader.saveData(itemsWithoutIds);
     this.logger.debug(`Dumped ${mappedItems.length} items.`);
+  }
+
+  /**
+   * This methods will change ids to sync ids and add users placeholders.
+   */
+  async postProcessDump() {
+    const items = this.dataLoader.getSourceData();
+    const mappedItems =
+      await this.dataMapper.mapIdsToSyncIdAndRemoveIgnoredFields(items);
+    this.dataLoader.saveData(mappedItems);
+    this.logger.debug(`Post-processed ${mappedItems.length} items.`);
   }
 
   async plan() {
@@ -101,7 +115,7 @@ export abstract class DirectusCollection<
   ): Promise<WithSyncId<T>[]> {
     const output: WithSyncId<T>[] = [];
     for (const item of items) {
-      const syncId = await this.idMapper.getByLocalId(item.id);
+      const syncId = await this.idMapper.getByLocalId(item.id.toString());
       if (syncId) {
         output.push({ ...item, _syncId: syncId.sync_id });
       } else {
@@ -124,7 +138,9 @@ export abstract class DirectusCollection<
   protected async create(toCreate: WithSyncIdAndWithoutId<DirectusType>[]) {
     for (const sourceItem of toCreate) {
       const { _syncId, ...rest } = sourceItem;
-      const newItem = await this.dataClient.create(rest as unknown as WithoutIdAndSyncId<DirectusType>);
+      const newItem = await this.dataClient.create(
+        rest as unknown as WithoutIdAndSyncId<DirectusType>,
+      );
       this.logger.debug(sourceItem, `Created item`);
       // Create new entry in the id mapper
       const syncId = await this.idMapper.create(newItem.id, _syncId);

@@ -20,9 +20,7 @@ export class FlowsDataClient extends DataClient<DirectusFlow<object>> {
     return deleteFlow(itemId);
   }
 
-  protected getInsertCommand(
-    item: WithoutIdAndSyncId<DirectusFlow<object>>,
-  ) {
+  protected getInsertCommand(item: WithoutIdAndSyncId<DirectusFlow<object>>) {
     return createFlow(item);
   }
 

@@ -75,7 +75,7 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
     const idMap = await this.idMapper.getBySyncId(sourceItem._syncId);
     if (idMap) {
       const targetItem = await this.dataClient
-        .query({ filter: { id: idMap.id } })
+        .query({ filter: { id: idMap.local_id } })
         .then((items) => items[0])
         .catch(() => {
           this.logger.warn(`Could not find item with id ${idMap.id}`);

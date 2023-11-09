@@ -1,3 +1,5 @@
+import { IdMapperClient } from './id-mapper-client';
+
 export type DirectusId = number | string;
 export type DirectusBaseType = {
   id: DirectusId;
@@ -13,4 +15,10 @@ export type UpdateItem<T> = {
   sourceItem: WithSyncIdAndWithoutId<T>;
   targetItem: WithSyncId<T>;
   diffItem: Partial<WithoutIdAndSyncId<T>>;
+};
+
+export type StrictField<T> = keyof WithSyncIdAndWithoutId<T>;
+export type Field<T> = keyof WithSyncIdAndWithoutId<T> | string; // Allows other fields
+export type IdMappers<T> = {
+  [key in keyof WithSyncIdAndWithoutId<T>]?: IdMapperClient;
 };

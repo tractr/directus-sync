@@ -9,6 +9,7 @@ import { SettingsIdMapperClient } from './id-mapper-client';
 import { SettingsDataDiffer } from './data-differ';
 import { getChildLogger } from '../../../helpers';
 import { SETTINGS_COLLECTION } from './constants';
+import { SettingsDataMapper } from './data-mapper';
 
 @Service()
 export class SettingsCollection extends DirectusCollection<
@@ -23,6 +24,7 @@ export class SettingsCollection extends DirectusCollection<
     dataDiffer: SettingsDataDiffer,
     dataLoader: SettingsDataLoader,
     dataClient: SettingsDataClient,
+    dataMapper: SettingsDataMapper,
     idMapper: SettingsIdMapperClient,
   ) {
     super(
@@ -30,6 +32,7 @@ export class SettingsCollection extends DirectusCollection<
       dataDiffer,
       dataLoader,
       dataClient,
+      dataMapper,
       idMapper,
     );
   }

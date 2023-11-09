@@ -11,7 +11,9 @@ import { Service } from 'typedi';
 import { MigrationClient } from '../../migration-client';
 
 @Service()
-export class OperationsDataClient extends DataClient<DirectusOperation<object>> {
+export class OperationsDataClient extends DataClient<
+  DirectusOperation<object>
+> {
   constructor(migrationClient: MigrationClient) {
     super(migrationClient);
   }

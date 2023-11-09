@@ -12,6 +12,9 @@ async function run() {
   for (const collection of collections) {
     await collection.dump();
   }
+  for (const collection of collections) {
+    await collection.postProcessDump();
+  }
 }
 
 initContext()

@@ -3,6 +3,7 @@ import {
   AuthenticationClient,
   createDirectus,
   DirectusClient,
+  readMe,
   rest,
   RestClient,
 } from '@directus/sdk';
@@ -16,6 +17,8 @@ export class MigrationClient {
     AuthenticationClient<any>;
 
   protected isLogged = false;
+
+  protected userId: number | undefined;
 
   protected refreshToken: string | undefined;
 
@@ -50,6 +53,7 @@ export class MigrationClient {
       throw new Error('Missing Directus credentials');
     }
     this.isLogged = true;
+    delete this.userId;
   }
 
   async logout() {
@@ -60,5 +64,15 @@ export class MigrationClient {
       });
     }
     this.isLogged = false;
+    delete this.refreshToken;
+    delete this.userId;
+  }
+
+  async getUserId() {
+    if (!this.userId) {
+      const { id } = await this.client.request(readMe());
+      this.userId = id;
+    }
+    return this.userId;
   }
 }

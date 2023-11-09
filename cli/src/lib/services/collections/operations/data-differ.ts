@@ -9,7 +9,9 @@ import { OperationsIdMapperClient } from './id-mapper-client';
 import { getChildLogger } from '../../../helpers';
 
 @Service()
-export class OperationsDataDiffer extends DataDiffer<DirectusOperation<object>> {
+export class OperationsDataDiffer extends DataDiffer<
+  DirectusOperation<object>
+> {
   constructor(
     @Inject('logger') baseLogger: pino.Logger,
     dataLoader: OperationsDataLoader,
