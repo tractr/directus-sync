@@ -12,13 +12,17 @@ import {
 import { createDumpFolders } from './helpers';
 import { Container } from 'typedi';
 import Logger from 'pino';
-import { Config } from './config';
-import { COLLECTIONS_CONFIG, SNAPSHOT_CONFIG } from './constants';
+import { getConfig } from './config';
+import { COLLECTIONS_CONFIG, LOGGER, SNAPSHOT_CONFIG } from './constants';
 
-export async function initContext() {
+export async function initContext(options: any) {
+  // Set temporary logger, in case the config is not loaded yet
+  Container.set(LOGGER, Logger({ level: 'info' }));
+  // Load the config
+  const config = getConfig(options);
   // Define the logger
   Container.set(
-    'logger',
+    LOGGER,
     Logger({
       transport: {
         target: 'pino-pretty',
@@ -26,15 +30,15 @@ export async function initContext() {
           colorize: true,
         },
       },
-      level: Config.logger.level,
+      level: config.logger.level,
     }),
   );
 
   // Define the configs
-  Container.set(COLLECTIONS_CONFIG, Config.collections);
-  Container.set(SNAPSHOT_CONFIG, Config.snapshot);
+  Container.set(COLLECTIONS_CONFIG, config.collections);
+  Container.set(SNAPSHOT_CONFIG, config.snapshot);
 
-  createDumpFolders(Config);
+  createDumpFolders(config);
 }
 
 export async function disposeContext() {

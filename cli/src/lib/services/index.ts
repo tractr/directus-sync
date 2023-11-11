@@ -1,4 +1,3 @@
-export * from './collections/base/id-mapper-client';
 export * from './migration-client';
-export * from './snapshot/snapshot-client';
+export * from './snapshot';
 export * from './collections';

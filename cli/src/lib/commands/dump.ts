@@ -1,15 +1,8 @@
-import 'reflect-metadata';
-import {
-  disposeContext,
-  initContext,
-  loadCollections,
-  logEndAndClose,
-  logErrorAndStop,
-  SnapshotClient,
-} from './lib';
 import { Container } from 'typedi';
+import { SnapshotClient } from '../services';
+import { loadCollections } from '../loader';
 
-async function run() {
+export async function runDump() {
   // Snapshot
   await Container.get(SnapshotClient).dump();
 
@@ -22,9 +15,3 @@ async function run() {
     await collection.postProcessDump();
   }
 }
-
-initContext()
-  .then(run)
-  .catch(logErrorAndStop)
-  .then(disposeContext)
-  .then(logEndAndClose);

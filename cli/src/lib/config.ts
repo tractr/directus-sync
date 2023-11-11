@@ -1,27 +1,32 @@
-import RootPath from 'app-root-path';
 import Path from 'path';
-import { env, envBool } from './helpers';
 
-const dumpPath = env('DUMP_PATH', RootPath.resolve('dump'));
-const snapshotPath = env('SNAPSHOT_PATH', Path.join(dumpPath, 'snapshot'));
-const collectionsPath = env(
-  'COLLECTIONS_PATH',
-  Path.join(dumpPath, 'collections'),
-);
-
-export const Config = {
-  logger: {
-    level: env('LOG_LEVEL', 'debug'),
-  },
-  collections: {
-    dumpPath: collectionsPath,
-  },
-  snapshot: {
-    dumpPath: snapshotPath,
-    splitFiles: envBool('SNAPSHOT_SPLIT_FILES', true),
-  },
+type ProgramOptions = {
+  debug: boolean;
+  split: boolean;
+  dumpPath: string;
+  collectionsPath: string;
+  snapshotPath: string;
 };
 
-export type Config = typeof Config;
-export type CollectionsConfig = typeof Config.collections;
-export type SnapshotConfig = typeof Config.snapshot;
+export function getConfig(options: ProgramOptions) {
+  const { dumpPath } = options;
+  const snapshotPath = Path.join(dumpPath, options.snapshotPath);
+  const collectionsPath = Path.join(dumpPath, options.collectionsPath);
+
+  return {
+    logger: {
+      level: options.debug ? 'debug' : 'info',
+    },
+    collections: {
+      dumpPath: collectionsPath,
+    },
+    snapshot: {
+      dumpPath: snapshotPath,
+      splitFiles: options.split,
+    },
+  };
+}
+
+export type Config = ReturnType<typeof getConfig>;
+export type CollectionsConfig = Config['collections'];
+export type SnapshotConfig = Config['snapshot'];

@@ -1,17 +1,11 @@
-import 'reflect-metadata';
-import {
-  disposeContext,
-  initContext,
-  loadCollections,
-  logEndAndClose,
-  logErrorAndStop,
-  SnapshotClient,
-} from './lib';
 import { Container } from 'typedi';
 import pino from 'pino';
+import { SnapshotClient } from '../services';
+import { loadCollections } from '../loader';
+import { LOGGER } from '../constants';
 
-async function run() {
-  const logger = Container.get('logger') as pino.Logger;
+export async function runRestore() {
+  const logger = Container.get(LOGGER) as pino.Logger;
 
   // Snapshot
   logger.info(`---- Restore schema ----`);
@@ -41,9 +35,3 @@ async function run() {
     index++;
   }
 }
-
-initContext()
-  .then(run)
-  .catch(logErrorAndStop)
-  .then(disposeContext)
-  .then(logEndAndClose);

@@ -1,18 +1,13 @@
 import { Inject, Service } from 'typedi';
 import { MigrationClient } from '../migration-client';
-import {schemaApply, schemaDiff, schemaSnapshot} from '@directus/sdk';
+import { schemaApply, schemaDiff, schemaSnapshot } from '@directus/sdk';
 import path from 'path';
 import type { SnapshotConfig } from '../../config';
 import { Collection, Field, Relation, Snapshot } from './interfaces';
-import {
-  mkdirpSync,
-  readJsonSync,
-  removeSync,
-  writeJsonSync,
-} from 'fs-extra';
+import { mkdirpSync, readJsonSync, removeSync, writeJsonSync } from 'fs-extra';
 import { LOGGER, SNAPSHOT_CONFIG } from '../../constants';
 import pino from 'pino';
-import {getChildLogger, loadJsonFilesRecursively} from '../../helpers';
+import { getChildLogger, loadJsonFilesRecursively } from '../../helpers';
 
 const SNAPSHOT_JSON = 'snapshot.json';
 const INFO_JSON = 'info.json';
@@ -142,16 +137,22 @@ export class SnapshotClient {
       this.logger.info('No changes to apply');
     } else {
       const { collections, fields, relations } = diff.diff;
-        this.logger.info(
-            `Found ${collections.length} change${collections.length > 1 ? 's' : ''} in collections`,
-        );
-        this.logger.info(
-            `Found ${fields.length} change${fields.length > 1 ? 's' : ''} in fields`,
-        );
-        this.logger.info(
-            `Found ${relations.length} change${relations.length > 1 ? 's' : ''} in relations`,
-        );
-        this.logger.debug(diff, 'Diff');
+      this.logger.info(
+        `Found ${collections.length} change${
+          collections.length > 1 ? 's' : ''
+        } in collections`,
+      );
+      this.logger.info(
+        `Found ${fields.length} change${
+          fields.length > 1 ? 's' : ''
+        } in fields`,
+      );
+      this.logger.info(
+        `Found ${relations.length} change${
+          relations.length > 1 ? 's' : ''
+        } in relations`,
+      );
+      this.logger.debug(diff, 'Diff');
     }
   }
 
