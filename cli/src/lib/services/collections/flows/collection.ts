@@ -10,6 +10,7 @@ import { FlowsDataDiffer } from './data-differ';
 import { getChildLogger } from '../../../helpers';
 import { FLOWS_COLLECTION } from './constants';
 import { FlowsDataMapper } from './data-mapper';
+import {LOGGER} from "../../../constants";
 
 @Service()
 export class FlowsCollection extends DirectusCollection<DirectusFlow<object>> {
@@ -18,7 +19,7 @@ export class FlowsCollection extends DirectusCollection<DirectusFlow<object>> {
   protected readonly enableDelete = true;
 
   constructor(
-    @Inject('logger') baseLogger: pino.Logger,
+    @Inject(LOGGER) baseLogger: pino.Logger,
     dataDiffer: FlowsDataDiffer,
     dataLoader: FlowsDataLoader,
     dataClient: FlowsDataClient,

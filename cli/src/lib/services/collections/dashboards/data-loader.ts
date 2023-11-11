@@ -4,7 +4,7 @@ import { Inject, Service } from 'typedi';
 import { DASHBOARDS_COLLECTION } from './constants';
 import path from 'path';
 import type {CollectionsConfig} from "../../../config";
-import {COLLECTIONS_CONFIG} from "../../../config";
+import {COLLECTIONS_CONFIG} from "../../../constants";
 
 @Service()
 export class DashboardsDataLoader extends DataLoader<

@@ -10,6 +10,7 @@ import { WebhooksDataDiffer } from './data-differ';
 import { getChildLogger } from '../../../helpers';
 import { WEBHOOKS_COLLECTION } from './constants';
 import { WebhooksDataMapper } from './data-mapper';
+import {LOGGER} from "../../../constants";
 
 @Service()
 export class WebhooksCollection extends DirectusCollection<
@@ -20,7 +21,7 @@ export class WebhooksCollection extends DirectusCollection<
   protected readonly enableDelete = true;
 
   constructor(
-    @Inject('logger') baseLogger: pino.Logger,
+    @Inject(LOGGER) baseLogger: pino.Logger,
     dataDiffer: WebhooksDataDiffer,
     dataLoader: WebhooksDataLoader,
     dataClient: WebhooksDataClient,

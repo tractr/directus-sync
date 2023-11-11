@@ -1,4 +1,4 @@
-import {existsSync, mkdirSync} from 'fs';
+import {existsSync, mkdirpSync} from 'fs-extra';
 import pino from 'pino';
 import {Container} from 'typedi';
 import {Config} from "./config";
@@ -63,11 +63,11 @@ export function createDumpFolders(config: Config) {
 
     if (!existsSync(config.collections.dumpPath)) {
         logger.info('Create dump folder for collections');
-        mkdirSync(config.collections.dumpPath, {recursive: true});
+        mkdirpSync(config.collections.dumpPath);
     }
     if (!existsSync(config.snapshot.dumpPath)) {
         logger.info('Create dump folder for snapshot');
-        mkdirSync(config.snapshot.dumpPath, {recursive: true});
+        mkdirpSync(config.snapshot.dumpPath);
     }
 }
 

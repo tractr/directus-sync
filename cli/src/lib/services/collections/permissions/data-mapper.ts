@@ -5,6 +5,7 @@ import { FLOWS_COLLECTION } from '../flows';
 import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
 import { RolesIdMapperClient } from '../roles';
+import {LOGGER} from "../../../constants";
 
 @Service()
 export class PermissionsDataMapper extends DataMapper<
@@ -15,7 +16,7 @@ export class PermissionsDataMapper extends DataMapper<
     role: Container.get(RolesIdMapperClient),
   };
 
-  constructor(@Inject('logger') baseLogger: pino.Logger) {
+  constructor(@Inject(LOGGER) baseLogger: pino.Logger) {
     super(getChildLogger(baseLogger, FLOWS_COLLECTION));
   }
 }

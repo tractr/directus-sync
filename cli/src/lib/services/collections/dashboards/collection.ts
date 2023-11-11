@@ -10,6 +10,7 @@ import { DashboardsDataDiffer } from './data-differ';
 import { getChildLogger } from '../../../helpers';
 import { DASHBOARDS_COLLECTION } from './constants';
 import { DashboardsDataMapper } from './data-mapper';
+import {LOGGER} from "../../../constants";
 
 @Service()
 export class DashboardsCollection extends DirectusCollection<
@@ -20,7 +21,7 @@ export class DashboardsCollection extends DirectusCollection<
   protected readonly enableDelete = true;
 
   constructor(
-    @Inject('logger') baseLogger: pino.Logger,
+    @Inject(LOGGER) baseLogger: pino.Logger,
     dataDiffer: DashboardsDataDiffer,
     dataLoader: DashboardsDataLoader,
     dataClient: DashboardsDataClient,

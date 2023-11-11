@@ -12,7 +12,8 @@ import {
 import {createDumpFolders} from './helpers';
 import {Container} from 'typedi';
 import Logger from 'pino';
-import {Config, COLLECTIONS_CONFIG, SNAPSHOT_CONFIG} from "./config";
+import {Config} from "./config";
+import {COLLECTIONS_CONFIG, SNAPSHOT_CONFIG} from './constants'
 
 export async function initContext() {
     // Define the logger

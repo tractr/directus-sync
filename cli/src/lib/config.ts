@@ -12,13 +12,10 @@ export const Config = {
     },
     snapshot: {
         dumpPath: snapshotPath,
-        splitFiles: envBool('SNAPSHOT_SPLIT_FILES', false),
+        splitFiles: envBool('SNAPSHOT_SPLIT_FILES', true),
     }
 }
 
 export type Config = typeof Config;
 export type CollectionsConfig = typeof Config.collections;
 export type SnapshotConfig = typeof Config.snapshot;
-
-export const COLLECTIONS_CONFIG = 'collectionsConfig';
-export const SNAPSHOT_CONFIG = 'snapshotConfig';

@@ -10,6 +10,7 @@ import { SettingsDataDiffer } from './data-differ';
 import { getChildLogger } from '../../../helpers';
 import { SETTINGS_COLLECTION } from './constants';
 import { SettingsDataMapper } from './data-mapper';
+import {LOGGER} from "../../../constants";
 
 @Service()
 export class SettingsCollection extends DirectusCollection<
@@ -20,7 +21,7 @@ export class SettingsCollection extends DirectusCollection<
   protected readonly enableDelete = false;
 
   constructor(
-    @Inject('logger') baseLogger: pino.Logger,
+    @Inject(LOGGER) baseLogger: pino.Logger,
     dataDiffer: SettingsDataDiffer,
     dataLoader: SettingsDataLoader,
     dataClient: SettingsDataClient,

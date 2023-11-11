@@ -9,6 +9,7 @@ import {
 } from '@directus/sdk';
 import { Inject, Service } from 'typedi';
 import pino from 'pino';
+import {LOGGER} from "../constants";
 
 @Service()
 export class MigrationClient {
@@ -22,7 +23,7 @@ export class MigrationClient {
 
   protected refreshToken: string | undefined;
 
-  constructor(@Inject('logger') protected readonly logger: pino.Logger) {
+  constructor(@Inject(LOGGER) protected readonly logger: pino.Logger) {
     this.client = this.createClient();
   }
 

@@ -10,6 +10,7 @@ import { PanelsDataDiffer } from './data-differ';
 import { getChildLogger } from '../../../helpers';
 import { PANELS_COLLECTION } from './constants';
 import { PanelsDataMapper } from './data-mapper';
+import {LOGGER} from "../../../constants";
 
 @Service()
 export class PanelsCollection extends DirectusCollection<
@@ -20,7 +21,7 @@ export class PanelsCollection extends DirectusCollection<
   protected readonly enableDelete = true;
 
   constructor(
-    @Inject('logger') baseLogger: pino.Logger,
+    @Inject(LOGGER) baseLogger: pino.Logger,
     dataDiffer: PanelsDataDiffer,
     dataLoader: PanelsDataLoader,
     dataClient: PanelsDataClient,

@@ -10,6 +10,7 @@ import { RolesDataDiffer } from './data-differ';
 import { getChildLogger } from '../../../helpers';
 import { ROLES_COLLECTION } from './constants';
 import { RolesDataMapper } from './data-mapper';
+import {LOGGER} from "../../../constants";
 
 @Service()
 export class RolesCollection extends DirectusCollection<DirectusRole<object>> {
@@ -18,7 +19,7 @@ export class RolesCollection extends DirectusCollection<DirectusRole<object>> {
   protected readonly enableDelete = true;
 
   constructor(
-    @Inject('logger') baseLogger: pino.Logger,
+    @Inject(LOGGER) baseLogger: pino.Logger,
     dataDiffer: RolesDataDiffer,
     dataLoader: RolesDataLoader,
     dataClient: RolesDataClient,

@@ -10,6 +10,7 @@ import { OperationsDataDiffer } from './data-differ';
 import { getChildLogger } from '../../../helpers';
 import { OPERATIONS_COLLECTION } from './constants';
 import { OperationsDataMapper } from './data-mapper';
+import {LOGGER} from "../../../constants";
 
 @Service()
 export class OperationsCollection extends DirectusCollection<
@@ -20,7 +21,7 @@ export class OperationsCollection extends DirectusCollection<
   protected readonly enableDelete = true;
 
   constructor(
-    @Inject('logger') baseLogger: pino.Logger,
+    @Inject(LOGGER) baseLogger: pino.Logger,
     dataDiffer: OperationsDataDiffer,
     dataLoader: OperationsDataLoader,
     dataClient: OperationsDataClient,

@@ -8,11 +8,12 @@ import { WebhooksDataClient } from './data-client';
 import { WebhooksIdMapperClient } from './id-mapper-client';
 import { getChildLogger } from '../../../helpers';
 import { WebhooksDataMapper } from './data-mapper';
+import {LOGGER} from "../../../constants";
 
 @Service()
 export class WebhooksDataDiffer extends DataDiffer<DirectusWebhook<object>> {
   constructor(
-    @Inject('logger') baseLogger: pino.Logger,
+    @Inject(LOGGER) baseLogger: pino.Logger,
     dataLoader: WebhooksDataLoader,
     dataClient: WebhooksDataClient,
     dataMapper: WebhooksDataMapper,

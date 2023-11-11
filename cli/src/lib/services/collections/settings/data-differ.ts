@@ -8,11 +8,12 @@ import { SettingsDataClient } from './data-client';
 import { SettingsIdMapperClient } from './id-mapper-client';
 import { getChildLogger } from '../../../helpers';
 import { SettingsDataMapper } from './data-mapper';
+import {LOGGER} from "../../../constants";
 
 @Service()
 export class SettingsDataDiffer extends DataDiffer<DirectusSettings<object>> {
   constructor(
-    @Inject('logger') baseLogger: pino.Logger,
+    @Inject(LOGGER) baseLogger: pino.Logger,
     dataLoader: SettingsDataLoader,
     dataClient: SettingsDataClient,
     dataMapper: SettingsDataMapper,

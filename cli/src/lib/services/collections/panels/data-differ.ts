@@ -8,11 +8,12 @@ import { PanelsDataClient } from './data-client';
 import { PanelsIdMapperClient } from './id-mapper-client';
 import { getChildLogger } from '../../../helpers';
 import { PanelsDataMapper } from './data-mapper';
+import {LOGGER} from "../../../constants";
 
 @Service()
 export class PanelsDataDiffer extends DataDiffer<DirectusPanel<object>> {
   constructor(
-    @Inject('logger') baseLogger: pino.Logger,
+    @Inject(LOGGER) baseLogger: pino.Logger,
     dataLoader: PanelsDataLoader,
     dataClient: PanelsDataClient,
     dataMapper: PanelsDataMapper,

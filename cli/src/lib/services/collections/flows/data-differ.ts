@@ -8,11 +8,12 @@ import { FlowsDataClient } from './data-client';
 import { FlowsIdMapperClient } from './id-mapper-client';
 import { getChildLogger } from '../../../helpers';
 import { FlowsDataMapper } from './data-mapper';
+import {LOGGER} from "../../../constants";
 
 @Service()
 export class FlowsDataDiffer extends DataDiffer<DirectusFlow<object>> {
   constructor(
-    @Inject('logger') baseLogger: pino.Logger,
+    @Inject(LOGGER) baseLogger: pino.Logger,
     dataLoader: FlowsDataLoader,
     dataClient: FlowsDataClient,
     dataMapper: FlowsDataMapper,

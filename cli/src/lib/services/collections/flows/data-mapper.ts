@@ -5,6 +5,7 @@ import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
 import { FLOWS_COLLECTION } from './constants';
 import { OperationsIdMapperClient } from '../operations';
+import {LOGGER} from "../../../constants";
 
 @Service()
 export class FlowsDataMapper extends DataMapper<DirectusFlow<object>> {
@@ -17,7 +18,7 @@ export class FlowsDataMapper extends DataMapper<DirectusFlow<object>> {
     operation: Container.get(OperationsIdMapperClient),
   };
 
-  constructor(@Inject('logger') baseLogger: pino.Logger) {
+  constructor(@Inject(LOGGER) baseLogger: pino.Logger) {
     super(getChildLogger(baseLogger, FLOWS_COLLECTION));
   }
 }

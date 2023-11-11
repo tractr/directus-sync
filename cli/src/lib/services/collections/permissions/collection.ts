@@ -10,6 +10,7 @@ import { PermissionsDataDiffer } from './data-differ';
 import { getChildLogger } from '../../../helpers';
 import { PERMISSIONS_COLLECTION } from './constants';
 import { PermissionsDataMapper } from './data-mapper';
+import {LOGGER} from "../../../constants";
 
 @Service()
 export class PermissionsCollection extends DirectusCollection<
@@ -20,7 +21,7 @@ export class PermissionsCollection extends DirectusCollection<
   protected readonly enableDelete = true;
 
   constructor(
-    @Inject('logger') baseLogger: pino.Logger,
+    @Inject(LOGGER) baseLogger: pino.Logger,
     dataDiffer: PermissionsDataDiffer,
     dataLoader: PermissionsDataLoader,
     dataClient: PermissionsDataClient,

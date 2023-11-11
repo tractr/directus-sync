@@ -8,13 +8,14 @@ import { OperationsDataClient } from './data-client';
 import { OperationsIdMapperClient } from './id-mapper-client';
 import { getChildLogger } from '../../../helpers';
 import { OperationsDataMapper } from './data-mapper';
+import {LOGGER} from "../../../constants";
 
 @Service()
 export class OperationsDataDiffer extends DataDiffer<
   DirectusOperation<object>
 > {
   constructor(
-    @Inject('logger') baseLogger: pino.Logger,
+    @Inject(LOGGER) baseLogger: pino.Logger,
     dataLoader: OperationsDataLoader,
     dataClient: OperationsDataClient,
     dataMapper: OperationsDataMapper,
