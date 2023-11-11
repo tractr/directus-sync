@@ -5,11 +5,16 @@ import {
   loadCollections,
   logEndAndClose,
   logErrorAndStop,
+  SnapshotClient,
 } from './lib';
 import { Container } from 'typedi';
 import pino from 'pino';
 
 async function run() {
+  // Snapshot
+  await Container.get(SnapshotClient).restoreSnapshot();
+
+  // Collections
   const collections = loadCollections();
   const logger = Container.get('logger') as pino.Logger;
 

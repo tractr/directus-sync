@@ -4,7 +4,7 @@ import { Inject, Service } from 'typedi';
 import { FLOWS_COLLECTION } from '../flows';
 import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
-import {LOGGER} from "../../../constants";
+import { LOGGER } from '../../../constants';
 
 @Service()
 export class DashboardsDataMapper extends DataMapper<

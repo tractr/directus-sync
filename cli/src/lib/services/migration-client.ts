@@ -9,7 +9,7 @@ import {
 } from '@directus/sdk';
 import { Inject, Service } from 'typedi';
 import pino from 'pino';
-import {LOGGER} from "../constants";
+import { LOGGER } from '../constants';
 
 @Service()
 export class MigrationClient {

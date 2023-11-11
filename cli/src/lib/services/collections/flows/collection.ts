@@ -10,7 +10,7 @@ import { FlowsDataDiffer } from './data-differ';
 import { getChildLogger } from '../../../helpers';
 import { FLOWS_COLLECTION } from './constants';
 import { FlowsDataMapper } from './data-mapper';
-import {LOGGER} from "../../../constants";
+import { LOGGER } from '../../../constants';
 
 @Service()
 export class FlowsCollection extends DirectusCollection<DirectusFlow<object>> {

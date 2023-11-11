@@ -8,7 +8,7 @@ import { SettingsDataClient } from './data-client';
 import { SettingsIdMapperClient } from './id-mapper-client';
 import { getChildLogger } from '../../../helpers';
 import { SettingsDataMapper } from './data-mapper';
-import {LOGGER} from "../../../constants";
+import { LOGGER } from '../../../constants';
 
 @Service()
 export class SettingsDataDiffer extends DataDiffer<DirectusSettings<object>> {

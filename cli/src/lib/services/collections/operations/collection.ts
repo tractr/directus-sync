@@ -10,7 +10,7 @@ import { OperationsDataDiffer } from './data-differ';
 import { getChildLogger } from '../../../helpers';
 import { OPERATIONS_COLLECTION } from './constants';
 import { OperationsDataMapper } from './data-mapper';
-import {LOGGER} from "../../../constants";
+import { LOGGER } from '../../../constants';
 
 @Service()
 export class OperationsCollection extends DirectusCollection<

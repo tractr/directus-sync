@@ -10,7 +10,7 @@ import { PermissionsDataDiffer } from './data-differ';
 import { getChildLogger } from '../../../helpers';
 import { PERMISSIONS_COLLECTION } from './constants';
 import { PermissionsDataMapper } from './data-mapper';
-import {LOGGER} from "../../../constants";
+import { LOGGER } from '../../../constants';
 
 @Service()
 export class PermissionsCollection extends DirectusCollection<

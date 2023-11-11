@@ -8,7 +8,7 @@ import { DashboardsDataClient } from './data-client';
 import { DashboardsIdMapperClient } from './id-mapper-client';
 import { getChildLogger } from '../../../helpers';
 import { DashboardsDataMapper } from './data-mapper';
-import {LOGGER} from "../../../constants";
+import { LOGGER } from '../../../constants';
 
 @Service()
 export class DashboardsDataDiffer extends DataDiffer<

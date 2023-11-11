@@ -4,12 +4,12 @@ import {
   initContext,
   loadCollections,
   logEndAndClose,
-  logErrorAndStop, SnapshotClient,
+  logErrorAndStop,
+  SnapshotClient,
 } from './lib';
-import {Container} from "typedi";
+import { Container } from 'typedi';
 
 async function run() {
-
   // Snapshot
   await Container.get(SnapshotClient).saveSnapshot();
 

@@ -4,7 +4,7 @@ import { Inject, Service } from 'typedi';
 import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
 import { FLOWS_COLLECTION } from '../flows';
-import {LOGGER} from "../../../constants";
+import { LOGGER } from '../../../constants';
 
 @Service()
 export class SettingsDataMapper extends DataMapper<DirectusSettings<object>> {

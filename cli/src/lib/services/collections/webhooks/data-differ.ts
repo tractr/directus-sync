@@ -8,7 +8,7 @@ import { WebhooksDataClient } from './data-client';
 import { WebhooksIdMapperClient } from './id-mapper-client';
 import { getChildLogger } from '../../../helpers';
 import { WebhooksDataMapper } from './data-mapper';
-import {LOGGER} from "../../../constants";
+import { LOGGER } from '../../../constants';
 
 @Service()
 export class WebhooksDataDiffer extends DataDiffer<DirectusWebhook<object>> {

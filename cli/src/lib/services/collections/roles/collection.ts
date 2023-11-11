@@ -10,7 +10,7 @@ import { RolesDataDiffer } from './data-differ';
 import { getChildLogger } from '../../../helpers';
 import { ROLES_COLLECTION } from './constants';
 import { RolesDataMapper } from './data-mapper';
-import {LOGGER} from "../../../constants";
+import { LOGGER } from '../../../constants';
 
 @Service()
 export class RolesCollection extends DirectusCollection<DirectusRole<object>> {

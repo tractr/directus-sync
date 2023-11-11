@@ -8,7 +8,7 @@ import { PermissionsDataClient } from './data-client';
 import { PermissionsIdMapperClient } from './id-mapper-client';
 import { getChildLogger } from '../../../helpers';
 import { PermissionsDataMapper } from './data-mapper';
-import {LOGGER} from "../../../constants";
+import { LOGGER } from '../../../constants';
 
 @Service()
 export class PermissionsDataDiffer extends DataDiffer<

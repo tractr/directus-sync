@@ -8,7 +8,7 @@ import { OperationsDataClient } from './data-client';
 import { OperationsIdMapperClient } from './id-mapper-client';
 import { getChildLogger } from '../../../helpers';
 import { OperationsDataMapper } from './data-mapper';
-import {LOGGER} from "../../../constants";
+import { LOGGER } from '../../../constants';
 
 @Service()
 export class OperationsDataDiffer extends DataDiffer<

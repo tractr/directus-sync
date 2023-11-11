@@ -10,7 +10,7 @@ import { WebhooksDataDiffer } from './data-differ';
 import { getChildLogger } from '../../../helpers';
 import { WEBHOOKS_COLLECTION } from './constants';
 import { WebhooksDataMapper } from './data-mapper';
-import {LOGGER} from "../../../constants";
+import { LOGGER } from '../../../constants';
 
 @Service()
 export class WebhooksCollection extends DirectusCollection<

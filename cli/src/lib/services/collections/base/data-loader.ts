@@ -1,5 +1,5 @@
 import { DirectusBaseType, WithSyncIdAndWithoutId } from './interfaces';
-import { readFileSync, writeFileSync } from 'fs-extra';
+import { readJsonSync, writeJsonSync } from 'fs-extra';
 
 export abstract class DataLoader<DirectusType extends DirectusBaseType> {
   constructor(protected readonly filePath: string) {}
@@ -9,8 +9,8 @@ export abstract class DataLoader<DirectusType extends DirectusBaseType> {
    * and passes it through the data transformer.
    */
   getSourceData(): WithSyncIdAndWithoutId<DirectusType>[] {
-    return JSON.parse(
-      String(readFileSync(this.filePath)),
+    return readJsonSync(
+      this.filePath,
     ) as WithSyncIdAndWithoutId<DirectusType>[];
   }
 
@@ -18,6 +18,6 @@ export abstract class DataLoader<DirectusType extends DirectusBaseType> {
    * Save the data to the dump file. The data is passed through the data transformer.
    */
   saveData(data: WithSyncIdAndWithoutId<DirectusType>[]) {
-    writeFileSync(this.filePath, JSON.stringify(data, null, 2));
+    writeJsonSync(this.filePath, data, { spaces: 2 });
   }
 }

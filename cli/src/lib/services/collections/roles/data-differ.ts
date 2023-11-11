@@ -8,7 +8,7 @@ import { RolesDataClient } from './data-client';
 import { RolesIdMapperClient } from './id-mapper-client';
 import { getChildLogger } from '../../../helpers';
 import { RolesDataMapper } from './data-mapper';
-import {LOGGER} from "../../../constants";
+import { LOGGER } from '../../../constants';
 
 @Service()
 export class RolesDataDiffer extends DataDiffer<DirectusRole<object>> {

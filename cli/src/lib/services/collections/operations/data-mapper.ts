@@ -5,7 +5,7 @@ import { FLOWS_COLLECTION, FlowsIdMapperClient } from '../flows';
 import { OperationsIdMapperClient } from './id-mapper-client';
 import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
-import {LOGGER} from "../../../constants";
+import { LOGGER } from '../../../constants';
 
 @Service()
 export class OperationsDataMapper extends DataMapper<

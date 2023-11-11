@@ -10,7 +10,7 @@ import { PanelsDataDiffer } from './data-differ';
 import { getChildLogger } from '../../../helpers';
 import { PANELS_COLLECTION } from './constants';
 import { PanelsDataMapper } from './data-mapper';
-import {LOGGER} from "../../../constants";
+import { LOGGER } from '../../../constants';
 
 @Service()
 export class PanelsCollection extends DirectusCollection<

@@ -10,7 +10,7 @@ import { SettingsDataDiffer } from './data-differ';
 import { getChildLogger } from '../../../helpers';
 import { SETTINGS_COLLECTION } from './constants';
 import { SettingsDataMapper } from './data-mapper';
-import {LOGGER} from "../../../constants";
+import { LOGGER } from '../../../constants';
 
 @Service()
 export class SettingsCollection extends DirectusCollection<

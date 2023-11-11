@@ -8,7 +8,7 @@ import { PanelsDataClient } from './data-client';
 import { PanelsIdMapperClient } from './id-mapper-client';
 import { getChildLogger } from '../../../helpers';
 import { PanelsDataMapper } from './data-mapper';
-import {LOGGER} from "../../../constants";
+import { LOGGER } from '../../../constants';
 
 @Service()
 export class PanelsDataDiffer extends DataDiffer<DirectusPanel<object>> {
