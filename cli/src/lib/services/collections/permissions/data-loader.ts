@@ -3,13 +3,15 @@ import { DirectusPermission } from '@directus/sdk';
 import { Inject, Service } from 'typedi';
 import { PERMISSIONS_COLLECTION } from './constants';
 import path from 'path';
+import type {CollectionsConfig} from "../../../config";
+import {COLLECTIONS_CONFIG} from "../../../config";
 
 @Service()
 export class PermissionsDataLoader extends DataLoader<
   DirectusPermission<object>
 > {
-  constructor(@Inject('directusDumpPath') dumpPath: string) {
-    const filePath = path.join(dumpPath, `${PERMISSIONS_COLLECTION}.json`);
+  constructor(@Inject(COLLECTIONS_CONFIG) config: CollectionsConfig) {
+    const filePath = path.join(config.dumpPath, `${PERMISSIONS_COLLECTION}.json`);
     super(filePath);
   }
 }

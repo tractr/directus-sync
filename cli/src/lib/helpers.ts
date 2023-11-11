@@ -1,35 +1,73 @@
-import RootPath from 'app-root-path';
 import {existsSync, mkdirSync} from 'fs';
-import * as Path from 'path';
 import pino from 'pino';
 import {Container} from 'typedi';
+import {Config} from "./config";
 
 /**
- * Get the path to the root of the project
+ * Get the value of an environment variable or throw an error if it is not defined.
  */
-export function getDumpFilesPaths() {
-    const dumpDirPath = RootPath.resolve('dump');
-    const directusSnapshotPath = Path.join(dumpDirPath, 'snapshot');
-    const directusDumpPath = Path.join(dumpDirPath, 'directus');
-
-    return {
-        dumpDirPath,
-        directusSnapshotPath,
-        directusDumpPath,
-    };
+export function env(key: string, defaultValue?: string): string {
+    const value = process.env[key] || defaultValue;
+    if (value === undefined) {
+        throw new Error(`Missing environment variable ${key}`);
+    }
+    return value;
 }
 
-export function createDumpFolders() {
-    const logger = Container.get('logger') as pino.Logger;
-    const {dumpDirPath, directusDumpPath} = getDumpFilesPaths();
-
-    if (!existsSync(dumpDirPath)) {
-        logger.info('Create dump folder');
-        mkdirSync(dumpDirPath, {recursive: true});
+/**
+ * Get the value of an environment variable as a boolean.
+ * true: 'true', '1'
+ * false: 'false', '0'
+ * throw an error if it is not defined or not a valid boolean.
+ */
+export function envBool(key: string, defaultValue?: boolean): boolean {
+    const value = process.env[key];
+    if (typeof value === 'undefined') {
+        if (typeof defaultValue !== 'undefined') {
+            return defaultValue;
+        }
+        throw new Error(`Missing environment variable ${key}`);
     }
-    if (!existsSync(directusDumpPath)) {
-        logger.info('Create directus dump folder');
-        mkdirSync(directusDumpPath, {recursive: true});
+
+    if (value.toLowerCase() === 'true' || value === '1') {
+        return true;
+    }
+    if (value.toLowerCase() === 'false' || value === '0') {
+        return false;
+    }
+    throw new Error(`Invalid value for environment variable ${key}: ${value}`);
+}
+
+/**
+ * Get the value of an environment variable as a number.
+ * throw an error if it is not defined or not a valid number.
+ */
+export function envNumber(key: string, defaultValue?: number): number {
+    const value = process.env[key];
+    if (typeof value === 'undefined') {
+        if (typeof defaultValue !== 'undefined') {
+            return defaultValue;
+        }
+        throw new Error(`Missing environment variable ${key}`);
+    }
+
+    const number = Number(value);
+    if (isNaN(number)) {
+        throw new Error(`Invalid value for environment variable ${key}: ${value}`);
+    }
+    return number;
+}
+
+export function createDumpFolders(config: Config) {
+    const logger = Container.get('logger') as pino.Logger;
+
+    if (!existsSync(config.collections.dumpPath)) {
+        logger.info('Create dump folder for collections');
+        mkdirSync(config.collections.dumpPath, {recursive: true});
+    }
+    if (!existsSync(config.snapshot.dumpPath)) {
+        logger.info('Create dump folder for snapshot');
+        mkdirSync(config.snapshot.dumpPath, {recursive: true});
     }
 }
 

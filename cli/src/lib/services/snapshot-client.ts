@@ -3,15 +3,17 @@ import {MigrationClient} from "./migration-client";
 import {schemaSnapshot, SchemaSnapshotOutput} from "@directus/sdk";
 import {writeFileSync} from "fs";
 import path from "path";
+import type {SnapshotConfig} from "../config";
+import {SNAPSHOT_CONFIG} from "../config";
 
 @Service()
 export class SnapshotClient {
 
     protected readonly filePath: string;
 
-    constructor(@Inject('directusSnapshotPath') dumpPath: string,
+    constructor(@Inject(SNAPSHOT_CONFIG) config: SnapshotConfig,
                 protected readonly migrationClient: MigrationClient) {
-        this.filePath = path.join(dumpPath, `snapshot.json`);
+        this.filePath = path.join(config.dumpPath, `snapshot.json`);
     }
 
     async saveSnapshot() {

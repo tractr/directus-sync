@@ -9,9 +9,10 @@ import {
   SettingsCollection,
   WebhooksCollection,
 } from './services';
-import {createDumpFolders, getDumpFilesPaths} from './helpers';
+import {createDumpFolders} from './helpers';
 import {Container} from 'typedi';
 import Logger from 'pino';
+import {Config, COLLECTIONS_CONFIG, SNAPSHOT_CONFIG} from "./config";
 
 export async function initContext() {
     // Define the logger
@@ -27,12 +28,12 @@ export async function initContext() {
             level: 'debug',
         }),
     );
-    // Define the dump folders
-    const {dumpDirPath, directusSnapshotPath} = getDumpFilesPaths();
-    Container.set('directusDumpPath', dumpDirPath);
-    Container.set('directusDumpPath', directusSnapshotPath);
 
-    createDumpFolders();
+    // Define the configs
+    Container.set(COLLECTIONS_CONFIG, Config.collections);
+    Container.set(SNAPSHOT_CONFIG, Config.snapshot);
+
+    createDumpFolders(Config);
 }
 
 export async function disposeContext() {
