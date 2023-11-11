@@ -11,7 +11,7 @@ import { Container } from 'typedi';
 
 async function run() {
   // Snapshot
-  await Container.get(SnapshotClient).saveSnapshot();
+  await Container.get(SnapshotClient).dump();
 
   // Collections
   const collections = loadCollections();

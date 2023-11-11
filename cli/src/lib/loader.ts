@@ -26,7 +26,7 @@ export async function initContext() {
           colorize: true,
         },
       },
-      level: 'debug',
+      level: Config.logger.level,
     }),
   );
 

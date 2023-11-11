@@ -1,7 +1,8 @@
-import { existsSync, mkdirpSync } from 'fs-extra';
+import {existsSync, mkdirpSync, readdirSync, readJsonSync, statSync} from 'fs-extra';
 import pino from 'pino';
 import { Container } from 'typedi';
 import { Config } from './config';
+import path from "path";
 
 /**
  * Get the value of an environment variable or throw an error if it is not defined.
@@ -102,4 +103,22 @@ export function getChildLogger(
       msgPrefix: `[${prefix}] `,
     },
   );
+}
+
+/**
+ * Load all JSON files from a directory recursively.
+ */
+export function loadJsonFilesRecursively<T>(dirPath: string): T[] {
+  const files: T[] = [];
+  const fileNames = readdirSync(dirPath);
+  for (const fileName of fileNames) {
+    const filePath = path.join(dirPath, fileName);
+    const stat = statSync(filePath);
+    if (stat.isDirectory()) {
+      files.push(...loadJsonFilesRecursively<T>(filePath));
+    } else if (fileName.endsWith('.json')) {
+      files.push(readJsonSync(filePath, 'utf-8') as T);
+    }
+  }
+  return files;
 }

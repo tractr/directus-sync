@@ -1,20 +1,18 @@
 import { Inject, Service } from 'typedi';
 import { MigrationClient } from '../migration-client';
-import { schemaSnapshot } from '@directus/sdk';
+import {schemaApply, schemaDiff, schemaSnapshot} from '@directus/sdk';
 import path from 'path';
 import type { SnapshotConfig } from '../../config';
 import { Collection, Field, Relation, Snapshot } from './interfaces';
 import {
   mkdirpSync,
-  readdirSync,
   readJsonSync,
   removeSync,
-  statSync,
   writeJsonSync,
 } from 'fs-extra';
 import { LOGGER, SNAPSHOT_CONFIG } from '../../constants';
 import pino from 'pino';
-import { getChildLogger } from '../../helpers';
+import {getChildLogger, loadJsonFilesRecursively} from '../../helpers';
 
 const SNAPSHOT_JSON = 'snapshot.json';
 const INFO_JSON = 'info.json';
@@ -43,10 +41,10 @@ export class SnapshotClient {
   /**
    * Save the snapshot to the dump file.
    */
-  async saveSnapshot() {
+  async dump() {
     const snapshot = await this.getSnapshot();
     const numberOfFiles = this.saveData(snapshot);
-    this.logger.info(
+    this.logger.debug(
       `Saved ${numberOfFiles} file${numberOfFiles > 1 ? 's' : ''} to ${
         this.dumpPath
       }`,
@@ -124,10 +122,46 @@ export class SnapshotClient {
   /**
    * Restore the snapshot from the dump file.
    */
-  async restoreSnapshot() {
+  async restore() {
+    const diff = await this.diffSnapshot();
+    if (typeof diff === 'undefined') {
+      this.logger.info('No changes to apply');
+    } else {
+      const directus = await this.migrationClient.getClient();
+      await directus.request(schemaApply(diff));
+      this.logger.info('Changes applied');
+    }
+  }
+
+  /**
+   * Restore the snapshot from the dump file.
+   */
+  async plan() {
+    const diff = await this.diffSnapshot();
+    if (typeof diff === 'undefined') {
+      this.logger.info('No changes to apply');
+    } else {
+      const { collections, fields, relations } = diff.diff;
+        this.logger.info(
+            `Found ${collections.length} change${collections.length > 1 ? 's' : ''} in collections`,
+        );
+        this.logger.info(
+            `Found ${fields.length} change${fields.length > 1 ? 's' : ''} in fields`,
+        );
+        this.logger.info(
+            `Found ${relations.length} change${relations.length > 1 ? 's' : ''} in relations`,
+        );
+        this.logger.debug(diff, 'Diff');
+    }
+  }
+
+  /**
+   * Restore the snapshot from the dump file.
+   */
+  protected async diffSnapshot() {
+    const directus = await this.migrationClient.getClient();
     const snapshot = this.loadData();
-    console.log(snapshot);
-    // await this.restoreData(snapshot);
+    return await directus.request(schemaDiff(snapshot));
   }
 
   /**
@@ -135,13 +169,13 @@ export class SnapshotClient {
    */
   protected loadData(): Snapshot {
     if (this.splitFiles) {
-      const collections = this.loadJsonFilesRecursively<Collection>(
+      const collections = loadJsonFilesRecursively<Collection>(
         path.join(this.dumpPath, COLLECTIONS_DIR),
       );
-      const fields = this.loadJsonFilesRecursively<Field>(
+      const fields = loadJsonFilesRecursively<Field>(
         path.join(this.dumpPath, FIELDS_DIR),
       );
-      const relations = this.loadJsonFilesRecursively<Relation>(
+      const relations = loadJsonFilesRecursively<Relation>(
         path.join(this.dumpPath, RELATIONS_DIR),
       );
       const info = readJsonSync(path.join(this.dumpPath, INFO_JSON)) as Omit<
@@ -153,23 +187,5 @@ export class SnapshotClient {
       const filePath = path.join(this.dumpPath, SNAPSHOT_JSON);
       return readJsonSync(filePath, 'utf-8') as Snapshot;
     }
-  }
-
-  /**
-   * This methods recursively loads the files from a directory.
-   */
-  protected loadJsonFilesRecursively<T>(dirPath: string): T[] {
-    const files: T[] = [];
-    const fileNames = readdirSync(dirPath);
-    for (const fileName of fileNames) {
-      const filePath = path.join(dirPath, fileName);
-      const stat = statSync(filePath);
-      if (stat.isDirectory()) {
-        files.push(...this.loadJsonFilesRecursively<T>(filePath));
-      } else if (fileName.endsWith('.json')) {
-        files.push(readJsonSync(filePath, 'utf-8') as T);
-      }
-    }
-    return files;
   }
 }

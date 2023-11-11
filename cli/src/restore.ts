@@ -11,12 +11,14 @@ import { Container } from 'typedi';
 import pino from 'pino';
 
 async function run() {
+  const logger = Container.get('logger') as pino.Logger;
+
   // Snapshot
-  await Container.get(SnapshotClient).restoreSnapshot();
+  logger.info(`---- Restore schema ----`);
+  await Container.get(SnapshotClient).restore();
 
   // Collections
   const collections = loadCollections();
-  const logger = Container.get('logger') as pino.Logger;
 
   // Clean up the collections (dangling id maps, etc.)
   logger.info(`---- Clean up collections ----`);

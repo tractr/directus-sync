@@ -4,10 +4,15 @@ import {
   initContext,
   loadCollections,
   logEndAndClose,
-  logErrorAndStop,
+  logErrorAndStop, SnapshotClient,
 } from './lib';
+import {Container} from "typedi";
 
 async function run() {
+  // Snapshot
+  await Container.get(SnapshotClient).plan();
+
+  // Collections
   const collections = loadCollections();
   for (const collection of collections) {
     await collection.plan();

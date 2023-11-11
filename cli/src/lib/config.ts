@@ -10,6 +10,9 @@ const collectionsPath = env(
 );
 
 export const Config = {
+  logger: {
+    level: env('LOG_LEVEL', 'debug'),
+  },
   collections: {
     dumpPath: collectionsPath,
   },
