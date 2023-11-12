@@ -9,9 +9,9 @@ import {
   runPlan,
   runRestore,
 } from './lib';
-import RootPath from 'app-root-path';
+import Path from 'path';
 
-const defaultDumpPath = RootPath.resolve('dump');
+const defaultDumpPath = Path.join(process.cwd(), 'dump');
 const defaultSnapshotPath = 'snapshot';
 const defaultCollectionsPath = 'collections';
 
