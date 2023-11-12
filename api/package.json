@@ -1,5 +1,5 @@
 {
-  "name": "@tractr/directus-extension-sync-api",
+  "name": "directus-extension-sync-api-tractr",
   "description": "This extension exposes routes to manage id mapping for Directus sync.",
   "icon": "extension",
   "version": "0.1.0",
