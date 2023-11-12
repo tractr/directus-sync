@@ -21,7 +21,8 @@
     "build": "directus-extension build",
     "dev": "directus-extension build -w --no-minify",
     "link": "directus-extension link",
-    "test": "jest"
+    "test": "jest",
+    "prepublishOnly": "npm install && npm run format && npm test && npm run build"
   },
   "devDependencies": {
     "@directus/extensions-sdk": "10.1.13",
