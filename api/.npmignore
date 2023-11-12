@@ -4,5 +4,5 @@ src
 .gitignore
 .prettierignore
 .prettierrc
-jest.config.js
+jest.config.cjs
 tsconfig.json
