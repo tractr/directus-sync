@@ -1,8 +1,9 @@
 {
-  "name": "directus-extension-sync",
-  "description": "Please enter a description for your extension",
+  "name": "@tractr/directus-extension-sync-api",
+  "description": "This extension exposes routes to manage id mapping for Directus sync.",
   "icon": "extension",
-  "version": "1.0.0",
+  "version": "0.1.0",
+  "author": "Edouard Demotes-Mainard <edouard@tractr.net>",
   "keywords": [
     "directus",
     "directus-extension",

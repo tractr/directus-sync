@@ -1,15 +1,16 @@
 {
-  "name": "directus-sync",
-  "version": "1.0.0",
-  "description": "",
+  "name": "@tractr/directus-sync",
+  "version": "0.1.0",
+  "description": "This is a CLI tool to sync schema and configuration from one Directus instance to another.",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,gql,mjs}\"",
     "start": "ts-node-esm src/index.ts",
     "test": "jest"
   },
   "keywords": [],
-  "author": "",
+  "author": "Edouard Demotes-Mainard <edouard@tractr.net>",
   "license": "ISC",
   "devDependencies": {
     "@types/app-root-path": "^1.2.7",

@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
     "target": "ES2019",
-    "lib": ["ES2019", "DOM"],
+    "lib": [
+      "ES2019",
+      "DOM"
+    ],
     "moduleResolution": "node",
     "strict": true,
     "emitDecoratorMetadata": true,
@@ -24,8 +27,13 @@
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "isolatedModules": true,
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "outDir": "./dist"
   },
-  "include": ["./src/**/*.ts"],
-  "exclude": ["./src/**/*.spec.ts"]
+  "include": [
+    "./src/**/*.ts"
+  ],
+  "exclude": [
+    "./src/**/*.spec.ts"
+  ]
 }
