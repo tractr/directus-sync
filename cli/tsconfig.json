@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
-    "target": "ES2019",
+    "target": "es6",
     "lib": [
       "ES2019",
       "DOM"
     ],
     "moduleResolution": "node",
     "strict": true,
+    "module": "commonjs",
+    "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noFallthroughCasesInSwitch": true,

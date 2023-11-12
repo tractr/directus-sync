@@ -1,0 +1,11 @@
+node_modules
+dump
+src
+.DS_Store
+.env
+.gitignore
+.prettierignore
+.prettierrc
+example.env
+jest.config.js
+tsconfig.json
