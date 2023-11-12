@@ -1,10 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": [
-      "ES2019",
-      "DOM"
-    ],
+    "lib": ["ES2019", "DOM"],
     "moduleResolution": "node",
     "strict": true,
     "module": "commonjs",
@@ -32,10 +29,6 @@
     "rootDir": "./src",
     "outDir": "./dist"
   },
-  "include": [
-    "./src/**/*.ts"
-  ],
-  "exclude": [
-    "./src/**/*.spec.ts"
-  ]
+  "include": ["./src/**/*.ts"],
+  "exclude": ["./src/**/*.spec.ts"]
 }

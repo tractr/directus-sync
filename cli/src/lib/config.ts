@@ -1,37 +1,37 @@
 import Path from 'path';
-import {env} from "./helpers";
+import { env } from './helpers';
 
 type ProgramOptions = {
-    debug: boolean;
-    split: boolean;
-    dumpPath: string;
-    collectionsPath: string;
-    snapshotPath: string;
-    directusUrl?: string;
-    directusToken?: string;
+  debug: boolean;
+  split: boolean;
+  dumpPath: string;
+  collectionsPath: string;
+  snapshotPath: string;
+  directusUrl?: string;
+  directusToken?: string;
 };
 
 export function getConfig(options: ProgramOptions) {
-    const {dumpPath} = options;
-    const snapshotPath = Path.join(dumpPath, options.snapshotPath);
-    const collectionsPath = Path.join(dumpPath, options.collectionsPath);
+  const { dumpPath } = options;
+  const snapshotPath = Path.join(dumpPath, options.snapshotPath);
+  const collectionsPath = Path.join(dumpPath, options.collectionsPath);
 
-    return {
-        logger: {
-            level: options.debug ? 'debug' : 'info',
-        },
-        collections: {
-            dumpPath: collectionsPath,
-        },
-        snapshot: {
-            dumpPath: snapshotPath,
-            splitFiles: options.split,
-        },
-        directus: {
-            url: env('DIRECTUS_URL', options.directusUrl),
-            token: env('DIRECTUS_TOKEN', options.directusToken),
-        }
-    };
+  return {
+    logger: {
+      level: options.debug ? 'debug' : 'info',
+    },
+    collections: {
+      dumpPath: collectionsPath,
+    },
+    snapshot: {
+      dumpPath: snapshotPath,
+      splitFiles: options.split,
+    },
+    directus: {
+      url: env('DIRECTUS_URL', options.directusUrl),
+      token: env('DIRECTUS_TOKEN', options.directusToken),
+    },
+  };
 }
 
 export type Config = ReturnType<typeof getConfig>;

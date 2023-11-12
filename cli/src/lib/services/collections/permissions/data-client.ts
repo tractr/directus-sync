@@ -18,6 +18,17 @@ export class PermissionsDataClient extends DataClient<
     super(migrationClient);
   }
 
+  /**
+   * Returns the admins permissions. These are static permissions that are not stored in the database.
+   * We must discard them as they can't be updated and have no id.
+   */
+  async query<T extends object = DirectusPermission<object>>(
+    query: Query<DirectusPermission<object>, object>,
+  ): Promise<T[]> {
+    const values = await super.query(query);
+    return values.filter((value) => !!value.id) as T[];
+  }
+
   protected getDeleteCommand(itemId: number) {
     return deletePermission(itemId);
   }
@@ -37,16 +48,5 @@ export class PermissionsDataClient extends DataClient<
     diffItem: Partial<WithoutIdAndSyncId<DirectusPermission<object>>>,
   ) {
     return updatePermission(itemId, diffItem);
-  }
-
-  /**
-   * Returns the admins permissions. These are static permissions that are not stored in the database.
-   * We must discard them as they can't be updated and have no id.
-   */
-  async query<T extends object = DirectusPermission<object>>(
-    query: Query<DirectusPermission<object>, object>,
-  ): Promise<T[]> {
-    const values = await super.query(query);
-    return values.filter((value) => !!value.id) as T[];
   }
 }

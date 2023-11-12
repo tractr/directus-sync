@@ -1,4 +1,4 @@
-import {ZodError, ZodSchema} from 'zod';
+import { ZodError, ZodSchema } from 'zod';
 import createError, { isHttpError } from 'http-errors';
 
 /**
@@ -25,8 +25,11 @@ export function validateInput<T extends ZodSchema>(
   try {
     return zodSchema.parse(params);
   } catch (error) {
-    const message = error instanceof ZodError ?
-        error.issues.map(e => `[${e.path.join(',')}] ${e.message}`).join('. ')
+    const message =
+      error instanceof ZodError
+        ? error.issues
+            .map((e) => `[${e.path.join(',')}] ${e.message}`)
+            .join('. ')
         : error.message;
     throw createError(400, message);
   }
