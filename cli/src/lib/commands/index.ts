@@ -1,3 +1,3 @@
-export * from './dump';
-export * from './plan';
-export * from './restore';
+export * from './diff';
+export * from './pull';
+export * from './push';
