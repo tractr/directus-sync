@@ -11,7 +11,7 @@ import {
 } from './lib';
 import Path from 'path';
 
-const defaultDumpPath = Path.join(process.cwd(), 'dump');
+const defaultDumpPath = Path.join(process.cwd(), 'directus-config');
 const defaultSnapshotPath = 'snapshot';
 const defaultCollectionsPath = 'collections';
 

@@ -2,4 +2,4 @@
 .env
 node_modules
 dist
-dump
+directus-config
