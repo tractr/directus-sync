@@ -48,4 +48,3 @@ The run in development mode:
 ```bash
 npm run dev
 ```
-
