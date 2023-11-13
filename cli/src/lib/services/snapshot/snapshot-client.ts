@@ -65,25 +65,37 @@ export class SnapshotClient {
    */
   async plan() {
     const diff = await this.diffSnapshot();
-    if (typeof diff === 'undefined') {
+    if (typeof diff === 'undefined' || !diff.diff) {
       this.logger.info('No changes to apply');
     } else {
       const { collections, fields, relations } = diff.diff;
-      this.logger.info(
-        `Found ${collections.length} change${
-          collections.length > 1 ? 's' : ''
-        } in collections`,
-      );
-      this.logger.info(
-        `Found ${fields.length} change${
-          fields.length > 1 ? 's' : ''
-        } in fields`,
-      );
-      this.logger.info(
-        `Found ${relations.length} change${
-          relations.length > 1 ? 's' : ''
-        } in relations`,
-      );
+      if (collections) {
+        this.logger.info(
+          `Found ${collections.length} change${
+            collections.length > 1 ? 's' : ''
+          } in collections`,
+        );
+      } else {
+        this.logger.info('No changes in collections');
+      }
+      if (fields) {
+        this.logger.info(
+          `Found ${fields.length} change${
+            fields.length > 1 ? 's' : ''
+          } in fields`,
+        );
+      } else {
+        this.logger.info('No changes in fields');
+      }
+      if (relations) {
+        this.logger.info(
+          `Found ${relations.length} change${
+            relations.length > 1 ? 's' : ''
+          } in relations`,
+        );
+      } else {
+        this.logger.info('No changes in relations');
+      }
       this.logger.debug(diff, 'Diff');
     }
   }
