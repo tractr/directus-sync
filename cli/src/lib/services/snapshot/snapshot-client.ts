@@ -51,7 +51,7 @@ export class SnapshotClient {
    */
   async restore() {
     const diff = await this.diffSnapshot();
-    if (typeof diff === 'undefined') {
+    if (typeof diff === 'undefined' || !diff.diff) {
       this.logger.info('No changes to apply');
     } else {
       const directus = this.migrationClient.get();
