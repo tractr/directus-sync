@@ -15,6 +15,11 @@
   },
   "keywords": [],
   "author": "Edouard Demotes-Mainard <edouard@tractr.net>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tractr/directus-sync.git"
+  },
+  "license": "MIT",
   "devDependencies": {
     "@types/app-root-path": "^1.2.7",
     "@types/fs-extra": "^11.0.4",

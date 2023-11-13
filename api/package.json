@@ -4,6 +4,11 @@
   "icon": "extension",
   "version": "0.1.2",
   "author": "Edouard Demotes-Mainard <edouard@tractr.net>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tractr/directus-sync.git"
+  },
+  "license": "MIT",
   "keywords": [
     "directus",
     "directus-extension",
