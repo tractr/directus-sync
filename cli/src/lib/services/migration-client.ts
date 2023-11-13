@@ -33,7 +33,7 @@ export class MigrationClient {
     }
 
     /**
-     * This methods return the role of the current user as the Admin role
+     * This method return the role of the current user as the Admin role
      */
     async getAdminRoleId() {
         if (!this.adminRoleId) {

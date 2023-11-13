@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import {program} from 'commander';
 import {disposeContext, initContext, logEndAndClose, logErrorAndStop, runDiff, runPull, runPush,} from './lib';
 import Path from 'path';
+import {runUntrack} from "./lib/commands/untrack";
 
 const defaultDumpPath = Path.join(process.cwd(), 'directus-config');
 const defaultSnapshotPath = 'snapshot';
@@ -45,20 +46,23 @@ registerCommand(
     runDiff
 );
 registerCommand('push', 'push the schema and collections', runPush);
+registerCommand('untrack', 'stop tracking of an element', runUntrack)
+    .option('-c, --collection <collection>', 'the collection of the element')
+    .option('-i, --id <id>', 'the id of the element to untrack');
 
 program.parse(process.argv);
 
 function registerCommand(
     name: string,
     description: string,
-    action: () => Promise<void>
+    action: (options?: any) => Promise<void>
 ) {
     return program
         .command(name)
         .description(description)
-        .action(() => {
+        .action((options) => {
             return initContext(program.opts())
-                .then(action)
+                .then(() => action(options))
                 .catch(logErrorAndStop)
                 .then(disposeContext)
                 .then(logEndAndClose);
