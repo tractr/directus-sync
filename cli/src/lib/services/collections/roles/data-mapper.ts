@@ -1,10 +1,10 @@
 import { DataMapper, Field, IdMappers } from '../base';
 import { DirectusRole } from '@directus/sdk';
 import { Inject, Service } from 'typedi';
-import { FLOWS_COLLECTION } from '../flows';
 import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
 import { LOGGER } from '../../../constants';
+import { ROLES_COLLECTION } from './constants';
 
 @Service()
 export class RolesDataMapper extends DataMapper<DirectusRole<object>> {
@@ -12,6 +12,6 @@ export class RolesDataMapper extends DataMapper<DirectusRole<object>> {
   protected idMappers: IdMappers<DirectusRole<object>> = {};
 
   constructor(@Inject(LOGGER) baseLogger: pino.Logger) {
-    super(getChildLogger(baseLogger, FLOWS_COLLECTION));
+    super(getChildLogger(baseLogger, ROLES_COLLECTION));
   }
 }

@@ -1,10 +1,10 @@
 import { DataMapper, Field, IdMappers } from '../base';
 import { DirectusDashboard } from '@directus/sdk';
 import { Inject, Service } from 'typedi';
-import { FLOWS_COLLECTION } from '../flows';
 import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
 import { LOGGER } from '../../../constants';
+import { DASHBOARDS_COLLECTION } from './constants';
 
 @Service()
 export class DashboardsDataMapper extends DataMapper<
@@ -18,6 +18,6 @@ export class DashboardsDataMapper extends DataMapper<
   protected idMappers: IdMappers<DirectusDashboard<object>> = {};
 
   constructor(@Inject(LOGGER) baseLogger: pino.Logger) {
-    super(getChildLogger(baseLogger, FLOWS_COLLECTION));
+    super(getChildLogger(baseLogger, DASHBOARDS_COLLECTION));
   }
 }

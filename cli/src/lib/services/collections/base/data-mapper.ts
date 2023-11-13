@@ -22,7 +22,7 @@ export abstract class DataMapper<DT extends DirectusBaseType> {
 
   /**
    * Returns the items with the ids mapped to the sync ids,
-   * without the fields to ignore and with the users fields replaced by a placeholder.
+   * without the fields to ignore.
    */
   async mapIdsToSyncIdAndRemoveIgnoredFields(
     items: WithSyncIdAndWithoutId<DT>[],
@@ -30,7 +30,7 @@ export abstract class DataMapper<DT extends DirectusBaseType> {
     const output: WithSyncIdAndWithoutId<DT>[] = [];
     for (const item of items) {
       const withoutFields = this.removeFieldsToIgnore(item);
-      const newItem = await this.mapLocalIdToSyncId(withoutFields);
+      const newItem = await this.mapLocalIdToSyncIdIfPossible(withoutFields);
       output.push(newItem);
     }
     return output;
@@ -81,8 +81,9 @@ export abstract class DataMapper<DT extends DirectusBaseType> {
 
   /**
    * Map the ids of the item to the sync ids.
+   * For new items, the original id is used.
    */
-  protected async mapLocalIdToSyncId<T>(item: T): Promise<T> {
+  protected async mapLocalIdToSyncIdIfPossible<T>(item: T): Promise<T> {
     const newItem = { ...item };
     for (const entry of Object.entries(this.idMappers)) {
       const field = entry[0] as keyof T;
@@ -94,10 +95,11 @@ export abstract class DataMapper<DT extends DirectusBaseType> {
       const id = newItem[field] as DirectusId;
       if (id) {
         const idMap = await idMapper.getByLocalId(id.toString());
-        if (!idMap) {
-          throw new Error(`No id map found for ${id}`);
+        if (idMap) {
+          newItem[field] = idMap.sync_id;
+        } else {
+          this.logger.debug(`No id map found for ${field as string}:${id}`);
         }
-        newItem[field] = idMap.sync_id;
       }
     }
     return newItem;
