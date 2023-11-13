@@ -10,7 +10,7 @@ export type IdMap = {
 };
 
 export abstract class IdMapperClient {
-  protected readonly extensionUri = '/directus-extension-sync-api-tractr';
+  protected readonly extensionUri = '/directus-extension-sync';
 
   /**
    * Cache for id maps
