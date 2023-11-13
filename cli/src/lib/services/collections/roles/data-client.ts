@@ -20,7 +20,7 @@ export class RolesDataClient extends DataClient<DirectusRole<object>> {
 
     protected async getQueryCommand(query: Query<DirectusRole<object>, object>) {
         // Always exclude the admin role from the dump
-        const adminRoleId = await this.migrationClient.getUserRoleId();
+        const adminRoleId = await this.migrationClient.getAdminRoleId();
         // Do not filter by id if the query already contains a filter for the id
         const hasIdFilter = query.filter && (query.filter as { id?: string }).id;
         const newQuery = !hasIdFilter ? deepmerge(query, {

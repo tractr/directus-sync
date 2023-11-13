@@ -15,7 +15,7 @@ import type {DirectusConfig} from '../config';
 @Service()
 export class MigrationClient {
 
-    protected userRoleId: string | undefined;
+    protected adminRoleId: string | undefined;
 
     protected readonly client: DirectusClient<any> &
         RestClient<any> &
@@ -33,17 +33,17 @@ export class MigrationClient {
     }
 
     /**
-     * This methods return the role of the current user
+     * This methods return the role of the current user as the Admin role
      */
-    async getUserRoleId() {
-        if (!this.userRoleId) {
+    async getAdminRoleId() {
+        if (!this.adminRoleId) {
             const directus = this.get();
             const {role} = await directus.request(readMe({
                 fields: ['role'],
             }));
-            this.userRoleId = role;
+            this.adminRoleId = role;
         }
-        return this.userRoleId;
+        return this.adminRoleId;
     }
 
     protected createClient() {
