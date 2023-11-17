@@ -3,6 +3,16 @@
 The `directus-sync` command-line interface (CLI) provides a set of tools for managing and synchronizing the schema and
 collections within Directus across different environments.
 
+By leveraging Directus's REST API, it aligns closely with the native actions performed within the application, ensuring
+a high fidelity of operation.
+
+Updates are granular, focusing on differential data changes rather than blunt table
+overwrites, which means only the necessary changes are applied, preserving the integrity and history of your data.
+
+Moreover, `directus-sync` organizes backups into multiple files, significantly improving readability and making it
+easier to track and review changes. This thoughtful separation facilitates a smoother version control process, allowing
+for targeted updates and clearer oversight of your Directus configurations.
+
 # Usage
 
 The CLI is available using the `npx` command.
@@ -12,36 +22,6 @@ npx directus-sync <command> [options]
 ```
 
 Here's how to use each command in the CLI:
-
-## Global Options
-
-These options can be used with any command to configure the operation of `directus-sync`:
-
-- `-d, --debug`  
-  Display additional logging information. Useful for debugging or verifying what `directus-sync` is doing under the
-  hood.
-
-- `-u, --directus-url <directusUrl>`  
-  Specify the Directus instance URL. Alternatively, set the `DIRECTUS_URL` environment variable.
-
-- `-t, --directus-token <directusToken>`  
-  Provide the Directus access token. Alternatively, set the `DIRECTUS_TOKEN` environment variable.
-
-- `--no-split`  
-  Indicates whether the schema snapshot should be split into multiple files. By default, snapshots are split.
-
-- `--dump-path <dumpPath>`  
-  Set the base path for the dump. This must be an absolute path. The default
-  is `"./directus-config"`.
-
-- `--collections-path <collectionPath>`  
-  Specify the path for the collections dump, relative to the dump path. The default is `"collections"`.
-
-- `--snapshot-path <snapshotPath>`  
-  Specify the path for the schema snapshot dump, relative to the dump path. The default is `"snapshot"`.
-
-- `-h, --help`  
-  Display help information for the `directus-sync` commands.
 
 ## Commands
 
@@ -80,6 +60,39 @@ npx directus-sync untrack --collection <collection> --id <id>
 
 Removes tracking from an element within Directus. You must specify the collection and the ID of the element you wish to
 stop tracking.
+
+## Global Options
+
+These options can be used with any command to configure the operation of `directus-sync`:
+
+- `-d, --debug`  
+  Display additional logging information. Useful for debugging or verifying what `directus-sync` is doing under the
+  hood.
+
+- `-u, --directus-url <directusUrl>`  
+  Specify the Directus instance URL. Alternatively, set the `DIRECTUS_URL` environment variable.
+
+- `-t, --directus-token <directusToken>`  
+  Provide the Directus access token. Alternatively, set the `DIRECTUS_TOKEN` environment variable.
+
+- `--no-split`  
+  Indicates whether the schema snapshot should be split into multiple files. By default, snapshots are split.
+
+- `--dump-path <dumpPath>`  
+  Set the base path for the dump. This must be an absolute path. The default
+  is `"./directus-config"`.
+
+- `--collections-path <collectionPath>`  
+  Specify the path for the collections dump, relative to the dump path. The default is `"collections"`.
+
+- `--snapshot-path <snapshotPath>`  
+  Specify the path for the schema snapshot dump, relative to the dump path. The default is `"snapshot"`.
+
+- `-f, --force`  
+  Force the diff of schema, even if the Directus version is different. The default is `false`.
+
+- `-h, --help`  
+  Display help information for the `directus-sync` commands.
 
 ### Tracked Elements
 
