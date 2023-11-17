@@ -18,6 +18,15 @@ export abstract class DataLoader<DirectusType extends DirectusBaseType> {
    * Save the data to the dump file. The data is passed through the data transformer.
    */
   saveData(data: WithSyncIdAndWithoutId<DirectusType>[]) {
+    // Sort data by _syncId to avoid git changes
+    data.sort(this.getSortFunction());
     writeJsonSync(this.filePath, data, { spaces: 2 });
+  }
+
+  /**
+   * Returns a function to sort the data before saving it.
+   */
+    protected getSortFunction(): (a: WithSyncIdAndWithoutId<DirectusType>, b: WithSyncIdAndWithoutId<DirectusType>) => number {
+    return (a, b) => a._syncId.localeCompare(b._syncId);
   }
 }

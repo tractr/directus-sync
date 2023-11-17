@@ -1,4 +1,4 @@
-import { DataLoader } from '../base';
+import {DataLoader, WithSyncIdAndWithoutId} from '../base';
 import { DirectusPermission } from '@directus/sdk';
 import { Inject, Service } from 'typedi';
 import { PERMISSIONS_COLLECTION } from './constants';
@@ -16,5 +16,14 @@ export class PermissionsDataLoader extends DataLoader<
       `${PERMISSIONS_COLLECTION}.json`,
     );
     super(filePath);
+  }
+
+
+  protected getSortFunction(): (a: WithSyncIdAndWithoutId<DirectusPermission<object>>, b: WithSyncIdAndWithoutId<DirectusPermission<object>>) => number {
+    return (a, b) => {
+      const aVal = `${a.role}-${a.collection}-${a.action}`;
+      const bVal = `${b.role}-${b.collection}-${b.action}`;
+        return aVal.localeCompare(bVal);
+    };
   }
 }
