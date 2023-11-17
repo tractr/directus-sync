@@ -7,6 +7,7 @@ type ProgramOptions = {
   dumpPath: string;
   collectionsPath: string;
   snapshotPath: string;
+  force: boolean;
   directusUrl?: string;
   directusToken?: string;
 };
@@ -26,6 +27,7 @@ export function getConfig(options: ProgramOptions) {
     snapshot: {
       dumpPath: snapshotPath,
       splitFiles: options.split,
+      force: options.force,
     },
     directus: {
       url: env('DIRECTUS_URL', options.directusUrl),

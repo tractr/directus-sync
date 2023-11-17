@@ -45,7 +45,12 @@ program
     '--snapshot-path <snapshotPath>',
     'the path for the schema snapshot dump, relative to the dump path',
     defaultSnapshotPath,
-  );
+  )
+    .option(
+        '-f, --force',
+        'force the diff of schema, even if the Directus version is different',
+        false
+    );
 
 registerCommand(
   'pull',

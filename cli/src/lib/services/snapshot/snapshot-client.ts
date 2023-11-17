@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { MigrationClient } from '../migration-client';
-import { schemaApply, schemaDiff, schemaSnapshot } from '@directus/sdk';
+import {schemaApply, schemaDiff, schemaSnapshot } from '@directus/sdk';
 import path from 'path';
 import type { SnapshotConfig } from '../../config';
 import { Collection, Field, Relation, Snapshot } from './interfaces';
@@ -21,6 +21,8 @@ export class SnapshotClient {
 
   protected readonly splitFiles: boolean;
 
+  protected readonly force: boolean;
+
   protected readonly logger: pino.Logger;
 
   constructor(
@@ -31,6 +33,7 @@ export class SnapshotClient {
     this.logger = getChildLogger(baseLogger, 'snapshot');
     this.dumpPath = config.dumpPath;
     this.splitFiles = config.splitFiles;
+    this.force = config.force;
   }
 
   /**
@@ -174,7 +177,7 @@ export class SnapshotClient {
   protected async diffSnapshot() {
     const directus = this.migrationClient.get();
     const snapshot = this.loadData();
-    return await directus.request(schemaDiff(snapshot));
+    return await directus.request(schemaDiff(snapshot, this.force));
   }
 
   /**
