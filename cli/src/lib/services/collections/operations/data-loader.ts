@@ -1,4 +1,4 @@
-import {DataLoader, WithSyncIdAndWithoutId} from '../base';
+import { DataLoader, WithSyncIdAndWithoutId } from '../base';
 import { DirectusOperation } from '@directus/sdk';
 import { Inject, Service } from 'typedi';
 import { OPERATIONS_COLLECTION } from './constants';
@@ -18,7 +18,10 @@ export class OperationsDataLoader extends DataLoader<
     super(filePath);
   }
 
-    protected getSortFunction(): (a: WithSyncIdAndWithoutId<DirectusOperation<object>>, b: WithSyncIdAndWithoutId<DirectusOperation<object>>) => number {
+  protected getSortFunction(): (
+    a: WithSyncIdAndWithoutId<DirectusOperation<object>>,
+    b: WithSyncIdAndWithoutId<DirectusOperation<object>>,
+  ) => number {
     return (a, b) => a.key.localeCompare(b.key);
-    }
+  }
 }

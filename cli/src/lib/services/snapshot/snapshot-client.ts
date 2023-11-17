@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { MigrationClient } from '../migration-client';
-import {schemaApply, schemaDiff, schemaSnapshot } from '@directus/sdk';
+import { schemaApply, schemaDiff, schemaSnapshot } from '@directus/sdk';
 import path from 'path';
 import type { SnapshotConfig } from '../../config';
 import { Collection, Field, Relation, Snapshot } from './interfaces';

@@ -26,7 +26,10 @@ export abstract class DataLoader<DirectusType extends DirectusBaseType> {
   /**
    * Returns a function to sort the data before saving it.
    */
-    protected getSortFunction(): (a: WithSyncIdAndWithoutId<DirectusType>, b: WithSyncIdAndWithoutId<DirectusType>) => number {
+  protected getSortFunction(): (
+    a: WithSyncIdAndWithoutId<DirectusType>,
+    b: WithSyncIdAndWithoutId<DirectusType>,
+  ) => number {
     return (a, b) => a._syncId.localeCompare(b._syncId);
   }
 }
