@@ -1,18 +1,18 @@
 import 'dotenv/config';
-import { IdMap, IdMapperClient } from './id-mapper-client';
+import {IdMap, IdMapperClient} from './id-mapper-client';
 import {
-  DirectusBaseType,
-  UpdateItem,
-  WithoutId,
-  WithoutIdAndSyncId,
-  WithSyncId,
-  WithSyncIdAndWithoutId,
+    DirectusBaseType,
+    UpdateItem,
+    WithoutId,
+    WithoutIdAndSyncId,
+    WithSyncId,
+    WithSyncIdAndWithoutId,
 } from './interfaces';
-import { DataClient } from './data-client';
-import { DataLoader } from './data-loader';
-import { DataDiffer } from './data-differ';
+import {DataClient} from './data-client';
+import {DataLoader} from './data-loader';
+import {DataDiffer} from './data-differ';
 import pino from 'pino';
-import { DataMapper } from './data-mapper';
+import {DataMapper} from './data-mapper';
 
 /**
  * This class is responsible for merging the data from a dump to a target table.

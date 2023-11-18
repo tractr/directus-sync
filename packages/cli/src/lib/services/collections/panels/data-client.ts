@@ -1,17 +1,11 @@
-import { DataClient, WithoutIdAndSyncId } from '../base';
-import {
-  createPanel,
-  deletePanel,
-  DirectusPanel,
-  Query,
-  readPanels,
-  updatePanel,
-} from '@directus/sdk';
-import { Service } from 'typedi';
-import { MigrationClient } from '../../migration-client';
+import {DataClient, Query, WithoutIdAndSyncId} from '../base';
+import {createPanel, deletePanel, readPanels, updatePanel,} from '@directus/sdk';
+import {Service} from 'typedi';
+import {MigrationClient} from '../../migration-client';
+import {DirectusPanel} from "./interfaces";
 
 @Service()
-export class PanelsDataClient extends DataClient<DirectusPanel<object>> {
+export class PanelsDataClient extends DataClient<DirectusPanel> {
   constructor(migrationClient: MigrationClient) {
     super(migrationClient);
   }
@@ -20,17 +14,17 @@ export class PanelsDataClient extends DataClient<DirectusPanel<object>> {
     return deletePanel(itemId);
   }
 
-  protected getInsertCommand(item: WithoutIdAndSyncId<DirectusPanel<object>>) {
+  protected getInsertCommand(item: WithoutIdAndSyncId<DirectusPanel>) {
     return createPanel(item);
   }
 
-  protected getQueryCommand(query: Query<DirectusPanel<object>, object>) {
+  protected getQueryCommand(query: Query<DirectusPanel>) {
     return readPanels(query);
   }
 
   protected getUpdateCommand(
     itemId: string,
-    diffItem: Partial<WithoutIdAndSyncId<DirectusPanel<object>>>,
+    diffItem: Partial<WithoutIdAndSyncId<DirectusPanel>>,
   ) {
     return updatePanel(itemId, diffItem);
   }

@@ -1,20 +1,20 @@
 import 'dotenv/config';
-import { DirectusPanel } from '@directus/sdk';
-import { DirectusCollection } from '../base';
+import {DirectusCollection} from '../base';
 import pino from 'pino';
-import { Inject, Service } from 'typedi';
-import { PanelsDataLoader } from './data-loader';
-import { PanelsDataClient } from './data-client';
-import { PanelsIdMapperClient } from './id-mapper-client';
-import { PanelsDataDiffer } from './data-differ';
-import { getChildLogger } from '../../../helpers';
-import { PANELS_COLLECTION } from './constants';
-import { PanelsDataMapper } from './data-mapper';
-import { LOGGER } from '../../../constants';
+import {Inject, Service} from 'typedi';
+import {PanelsDataLoader} from './data-loader';
+import {PanelsDataClient} from './data-client';
+import {PanelsIdMapperClient} from './id-mapper-client';
+import {PanelsDataDiffer} from './data-differ';
+import {getChildLogger} from '../../../helpers';
+import {PANELS_COLLECTION} from './constants';
+import {PanelsDataMapper} from './data-mapper';
+import {LOGGER} from '../../../constants';
+import {DirectusPanel} from "./interfaces";
 
 @Service()
 export class PanelsCollection extends DirectusCollection<
-  DirectusPanel<object>
+  DirectusPanel
 > {
   protected readonly enableCreate = true;
   protected readonly enableUpdate = true;

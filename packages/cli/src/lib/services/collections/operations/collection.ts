@@ -1,20 +1,20 @@
 import 'dotenv/config';
-import { DirectusOperation } from '@directus/sdk';
-import { DirectusCollection } from '../base';
+import {DirectusCollection} from '../base';
 import pino from 'pino';
-import { Inject, Service } from 'typedi';
-import { OperationsDataLoader } from './data-loader';
-import { OperationsDataClient } from './data-client';
-import { OperationsIdMapperClient } from './id-mapper-client';
-import { OperationsDataDiffer } from './data-differ';
-import { getChildLogger } from '../../../helpers';
-import { OPERATIONS_COLLECTION } from './constants';
-import { OperationsDataMapper } from './data-mapper';
-import { LOGGER } from '../../../constants';
+import {Inject, Service} from 'typedi';
+import {OperationsDataLoader} from './data-loader';
+import {OperationsDataClient} from './data-client';
+import {OperationsIdMapperClient} from './id-mapper-client';
+import {OperationsDataDiffer} from './data-differ';
+import {getChildLogger} from '../../../helpers';
+import {OPERATIONS_COLLECTION} from './constants';
+import {OperationsDataMapper} from './data-mapper';
+import {LOGGER} from '../../../constants';
+import {DirectusOperation} from "./interfaces";
 
 @Service()
 export class OperationsCollection extends DirectusCollection<
-  DirectusOperation<object>
+  DirectusOperation
 > {
   protected readonly enableCreate = true;
   protected readonly enableUpdate = true;

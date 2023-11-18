@@ -1,19 +1,19 @@
 import 'dotenv/config';
-import { DirectusFlow } from '@directus/sdk';
-import { DirectusCollection, WithSyncIdAndWithoutId } from '../base';
+import {DirectusCollection, WithSyncIdAndWithoutId} from '../base';
 import pino from 'pino';
-import { Inject, Service } from 'typedi';
-import { FlowsDataLoader } from './data-loader';
-import { FlowsDataClient } from './data-client';
-import { FlowsIdMapperClient } from './id-mapper-client';
-import { FlowsDataDiffer } from './data-differ';
-import { getChildLogger } from '../../../helpers';
-import { FLOWS_COLLECTION } from './constants';
-import { FlowsDataMapper } from './data-mapper';
-import { LOGGER } from '../../../constants';
+import {Inject, Service} from 'typedi';
+import {FlowsDataLoader} from './data-loader';
+import {FlowsDataClient} from './data-client';
+import {FlowsIdMapperClient} from './id-mapper-client';
+import {FlowsDataDiffer} from './data-differ';
+import {getChildLogger} from '../../../helpers';
+import {FLOWS_COLLECTION} from './constants';
+import {FlowsDataMapper} from './data-mapper';
+import {LOGGER} from '../../../constants';
+import {DirectusFlow} from "./interfaces";
 
 @Service()
-export class FlowsCollection extends DirectusCollection<DirectusFlow<object>> {
+export class FlowsCollection extends DirectusCollection<DirectusFlow> {
   protected readonly enableCreate = true;
   protected readonly enableUpdate = true;
   protected readonly enableDelete = true;
@@ -41,7 +41,7 @@ export class FlowsCollection extends DirectusCollection<DirectusFlow<object>> {
    * Always create new flows without reference to operations. Then update the flow once the operations are created.
    */
   protected async create(
-    toCreate: WithSyncIdAndWithoutId<DirectusFlow<object>>[],
+    toCreate: WithSyncIdAndWithoutId<DirectusFlow>[],
   ): Promise<boolean> {
     const shouldRetry = toCreate.length > 0;
     const toCreateWithoutOperations = toCreate.map((flow) => {

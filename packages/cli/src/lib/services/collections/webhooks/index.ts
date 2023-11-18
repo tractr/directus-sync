@@ -1,3 +1,4 @@
+export * from './interfaces';
 export * from './constants';
 export * from './collection';
 export * from './data-client';

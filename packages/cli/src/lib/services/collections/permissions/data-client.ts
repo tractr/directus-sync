@@ -1,18 +1,12 @@
-import { DataClient, WithoutIdAndSyncId } from '../base';
-import {
-  createPermission,
-  deletePermission,
-  DirectusPermission,
-  Query,
-  readPermissions,
-  updatePermission,
-} from '@directus/sdk';
-import { Service } from 'typedi';
-import { MigrationClient } from '../../migration-client';
+import {DataClient, Query, WithoutIdAndSyncId} from '../base';
+import {createPermission, deletePermission, readPermissions, updatePermission,} from '@directus/sdk';
+import {Service} from 'typedi';
+import {MigrationClient} from '../../migration-client';
+import {DirectusPermission} from "./interfaces";
 
 @Service()
 export class PermissionsDataClient extends DataClient<
-  DirectusPermission<object>
+  DirectusPermission
 > {
   constructor(migrationClient: MigrationClient) {
     super(migrationClient);
@@ -22,8 +16,8 @@ export class PermissionsDataClient extends DataClient<
    * Returns the admins permissions. These are static permissions that are not stored in the database.
    * We must discard them as they can't be updated and have no id.
    */
-  async query<T extends object = DirectusPermission<object>>(
-    query: Query<DirectusPermission<object>, object>,
+  async query<T extends object = DirectusPermission>(
+    query: Query<DirectusPermission>,
   ): Promise<T[]> {
     const values = await super.query(query);
     return values.filter((value) => !!value.id) as T[];
@@ -34,18 +28,18 @@ export class PermissionsDataClient extends DataClient<
   }
 
   protected getInsertCommand(
-    item: WithoutIdAndSyncId<DirectusPermission<object>>,
+    item: WithoutIdAndSyncId<DirectusPermission>,
   ) {
     return createPermission(item);
   }
 
-  protected getQueryCommand(query: Query<DirectusPermission<object>, object>) {
+  protected getQueryCommand(query: Query<DirectusPermission>) {
     return readPermissions({ ...query });
   }
 
   protected getUpdateCommand(
     itemId: number,
-    diffItem: Partial<WithoutIdAndSyncId<DirectusPermission<object>>>,
+    diffItem: Partial<WithoutIdAndSyncId<DirectusPermission>>,
   ) {
     return updatePermission(itemId, diffItem);
   }

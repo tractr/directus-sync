@@ -1,15 +1,11 @@
-import { DataClient, WithoutIdAndSyncId } from '../base';
-import {
-  DirectusSettings,
-  Query,
-  readSettings,
-  updateSettings,
-} from '@directus/sdk';
-import { Service } from 'typedi';
-import { MigrationClient } from '../../migration-client';
+import {DataClient, Query, WithoutIdAndSyncId} from '../base';
+import {readSettings, updateSettings,} from '@directus/sdk';
+import {Service} from 'typedi';
+import {MigrationClient} from '../../migration-client';
+import {DirectusSettings} from "./interfaces";
 
 @Service()
-export class SettingsDataClient extends DataClient<DirectusSettings<object>> {
+export class SettingsDataClient extends DataClient<DirectusSettings> {
   constructor(migrationClient: MigrationClient) {
     super(migrationClient);
   }
@@ -21,13 +17,13 @@ export class SettingsDataClient extends DataClient<DirectusSettings<object>> {
   }
 
   protected getInsertCommand(
-    item: WithoutIdAndSyncId<DirectusSettings<object>>,
+    item: WithoutIdAndSyncId<DirectusSettings>,
   ) {
     // Settings are not creatable, use update instead
     return updateSettings(item);
   }
 
-  protected getQueryCommand(query: Query<DirectusSettings<object>, object>) {
+  protected getQueryCommand(query: Query<DirectusSettings>) {
     // Remove the filter of the query, settings are not filterable
     const { filter, ...rest } = query;
     return readSettings(rest);
@@ -35,7 +31,7 @@ export class SettingsDataClient extends DataClient<DirectusSettings<object>> {
 
   protected getUpdateCommand(
     itemId: 1,
-    diffItem: Partial<WithoutIdAndSyncId<DirectusSettings<object>>>,
+    diffItem: Partial<WithoutIdAndSyncId<DirectusSettings>>,
   ) {
     return updateSettings({
       id: itemId,

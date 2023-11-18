@@ -1,17 +1,11 @@
-import { DataClient, WithoutIdAndSyncId } from '../base';
-import {
-  createWebhook,
-  deleteWebhook,
-  DirectusWebhook,
-  Query,
-  readWebhooks,
-  updateWebhook,
-} from '@directus/sdk';
-import { Service } from 'typedi';
-import { MigrationClient } from '../../migration-client';
+import {DataClient, Query, WithoutIdAndSyncId} from '../base';
+import {createWebhook, deleteWebhook, readWebhooks, updateWebhook,} from '@directus/sdk';
+import {Service} from 'typedi';
+import {MigrationClient} from '../../migration-client';
+import {DirectusWebhook} from "./interfaces";
 
 @Service()
-export class WebhooksDataClient extends DataClient<DirectusWebhook<object>> {
+export class WebhooksDataClient extends DataClient<DirectusWebhook> {
   constructor(migrationClient: MigrationClient) {
     super(migrationClient);
   }
@@ -21,18 +15,18 @@ export class WebhooksDataClient extends DataClient<DirectusWebhook<object>> {
   }
 
   protected getInsertCommand(
-    item: WithoutIdAndSyncId<DirectusWebhook<object>>,
+    item: WithoutIdAndSyncId<DirectusWebhook>,
   ) {
     return createWebhook(item);
   }
 
-  protected getQueryCommand(query: Query<DirectusWebhook<object>, object>) {
+  protected getQueryCommand(query: Query<DirectusWebhook>) {
     return readWebhooks(query);
   }
 
   protected getUpdateCommand(
     itemId: number,
-    diffItem: Partial<WithoutIdAndSyncId<DirectusWebhook<object>>>,
+    diffItem: Partial<WithoutIdAndSyncId<DirectusWebhook>>,
   ) {
     return updateWebhook(itemId, diffItem);
   }

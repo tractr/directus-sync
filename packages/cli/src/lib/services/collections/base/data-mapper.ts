@@ -1,10 +1,4 @@
-import {
-  DirectusBaseType,
-  DirectusId,
-  Field,
-  IdMappers,
-  WithSyncIdAndWithoutId,
-} from './interfaces';
+import {DirectusBaseType, DirectusId, Field, IdMappers, WithSyncIdAndWithoutId,} from './interfaces';
 import pino from 'pino';
 
 export abstract class DataMapper<DT extends DirectusBaseType> {

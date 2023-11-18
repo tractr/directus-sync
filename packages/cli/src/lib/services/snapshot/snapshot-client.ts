@@ -1,13 +1,13 @@
-import { Inject, Service } from 'typedi';
-import { MigrationClient } from '../migration-client';
-import { schemaApply, schemaDiff, schemaSnapshot } from '@directus/sdk';
+import {Inject, Service} from 'typedi';
+import {MigrationClient} from '../migration-client';
+import {schemaApply, schemaDiff, schemaSnapshot} from '@directus/sdk';
 import path from 'path';
-import type { SnapshotConfig } from '../../config';
-import { Collection, Field, Relation, Snapshot } from './interfaces';
-import { mkdirpSync, readJsonSync, removeSync, writeJsonSync } from 'fs-extra';
-import { LOGGER, SNAPSHOT_CONFIG } from '../../constants';
+import type {SnapshotConfig} from '../../config';
+import {Collection, Field, Relation, Snapshot} from './interfaces';
+import {mkdirpSync, readJsonSync, removeSync, writeJsonSync} from 'fs-extra';
+import {LOGGER, SNAPSHOT_CONFIG} from '../../constants';
 import pino from 'pino';
-import { getChildLogger, loadJsonFilesRecursively } from '../../helpers';
+import {getChildLogger, loadJsonFilesRecursively} from '../../helpers';
 
 const SNAPSHOT_JSON = 'snapshot.json';
 const INFO_JSON = 'info.json';

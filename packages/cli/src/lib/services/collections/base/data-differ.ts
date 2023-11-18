@@ -1,17 +1,18 @@
 import {
   DirectusBaseType,
   DirectusId,
+  Query,
   UpdateItem,
   WithoutIdAndSyncId,
   WithSyncId,
   WithSyncIdAndWithoutId,
 } from './interfaces';
-import { IdMap, IdMapperClient } from './id-mapper-client';
-import { diff } from 'deep-object-diff';
-import { DataLoader } from './data-loader';
-import { DataClient } from './data-client';
+import {IdMap, IdMapperClient} from './id-mapper-client';
+import {diff} from 'deep-object-diff';
+import {DataLoader} from './data-loader';
+import {DataClient} from './data-client';
 import pino from 'pino';
-import { DataMapper } from './data-mapper';
+import {DataMapper} from './data-mapper';
 
 export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
   protected readonly fieldsToIgnore: [
@@ -77,7 +78,8 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
     const idMap = await this.idMapper.getBySyncId(sourceItem._syncId);
     if (idMap) {
       const targetItem = await this.dataClient
-        .query({ filter: { id: idMap.local_id } })
+
+        .query({ filter: { id: idMap.local_id } } as Query<DirectusType>)
         .then((items) => items[0])
         .catch(() => {
           this.logger.warn(`Could not find item with id ${idMap.id}`);
@@ -116,7 +118,7 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
           },
           limit: -1,
           fields: ['id'],
-        })
+        } as Query<DirectusType>)
       : [];
     return allIdsMap.filter((item) => {
       return !existingIds.find(

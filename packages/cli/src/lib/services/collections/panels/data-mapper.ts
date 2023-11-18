@@ -1,19 +1,19 @@
-import { DataMapper, Field, IdMappers } from '../base';
-import { DirectusPanel } from '@directus/sdk';
-import { Container, Inject, Service } from 'typedi';
+import {DataMapper, Field, IdMappers} from '../base';
+import {Container, Inject, Service} from 'typedi';
 import pino from 'pino';
-import { getChildLogger } from '../../../helpers';
-import { DashboardsIdMapperClient } from '../dashboards';
-import { LOGGER } from '../../../constants';
-import { PANELS_COLLECTION } from './constants';
+import {getChildLogger} from '../../../helpers';
+import {DashboardsIdMapperClient} from '../dashboards';
+import {LOGGER} from '../../../constants';
+import {PANELS_COLLECTION} from './constants';
+import {DirectusPanel} from "./interfaces";
 
 @Service()
-export class PanelsDataMapper extends DataMapper<DirectusPanel<object>> {
-  protected fieldsToIgnore: Field<DirectusPanel<object>>[] = [
+export class PanelsDataMapper extends DataMapper<DirectusPanel> {
+  protected fieldsToIgnore: Field<DirectusPanel>[] = [
     'date_created',
     'user_created',
   ];
-  protected idMappers: IdMappers<DirectusPanel<object>> = {
+  protected idMappers: IdMappers<DirectusPanel> = {
     dashboard: Container.get(DashboardsIdMapperClient),
   };
 

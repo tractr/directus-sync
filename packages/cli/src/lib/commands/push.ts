@@ -1,8 +1,8 @@
-import { Container } from 'typedi';
+import {Container} from 'typedi';
 import pino from 'pino';
-import { SnapshotClient } from '../services';
-import { loadCollections } from '../loader';
-import { LOGGER } from '../constants';
+import {SnapshotClient} from '../services';
+import {loadCollections} from '../loader';
+import {LOGGER} from '../constants';
 
 export async function runPush() {
   const logger = Container.get(LOGGER) as pino.Logger;

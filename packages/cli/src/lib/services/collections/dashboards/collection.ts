@@ -1,20 +1,20 @@
 import 'dotenv/config';
-import { DirectusDashboard } from '@directus/sdk';
-import { DirectusCollection } from '../base';
+import {DirectusCollection} from '../base';
 import pino from 'pino';
-import { Inject, Service } from 'typedi';
-import { DashboardsDataLoader } from './data-loader';
-import { DashboardsDataClient } from './data-client';
-import { DashboardsIdMapperClient } from './id-mapper-client';
-import { DashboardsDataDiffer } from './data-differ';
-import { getChildLogger } from '../../../helpers';
-import { DASHBOARDS_COLLECTION } from './constants';
-import { DashboardsDataMapper } from './data-mapper';
-import { LOGGER } from '../../../constants';
+import {Inject, Service} from 'typedi';
+import {DashboardsDataLoader} from './data-loader';
+import {DashboardsDataClient} from './data-client';
+import {DashboardsIdMapperClient} from './id-mapper-client';
+import {DashboardsDataDiffer} from './data-differ';
+import {getChildLogger} from '../../../helpers';
+import {DASHBOARDS_COLLECTION} from './constants';
+import {DashboardsDataMapper} from './data-mapper';
+import {LOGGER} from '../../../constants';
+import {DirectusDashboard} from "./interfaces";
 
 @Service()
 export class DashboardsCollection extends DirectusCollection<
-  DirectusDashboard<object>
+  DirectusDashboard
 > {
   protected readonly enableCreate = true;
   protected readonly enableUpdate = true;

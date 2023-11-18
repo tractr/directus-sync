@@ -1,6 +1,6 @@
-import { Query, RestCommand } from '@directus/sdk';
-import { DirectusBaseType, DirectusId, WithoutIdAndSyncId } from './interfaces';
-import { MigrationClient } from '../../migration-client';
+import {RestCommand} from '@directus/sdk';
+import {DirectusBaseType, DirectusId, Query, WithoutIdAndSyncId} from './interfaces';
+import {MigrationClient} from '../../migration-client';
 
 /**
  * This class is responsible for calling CRUD operations on the target collection using the rest API.
@@ -12,7 +12,7 @@ export abstract class DataClient<DirectusType extends DirectusBaseType> {
    * Request data from the target collection using the rest API.
    */
   async query<T extends object = DirectusType>(
-    query: Query<DirectusType, object>,
+    query: Query<DirectusType>,
   ): Promise<T[]> {
     const directus = this.migrationClient.get();
     const response = await directus.request<T | T[]>(
@@ -62,7 +62,7 @@ export abstract class DataClient<DirectusType extends DirectusBaseType> {
   }
 
   protected abstract getQueryCommand(
-    query: Query<DirectusType, object>,
+    query: Query<DirectusType>,
   ):
     | RestCommand<DirectusType[], object>
     | Promise<RestCommand<DirectusType[], object>>;

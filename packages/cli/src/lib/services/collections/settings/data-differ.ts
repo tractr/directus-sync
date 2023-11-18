@@ -1,17 +1,18 @@
-import { DataDiffer } from '../base';
-import { DirectusSettings } from '@directus/sdk';
-import { Inject, Service } from 'typedi';
-import { SETTINGS_COLLECTION } from './constants';
+import {DataDiffer} from '../base';
+
+import {Inject, Service} from 'typedi';
+import {SETTINGS_COLLECTION} from './constants';
 import pino from 'pino';
-import { SettingsDataLoader } from './data-loader';
-import { SettingsDataClient } from './data-client';
-import { SettingsIdMapperClient } from './id-mapper-client';
-import { getChildLogger } from '../../../helpers';
-import { SettingsDataMapper } from './data-mapper';
-import { LOGGER } from '../../../constants';
+import {SettingsDataLoader} from './data-loader';
+import {SettingsDataClient} from './data-client';
+import {SettingsIdMapperClient} from './id-mapper-client';
+import {getChildLogger} from '../../../helpers';
+import {SettingsDataMapper} from './data-mapper';
+import {LOGGER} from '../../../constants';
+import {DirectusSettings} from "./interfaces";
 
 @Service()
-export class SettingsDataDiffer extends DataDiffer<DirectusSettings<object>> {
+export class SettingsDataDiffer extends DataDiffer<DirectusSettings> {
   constructor(
     @Inject(LOGGER) baseLogger: pino.Logger,
     dataLoader: SettingsDataLoader,

@@ -1,6 +1,6 @@
-import { getIdMapperClientByName } from '../services';
-import { Container } from 'typedi';
-import { LOGGER } from '../constants';
+import {getIdMapperClientByName} from '../services';
+import {Container} from 'typedi';
+import {LOGGER} from '../constants';
 import pino from 'pino';
 
 export async function runUntrack({

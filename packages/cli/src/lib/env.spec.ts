@@ -1,4 +1,4 @@
-import { env } from './helpers';
+import {env} from './helpers';
 
 describe('env', () => {
   let originalEnv: NodeJS.ProcessEnv;

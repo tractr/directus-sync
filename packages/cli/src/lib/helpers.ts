@@ -1,15 +1,9 @@
-import {
-  existsSync,
-  mkdirpSync,
-  readdirSync,
-  readJsonSync,
-  statSync,
-} from 'fs-extra';
+import {existsSync, mkdirpSync, readdirSync, readJsonSync, statSync,} from 'fs-extra';
 import pino from 'pino';
-import { Container } from 'typedi';
-import { Config } from './config';
+import {Container} from 'typedi';
+import {Config} from './config';
 import path from 'path';
-import { LOGGER } from './constants';
+import {LOGGER} from './constants';
 
 export function createDumpFolders(config: Config) {
   const logger = Container.get(LOGGER) as pino.Logger;

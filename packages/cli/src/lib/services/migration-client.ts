@@ -7,10 +7,10 @@ import {
   rest,
   RestClient,
 } from '@directus/sdk';
-import { Inject, Service } from 'typedi';
+import {Inject, Service} from 'typedi';
 import pino from 'pino';
-import { DIRECTUS_CONFIG, LOGGER } from '../constants';
-import type { DirectusConfig } from '../config';
+import {DIRECTUS_CONFIG, LOGGER} from '../constants';
+import type {DirectusConfig} from '../config';
 
 @Service()
 export class MigrationClient {

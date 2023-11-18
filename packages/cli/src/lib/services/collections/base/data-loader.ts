@@ -1,5 +1,5 @@
-import { DirectusBaseType, WithSyncIdAndWithoutId } from './interfaces';
-import { readJsonSync, writeJsonSync } from 'fs-extra';
+import {DirectusBaseType, WithSyncIdAndWithoutId} from './interfaces';
+import {readJsonSync, writeJsonSync} from 'fs-extra';
 
 export abstract class DataLoader<DirectusType extends DirectusBaseType> {
   constructor(protected readonly filePath: string) {}

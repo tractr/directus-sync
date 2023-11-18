@@ -1,4 +1,5 @@
-import { IdMapperClient } from './id-mapper-client';
+import {IdMapperClient} from './id-mapper-client';
+import {Query as DirectusQuery} from "@directus/sdk";
 
 export type DirectusId = number | string;
 export type DirectusBaseType = {
@@ -22,3 +23,7 @@ export type Field<T> = keyof WithSyncIdAndWithoutId<T> | string; // Allows other
 export type IdMappers<T> = {
   [key in keyof WithSyncIdAndWithoutId<T>]?: IdMapperClient;
 };
+
+
+export type BaseSchema = object;
+export type Query<T extends DirectusBaseType> = DirectusQuery<BaseSchema, T>;

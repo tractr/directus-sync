@@ -1,18 +1,12 @@
-import { DataClient, WithoutIdAndSyncId } from '../base';
-import {
-  createOperation,
-  deleteOperation,
-  DirectusOperation,
-  Query,
-  readOperations,
-  updateOperation,
-} from '@directus/sdk';
-import { Service } from 'typedi';
-import { MigrationClient } from '../../migration-client';
+import {DataClient, Query, WithoutIdAndSyncId} from '../base';
+import {createOperation, deleteOperation, readOperations, updateOperation,} from '@directus/sdk';
+import {Service} from 'typedi';
+import {MigrationClient} from '../../migration-client';
+import {DirectusOperation} from "./interfaces";
 
 @Service()
 export class OperationsDataClient extends DataClient<
-  DirectusOperation<object>
+  DirectusOperation
 > {
   constructor(migrationClient: MigrationClient) {
     super(migrationClient);
@@ -23,18 +17,18 @@ export class OperationsDataClient extends DataClient<
   }
 
   protected getInsertCommand(
-    item: WithoutIdAndSyncId<DirectusOperation<object>>,
+    item: WithoutIdAndSyncId<DirectusOperation>,
   ) {
     return createOperation(item);
   }
 
-  protected getQueryCommand(query: Query<DirectusOperation<object>, object>) {
+  protected getQueryCommand(query: Query<DirectusOperation>) {
     return readOperations(query);
   }
 
   protected getUpdateCommand(
     itemId: string,
-    diffItem: Partial<WithoutIdAndSyncId<DirectusOperation<object>>>,
+    diffItem: Partial<WithoutIdAndSyncId<DirectusOperation>>,
   ) {
     return updateOperation(itemId, diffItem);
   }

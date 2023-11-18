@@ -1,18 +1,12 @@
-import { DataClient, WithoutIdAndSyncId } from '../base';
-import {
-  createRole,
-  deleteRole,
-  DirectusRole,
-  Query,
-  readRoles,
-  updateRole,
-} from '@directus/sdk';
-import { Service } from 'typedi';
-import { MigrationClient } from '../../migration-client';
+import {DataClient, Query, WithoutIdAndSyncId} from '../base';
+import {createRole, deleteRole, readRoles, updateRole,} from '@directus/sdk';
+import {Service} from 'typedi';
+import {MigrationClient} from '../../migration-client';
 import deepmerge from 'deepmerge';
+import {DirectusRole} from "./interfaces";
 
 @Service()
-export class RolesDataClient extends DataClient<DirectusRole<object>> {
+export class RolesDataClient extends DataClient<DirectusRole> {
   constructor(migrationClient: MigrationClient) {
     super(migrationClient);
   }
@@ -21,11 +15,11 @@ export class RolesDataClient extends DataClient<DirectusRole<object>> {
     return deleteRole(itemId);
   }
 
-  protected getInsertCommand(item: WithoutIdAndSyncId<DirectusRole<object>>) {
+  protected getInsertCommand(item: WithoutIdAndSyncId<DirectusRole>) {
     return createRole(item);
   }
 
-  protected async getQueryCommand(query: Query<DirectusRole<object>, object>) {
+  protected async getQueryCommand(query: Query<DirectusRole>) {
     // Always exclude the admin role from the dump
     const adminRoleId = await this.migrationClient.getAdminRoleId();
     // Do not filter by id if the query already contains a filter for the id
@@ -37,14 +31,14 @@ export class RolesDataClient extends DataClient<DirectusRole<object>> {
               _neq: adminRoleId,
             },
           },
-        }) as Query<DirectusRole<object>, object>)
+        }))
       : query;
     return readRoles(newQuery);
   }
 
   protected getUpdateCommand(
     itemId: string,
-    diffItem: Partial<WithoutIdAndSyncId<DirectusRole<object>>>,
+    diffItem: Partial<WithoutIdAndSyncId<DirectusRole>>,
   ) {
     return updateRole(itemId, diffItem);
   }
