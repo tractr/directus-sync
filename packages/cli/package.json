@@ -8,7 +8,6 @@
   },
   "scripts": {
     "build": "tsc",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,gql,mjs}\"",
     "start": "ts-node-esm src/index.ts",
     "test": "jest",
     "prepublishOnly": "cp ../../README.md ./README.md && npm install && npm run format && npm test && npm run build"
@@ -27,7 +26,6 @@
     "@types/jest": "^29.5.5",
     "@types/node": "20.8.0",
     "jest": "^29.7.0",
-    "prettier": "^3.0.3",
     "ts-essentials": "^9.4.1",
     "ts-jest": "^29.1.1",
     "ts-node": "10.9.1",
