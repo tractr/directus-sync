@@ -1,0 +1,27 @@
+{
+  "name": "root",
+  "description": "Monorepo for Directus Sync",
+  "author": "Edouard Demotes-Mainard <edouard@tractr.net>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tractr/directus-sync.git"
+  },
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "lerna": "lerna",
+    "clean": "lerna clean",
+    "build": "lerna run build",
+    "test": "lerna run test",
+    "format": "lerna run format",
+    "publish": "lerna publish",
+    "version": "lerna version",
+    "changed": "lerna changed"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "lerna": "^7.4.2"
+  }
+}

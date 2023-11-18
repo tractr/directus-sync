@@ -11,7 +11,7 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,gql,mjs}\"",
     "start": "ts-node-esm src/index.ts",
     "test": "jest",
-    "prepublishOnly": "cp ../README.md ./README.md && npm install && npm run format && npm test && npm run build"
+    "prepublishOnly": "cp ../../README.md ./README.md && npm install && npm run format && npm test && npm run build"
   },
   "keywords": [],
   "author": "Edouard Demotes-Mainard <edouard@tractr.net>",
