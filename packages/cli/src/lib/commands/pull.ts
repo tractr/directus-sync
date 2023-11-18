@@ -1,6 +1,6 @@
-import {Container} from 'typedi';
-import {SnapshotClient} from '../services';
-import {loadCollections} from '../loader';
+import { Container } from 'typedi';
+import { SnapshotClient } from '../services';
+import { loadCollections } from '../loader';
 
 export async function runPull() {
   // Snapshot

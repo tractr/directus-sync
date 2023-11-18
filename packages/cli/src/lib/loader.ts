@@ -1,18 +1,23 @@
 import {
-    DashboardsCollection,
-    FlowsCollection,
-    OperationsCollection,
-    PanelsCollection,
-    PermissionsCollection,
-    RolesCollection,
-    SettingsCollection,
-    WebhooksCollection,
+  DashboardsCollection,
+  FlowsCollection,
+  OperationsCollection,
+  PanelsCollection,
+  PermissionsCollection,
+  RolesCollection,
+  SettingsCollection,
+  WebhooksCollection,
 } from './services';
-import {createDumpFolders} from './helpers';
-import {Container} from 'typedi';
+import { createDumpFolders } from './helpers';
+import { Container } from 'typedi';
 import Logger from 'pino';
-import {getConfig} from './config';
-import {COLLECTIONS_CONFIG, DIRECTUS_CONFIG, LOGGER, SNAPSHOT_CONFIG,} from './constants';
+import { getConfig } from './config';
+import {
+  COLLECTIONS_CONFIG,
+  DIRECTUS_CONFIG,
+  LOGGER,
+  SNAPSHOT_CONFIG,
+} from './constants';
 
 export async function initContext(options: any) {
   // Set temporary logger, in case of error when loading the config

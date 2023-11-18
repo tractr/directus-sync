@@ -1,8 +1,8 @@
-import {DataClient, Query, WithoutIdAndSyncId} from '../base';
-import {createFlow, deleteFlow, readFlows, updateFlow,} from '@directus/sdk';
-import {Service} from 'typedi';
-import {MigrationClient} from '../../migration-client';
-import {DirectusFlow} from "./interfaces";
+import { DataClient, Query, WithoutIdAndSyncId } from '../base';
+import { createFlow, deleteFlow, readFlows, updateFlow } from '@directus/sdk';
+import { Service } from 'typedi';
+import { MigrationClient } from '../../migration-client';
+import { DirectusFlow } from './interfaces';
 
 @Service()
 export class FlowsDataClient extends DataClient<DirectusFlow> {

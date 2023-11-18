@@ -1,13 +1,16 @@
-import {DataClient, Query, WithoutIdAndSyncId} from '../base';
-import {createDashboard, deleteDashboard, readDashboards, updateDashboard,} from '@directus/sdk';
-import {Service} from 'typedi';
-import {MigrationClient} from '../../migration-client';
-import {DirectusDashboard} from "./interfaces";
+import { DataClient, Query, WithoutIdAndSyncId } from '../base';
+import {
+  createDashboard,
+  deleteDashboard,
+  readDashboards,
+  updateDashboard,
+} from '@directus/sdk';
+import { Service } from 'typedi';
+import { MigrationClient } from '../../migration-client';
+import { DirectusDashboard } from './interfaces';
 
 @Service()
-export class DashboardsDataClient extends DataClient<
-  DirectusDashboard
-> {
+export class DashboardsDataClient extends DataClient<DirectusDashboard> {
   constructor(migrationClient: MigrationClient) {
     super(migrationClient);
   }
@@ -16,9 +19,7 @@ export class DashboardsDataClient extends DataClient<
     return deleteDashboard(itemId);
   }
 
-  protected getInsertCommand(
-    item: WithoutIdAndSyncId<DirectusDashboard>,
-  ) {
+  protected getInsertCommand(item: WithoutIdAndSyncId<DirectusDashboard>) {
     return createDashboard(item);
   }
 

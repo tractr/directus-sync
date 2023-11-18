@@ -1,9 +1,9 @@
-import {DataClient, Query, WithoutIdAndSyncId} from '../base';
-import {createRole, deleteRole, readRoles, updateRole,} from '@directus/sdk';
-import {Service} from 'typedi';
-import {MigrationClient} from '../../migration-client';
+import { DataClient, Query, WithoutIdAndSyncId } from '../base';
+import { createRole, deleteRole, readRoles, updateRole } from '@directus/sdk';
+import { Service } from 'typedi';
+import { MigrationClient } from '../../migration-client';
 import deepmerge from 'deepmerge';
-import {DirectusRole} from "./interfaces";
+import { DirectusRole } from './interfaces';
 
 @Service()
 export class RolesDataClient extends DataClient<DirectusRole> {
@@ -25,13 +25,13 @@ export class RolesDataClient extends DataClient<DirectusRole> {
     // Do not filter by id if the query already contains a filter for the id
     const hasIdFilter = query.filter && (query.filter as { id?: string }).id;
     const newQuery = !hasIdFilter
-      ? (deepmerge(query, {
+      ? deepmerge(query, {
           filter: {
             id: {
               _neq: adminRoleId,
             },
           },
-        }))
+        })
       : query;
     return readRoles(newQuery);
   }

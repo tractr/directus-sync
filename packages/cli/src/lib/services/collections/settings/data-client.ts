@@ -1,8 +1,8 @@
-import {DataClient, Query, WithoutIdAndSyncId} from '../base';
-import {readSettings, updateSettings,} from '@directus/sdk';
-import {Service} from 'typedi';
-import {MigrationClient} from '../../migration-client';
-import {DirectusSettings} from "./interfaces";
+import { DataClient, Query, WithoutIdAndSyncId } from '../base';
+import { readSettings, updateSettings } from '@directus/sdk';
+import { Service } from 'typedi';
+import { MigrationClient } from '../../migration-client';
+import { DirectusSettings } from './interfaces';
 
 @Service()
 export class SettingsDataClient extends DataClient<DirectusSettings> {
@@ -16,9 +16,7 @@ export class SettingsDataClient extends DataClient<DirectusSettings> {
     return readSettings();
   }
 
-  protected getInsertCommand(
-    item: WithoutIdAndSyncId<DirectusSettings>,
-  ) {
+  protected getInsertCommand(item: WithoutIdAndSyncId<DirectusSettings>) {
     // Settings are not creatable, use update instead
     return updateSettings(item);
   }

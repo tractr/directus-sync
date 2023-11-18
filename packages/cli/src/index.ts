@@ -1,8 +1,16 @@
 import 'reflect-metadata';
-import {program} from 'commander';
-import {disposeContext, initContext, logEndAndClose, logErrorAndStop, runDiff, runPull, runPush,} from './lib';
+import { program } from 'commander';
+import {
+  disposeContext,
+  initContext,
+  logEndAndClose,
+  logErrorAndStop,
+  runDiff,
+  runPull,
+  runPush,
+} from './lib';
 import Path from 'path';
-import {runUntrack} from './lib/commands/untrack';
+import { runUntrack } from './lib/commands/untrack';
 
 const defaultDumpPath = Path.join(process.cwd(), 'directus-config');
 const defaultSnapshotPath = 'snapshot';

@@ -7,12 +7,12 @@ import {
   WithSyncId,
   WithSyncIdAndWithoutId,
 } from './interfaces';
-import {IdMap, IdMapperClient} from './id-mapper-client';
-import {diff} from 'deep-object-diff';
-import {DataLoader} from './data-loader';
-import {DataClient} from './data-client';
+import { IdMap, IdMapperClient } from './id-mapper-client';
+import { diff } from 'deep-object-diff';
+import { DataLoader } from './data-loader';
+import { DataClient } from './data-client';
 import pino from 'pino';
-import {DataMapper} from './data-mapper';
+import { DataMapper } from './data-mapper';
 
 export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
   protected readonly fieldsToIgnore: [

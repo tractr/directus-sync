@@ -1,11 +1,11 @@
-import {DataLoader} from '../base';
+import { DataLoader } from '../base';
 
-import {Inject, Service} from 'typedi';
-import {WEBHOOKS_COLLECTION} from './constants';
+import { Inject, Service } from 'typedi';
+import { WEBHOOKS_COLLECTION } from './constants';
 import path from 'path';
-import type {CollectionsConfig} from '../../../config';
-import {COLLECTIONS_CONFIG} from '../../../constants';
-import {DirectusWebhook} from "./interfaces";
+import type { CollectionsConfig } from '../../../config';
+import { COLLECTIONS_CONFIG } from '../../../constants';
+import { DirectusWebhook } from './interfaces';
 
 @Service()
 export class WebhooksDataLoader extends DataLoader<DirectusWebhook> {

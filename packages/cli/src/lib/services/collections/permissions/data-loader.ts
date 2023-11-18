@@ -1,15 +1,13 @@
-import {DataLoader, WithSyncIdAndWithoutId} from '../base';
-import {Inject, Service} from 'typedi';
-import {PERMISSIONS_COLLECTION} from './constants';
+import { DataLoader, WithSyncIdAndWithoutId } from '../base';
+import { Inject, Service } from 'typedi';
+import { PERMISSIONS_COLLECTION } from './constants';
 import path from 'path';
-import type {CollectionsConfig} from '../../../config';
-import {COLLECTIONS_CONFIG} from '../../../constants';
-import {DirectusPermission} from "./interfaces";
+import type { CollectionsConfig } from '../../../config';
+import { COLLECTIONS_CONFIG } from '../../../constants';
+import { DirectusPermission } from './interfaces';
 
 @Service()
-export class PermissionsDataLoader extends DataLoader<
-  DirectusPermission
-> {
+export class PermissionsDataLoader extends DataLoader<DirectusPermission> {
   constructor(@Inject(COLLECTIONS_CONFIG) config: CollectionsConfig) {
     const filePath = path.join(
       config.dumpPath,

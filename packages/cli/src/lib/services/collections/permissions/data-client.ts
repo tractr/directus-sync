@@ -1,13 +1,16 @@
-import {DataClient, Query, WithoutIdAndSyncId} from '../base';
-import {createPermission, deletePermission, readPermissions, updatePermission,} from '@directus/sdk';
-import {Service} from 'typedi';
-import {MigrationClient} from '../../migration-client';
-import {DirectusPermission} from "./interfaces";
+import { DataClient, Query, WithoutIdAndSyncId } from '../base';
+import {
+  createPermission,
+  deletePermission,
+  readPermissions,
+  updatePermission,
+} from '@directus/sdk';
+import { Service } from 'typedi';
+import { MigrationClient } from '../../migration-client';
+import { DirectusPermission } from './interfaces';
 
 @Service()
-export class PermissionsDataClient extends DataClient<
-  DirectusPermission
-> {
+export class PermissionsDataClient extends DataClient<DirectusPermission> {
   constructor(migrationClient: MigrationClient) {
     super(migrationClient);
   }
@@ -27,9 +30,7 @@ export class PermissionsDataClient extends DataClient<
     return deletePermission(itemId);
   }
 
-  protected getInsertCommand(
-    item: WithoutIdAndSyncId<DirectusPermission>,
-  ) {
+  protected getInsertCommand(item: WithoutIdAndSyncId<DirectusPermission>) {
     return createPermission(item);
   }
 

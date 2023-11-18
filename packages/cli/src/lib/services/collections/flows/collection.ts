@@ -1,16 +1,16 @@
 import 'dotenv/config';
-import {DirectusCollection, WithSyncIdAndWithoutId} from '../base';
+import { DirectusCollection, WithSyncIdAndWithoutId } from '../base';
 import pino from 'pino';
-import {Inject, Service} from 'typedi';
-import {FlowsDataLoader} from './data-loader';
-import {FlowsDataClient} from './data-client';
-import {FlowsIdMapperClient} from './id-mapper-client';
-import {FlowsDataDiffer} from './data-differ';
-import {getChildLogger} from '../../../helpers';
-import {FLOWS_COLLECTION} from './constants';
-import {FlowsDataMapper} from './data-mapper';
-import {LOGGER} from '../../../constants';
-import {DirectusFlow} from "./interfaces";
+import { Inject, Service } from 'typedi';
+import { FlowsDataLoader } from './data-loader';
+import { FlowsDataClient } from './data-client';
+import { FlowsIdMapperClient } from './id-mapper-client';
+import { FlowsDataDiffer } from './data-differ';
+import { getChildLogger } from '../../../helpers';
+import { FLOWS_COLLECTION } from './constants';
+import { FlowsDataMapper } from './data-mapper';
+import { LOGGER } from '../../../constants';
+import { DirectusFlow } from './interfaces';
 
 @Service()
 export class FlowsCollection extends DirectusCollection<DirectusFlow> {

@@ -1,16 +1,16 @@
 import 'dotenv/config';
-import {DirectusCollection} from '../base';
+import { DirectusCollection } from '../base';
 import pino from 'pino';
-import {Inject, Service} from 'typedi';
-import {RolesDataLoader} from './data-loader';
-import {RolesDataClient} from './data-client';
-import {RolesIdMapperClient} from './id-mapper-client';
-import {RolesDataDiffer} from './data-differ';
-import {getChildLogger} from '../../../helpers';
-import {ROLES_COLLECTION} from './constants';
-import {RolesDataMapper} from './data-mapper';
-import {LOGGER} from '../../../constants';
-import {DirectusRole} from "./interfaces";
+import { Inject, Service } from 'typedi';
+import { RolesDataLoader } from './data-loader';
+import { RolesDataClient } from './data-client';
+import { RolesIdMapperClient } from './id-mapper-client';
+import { RolesDataDiffer } from './data-differ';
+import { getChildLogger } from '../../../helpers';
+import { ROLES_COLLECTION } from './constants';
+import { RolesDataMapper } from './data-mapper';
+import { LOGGER } from '../../../constants';
+import { DirectusRole } from './interfaces';
 
 @Service()
 export class RolesCollection extends DirectusCollection<DirectusRole> {

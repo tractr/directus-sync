@@ -1,11 +1,11 @@
-import {DataMapper, Field, IdMappers} from '../base';
-import {Container, Inject, Service} from 'typedi';
+import { DataMapper, Field, IdMappers } from '../base';
+import { Container, Inject, Service } from 'typedi';
 import pino from 'pino';
-import {getChildLogger} from '../../../helpers';
-import {DashboardsIdMapperClient} from '../dashboards';
-import {LOGGER} from '../../../constants';
-import {PANELS_COLLECTION} from './constants';
-import {DirectusPanel} from "./interfaces";
+import { getChildLogger } from '../../../helpers';
+import { DashboardsIdMapperClient } from '../dashboards';
+import { LOGGER } from '../../../constants';
+import { PANELS_COLLECTION } from './constants';
+import { DirectusPanel } from './interfaces';
 
 @Service()
 export class PanelsDataMapper extends DataMapper<DirectusPanel> {

@@ -1,5 +1,5 @@
 import Path from 'path';
-import {env} from './helpers';
+import { env } from './helpers';
 
 type ProgramOptions = {
   debug: boolean;

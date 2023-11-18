@@ -1,8 +1,13 @@
-import {DataClient, Query, WithoutIdAndSyncId} from '../base';
-import {createPanel, deletePanel, readPanels, updatePanel,} from '@directus/sdk';
-import {Service} from 'typedi';
-import {MigrationClient} from '../../migration-client';
-import {DirectusPanel} from "./interfaces";
+import { DataClient, Query, WithoutIdAndSyncId } from '../base';
+import {
+  createPanel,
+  deletePanel,
+  readPanels,
+  updatePanel,
+} from '@directus/sdk';
+import { Service } from 'typedi';
+import { MigrationClient } from '../../migration-client';
+import { DirectusPanel } from './interfaces';
 
 @Service()
 export class PanelsDataClient extends DataClient<DirectusPanel> {

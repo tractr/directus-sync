@@ -1,5 +1,5 @@
 import createHttpError from 'http-errors';
-import {DirectusConfig} from '../../../config';
+import { DirectusConfig } from '../../../config';
 
 export type IdMap = {
   id: number;

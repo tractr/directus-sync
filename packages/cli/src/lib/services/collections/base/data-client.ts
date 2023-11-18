@@ -1,6 +1,11 @@
-import {RestCommand} from '@directus/sdk';
-import {DirectusBaseType, DirectusId, Query, WithoutIdAndSyncId} from './interfaces';
-import {MigrationClient} from '../../migration-client';
+import { RestCommand } from '@directus/sdk';
+import {
+  DirectusBaseType,
+  DirectusId,
+  Query,
+  WithoutIdAndSyncId,
+} from './interfaces';
+import { MigrationClient } from '../../migration-client';
 
 /**
  * This class is responsible for calling CRUD operations on the target collection using the rest API.

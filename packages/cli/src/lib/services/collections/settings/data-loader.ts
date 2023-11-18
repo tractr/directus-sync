@@ -1,11 +1,11 @@
-import {DataLoader} from '../base';
+import { DataLoader } from '../base';
 
-import {Inject, Service} from 'typedi';
-import {SETTINGS_COLLECTION} from './constants';
+import { Inject, Service } from 'typedi';
+import { SETTINGS_COLLECTION } from './constants';
 import path from 'path';
-import type {CollectionsConfig} from '../../../config';
-import {COLLECTIONS_CONFIG} from '../../../constants';
-import {DirectusSettings} from "./interfaces";
+import type { CollectionsConfig } from '../../../config';
+import { COLLECTIONS_CONFIG } from '../../../constants';
+import { DirectusSettings } from './interfaces';
 
 @Service()
 export class SettingsDataLoader extends DataLoader<DirectusSettings> {

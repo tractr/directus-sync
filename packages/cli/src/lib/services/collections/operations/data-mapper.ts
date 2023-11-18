@@ -1,17 +1,15 @@
-import {DataMapper, Field, IdMappers} from '../base';
-import {Container, Inject, Service} from 'typedi';
-import {FlowsIdMapperClient} from '../flows';
-import {OperationsIdMapperClient} from './id-mapper-client';
+import { DataMapper, Field, IdMappers } from '../base';
+import { Container, Inject, Service } from 'typedi';
+import { FlowsIdMapperClient } from '../flows';
+import { OperationsIdMapperClient } from './id-mapper-client';
 import pino from 'pino';
-import {getChildLogger} from '../../../helpers';
-import {LOGGER} from '../../../constants';
-import {OPERATIONS_COLLECTION} from './constants';
-import {DirectusOperation} from "./interfaces";
+import { getChildLogger } from '../../../helpers';
+import { LOGGER } from '../../../constants';
+import { OPERATIONS_COLLECTION } from './constants';
+import { DirectusOperation } from './interfaces';
 
 @Service()
-export class OperationsDataMapper extends DataMapper<
-  DirectusOperation
-> {
+export class OperationsDataMapper extends DataMapper<DirectusOperation> {
   protected fieldsToIgnore: Field<DirectusOperation>[] = [
     'date_created',
     'user_created',
