@@ -1,7 +1,7 @@
 import Path from 'path';
 import { env } from './helpers';
 
-type ProgramOptions = {
+interface ProgramOptions {
   debug: boolean;
   split: boolean;
   dumpPath: string;
@@ -10,7 +10,7 @@ type ProgramOptions = {
   force: boolean;
   directusUrl?: string;
   directusToken?: string;
-};
+}
 
 export function getConfig(options: ProgramOptions) {
   const { dumpPath } = options;

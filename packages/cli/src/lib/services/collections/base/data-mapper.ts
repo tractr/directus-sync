@@ -42,7 +42,7 @@ export abstract class DataMapper<DT extends DirectusBaseType> {
    * This allows to create items by order of dependencies.
    */
   async mapSyncIdToLocalId<T>(item: T): Promise<T | undefined> {
-    const newItem = { ...item } as T;
+    const newItem = { ...item } ;
     for (const entry of Object.entries(this.idMappers)) {
       const field = entry[0] as keyof T;
       const idMapper = entry[1];

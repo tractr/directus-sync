@@ -1,13 +1,13 @@
 import createHttpError from 'http-errors';
 import { DirectusConfig } from '../../../config';
 
-export type IdMap = {
+export interface IdMap {
   id: number;
   table: string;
   sync_id: string;
   local_id: string;
   created_at: Date;
-};
+}
 
 export abstract class IdMapperClient {
   protected readonly extensionUri = '/directus-extension-sync';

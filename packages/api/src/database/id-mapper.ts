@@ -1,13 +1,13 @@
 import { Knex } from 'knex';
 import { randomUUID } from 'crypto';
 
-export type IdMap = {
+export interface IdMap {
   id: number;
   table: string;
   sync_id: string;
   local_id: string;
   created_at: Date;
-};
+}
 
 export class IdMapper {
   protected readonly tableName = 'directus_sync_id_map';

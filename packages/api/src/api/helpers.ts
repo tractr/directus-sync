@@ -1,10 +1,16 @@
-import { ZodError, ZodSchema } from 'zod';
+import { z, ZodError, ZodSchema } from 'zod';
 import createError, { isHttpError } from 'http-errors';
+import pino from 'pino';
+import { Response, Request, NextFunction } from './interfaces';
 
 /**
  * Helpers to ensure the user is an admin
  */
-export function ensureIsAdminHandler(req: any, _res: any, next: any) {
+export function ensureIsAdminHandler(
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+) {
   const { accountability } = req;
   if (accountability?.user == null) {
     return next(createError(401, 'You must be logged in to access this.'));
@@ -19,26 +25,31 @@ export function ensureIsAdminHandler(req: any, _res: any, next: any) {
  * Extract params from a query and
  */
 export function validateInput<T extends ZodSchema>(
-  params: Record<string, any>,
-  zodSchema: T,
-): Zod.infer<T> {
+  payload: unknown,
+  schema: T,
+): z.infer<T> {
   try {
-    return zodSchema.parse(params);
+    return schema.parse(payload);
   } catch (error) {
     const message =
       error instanceof ZodError
         ? error.issues
             .map((e) => `[${e.path.join(',')}] ${e.message}`)
             .join('. ')
-        : error.message;
-    throw createError(400, message);
+        : (error as string);
+    throw new Error(message);
   }
 }
 
 /**
  * Error handler for express
  */
-export function errorHandler(err: any, _req: any, res: any, next: any) {
+export function errorHandler(
+  err: Error,
+  _req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   if (res.headersSent) {
     return next(err);
   }
@@ -53,8 +64,13 @@ export function errorHandler(err: any, _req: any, res: any, next: any) {
 /**
  * Helper to log errors using pino
  */
-export function logError(logger: any) {
-  return function (err: any, _req: any, _res: any, next: any) {
+export function logError(logger: pino.Logger) {
+  return function (
+    err: Error,
+    _req: Request,
+    _res: Response,
+    next: NextFunction,
+  ) {
     if (isHttpError(err)) {
       // Log only 5xx errors
       if (err.statusCode < 500) {

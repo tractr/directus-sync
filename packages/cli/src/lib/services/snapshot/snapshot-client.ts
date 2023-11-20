@@ -9,11 +9,14 @@ import { LOGGER, SNAPSHOT_CONFIG } from '../../constants';
 import pino from 'pino';
 import { getChildLogger, loadJsonFilesRecursively } from '../../helpers';
 
+interface SnapshotDiffDiff { collections: unknown[], fields: unknown[], relations: unknown[] }
+
 const SNAPSHOT_JSON = 'snapshot.json';
 const INFO_JSON = 'info.json';
 const COLLECTIONS_DIR = 'collections';
 const FIELDS_DIR = 'fields';
 const RELATIONS_DIR = 'relations';
+
 
 @Service()
 export class SnapshotClient {
@@ -54,7 +57,7 @@ export class SnapshotClient {
    */
   async push() {
     const diff = await this.diffSnapshot();
-    if (typeof diff === 'undefined' || !diff.diff) {
+    if (!diff?.diff) {
       this.logger.info('No changes to apply');
     } else {
       const directus = this.migrationClient.get();
@@ -68,10 +71,10 @@ export class SnapshotClient {
    */
   async diff() {
     const diff = await this.diffSnapshot();
-    if (typeof diff === 'undefined' || !diff.diff) {
+    if (!diff?.diff) {
       this.logger.info('No changes to apply');
     } else {
-      const { collections, fields, relations } = diff.diff;
+      const { collections, fields, relations } = diff.diff as SnapshotDiffDiff;
       if (collections) {
         this.logger.info(
           `Found ${collections.length} change${

@@ -10,7 +10,7 @@ export async function runUntrack({
   collection: string;
   id: string;
 }) {
-  const logger = Container.get(LOGGER) as pino.Logger;
+  const logger = Container.get(LOGGER) ;
   const idMapper = getIdMapperClientByName(collection);
   try {
     await idMapper.removeByLocalId(id);

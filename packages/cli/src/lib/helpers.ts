@@ -12,7 +12,7 @@ import path from 'path';
 import { LOGGER } from './constants';
 
 export function createDumpFolders(config: Config) {
-  const logger = Container.get(LOGGER) as pino.Logger;
+  const logger = Container.get(LOGGER) ;
 
   if (!existsSync(config.collections.dumpPath)) {
     logger.info('Create dump folder for collections');
@@ -28,7 +28,7 @@ export function createDumpFolders(config: Config) {
  * Helper for logging error.
  */
 export function logErrorAndStop(error: string | Error, code = 1) {
-  const logger = Container.get(LOGGER) as pino.Logger;
+  const logger = Container.get(LOGGER) ;
   logger.error(error);
   process.exit(code);
 }
@@ -37,7 +37,7 @@ export function logErrorAndStop(error: string | Error, code = 1) {
  * Helper for logging success.
  */
 export function logEndAndClose() {
-  const logger = Container.get(LOGGER) as pino.Logger;
+  const logger = Container.get(LOGGER) ;
   logger.info(`✅  Done!`);
   process.exit(0);
 }
