@@ -10,7 +10,7 @@ describe('env', () => {
     process.env = originalEnv;
   });
   it('should return the environment variable', () => {
-    process.env['TEST'] = 'test';
+    process.env.TEST = 'test';
     expect(env('TEST')).toEqual('test');
   });
   it('should return the default value', () => {

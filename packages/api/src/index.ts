@@ -27,7 +27,8 @@ export default defineEndpoint(async (router, { database, logger }) => {
       );
       const idMap = await idMapper.getBySyncId(table, sync_id);
       if (idMap === null) {
-        return next(createError(404, 'No id map found'));
+        next(createError(404, 'No id map found'));
+        return;
       }
       res.status(200);
       res.json(idMap);

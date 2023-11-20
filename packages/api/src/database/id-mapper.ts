@@ -82,7 +82,7 @@ export class IdMapper {
     localId: number | string,
     syncId?: string,
   ): Promise<string> {
-    const finalSyncId = syncId || randomUUID();
+    const finalSyncId = syncId ?? randomUUID();
     await this.database(this.tableName).insert({
       table,
       sync_id: finalSyncId,

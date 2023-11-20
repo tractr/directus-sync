@@ -1,7 +1,7 @@
 import Path from 'path';
 import { env } from './helpers';
 
-interface ProgramOptions {
+export interface ProgramOptions {
   debug: boolean;
   split: boolean;
   dumpPath: string;

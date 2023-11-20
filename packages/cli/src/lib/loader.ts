@@ -11,7 +11,7 @@ import {
 import { createDumpFolders } from './helpers';
 import { Container } from 'typedi';
 import Logger from 'pino';
-import { getConfig } from './config';
+import { getConfig, ProgramOptions } from './config';
 import {
   COLLECTIONS_CONFIG,
   DIRECTUS_CONFIG,
@@ -19,7 +19,8 @@ import {
   SNAPSHOT_CONFIG,
 } from './constants';
 
-export async function initContext(options: any) {
+// eslint-disable-next-line @typescript-eslint/require-await
+export async function initContext(options: ProgramOptions) {
   // Set temporary logger, in case of error when loading the config
   Container.set(
     LOGGER,

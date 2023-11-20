@@ -8,7 +8,7 @@ import { DirectusRole } from './interfaces';
 
 @Service()
 export class RolesDataMapper extends DataMapper<DirectusRole> {
-  protected fieldsToIgnore: Field<DirectusRole>[] = ['users'];
+  protected fieldsToIgnore: Field<DirectusRole, 'users'>[] = ['users'];
   protected idMappers: IdMappers<DirectusRole> = {};
 
   constructor(@Inject(LOGGER) baseLogger: pino.Logger) {

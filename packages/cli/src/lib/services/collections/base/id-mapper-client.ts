@@ -134,7 +134,7 @@ export abstract class IdMapperClient {
     if (!response.ok) {
       let error;
       try {
-        const payload = await response.json();
+        const payload: Error = await response.json();
         error = createHttpError(response.status, payload.message);
       } catch (e) {
         if (response.status === 404 && response.statusText === 'Not Found') {

@@ -4,15 +4,17 @@ import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
 import { LOGGER } from '../../../constants';
 import { DASHBOARDS_COLLECTION } from './constants';
-import { DirectusDashboard } from './interfaces';
+import {
+  DirectusDashboard,
+  DirectusDashboardVirtualFields,
+} from './interfaces';
 
 @Service()
 export class DashboardsDataMapper extends DataMapper<DirectusDashboard> {
-  protected fieldsToIgnore: Field<DirectusDashboard>[] = [
-    'date_created',
-    'user_created',
-    'panels',
-  ];
+  protected fieldsToIgnore: Field<
+    DirectusDashboard,
+    DirectusDashboardVirtualFields
+  >[] = ['date_created', 'user_created', 'panels'];
   protected idMappers: IdMappers<DirectusDashboard> = {};
 
   constructor(@Inject(LOGGER) baseLogger: pino.Logger) {

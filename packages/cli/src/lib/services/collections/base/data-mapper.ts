@@ -6,12 +6,13 @@ import {
   WithSyncIdAndWithoutId,
 } from './interfaces';
 import pino from 'pino';
+import { IdMapperClient } from './id-mapper-client';
 
 export abstract class DataMapper<DT extends DirectusBaseType> {
   /**
    * These field will be ignored when comparing the data from the dump with the data from the target table.
    */
-  protected fieldsToIgnore: Field<DT>[] = [];
+  protected fieldsToIgnore: Field<DT, string>[] = [];
 
   /**
    * Returns a map of fields and id mapper to use when mapping the ids of the items.
@@ -42,10 +43,10 @@ export abstract class DataMapper<DT extends DirectusBaseType> {
    * This allows to create items by order of dependencies.
    */
   async mapSyncIdToLocalId<T>(item: T): Promise<T | undefined> {
-    const newItem = { ...item } ;
+    const newItem = { ...item };
     for (const entry of Object.entries(this.idMappers)) {
       const field = entry[0] as keyof T;
-      const idMapper = entry[1];
+      const idMapper: IdMapperClient = entry[1];
 
       if (Array.isArray(newItem[field])) {
         throw new Error('Mapping ids for array is not supported');
@@ -60,7 +61,7 @@ export abstract class DataMapper<DT extends DirectusBaseType> {
           );
           return undefined;
         }
-        newItem[field] = idMap.local_id;
+        newItem[field] = idMap.local_id as T[keyof T];
       }
     }
     return newItem;
@@ -87,7 +88,7 @@ export abstract class DataMapper<DT extends DirectusBaseType> {
     const newItem = { ...item };
     for (const entry of Object.entries(this.idMappers)) {
       const field = entry[0] as keyof T;
-      const idMapper = entry[1];
+      const idMapper: IdMapperClient = entry[1];
 
       if (Array.isArray(newItem[field])) {
         throw new Error('Mapping ids for array is not supported');
@@ -96,7 +97,7 @@ export abstract class DataMapper<DT extends DirectusBaseType> {
       if (id) {
         const idMap = await idMapper.getByLocalId(id.toString());
         if (idMap) {
-          newItem[field] = idMap.sync_id;
+          newItem[field] = idMap.sync_id as T[keyof T];
         } else {
           this.logger.debug(`No id map found for ${field as string}:${id}`);
         }

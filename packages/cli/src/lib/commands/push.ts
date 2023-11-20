@@ -5,7 +5,7 @@ import { loadCollections } from '../loader';
 import { LOGGER } from '../constants';
 
 export async function runPush() {
-  const logger = Container.get(LOGGER) ;
+  const logger: pino.Logger = Container.get(LOGGER);
 
   // Snapshot
   logger.info(`---- Push schema ----`);

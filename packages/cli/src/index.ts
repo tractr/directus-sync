@@ -5,6 +5,7 @@ import {
   initContext,
   logEndAndClose,
   logErrorAndStop,
+  ProgramOptions,
   runDiff,
   runPull,
   runPush,
@@ -69,16 +70,17 @@ registerCommand('untrack', 'stop tracking of an element', runUntrack)
 
 program.parse(process.argv);
 
-function registerCommand(
+function registerCommand<Options>(
   name: string,
   description: string,
-  action: (options?: any) => Promise<void>,
+  action: (options?: Options) => Promise<void>,
 ) {
   return program
     .command(name)
     .description(description)
-    .action((options) => {
-      return initContext(program.opts())
+    .action(() => {
+      const options = program.opts() as Options;
+      return initContext(options as ProgramOptions)
         .then(() => action(options))
         .catch(logErrorAndStop)
         .then(disposeContext)

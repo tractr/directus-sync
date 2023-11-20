@@ -9,7 +9,7 @@ import { DirectusFlow } from './interfaces';
 
 @Service()
 export class FlowsDataMapper extends DataMapper<DirectusFlow> {
-  protected fieldsToIgnore: Field<DirectusFlow>[] = [
+  protected fieldsToIgnore: Field<DirectusFlow, 'operations'>[] = [
     'date_created',
     'user_created',
     'operations',

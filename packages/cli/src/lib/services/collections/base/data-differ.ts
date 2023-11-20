@@ -43,7 +43,7 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
       // Existing item from idMapper
       const targetItem = await this.getTargetItem(sourceItem);
       if (targetItem) {
-        const { hasDiff, diffObject } = await this.getDiffBetweenItems(
+        const { hasDiff, diffObject } = this.getDiffBetweenItems(
           sourceItem,
           targetItem,
         );
@@ -64,7 +64,7 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
     const toDelete = await this.getIdsToDelete(unchanged, toUpdate, dangling);
 
     // Ensure that dangling items are not in toDelete
-    await this.checkDanglingAndDeleteOverlap(dangling, toDelete);
+    this.checkDanglingAndDeleteOverlap(dangling, toDelete);
 
     return { toCreate, toUpdate, toDelete, unchanged, dangling };
   }
@@ -150,7 +150,7 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
    * This method ensure there is no dangling ids that are also in the toDelete list.
    * Throws an error if there is.
    */
-  protected async checkDanglingAndDeleteOverlap(
+  protected checkDanglingAndDeleteOverlap(
     dangling: IdMap[],
     toDelete: IdMap[],
   ) {
@@ -175,7 +175,7 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
    * Get the diff between two items and returns the source item with only the diff fields.
    * This is non-destructive, and non-deep.
    */
-  protected async getDiffBetweenItems(
+  protected getDiffBetweenItems(
     sourceItem: WithSyncIdAndWithoutId<DirectusType>,
     targetItem: WithSyncId<DirectusType>,
   ) {

@@ -1,12 +1,12 @@
 // Use a memory sqlite database for testing the IdMapper class:
 import * as Knex from 'knex';
-import { IdMap, IdMapper } from './id-mapper';
+import { IdMapper } from './id-mapper';
 
 describe('IdMapper', () => {
   let idMapper: IdMapper;
   let database: Knex.Knex;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     // Create a new in-memory database before each test
     database = Knex.knex({
       client: 'sqlite3',
@@ -41,7 +41,7 @@ describe('IdMapper', () => {
     expect(created2).toBe(false);
   });
 
-  it('should get table name', async () => {
+  it('should get table name', () => {
     expect(idMapper.getTableName()).toBe('directus_sync_id_map');
   });
 
@@ -51,10 +51,7 @@ describe('IdMapper', () => {
     const newSyncId2 = await idMapper.add('directus_hooks', 'local_id_2');
     const newSyncId3 = await idMapper.add('directus_users', 'local_id_3');
 
-    const result1 = (await idMapper.getBySyncId(
-      'directus_hooks',
-      newSyncId1,
-    )) as IdMap;
+    const result1 = (await idMapper.getBySyncId('directus_hooks', newSyncId1))!;
     expect(result1.sync_id).toBe(newSyncId1);
     expect(result1.local_id).toBe('local_id_1');
     expect(result1.table).toBe('directus_hooks');
@@ -64,31 +61,31 @@ describe('IdMapper', () => {
     const { local_id: localId2 } = (await idMapper.getBySyncId(
       'directus_hooks',
       newSyncId2,
-    )) as IdMap;
+    ))!;
     expect(localId2).toBe('local_id_2');
 
     const { local_id: localId3 } = (await idMapper.getBySyncId(
       'directus_users',
       newSyncId3,
-    )) as IdMap;
+    ))!;
     expect(localId3).toBe('local_id_3');
 
     const { sync_id: syncId1 } = (await idMapper.getByLocalId(
       'directus_hooks',
       'local_id_1',
-    )) as IdMap;
+    ))!;
     expect(syncId1).toBe(newSyncId1);
 
     const { sync_id: syncId2 } = (await idMapper.getByLocalId(
       'directus_hooks',
       'local_id_2',
-    )) as IdMap;
+    ))!;
     expect(syncId2).toBe(newSyncId2);
 
     const { sync_id: syncId3 } = (await idMapper.getByLocalId(
       'directus_users',
       'local_id_3',
-    )) as IdMap;
+    ))!;
     expect(syncId3).toBe(newSyncId3);
 
     // Count the number of rows in the table

@@ -21,8 +21,8 @@ export class PermissionsDataLoader extends DataLoader<DirectusPermission> {
     b: WithSyncIdAndWithoutId<DirectusPermission>,
   ) => number {
     return (a, b) => {
-      const aVal = `${a.role}-${a.collection}-${a.action}`;
-      const bVal = `${b.role}-${b.collection}-${b.action}`;
+      const aVal = `${a.role as string}-${a.collection}-${a.action}`;
+      const bVal = `${b.role as string}-${b.collection}-${b.action}`;
       return aVal.localeCompare(bVal);
     };
   }

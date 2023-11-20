@@ -16,9 +16,9 @@ import type { DirectusConfig } from '../config';
 export class MigrationClient {
   protected adminRoleId: string | undefined;
 
-  protected readonly client: DirectusClient<any> &
-    RestClient<any> &
-    AuthenticationClient<any>;
+  protected readonly client: DirectusClient<object> &
+    RestClient<object> &
+    AuthenticationClient<object>;
 
   constructor(
     @Inject(DIRECTUS_CONFIG) protected readonly config: DirectusConfig,
@@ -42,7 +42,7 @@ export class MigrationClient {
           fields: ['role'],
         }),
       );
-      this.adminRoleId = role;
+      this.adminRoleId = role as string;
     }
     return this.adminRoleId;
   }

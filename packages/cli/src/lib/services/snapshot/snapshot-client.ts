@@ -9,14 +9,17 @@ import { LOGGER, SNAPSHOT_CONFIG } from '../../constants';
 import pino from 'pino';
 import { getChildLogger, loadJsonFilesRecursively } from '../../helpers';
 
-interface SnapshotDiffDiff { collections: unknown[], fields: unknown[], relations: unknown[] }
+interface SnapshotDiffDiff {
+  collections: unknown[];
+  fields: unknown[];
+  relations: unknown[];
+}
 
 const SNAPSHOT_JSON = 'snapshot.json';
 const INFO_JSON = 'info.json';
 const COLLECTIONS_DIR = 'collections';
 const FIELDS_DIR = 'fields';
 const RELATIONS_DIR = 'relations';
-
 
 @Service()
 export class SnapshotClient {
@@ -142,10 +145,12 @@ export class SnapshotClient {
   /**
    * Decompose the snapshot into a collection of files.
    */
-  protected decomposeData(data: Snapshot): { path: string; content: any }[] {
+  protected decomposeData(
+    data: Snapshot,
+  ): { path: string; content: unknown }[] {
     const { collections, fields, relations, ...info } = data;
 
-    const files: { path: string; content: any }[] = [
+    const files: { path: string; content: unknown }[] = [
       { path: INFO_JSON, content: info },
     ];
 

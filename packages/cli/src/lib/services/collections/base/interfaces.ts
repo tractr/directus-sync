@@ -19,7 +19,9 @@ export interface UpdateItem<T> {
 }
 
 export type StrictField<T> = keyof WithSyncIdAndWithoutId<T>;
-export type Field<T> = keyof WithSyncIdAndWithoutId<T> | string; // Allows other fields
+export type Field<T, Virtual extends string = never> =
+  | keyof WithSyncIdAndWithoutId<T>
+  | Virtual; // Allows other fields
 export type IdMappers<T> = {
   [key in keyof WithSyncIdAndWithoutId<T>]?: IdMapperClient;
 };
