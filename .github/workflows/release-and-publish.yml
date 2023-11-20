@@ -26,6 +26,6 @@ jobs:
       - run: npm run test
       - run: npm run build
       - run: npm run lerna version
-      - run: npm run lerna publish
+      - run: npm run lerna publish from-package
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
