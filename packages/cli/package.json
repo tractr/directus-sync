@@ -10,7 +10,7 @@
     "build": "tsc",
     "start": "ts-node-esm src/index.ts",
     "test": "jest",
-    "prepublishOnly": "cp ../../README.md ./README.md && npm install && npm run format && npm test && npm run build"
+    "prepublishOnly": "cp ../../README.md ./README.md"
   },
   "keywords": [],
   "author": "Edouard Demotes-Mainard <edouard@tractr.net>",
