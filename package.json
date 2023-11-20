@@ -18,7 +18,7 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,gql,mjs}\"",
     "lint": "eslint --fix .",
     "publish": "lerna publish",
-    "version": "lerna version && auto-changelog -p && git add CHANGELOG.md",
+    "version": "lerna version",
     "changed": "lerna changed",
     "prepare": "husky install"
   },
@@ -27,7 +27,6 @@
     "@commitlint/config-conventional": "^18.4.2",
     "@typescript-eslint/eslint-plugin": "^6.11.0",
     "@typescript-eslint/parser": "^6.11.0",
-    "auto-changelog": "^2.4.0",
     "eslint": "^8.54.0",
     "eslint-config-prettier": "^9.0.0",
     "husky": "^8.0.3",
