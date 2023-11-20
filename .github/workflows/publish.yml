@@ -1,4 +1,4 @@
-name: Lerna version & publish
+name: Lerna publish
 
 on:
   push:
@@ -7,25 +7,18 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    if: "contains(github.event.head_commit.message, 'chore(release): bump version')"
     steps:
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GH_TOKEN }}
-      - name: Configure Git
-        run: |
-          git config --global user.email "tractr-bot@tractr.net"
-          git config --global user.name "tractr-bot"
       - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
           registry-url: 'https://registry.npmjs.org/'
       - run: npm ci
-      - run: npm run lint
-      - run: npm run test
       - run: npm run build
-      - run: npm run lerna version
       - run: npm run lerna publish from-package
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
