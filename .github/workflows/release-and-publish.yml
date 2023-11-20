@@ -14,8 +14,8 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
       - name: Configure Git
         run: |
-          git config --global user.name "$CI_BOT_NAME"
-          git config --global user.email "$CI_BOT_EMAIL"
+          git config --global user.name "${{ env.CI_BOT_NAME }}"
+          git config --global user.email "${{ env.CI_BOT_EMAIL }}"
       - name: Use Node.js 18.x
         uses: actions/setup-node@v2
         with:
