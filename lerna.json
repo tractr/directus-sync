@@ -3,10 +3,12 @@
   "version": "independent",
   "command": {
     "version": {
-      "conventionalCommits": true
+      "conventionalCommits": true,
+      "message": "chore(release): bump version to {{currentVersion}} [skip ci]\n\n{{currentTag}}"
     },
     "publish": {
-      "conventionalCommits": true
+      "conventionalCommits": true,
+      "message": "chore(release): publish\n\n{{currentTag}}"
     }
   }
 }
