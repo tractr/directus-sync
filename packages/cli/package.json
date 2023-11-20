@@ -1,0 +1,48 @@
+{
+  "name": "directus-sync",
+  "version": "0.1.7",
+  "description": "This is a CLI tool to sync schema and configuration from one Directus instance to another.",
+  "main": "index.js",
+  "bin": {
+    "directus-sync": "./bin/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node-esm src/index.ts",
+    "test": "jest",
+    "prepublishOnly": "cp ../../README.md ./README.md && npm install && npm run format && npm test && npm run build"
+  },
+  "keywords": [],
+  "author": "Edouard Demotes-Mainard <edouard@tractr.net>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tractr/directus-sync.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/app-root-path": "^1.2.7",
+    "@types/fs-extra": "^11.0.4",
+    "@types/http-errors": "^2.0.4",
+    "@types/jest": "^29.5.5",
+    "@types/node": "20.8.0",
+    "jest": "^29.7.0",
+    "ts-essentials": "^9.4.1",
+    "ts-jest": "^29.1.1",
+    "ts-node": "10.9.1",
+    "typescript": "5.2.2"
+  },
+  "dependencies": {
+    "@directus/sdk": "^12.0.1",
+    "commander": "^11.1.0",
+    "deep-object-diff": "^1.1.9",
+    "deepmerge": "^4.3.1",
+    "dotenv": "^16.3.1",
+    "fs-extra": "^11.1.1",
+    "http-errors": "^2.0.0",
+    "node-fetch": "^3.3.2",
+    "pino": "^8.16.1",
+    "pino-pretty": "^10.2.3",
+    "reflect-metadata": "^0.1.13",
+    "typedi": "^0.10.0"
+  }
+}

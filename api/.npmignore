@@ -1,8 +1,0 @@
-node_modules
-src
-.DS_Store
-.gitignore
-.prettierignore
-.prettierrc
-jest.config.cjs
-tsconfig.json

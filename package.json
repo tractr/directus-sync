@@ -1,0 +1,34 @@
+{
+  "name": "root",
+  "description": "Monorepo for Directus Sync",
+  "author": "Edouard Demotes-Mainard <edouard@tractr.net>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tractr/directus-sync.git"
+  },
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "lerna": "lerna",
+    "clean": "lerna clean",
+    "build": "lerna run build",
+    "test": "lerna run test",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,gql,mjs}\"",
+    "lint": "eslint --fix .",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.2",
+    "@commitlint/config-conventional": "^18.4.2",
+    "@typescript-eslint/eslint-plugin": "^6.11.0",
+    "@typescript-eslint/parser": "^6.11.0",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
+    "husky": "^8.0.3",
+    "lerna": "^7.4.2",
+    "prettier": "^3.1.0",
+    "typescript": "^5.2.2"
+  }
+}
