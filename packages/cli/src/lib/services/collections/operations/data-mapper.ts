@@ -18,6 +18,9 @@ export class OperationsDataMapper extends DataMapper<DirectusOperation> {
     flow: Container.get(FlowsIdMapperClient),
     resolve: Container.get(OperationsIdMapperClient),
     reject: Container.get(OperationsIdMapperClient),
+    options: {
+      flow: Container.get(OperationsIdMapperClient),
+    },
   };
 
   constructor(@Inject(LOGGER) baseLogger: pino.Logger) {
