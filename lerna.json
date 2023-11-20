@@ -4,11 +4,11 @@
   "command": {
     "version": {
       "conventionalCommits": true,
-      "message": "chore(release): bump version [skip ci]"
+      "message": "chore(release): bump version [skip ci]",
+      "yes": true
     },
     "publish": {
-      "conventionalCommits": true,
-      "message": "chore(release): publish"
+      "yes": true
     }
   }
 }
