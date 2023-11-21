@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { DirectusCollection, WithSyncIdAndWithoutId } from '../base';
 import pino from 'pino';
 import { Inject, Service } from 'typedi';
