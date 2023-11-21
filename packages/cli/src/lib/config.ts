@@ -13,9 +13,8 @@ export interface ProgramOptions {
 }
 
 export function getConfig(options: ProgramOptions) {
-  const { dumpPath } = options;
-  const snapshotPath = Path.join(dumpPath, options.snapshotPath);
-  const collectionsPath = Path.join(dumpPath, options.collectionsPath);
+  const snapshotPath = Path.join(options.dumpPath, options.snapshotPath);
+  const collectionsPath = Path.join(options.dumpPath, options.collectionsPath);
 
   return {
     logger: {

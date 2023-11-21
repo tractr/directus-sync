@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { IdMap, IdMapperClient } from './id-mapper-client';
 import {
   DirectusBaseType,
