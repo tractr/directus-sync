@@ -15,6 +15,9 @@ import pino from 'pino';
 import { DataMapper } from './data-mapper';
 
 export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
+  /**
+   * These field will be ignored when comparing the data from the dump with the data from the target table.
+   */
   protected readonly fieldsToIgnore: [
     'id',
     '_syncId',
