@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.2.0 (2023-11-21)
+
+### Features
+
+- **cli:** ignore assets & url fields from settings ([#11](https://github.com/tractr/directus-sync/issues/11)) ([bc0853a](https://github.com/tractr/directus-sync/commit/bc0853af946818e0edf789611c7fba9c5a8183fe))
+
 ## 0.1.11 (2023-11-20)
 
 ### Bug Fixes
