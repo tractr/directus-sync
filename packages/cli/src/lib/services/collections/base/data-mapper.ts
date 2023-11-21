@@ -10,7 +10,7 @@ import { IdMapperClient } from './id-mapper-client';
 
 export abstract class DataMapper<DT extends DirectusBaseType> {
   /**
-   * These field will be ignored when comparing the data from the dump with the data from the target table.
+   * These field will be ignored when saving and restoring the data.
    */
   protected fieldsToIgnore: Field<DT, string>[] = [];
 
