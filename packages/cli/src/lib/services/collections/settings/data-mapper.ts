@@ -9,11 +9,12 @@ import { DirectusSettings } from './interfaces';
 
 @Service()
 export class SettingsDataMapper extends DataMapper<DirectusSettings> {
-  protected fieldsToIgnore: Field<DirectusSettings>[] = [
+  protected fieldsToIgnore: Field<DirectusSettings, 'public_favicon'>[] = [
     // These fields are not relevant meanwhile assets are not supported
     'project_logo',
     'public_foreground',
     'public_background',
+    'public_favicon',
     // Not relevant for migrations. URL are different for each environment. Can be set with env variables.
     'project_url',
   ];
