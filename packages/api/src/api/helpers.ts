@@ -1,7 +1,7 @@
 import { z, ZodError, ZodSchema } from 'zod';
 import createError, { isHttpError } from 'http-errors';
 import pino from 'pino';
-import { Response, Request, NextFunction } from './interfaces';
+import { NextFunction, Request, Response } from './interfaces';
 
 /**
  * Helpers to ensure the user is an admin
