@@ -1,9 +1,13 @@
 import {
+  CommandName,
+  CommandsOptions,
+  ConfigService,
   DashboardsCollection,
   FlowsCollection,
   OperationsCollection,
   PanelsCollection,
   PermissionsCollection,
+  ProgramOptions,
   RolesCollection,
   SettingsCollection,
   WebhooksCollection,
@@ -11,16 +15,14 @@ import {
 import { createDumpFolders } from './helpers';
 import { Container } from 'typedi';
 import Logger from 'pino';
-import { getConfig, ProgramOptions } from './config';
-import {
-  COLLECTIONS_CONFIG,
-  DIRECTUS_CONFIG,
-  LOGGER,
-  SNAPSHOT_CONFIG,
-} from './constants';
+import { LOGGER } from './constants';
 
 // eslint-disable-next-line @typescript-eslint/require-await
-export async function initContext(options: ProgramOptions) {
+export async function initContext(
+  programOptions: ProgramOptions,
+  commandName: CommandName,
+  commandOptions: CommandsOptions[CommandName],
+) {
   // Set temporary logger, in case of error when loading the config
   Container.set(
     LOGGER,
@@ -34,8 +36,10 @@ export async function initContext(options: ProgramOptions) {
       level: 'error',
     }),
   );
-  // Load the config
-  const config = getConfig(options);
+  // Get the config service
+  const config = Container.get(ConfigService);
+  // Set the options
+  config.setOptions(programOptions, commandName, commandOptions);
   // Define the logger
   Container.set(
     LOGGER,
@@ -46,19 +50,14 @@ export async function initContext(options: ProgramOptions) {
           colorize: true,
         },
       },
-      level: config.logger.level,
+      level: config.getLoggerConfig().level,
     }),
   );
 
-  // Define the configs
-  Container.set(COLLECTIONS_CONFIG, config.collections);
-  Container.set(SNAPSHOT_CONFIG, config.snapshot);
-  Container.set(DIRECTUS_CONFIG, config.directus);
-
-  createDumpFolders(config);
+  createDumpFolders();
 }
 
-export async function disposeContext() {
+export function disposeContext() {
   // Close some services if needed
 }
 

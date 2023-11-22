@@ -1,19 +1,13 @@
-import { getIdMapperClientByName } from '../services';
+import { ConfigService, getIdMapperClientByName } from '../services';
 import { Container } from 'typedi';
 import pino from 'pino';
 import { LOGGER } from '../constants';
 
-interface RunUntrackOptions {
-  collection: string;
-  id: string;
-}
-
-export async function runUntrack(options?: RunUntrackOptions) {
+export async function runUntrack() {
   const logger: pino.Logger = Container.get(LOGGER);
-  if (!options) {
-    throw new Error('Missing options');
-  }
-  const { collection, id } = options;
+  const config = Container.get(ConfigService);
+
+  const { collection, id } = config.getUntrackConfig();
   const idMapper = getIdMapperClientByName(collection);
   try {
     await idMapper.removeByLocalId(id);

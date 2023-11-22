@@ -1,5 +1,5 @@
 import createHttpError from 'http-errors';
-import { DirectusConfig } from '../../../config';
+import { ConfigService } from '../../config';
 
 export interface IdMap {
   id: number;
@@ -11,6 +11,10 @@ export interface IdMap {
 
 export abstract class IdMapperClient {
   protected readonly extensionUri = '/directus-extension-sync';
+
+  protected readonly url: string;
+
+  protected readonly token: string;
 
   /**
    * Cache for id maps
@@ -24,9 +28,13 @@ export abstract class IdMapperClient {
   };
 
   constructor(
-    protected readonly config: DirectusConfig,
+    protected readonly config: ConfigService,
     protected readonly table: string,
-  ) {}
+  ) {
+    const { url, token } = config.getDirectusConfig();
+    this.url = url;
+    this.token = token;
+  }
 
   async getBySyncId(syncId: string): Promise<IdMap | undefined> {
     // Try to get from cache
@@ -118,19 +126,16 @@ export abstract class IdMapperClient {
     payload: unknown = undefined,
     options: RequestInit = {},
   ): Promise<T> {
-    const response = await fetch(
-      `${this.config.url}${this.extensionUri}${uri}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-          Authorization: `Bearer ${this.config.token}`,
-        },
-        method,
-        body: payload ? JSON.stringify(payload) : null,
-        ...options,
+    const response = await fetch(`${this.url}${this.extensionUri}${uri}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${this.token}`,
       },
-    );
+      method,
+      body: payload ? JSON.stringify(payload) : null,
+      ...options,
+    });
     if (!response.ok) {
       let error;
       try {

@@ -2,12 +2,12 @@ import { Inject, Service } from 'typedi';
 import { MigrationClient } from '../migration-client';
 import { schemaApply, schemaDiff, schemaSnapshot } from '@directus/sdk';
 import path from 'path';
-import type { SnapshotConfig } from '../../config';
 import { Collection, Field, Relation, Snapshot } from './interfaces';
 import { mkdirpSync, readJsonSync, removeSync, writeJsonSync } from 'fs-extra';
-import { LOGGER, SNAPSHOT_CONFIG } from '../../constants';
+import { LOGGER } from '../../constants';
 import pino from 'pino';
 import { getChildLogger, loadJsonFilesRecursively } from '../../helpers';
+import { ConfigService } from '../config';
 
 interface SnapshotDiffDiff {
   collections: unknown[];
@@ -32,14 +32,15 @@ export class SnapshotClient {
   protected readonly logger: pino.Logger;
 
   constructor(
-    @Inject(SNAPSHOT_CONFIG) config: SnapshotConfig,
+    config: ConfigService,
     @Inject(LOGGER) baseLogger: pino.Logger,
     protected readonly migrationClient: MigrationClient,
   ) {
     this.logger = getChildLogger(baseLogger, 'snapshot');
-    this.dumpPath = config.dumpPath;
-    this.splitFiles = config.splitFiles;
-    this.force = config.force;
+    const { dumpPath, splitFiles, force } = config.getSnapshotConfig();
+    this.dumpPath = dumpPath;
+    this.splitFiles = splitFiles;
+    this.force = force;
   }
 
   /**

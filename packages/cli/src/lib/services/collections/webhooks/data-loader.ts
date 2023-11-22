@@ -1,16 +1,18 @@
 import { DataLoader } from '../base';
 
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { WEBHOOKS_COLLECTION } from './constants';
 import path from 'path';
-import type { CollectionsConfig } from '../../../config';
-import { COLLECTIONS_CONFIG } from '../../../constants';
 import { DirectusWebhook } from './interfaces';
+import { ConfigService } from '../../config';
 
 @Service()
 export class WebhooksDataLoader extends DataLoader<DirectusWebhook> {
-  constructor(@Inject(COLLECTIONS_CONFIG) config: CollectionsConfig) {
-    const filePath = path.join(config.dumpPath, `${WEBHOOKS_COLLECTION}.json`);
+  constructor(config: ConfigService) {
+    const filePath = path.join(
+      config.getCollectionsConfig().dumpPath,
+      `${WEBHOOKS_COLLECTION}.json`,
+    );
     super(filePath);
   }
 }
