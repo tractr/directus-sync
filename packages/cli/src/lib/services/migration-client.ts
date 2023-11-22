@@ -9,8 +9,8 @@ import {
 } from '@directus/sdk';
 import { Inject, Service } from 'typedi';
 import pino from 'pino';
-import { DIRECTUS_CONFIG, LOGGER } from '../constants';
-import type { DirectusConfig } from '../config';
+import { LOGGER } from '../constants';
+import { ConfigService } from './config';
 
 @Service()
 export class MigrationClient {
@@ -21,7 +21,7 @@ export class MigrationClient {
     AuthenticationClient<object>;
 
   constructor(
-    @Inject(DIRECTUS_CONFIG) protected readonly config: DirectusConfig,
+    protected readonly config: ConfigService,
     @Inject(LOGGER) protected readonly logger: pino.Logger,
   ) {
     this.client = this.createClient();
@@ -48,10 +48,9 @@ export class MigrationClient {
   }
 
   protected createClient() {
-    const client = createDirectus(this.config.url)
-      .with(rest())
-      .with(authentication());
-    client.setToken(this.config.token);
+    const { url, token } = this.config.getDirectusConfig();
+    const client = createDirectus(url).with(rest()).with(authentication());
+    client.setToken(token);
     return client;
   }
 }

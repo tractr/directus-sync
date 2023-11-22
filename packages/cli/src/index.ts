@@ -1,12 +1,13 @@
 import 'dotenv/config';
 import 'reflect-metadata';
-import { Option, program } from 'commander';
+import { Command, Option, program } from 'commander';
 import {
+  CommandName,
+  CommandsOptions,
   disposeContext,
   initContext,
   logEndAndClose,
   logErrorAndStop,
-  ProgramOptions,
   runDiff,
   runPull,
   runPush,
@@ -101,11 +102,14 @@ program
 
 program.parse(process.argv);
 
-function wrapAction<Options>(action: (options?: Options) => Promise<void>) {
-  return (commandOpts: Options) => {
-    const options: ProgramOptions = { ...program.opts(), ...commandOpts };
-    return initContext(options)
-      .then(() => action(commandOpts))
+function wrapAction(action: () => Promise<void>) {
+  return (commandOpts: CommandsOptions[CommandName], command: Command) => {
+    return initContext(
+      program.opts(),
+      command.name() as CommandName,
+      commandOpts,
+    )
+      .then(action)
       .catch(logErrorAndStop)
       .then(disposeContext)
       .then(logEndAndClose);
