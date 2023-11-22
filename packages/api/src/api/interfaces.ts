@@ -1,7 +1,7 @@
 import {
-  Response,
-  Request as BaseRequest,
   NextFunction,
+  Request as BaseRequest,
+  Response,
 } from 'express-serve-static-core';
 
 export interface Request extends BaseRequest {

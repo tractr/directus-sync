@@ -15,7 +15,7 @@ import {
 import { createDumpFolders } from './helpers';
 import { Container } from 'typedi';
 import Logger from 'pino';
-import { LOGGER } from './constants';
+import { LOGGER } from './constants'; // eslint-disable-next-line @typescript-eslint/require-await
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function initContext(

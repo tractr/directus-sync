@@ -11,9 +11,9 @@ import {
   runDiff,
   runPull,
   runPush,
+  runUntrack,
 } from './lib';
 import Path from 'path';
-import { runUntrack } from './lib/commands/untrack';
 
 const defaultDumpPath = Path.join(process.cwd(), 'directus-config');
 const defaultSnapshotPath = 'snapshot';
