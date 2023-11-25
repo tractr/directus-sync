@@ -5,6 +5,7 @@ import {
   readJsonSync,
   statSync,
 } from 'fs-extra';
+import { z, ZodError, ZodSchema } from 'zod';
 import pino from 'pino';
 import { Container } from 'typedi';
 import path from 'path';
@@ -77,4 +78,26 @@ export function loadJsonFilesRecursively<T>(dirPath: string): T[] {
     }
   }
   return files;
+}
+
+/**
+ * Validate an object against a zod schema and format the error if it fails
+ */
+export function zodParse<T extends ZodSchema>(
+  payload: unknown,
+  schema: T,
+  errorContext?: string,
+): z.infer<T> {
+  try {
+    return schema.parse(payload);
+  } catch (error) {
+    const message =
+      error instanceof ZodError
+        ? error.issues
+            .map((e) => `[${e.path.join(',')}] ${e.message}`)
+            .join('. ')
+        : (error as string);
+    const fullMessage = errorContext ? `${errorContext}: ${message}` : message;
+    throw new Error(fullMessage);
+  }
 }
