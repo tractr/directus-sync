@@ -13,9 +13,9 @@ import {
   runPush,
   runUntrack,
 } from './lib';
-import Path from 'path';
 
-const defaultDumpPath = Path.join(process.cwd(), 'directus-config');
+const defaultDumpPath = './directus-config';
+const defaultConfigPath = './directus-sync.config.js';
 const defaultSnapshotPath = 'snapshot';
 const defaultCollectionsPath = 'collections';
 
@@ -31,6 +31,10 @@ const directusTokenOption = new Option(
   '-t, --directus-token <directusToken>',
   'Directus access token',
 ).env('DIRECTUS_TOKEN');
+const configPathOption = new Option(
+  '-c, --config-path <configPath>',
+  'the path to the config file. Required for extended options',
+).default(defaultConfigPath);
 
 // Shared options
 const noSplitOption = new Option(
@@ -39,7 +43,7 @@ const noSplitOption = new Option(
 ).default(true);
 const dumpPathOption = new Option(
   '--dump-path <dumpPath>',
-  'the base path for the dump, must be an absolute path',
+  'the base path for the dump',
 ).default(defaultDumpPath);
 const collectionsPathOption = new Option(
   '--collections-path <collectionPath>',
@@ -57,7 +61,8 @@ const forceOption = new Option(
 program
   .addOption(debugOption)
   .addOption(directusUrlOption)
-  .addOption(directusTokenOption);
+  .addOption(directusTokenOption)
+  .addOption(configPathOption);
 
 program
   .command('pull')

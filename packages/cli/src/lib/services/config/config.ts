@@ -2,6 +2,7 @@ import { Service } from 'typedi';
 import {
   CommandName,
   CommandsOptions,
+  ConfigFileOptions,
   OptionsName,
   OptionsTypes,
   ProgramOptions,
@@ -9,6 +10,7 @@ import {
 import Path from 'path';
 import { CommandsOptionsSchemas, ProgramOptionsSchema } from './schema';
 import { Cacheable } from 'typescript-cacheable';
+import { ConfigFileLoader } from './config-file-loader';
 
 @Service()
 export class ConfigService {
@@ -37,9 +39,9 @@ export class ConfigService {
 
   @Cacheable()
   getCollectionsConfig() {
-    const dumpPath = this.getOptions('dumpPath');
+    const dumpPath = Path.resolve(this.getOptions('dumpPath'));
     const collectionsSubPath = this.getOptions('collectionsPath');
-    const collectionsPath = Path.join(dumpPath, collectionsSubPath);
+    const collectionsPath = Path.resolve(dumpPath, collectionsSubPath);
     return {
       dumpPath: collectionsPath,
     };
@@ -47,9 +49,9 @@ export class ConfigService {
 
   @Cacheable()
   getSnapshotConfig() {
-    const dumpPath = this.getOptions('dumpPath');
+    const dumpPath = Path.resolve(this.getOptions('dumpPath'));
     const snapshotSubPath = this.getOptions('snapshotPath');
-    const snapshotPath = Path.join(dumpPath, snapshotSubPath);
+    const snapshotPath = Path.resolve(dumpPath, snapshotSubPath);
     return {
       dumpPath: snapshotPath,
       splitFiles: this.getOptions('split'),
@@ -73,10 +75,19 @@ export class ConfigService {
     };
   }
 
+  @Cacheable()
+  getConfigFileLoaderConfig() {
+    return this.getOptions('configPath');
+  }
+
   protected getOptions<T extends OptionsName>(
     name: T,
     defaultValue?: OptionsTypes[T],
   ): OptionsTypes[T] {
+    const fileOptions = this.getFileOptions();
+    if (fileOptions && fileOptions[name as keyof ConfigFileOptions]) {
+      return fileOptions[name as keyof ConfigFileOptions] as OptionsTypes[T];
+    }
     const commandOptions = this.getCommandOptions();
     if (commandOptions[name as keyof typeof commandOptions] !== undefined) {
       return commandOptions[
@@ -93,6 +104,7 @@ export class ConfigService {
     return defaultValue;
   }
 
+  @Cacheable()
   protected getGlobalOptions() {
     if (!this.programOptions) {
       throw new Error('program options not set');
@@ -100,6 +112,7 @@ export class ConfigService {
     return ProgramOptionsSchema.parse(this.programOptions);
   }
 
+  @Cacheable()
   protected getCommandOptions() {
     if (!this.commandName) {
       throw new Error('command name not set');
@@ -112,5 +125,15 @@ export class ConfigService {
       throw new Error(`missing schema for command ${this.commandName}`);
     }
     return schema.parse(this.commandOptions);
+  }
+
+  @Cacheable()
+  protected getFileOptions(): ConfigFileOptions | undefined {
+    const globalOptions = this.getGlobalOptions();
+    if (!globalOptions.configPath) {
+      throw new Error('missing config file path');
+    }
+    const configFilePath = Path.resolve(globalOptions.configPath);
+    return new ConfigFileLoader(configFilePath).get();
   }
 }
