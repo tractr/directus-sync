@@ -1,13 +1,10 @@
 import {
-  CommandName,
-  CommandsOptions,
   ConfigService,
   DashboardsCollection,
   FlowsCollection,
   OperationsCollection,
   PanelsCollection,
   PermissionsCollection,
-  ProgramOptions,
   RolesCollection,
   SettingsCollection,
   WebhooksCollection,
@@ -19,9 +16,8 @@ import { LOGGER } from './constants'; // eslint-disable-next-line @typescript-es
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function initContext(
-  programOptions: ProgramOptions,
-  commandName: CommandName,
-  commandOptions: CommandsOptions[CommandName],
+  programOptions: object,
+  commandOptions: object,
 ) {
   // Set temporary logger, in case of error when loading the config
   Container.set(
@@ -39,7 +35,7 @@ export async function initContext(
   // Get the config service
   const config = Container.get(ConfigService);
   // Set the options
-  config.setOptions(programOptions, commandName, commandOptions);
+  config.setOptions(programOptions, commandOptions);
   // Define the logger
   Container.set(
     LOGGER,

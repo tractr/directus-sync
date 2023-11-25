@@ -1,33 +1,24 @@
 import { Service } from 'typedi';
-import {
-  CommandName,
-  CommandsOptions,
-  ConfigFileOptions,
-  OptionsName,
-  OptionsTypes,
-  ProgramOptions,
-} from './interfaces';
+import { ConfigFileOptions, OptionName, Options } from './interfaces';
 import Path from 'path';
-import { CommandsOptionsSchemas, ProgramOptionsSchema } from './schema';
 import { Cacheable } from 'typescript-cacheable';
 import { ConfigFileLoader } from './config-file-loader';
 import { zodParse } from '../../helpers';
+import deepmerge from 'deepmerge';
+import { DefaultConfig } from './default-config';
+import { OptionsSchema } from './schema';
 
 @Service()
 export class ConfigService {
-  protected programOptions: ProgramOptions | undefined;
+  protected programOptions: Partial<Options> | undefined;
 
-  protected commandOptions: CommandsOptions[CommandName] | undefined;
-
-  protected commandName: CommandName | undefined;
+  protected commandOptions: Partial<Options> | undefined;
 
   setOptions(
-    programOptions: ProgramOptions,
-    commandName: CommandName,
-    commandOptions: CommandsOptions[CommandName],
+    programOptions: Partial<Options>,
+    commandOptions: Partial<Options>,
   ) {
     this.programOptions = programOptions;
-    this.commandName = commandName;
     this.commandOptions = commandOptions;
   }
 
@@ -56,7 +47,7 @@ export class ConfigService {
     return {
       dumpPath: snapshotPath,
       splitFiles: this.getOptions('split'),
-      force: this.getOptions('force', false),
+      force: this.getOptions('force'),
     };
   }
 
@@ -81,64 +72,46 @@ export class ConfigService {
     return this.getOptions('configPath');
   }
 
-  protected getOptions<T extends OptionsName>(
+  protected getOptions<T extends OptionName>(
     name: T,
-    defaultValue?: OptionsTypes[T],
-  ): OptionsTypes[T] {
-    const fileOptions = this.getFileOptions();
-    if (fileOptions && fileOptions[name as keyof ConfigFileOptions]) {
-      return fileOptions[name as keyof ConfigFileOptions] as OptionsTypes[T];
-    }
-    const commandOptions = this.getCommandOptions();
-    if (commandOptions[name as keyof typeof commandOptions] !== undefined) {
-      return commandOptions[
-        name as keyof typeof commandOptions
-      ] as OptionsTypes[T];
-    }
-    const programOptions = this.getGlobalOptions();
-    if (programOptions[name as keyof ProgramOptions] !== undefined) {
-      return programOptions[name as keyof ProgramOptions] as OptionsTypes[T];
+    defaultValue?: Options[T],
+  ): Required<Options>[T] {
+    const options = this.flattenOptions();
+    if (options[name] !== undefined) {
+      return options[name] as Required<Options>[T];
     }
     if (defaultValue === undefined) {
       throw new Error(`missing option ${name}`);
     }
-    return defaultValue;
+    return defaultValue as Required<Options>[T];
   }
 
+  /**
+   * Options overridden in this order:
+   * 1. Default options
+   * 2. Config file options
+   * 3. Program options
+   * 4. Command options
+   */
   @Cacheable()
-  protected getGlobalOptions() {
-    if (!this.programOptions) {
-      throw new Error('program options not set');
-    }
-    return zodParse(
-      this.programOptions,
-      ProgramOptionsSchema,
-      'Global options',
-    );
-  }
-
-  @Cacheable()
-  protected getCommandOptions() {
-    if (!this.commandName) {
-      throw new Error('command name not set');
-    }
-    if (!this.commandOptions) {
-      throw new Error('command options not set');
-    }
-    const schema = CommandsOptionsSchemas[this.commandName];
-    if (!schema) {
-      throw new Error(`missing schema for command ${this.commandName}`);
-    }
-    return zodParse(this.commandOptions, schema, 'Command options');
+  protected flattenOptions() {
+    let options = {};
+    options = deepmerge(options, DefaultConfig);
+    options = deepmerge(options, this.getFileOptions() ?? {});
+    options = deepmerge(options, this.programOptions ?? {});
+    options = deepmerge(options, this.commandOptions ?? {});
+    // Validate options
+    return zodParse(options, OptionsSchema, 'Options parsing');
   }
 
   @Cacheable()
   protected getFileOptions(): ConfigFileOptions | undefined {
-    const globalOptions = this.getGlobalOptions();
-    if (!globalOptions.configPath) {
+    const configPath =
+      this.programOptions?.configPath ?? DefaultConfig.configPath;
+    if (!configPath) {
       throw new Error('missing config file path');
     }
-    const configFilePath = Path.resolve(globalOptions.configPath);
-    return new ConfigFileLoader(configFilePath).get();
+    const configFullPath = Path.resolve(configPath);
+    return new ConfigFileLoader(configFullPath).get();
   }
 }
