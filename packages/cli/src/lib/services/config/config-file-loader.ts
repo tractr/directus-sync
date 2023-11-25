@@ -3,6 +3,7 @@ import { ConfigFileOptions } from './interfaces';
 import { existsSync } from 'fs-extra';
 import deepmerge from 'deepmerge';
 import Path from 'path';
+import { zodParse } from '../../helpers';
 
 export class ConfigFileLoader {
   protected loadedConfig: ConfigFileOptions | undefined;
@@ -30,7 +31,7 @@ export class ConfigFileLoader {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const rawConfig = require(configPath);
     // Validate and return the config
-    const config = ConfigFileOptionsSchema.parse(rawConfig);
+    const config = zodParse(rawConfig, ConfigFileOptionsSchema, 'Config file');
     // Add the config to the loaded config
     this.loadedConfigPaths.push(configPath);
     // Merge with parents

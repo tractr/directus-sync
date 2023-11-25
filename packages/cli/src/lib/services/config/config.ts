@@ -11,6 +11,7 @@ import Path from 'path';
 import { CommandsOptionsSchemas, ProgramOptionsSchema } from './schema';
 import { Cacheable } from 'typescript-cacheable';
 import { ConfigFileLoader } from './config-file-loader';
+import { zodParse } from '../../helpers';
 
 @Service()
 export class ConfigService {
@@ -109,7 +110,11 @@ export class ConfigService {
     if (!this.programOptions) {
       throw new Error('program options not set');
     }
-    return ProgramOptionsSchema.parse(this.programOptions);
+    return zodParse(
+      this.programOptions,
+      ProgramOptionsSchema,
+      'Global options',
+    );
   }
 
   @Cacheable()
@@ -124,7 +129,7 @@ export class ConfigService {
     if (!schema) {
       throw new Error(`missing schema for command ${this.commandName}`);
     }
-    return schema.parse(this.commandOptions);
+    return zodParse(this.commandOptions, schema, 'Command options');
   }
 
   @Cacheable()
