@@ -11,6 +11,7 @@ export const Options = {
   force: z.boolean(),
   collection: z.string(),
   id: z.string(),
+  configPath: z.string(),
 };
 export const OptionsSchema = z.object(Options);
 
@@ -18,6 +19,7 @@ export const ProgramOptionsSchema = z.object({
   debug: Options.debug,
   directusUrl: Options.directusUrl,
   directusToken: Options.directusToken,
+  configPath: Options.configPath,
 });
 
 export const CommandsOptionsSchemas = {
@@ -46,3 +48,17 @@ export const CommandsOptionsSchemas = {
     id: Options.id,
   }),
 };
+
+export const ConfigFileOptionsSchema = z.object({
+  // Inheritance
+  extends: z.array(z.string()).optional(),
+  // Global options
+  debug: Options.debug.optional(),
+  directusUrl: Options.directusUrl.optional(),
+  directusToken: Options.directusToken.optional(),
+  // Dump config
+  split: Options.split.optional(),
+  dumpPath: Options.dumpPath.optional(),
+  collectionsPath: Options.collectionsPath.optional(),
+  snapshotPath: Options.snapshotPath.optional(),
+});

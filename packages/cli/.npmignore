@@ -7,3 +7,5 @@ src
 example.env
 jest.config.js
 tsconfig.json
+directus-sync.config.js
+directus-sync.config.*.js
