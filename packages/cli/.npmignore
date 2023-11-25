@@ -1,11 +1,12 @@
-node_modules
-directus-config
-src
+node_modules/
+directus-config/
+src/
+test/
 .DS_Store
 .env
 .gitignore
 example.env
 jest.config.js
 tsconfig.json
-directus-sync.config.js
+test/files/config-loader/basic/directus-sync.config.js
 directus-sync.config.*.js
