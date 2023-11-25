@@ -1,9 +1,8 @@
 import 'dotenv/config';
 import 'reflect-metadata';
-import { Command, Option, program } from 'commander';
+import { Option, program } from 'commander';
 import {
-  CommandName,
-  CommandsOptions,
+  DefaultConfig,
   disposeContext,
   initContext,
   logEndAndClose,
@@ -14,14 +13,10 @@ import {
   runUntrack,
 } from './lib';
 
-const defaultDumpPath = './directus-config';
-const defaultConfigPath = './directus-sync.config.js';
-const defaultSnapshotPath = 'snapshot';
-const defaultCollectionsPath = 'collections';
-
 // Global options
-const debugOption = new Option('-d, --debug', 'display more logging').default(
-  false,
+const debugOption = new Option(
+  '-d, --debug',
+  `display more logging (default "${DefaultConfig.debug}")`,
 );
 const directusUrlOption = new Option(
   '-u, --directus-url <directusUrl>',
@@ -33,30 +28,30 @@ const directusTokenOption = new Option(
 ).env('DIRECTUS_TOKEN');
 const configPathOption = new Option(
   '-c, --config-path <configPath>',
-  'the path to the config file. Required for extended options',
-).default(defaultConfigPath);
+  `the path to the config file. Required for extended options (default "${DefaultConfig.configPath}")`,
+);
 
 // Shared options
 const noSplitOption = new Option(
   '--no-split',
-  'should the schema snapshot be split into multiple files',
-).default(true);
+  `should the schema snapshot be split into multiple files (default "${DefaultConfig.split}")`,
+);
 const dumpPathOption = new Option(
   '--dump-path <dumpPath>',
-  'the base path for the dump',
-).default(defaultDumpPath);
+  `the base path for the dump (default "${DefaultConfig.dumpPath}")`,
+);
 const collectionsPathOption = new Option(
   '--collections-path <collectionPath>',
-  'the path for the collections dump, relative to the dump path',
-).default(defaultCollectionsPath);
+  `the path for the collections dump, relative to the dump path (default "${DefaultConfig.collectionsPath}")`,
+);
 const snapshotPathOption = new Option(
   '--snapshot-path <snapshotPath>',
-  'the path for the schema snapshot dump, relative to the dump path',
-).default(defaultSnapshotPath);
+  `the path for the schema snapshot dump, relative to the dump path (default "${DefaultConfig.snapshotPath}")`,
+);
 const forceOption = new Option(
   '-f, --force',
-  'force the diff of schema, even if the Directus version is different',
-).default(false);
+  `force the diff of schema, even if the Directus version is different (default "${DefaultConfig.force}")`,
+);
 
 program
   .addOption(debugOption)
@@ -107,12 +102,28 @@ program
 
 program.parse(process.argv);
 
+/**
+ * Remove some default values from the program options that overrides the config file
+ */
+function cleanProgramOptions(programOptions: Record<string, unknown>) {
+  return programOptions;
+}
+
+/**
+ * Remove some default values from the command options that overrides the config file
+ */
+function cleanCommandOptions(commandOptions: Record<string, unknown>) {
+  if (commandOptions.split === true) {
+    delete commandOptions.split;
+  }
+  return commandOptions;
+}
+
 function wrapAction(action: () => Promise<void>) {
-  return (commandOpts: CommandsOptions[CommandName], command: Command) => {
+  return (commandOpts: Record<string, unknown>) => {
     return initContext(
-      program.opts(),
-      command.name() as CommandName,
-      commandOpts,
+      cleanProgramOptions(program.opts()),
+      cleanCommandOptions(commandOpts),
     )
       .then(action)
       .catch(logErrorAndStop)

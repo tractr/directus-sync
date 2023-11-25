@@ -61,9 +61,21 @@ npx directus-sync untrack --collection <collection> --id <id>
 Removes tracking from an element within Directus. You must specify the collection and the ID of the element you wish to
 stop tracking.
 
-## Global Options
+## Available options
+
+Options are merged from the following sources, in order of precedence:
+
+1. CLI arguments
+2. Environment variables
+3. Configuration file
+4. Default values
+
+### CLI and environment variables
 
 These options can be used with any command to configure the operation of `directus-sync`:
+
+- `-c, --config-path <configPath>`
+  Change the path to the config file. The default is `"./directus-sync.config.js"`.
 
 - `-d, --debug`  
   Display additional logging information. Useful for debugging or verifying what `directus-sync` is doing under the
@@ -93,6 +105,32 @@ These options can be used with any command to configure the operation of `direct
 
 - `-h, --help`  
   Display help information for the `directus-sync` commands.
+
+### Configuration file
+
+The `directus-sync` CLI also supports a configuration file. This file is optional. If it is not provided, the CLI will
+use the default values for the options.
+
+The default path for the configuration file is `./directus-sync.config.js`. You can change this path using the
+`--config-path` option.
+
+The configuration file can extend another configuration file using the `extends` property.
+
+This is an example of a configuration file:
+
+```javascript
+// ./directus-sync.config.js
+module.exports = {
+    extends: ['./directus-sync.config.base.js'],
+    debug: true,
+    directusUrl: 'https://directus.example.com',
+    directusToken: 'my-directus-token',
+    split: true,
+    dumpPath: './directus-config',
+    collectionsPath: 'collections',
+    snapshotPath: 'snapshot',
+};
+```
 
 ### Tracked Elements
 

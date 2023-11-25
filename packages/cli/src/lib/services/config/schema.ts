@@ -1,64 +1,34 @@
 import { z } from 'zod';
 
-export const Options = {
+export const OptionsFields = {
+  // Global
+  configPath: z.string(),
   debug: z.boolean(),
   directusUrl: z.string(),
   directusToken: z.string(),
+  // Pull, diff, push
   split: z.boolean(),
   dumpPath: z.string(),
   collectionsPath: z.string(),
   snapshotPath: z.string(),
+  // Diff, push
   force: z.boolean(),
-  collection: z.string(),
-  id: z.string(),
-  configPath: z.string(),
+  // Untrack
+  collection: z.string().optional(),
+  id: z.string().optional(),
 };
-export const OptionsSchema = z.object(Options);
-
-export const ProgramOptionsSchema = z.object({
-  debug: Options.debug,
-  directusUrl: Options.directusUrl,
-  directusToken: Options.directusToken,
-  configPath: Options.configPath,
-});
-
-export const CommandsOptionsSchemas = {
-  pull: z.object({
-    split: Options.split,
-    dumpPath: Options.dumpPath,
-    collectionsPath: Options.collectionsPath,
-    snapshotPath: Options.snapshotPath,
-  }),
-  diff: z.object({
-    split: Options.split,
-    dumpPath: Options.dumpPath,
-    collectionsPath: Options.collectionsPath,
-    snapshotPath: Options.snapshotPath,
-    force: Options.force,
-  }),
-  push: z.object({
-    split: Options.split,
-    dumpPath: Options.dumpPath,
-    collectionsPath: Options.collectionsPath,
-    snapshotPath: Options.snapshotPath,
-    force: Options.force,
-  }),
-  untrack: z.object({
-    collection: Options.collection,
-    id: Options.id,
-  }),
-};
+export const OptionsSchema = z.object(OptionsFields);
 
 export const ConfigFileOptionsSchema = z.object({
   // Inheritance
   extends: z.array(z.string()).optional(),
   // Global options
-  debug: Options.debug.optional(),
-  directusUrl: Options.directusUrl.optional(),
-  directusToken: Options.directusToken.optional(),
+  debug: OptionsFields.debug.optional(),
+  directusUrl: OptionsFields.directusUrl.optional(),
+  directusToken: OptionsFields.directusToken.optional(),
   // Dump config
-  split: Options.split.optional(),
-  dumpPath: Options.dumpPath.optional(),
-  collectionsPath: Options.collectionsPath.optional(),
-  snapshotPath: Options.snapshotPath.optional(),
+  split: OptionsFields.split.optional(),
+  dumpPath: OptionsFields.dumpPath.optional(),
+  collectionsPath: OptionsFields.collectionsPath.optional(),
+  snapshotPath: OptionsFields.snapshotPath.optional(),
 });
