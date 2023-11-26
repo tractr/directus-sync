@@ -64,7 +64,7 @@ export class SnapshotClient {
     if (!diff?.diff) {
       this.logger.info('No changes to apply');
     } else {
-      const directus = this.migrationClient.get();
+      const directus = await this.migrationClient.get();
       await directus.request(schemaApply(diff));
       this.logger.info('Changes applied');
     }
@@ -114,7 +114,7 @@ export class SnapshotClient {
    * Get the snapshot from the Directus instance.
    */
   protected async getSnapshot() {
-    const directus = this.migrationClient.get();
+    const directus = await this.migrationClient.get();
     return await directus.request<Snapshot>(schemaSnapshot()); // Get better types
   }
 
@@ -184,7 +184,7 @@ export class SnapshotClient {
    * Get the diff from Directus instance
    */
   protected async diffSnapshot() {
-    const directus = this.migrationClient.get();
+    const directus = await this.migrationClient.get();
     const snapshot = this.loadData();
     return await directus.request(schemaDiff(snapshot, this.force));
   }

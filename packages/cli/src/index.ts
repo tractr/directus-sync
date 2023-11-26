@@ -26,6 +26,14 @@ const directusTokenOption = new Option(
   '-t, --directus-token <directusToken>',
   'Directus access token',
 ).env('DIRECTUS_TOKEN');
+const directusEmailOption = new Option(
+  '-e, --directus-email <directusEmail>',
+  'Directus user email',
+).env('DIRECTUS_ADMIN_EMAIL');
+const directusPasswordOption = new Option(
+  '-p, --directus-password <directusPassword>',
+  'Directus user password',
+).env('DIRECTUS_ADMIN_PASSWORD');
 const configPathOption = new Option(
   '-c, --config-path <configPath>',
   `the path to the config file. Required for extended options (default "${DefaultConfig.configPath}")`,
@@ -57,6 +65,8 @@ program
   .addOption(debugOption)
   .addOption(directusUrlOption)
   .addOption(directusTokenOption)
+  .addOption(directusEmailOption)
+  .addOption(directusPasswordOption)
   .addOption(configPathOption);
 
 program
