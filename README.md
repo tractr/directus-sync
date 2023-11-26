@@ -121,14 +121,14 @@ This is an example of a configuration file:
 ```javascript
 // ./directus-sync.config.js
 module.exports = {
-    extends: ['./directus-sync.config.base.js'],
-    debug: true,
-    directusUrl: 'https://directus.example.com',
-    directusToken: 'my-directus-token',
-    split: true,
-    dumpPath: './directus-config',
-    collectionsPath: 'collections',
-    snapshotPath: 'snapshot',
+  extends: ['./directus-sync.config.base.js'],
+  debug: true,
+  directusUrl: 'https://directus.example.com',
+  directusToken: 'my-directus-token',
+  split: true,
+  dumpPath: './directus-config',
+  collectionsPath: 'collections',
+  snapshotPath: 'snapshot',
 };
 ```
 
