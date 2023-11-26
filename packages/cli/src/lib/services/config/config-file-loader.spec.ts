@@ -1,4 +1,4 @@
-import { ConfigFileLoader } from '../../../src/lib';
+import { ConfigFileLoader } from './config-file-loader';
 import Path from 'path';
 
 describe('ConfigFileLoader', () => {

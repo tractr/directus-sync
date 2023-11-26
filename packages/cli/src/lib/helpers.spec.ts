@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { zodParse } from '../src/lib';
+import { zodParse } from './helpers';
 
 describe('zodParse', () => {
   it('should throw error if payload is invalid', () => {
