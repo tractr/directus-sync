@@ -62,6 +62,7 @@ const forceOption = new Option(
 );
 
 program
+  .version(process.env.npm_package_version ?? 'unknown')
   .addOption(debugOption)
   .addOption(directusUrlOption)
   .addOption(directusTokenOption)
