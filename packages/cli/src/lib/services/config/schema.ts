@@ -1,5 +1,11 @@
 import { z } from 'zod';
 
+export const DataListSchema = z.array(z.record(z.unknown()));
+export const TransformDataFunctionSchema = z
+  .function()
+  .args(DataListSchema)
+  .returns(DataListSchema);
+
 export const OptionsFields = {
   // Global
   configPath: z.string(),
@@ -18,6 +24,13 @@ export const OptionsFields = {
   // Untrack
   collection: z.string().optional(),
   id: z.string().optional(),
+  // Hooks
+  hooks: z.record(
+    z.object({
+      onLoad: TransformDataFunctionSchema.optional(),
+      onSave: TransformDataFunctionSchema.optional(),
+    }),
+  ),
 };
 export const OptionsSchema = z.object(OptionsFields);
 
