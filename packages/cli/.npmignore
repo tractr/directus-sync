@@ -8,5 +8,4 @@ test/
 example.env
 jest.config.js
 tsconfig.json
-test/files/config-loader/basic/directus-sync.config.js
-directus-sync.config.*.js
+directus-sync.config.js

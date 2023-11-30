@@ -137,6 +137,8 @@ module.exports = {
   debug: true,
   directusUrl: 'https://directus.example.com',
   directusToken: 'my-directus-token',
+  directusEmail: 'admin@example.com', // ignored if directusToken is provided
+  directusPassword: 'my-directus-password', // ignored if directusToken is provided
   split: true,
   dumpPath: './directus-config',
   collectionsPath: 'collections',
