@@ -13,6 +13,11 @@ Moreover, `directus-sync` organizes backups into multiple files, significantly i
 easier to track and review changes. This thoughtful separation facilitates a smoother version control process, allowing
 for targeted updates and clearer oversight of your Directus configurations.
 
+# Requirements
+
+- Node.js 18 or higher
+- `directus-extension-sync` installed on your Directus instance. See the [installation instructions](#dependency-directus-extension-sync).
+
 # Usage
 
 The CLI is available using the `npx` command.
@@ -86,6 +91,13 @@ These options can be used with any command to configure the operation of `direct
 
 - `-t, --directus-token <directusToken>`  
   Provide the Directus access token. Alternatively, set the `DIRECTUS_TOKEN` environment variable.
+  If provided, the `directus-email` and `directus-password` options are ignored.
+
+- `-e, --directus-email <directusEmail> `  
+  Provide the Directus email. Alternatively, set the `DIRECTUS_ADMIN_EMAIL` environment variable.
+
+- `-p, --directus-password <directusPassword>`
+  Provide the Directus password. Alternatively, set the `DIRECTUS_ADMIN_PASSWORD` environment variable.
 
 - `--no-split`  
   Indicates whether the schema snapshot should be split into multiple files. By default, snapshots are split.
@@ -125,6 +137,8 @@ module.exports = {
   debug: true,
   directusUrl: 'https://directus.example.com',
   directusToken: 'my-directus-token',
+  directusEmail: 'admin@example.com', // ignored if directusToken is provided
+  directusPassword: 'my-directus-password', // ignored if directusToken is provided
   split: true,
   dumpPath: './directus-config',
   collectionsPath: 'collections',

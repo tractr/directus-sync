@@ -10,24 +10,27 @@ import {
 import { Inject, Service } from 'typedi';
 import pino from 'pino';
 import { LOGGER } from '../constants';
-import { ConfigService } from './config';
+import { ConfigService, isDirectusConfigWithToken } from './config';
 
 @Service()
 export class MigrationClient {
   protected adminRoleId: string | undefined;
 
-  protected readonly client: DirectusClient<object> &
-    RestClient<object> &
-    AuthenticationClient<object>;
+  protected client:
+    | (DirectusClient<object> &
+        RestClient<object> &
+        AuthenticationClient<object>)
+    | undefined;
 
   constructor(
     protected readonly config: ConfigService,
     @Inject(LOGGER) protected readonly logger: pino.Logger,
-  ) {
-    this.client = this.createClient();
-  }
+  ) {}
 
-  get() {
+  async get() {
+    if (!this.client) {
+      this.client = await this.createClient();
+    }
     return this.client;
   }
 
@@ -36,7 +39,7 @@ export class MigrationClient {
    */
   async getAdminRoleId() {
     if (!this.adminRoleId) {
-      const directus = this.get();
+      const directus = await this.get();
       const { role } = await directus.request(
         readMe({
           fields: ['role'],
@@ -47,9 +50,29 @@ export class MigrationClient {
     return this.adminRoleId;
   }
 
-  protected createClient() {
-    const { url, token } = this.config.getDirectusConfig();
-    const client = createDirectus(url).with(rest()).with(authentication());
+  protected async createClient() {
+    const config = this.config.getDirectusConfig();
+    const client = createDirectus(config.url)
+      .with(rest())
+      .with(authentication());
+
+    // If the token is already set, return it
+    let token: string;
+    if (isDirectusConfigWithToken(config)) {
+      token = config.token;
+    }
+    // Otherwise, login and return the token
+    else {
+      const response = await client.login(config.email, config.password);
+
+      // Check if the token is defined
+      if (!response.access_token) {
+        throw new Error('Cannot login to Directus');
+      }
+
+      token = response.access_token;
+    }
+
     client.setToken(token);
     return client;
   }

@@ -5,7 +5,9 @@ export const OptionsFields = {
   configPath: z.string(),
   debug: z.boolean(),
   directusUrl: z.string(),
-  directusToken: z.string(),
+  directusToken: z.string().optional(),
+  directusEmail: z.string().optional(),
+  directusPassword: z.string().optional(),
   // Pull, diff, push
   split: z.boolean(),
   dumpPath: z.string(),
@@ -26,6 +28,8 @@ export const ConfigFileOptionsSchema = z.object({
   debug: OptionsFields.debug.optional(),
   directusUrl: OptionsFields.directusUrl.optional(),
   directusToken: OptionsFields.directusToken.optional(),
+  directusEmail: OptionsFields.directusEmail.optional(),
+  directusPassword: OptionsFields.directusPassword.optional(),
   // Dump config
   split: OptionsFields.split.optional(),
   dumpPath: OptionsFields.dumpPath.optional(),

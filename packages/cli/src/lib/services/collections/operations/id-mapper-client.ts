@@ -1,11 +1,11 @@
 import { IdMapperClient } from '../base';
 import { Service } from 'typedi';
 import { OPERATIONS_COLLECTION } from './constants';
-import { ConfigService } from '../../config';
+import { MigrationClient } from '../../migration-client';
 
 @Service()
 export class OperationsIdMapperClient extends IdMapperClient {
-  constructor(config: ConfigService) {
-    super(config, OPERATIONS_COLLECTION);
+  constructor(migrationClient: MigrationClient) {
+    super(migrationClient, OPERATIONS_COLLECTION);
   }
 }
