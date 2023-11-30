@@ -5,22 +5,27 @@ import {
   readJsonSync,
   statSync,
 } from 'fs-extra';
+import { z, ZodError, ZodSchema } from 'zod';
 import pino from 'pino';
 import { Container } from 'typedi';
-import { Config } from './config';
 import path from 'path';
 import { LOGGER } from './constants';
+import { ConfigService } from './services';
 
-export function createDumpFolders(config: Config) {
+export function createDumpFolders() {
   const logger: pino.Logger = Container.get(LOGGER);
+  const config = Container.get(ConfigService);
 
-  if (!existsSync(config.collections.dumpPath)) {
+  const collectionsConfig = config.getCollectionsConfig();
+  if (!existsSync(collectionsConfig.dumpPath)) {
     logger.info('Create dump folder for collections');
-    mkdirpSync(config.collections.dumpPath);
+    mkdirpSync(collectionsConfig.dumpPath);
   }
-  if (!existsSync(config.snapshot.dumpPath)) {
+
+  const snapshotConfig = config.getSnapshotConfig();
+  if (!existsSync(snapshotConfig.dumpPath)) {
     logger.info('Create dump folder for snapshot');
-    mkdirpSync(config.snapshot.dumpPath);
+    mkdirpSync(snapshotConfig.dumpPath);
   }
 }
 
@@ -76,13 +81,23 @@ export function loadJsonFilesRecursively<T>(dirPath: string): T[] {
 }
 
 /**
- * Returns an environment variable or throws an error if it is not defined.
- * Accepts a default value as a second argument.
+ * Validate an object against a zod schema and format the error if it fails
  */
-export function env(name: string, defaultValue?: string): string {
-  const value = process.env[name] ?? defaultValue;
-  if (value === undefined) {
-    throw new Error(`Environment variable ${name} is not defined`);
+export function zodParse<T extends ZodSchema>(
+  payload: unknown,
+  schema: T,
+  errorContext?: string,
+): z.infer<T> {
+  try {
+    return schema.parse(payload);
+  } catch (error) {
+    const message =
+      error instanceof ZodError
+        ? error.issues
+            .map((e) => `[${e.path.join(',')}] ${e.message}`)
+            .join('. ')
+        : (error as string);
+    const fullMessage = errorContext ? `${errorContext}: ${message}` : message;
+    throw new Error(fullMessage);
   }
-  return value;
 }

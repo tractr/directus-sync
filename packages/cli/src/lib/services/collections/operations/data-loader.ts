@@ -1,16 +1,15 @@
 import { DataLoader, WithSyncIdAndWithoutId } from '../base';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { OPERATIONS_COLLECTION } from './constants';
 import path from 'path';
-import type { CollectionsConfig } from '../../../config';
-import { COLLECTIONS_CONFIG } from '../../../constants';
 import { DirectusOperation } from './interfaces';
+import { ConfigService } from '../../config';
 
 @Service()
 export class OperationsDataLoader extends DataLoader<DirectusOperation> {
-  constructor(@Inject(COLLECTIONS_CONFIG) config: CollectionsConfig) {
+  constructor(config: ConfigService) {
     const filePath = path.join(
-      config.dumpPath,
+      config.getCollectionsConfig().dumpPath,
       `${OPERATIONS_COLLECTION}.json`,
     );
     super(filePath);

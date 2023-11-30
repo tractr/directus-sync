@@ -1,8 +1,8 @@
-name: Pull request on main
+name: Pull request on main or next
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ main, next ]
 
 jobs:
   build:

@@ -1,16 +1,15 @@
 import { DataLoader } from '../base';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { DASHBOARDS_COLLECTION } from './constants';
 import path from 'path';
-import type { CollectionsConfig } from '../../../config';
-import { COLLECTIONS_CONFIG } from '../../../constants';
 import { DirectusDashboard } from './interfaces';
+import { ConfigService } from '../../config';
 
 @Service()
 export class DashboardsDataLoader extends DataLoader<DirectusDashboard> {
-  constructor(@Inject(COLLECTIONS_CONFIG) config: CollectionsConfig) {
+  constructor(config: ConfigService) {
     const filePath = path.join(
-      config.dumpPath,
+      config.getCollectionsConfig().dumpPath,
       `${DASHBOARDS_COLLECTION}.json`,
     );
     super(filePath);

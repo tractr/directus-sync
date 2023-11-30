@@ -1,2 +1,3 @@
-directus-config
+directus-config/
 README.md
+directus-sync.config.js

@@ -1,89 +1,143 @@
+import 'dotenv/config';
 import 'reflect-metadata';
-import { program } from 'commander';
+import { Option, program } from 'commander';
 import {
+  DefaultConfig,
   disposeContext,
   initContext,
   logEndAndClose,
   logErrorAndStop,
-  ProgramOptions,
   runDiff,
   runPull,
   runPush,
+  runUntrack,
 } from './lib';
-import Path from 'path';
-import { runUntrack } from './lib/commands/untrack';
 
-const defaultDumpPath = Path.join(process.cwd(), 'directus-config');
-const defaultSnapshotPath = 'snapshot';
-const defaultCollectionsPath = 'collections';
+// Global options
+const debugOption = new Option(
+  '-d, --debug',
+  `display more logging (default "${DefaultConfig.debug}")`,
+);
+const directusUrlOption = new Option(
+  '-u, --directus-url <directusUrl>',
+  'Directus URL',
+).env('DIRECTUS_URL');
+const directusTokenOption = new Option(
+  '-t, --directus-token <directusToken>',
+  'Directus access token',
+).env('DIRECTUS_TOKEN');
+const directusEmailOption = new Option(
+  '-e, --directus-email <directusEmail>',
+  'Directus user email',
+).env('DIRECTUS_ADMIN_EMAIL');
+const directusPasswordOption = new Option(
+  '-p, --directus-password <directusPassword>',
+  'Directus user password',
+).env('DIRECTUS_ADMIN_PASSWORD');
+const configPathOption = new Option(
+  '-c, --config-path <configPath>',
+  `the path to the config file. Required for extended options (default "${DefaultConfig.configPath}")`,
+);
+
+// Shared options
+const noSplitOption = new Option(
+  '--no-split',
+  `should the schema snapshot be split into multiple files (default "${DefaultConfig.split}")`,
+);
+const dumpPathOption = new Option(
+  '--dump-path <dumpPath>',
+  `the base path for the dump (default "${DefaultConfig.dumpPath}")`,
+);
+const collectionsPathOption = new Option(
+  '--collections-path <collectionPath>',
+  `the path for the collections dump, relative to the dump path (default "${DefaultConfig.collectionsPath}")`,
+);
+const snapshotPathOption = new Option(
+  '--snapshot-path <snapshotPath>',
+  `the path for the schema snapshot dump, relative to the dump path (default "${DefaultConfig.snapshotPath}")`,
+);
+const forceOption = new Option(
+  '-f, --force',
+  `force the diff of schema, even if the Directus version is different (default "${DefaultConfig.force}")`,
+);
 
 program
-  .option('-d, --debug', 'display more logging', false)
-  .option(
-    '-u, --directus-url <directusUrl>',
-    'Directus URL. Can also be set via DIRECTUS_URL env var',
-  )
-  .option(
-    '-t, --directus-token <directusToken>',
-    'Directus access token. Can also be set via DIRECTUS_TOKEN env var',
-  )
-  .option(
-    '--no-split',
-    'should the schema snapshot be split into multiple files',
-    true,
-  )
-  .option(
-    '--dump-path <dumpPath>',
-    'the base path for the dump, must be an absolute path',
-    defaultDumpPath,
-  )
-  .option(
-    '--collections-path <collectionPath>',
-    'the path for the collections dump, relative to the dump path',
-    defaultCollectionsPath,
-  )
-  .option(
-    '--snapshot-path <snapshotPath>',
-    'the path for the schema snapshot dump, relative to the dump path',
-    defaultSnapshotPath,
-  )
-  .option(
-    '-f, --force',
-    'force the diff of schema, even if the Directus version is different',
-    false,
-  );
+  .addOption(debugOption)
+  .addOption(directusUrlOption)
+  .addOption(directusTokenOption)
+  .addOption(directusEmailOption)
+  .addOption(directusPasswordOption)
+  .addOption(configPathOption);
 
-registerCommand(
-  'pull',
-  'get the schema and collections and store them locally',
-  runPull,
-);
-registerCommand(
-  'diff',
-  'describe the schema and collections diff. Does not modify the database.',
-  runDiff,
-);
-registerCommand('push', 'push the schema and collections', runPush);
-registerCommand('untrack', 'stop tracking of an element', runUntrack)
-  .option('-c, --collection <collection>', 'the collection of the element')
-  .option('-i, --id <id>', 'the id of the element to untrack');
+program
+  .command('pull')
+  .description('get the schema and collections and store them locally')
+  .addOption(noSplitOption)
+  .addOption(dumpPathOption)
+  .addOption(collectionsPathOption)
+  .addOption(snapshotPathOption)
+  .action(wrapAction(runPull));
+
+program
+  .command('diff')
+  .description(
+    'describe the schema and collections diff. Does not modify the database.',
+  )
+  .addOption(noSplitOption)
+  .addOption(dumpPathOption)
+  .addOption(collectionsPathOption)
+  .addOption(snapshotPathOption)
+  .addOption(forceOption)
+  .action(wrapAction(runDiff));
+
+program
+  .command('push')
+  .description('push the schema and collections')
+  .addOption(noSplitOption)
+  .addOption(dumpPathOption)
+  .addOption(collectionsPathOption)
+  .addOption(snapshotPathOption)
+  .addOption(forceOption)
+  .action(wrapAction(runPush));
+
+program
+  .command('untrack')
+  .description('stop tracking of an element')
+  .requiredOption(
+    '-c, --collection <collection>',
+    'the collection of the element',
+  )
+  .requiredOption('-i, --id <id>', 'the id of the element to untrack')
+  .action(wrapAction(runUntrack));
 
 program.parse(process.argv);
 
-function registerCommand<Options>(
-  name: string,
-  description: string,
-  action: (options?: Options) => Promise<void>,
-) {
-  return program
-    .command(name)
-    .description(description)
-    .action(() => {
-      const options = program.opts() as Options;
-      return initContext(options as ProgramOptions)
-        .then(() => action(options))
-        .catch(logErrorAndStop)
-        .then(disposeContext)
-        .then(logEndAndClose);
-    });
+/**
+ * Remove some default values from the program options that overrides the config file
+ */
+function cleanProgramOptions(programOptions: Record<string, unknown>) {
+  return programOptions;
+}
+
+/**
+ * Remove some default values from the command options that overrides the config file
+ */
+function cleanCommandOptions(commandOptions: Record<string, unknown>) {
+  if (commandOptions.split === true) {
+    delete commandOptions.split;
+  }
+  return commandOptions;
+}
+
+function wrapAction(action: () => Promise<void>) {
+  return (commandOpts: Record<string, unknown>) => {
+    return initContext(
+      cleanProgramOptions(program.opts()),
+      cleanCommandOptions(commandOpts),
+    )
+      .then(action)
+      .catch(logErrorAndStop)
+      .then(disposeContext)
+      .then(logEndAndClose);
+  };
 }

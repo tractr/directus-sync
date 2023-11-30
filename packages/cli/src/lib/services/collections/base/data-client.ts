@@ -19,7 +19,7 @@ export abstract class DataClient<DirectusType extends DirectusBaseType> {
   async query<T extends object = DirectusType>(
     query: Query<DirectusType>,
   ): Promise<T[]> {
-    const directus = this.migrationClient.get();
+    const directus = await this.migrationClient.get();
     const response = await directus.request<T | T[]>(
       await this.getQueryCommand(query),
     );
@@ -39,7 +39,7 @@ export abstract class DataClient<DirectusType extends DirectusBaseType> {
    * Remove the id and the syncId from the item before inserting it.
    */
   async create(item: WithoutIdAndSyncId<DirectusType>): Promise<DirectusType> {
-    const directus = this.migrationClient.get();
+    const directus = await this.migrationClient.get();
     return await directus.request(await this.getInsertCommand(item));
   }
 
@@ -51,7 +51,7 @@ export abstract class DataClient<DirectusType extends DirectusBaseType> {
     itemId: DirectusId,
     diffItem: Partial<WithoutIdAndSyncId<DirectusType>>,
   ): Promise<DirectusType> {
-    const directus = this.migrationClient.get();
+    const directus = await this.migrationClient.get();
     return await directus.request(
       await this.getUpdateCommand(itemId, diffItem),
     );
@@ -62,7 +62,7 @@ export abstract class DataClient<DirectusType extends DirectusBaseType> {
    * The id is the local id.
    */
   async delete(itemId: DirectusId): Promise<DirectusType> {
-    const directus = this.migrationClient.get();
+    const directus = await this.migrationClient.get();
     return await directus.request(await this.getDeleteCommand(itemId));
   }
 

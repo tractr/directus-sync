@@ -1,5 +1,6 @@
 import createHttpError from 'http-errors';
-import { DirectusConfig } from '../../../config';
+import { MigrationClient } from '../../migration-client';
+import { Cacheable } from 'typescript-cacheable';
 
 export interface IdMap {
   id: number;
@@ -24,7 +25,7 @@ export abstract class IdMapperClient {
   };
 
   constructor(
-    protected readonly config: DirectusConfig,
+    protected readonly migrationClient: MigrationClient,
     protected readonly table: string,
   ) {}
 
@@ -118,19 +119,17 @@ export abstract class IdMapperClient {
     payload: unknown = undefined,
     options: RequestInit = {},
   ): Promise<T> {
-    const response = await fetch(
-      `${this.config.url}${this.extensionUri}${uri}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-          Authorization: `Bearer ${this.config.token}`,
-        },
-        method,
-        body: payload ? JSON.stringify(payload) : null,
-        ...options,
+    const { url, token } = await this.getUrlAndToken();
+    const response = await fetch(`${url}${this.extensionUri}${uri}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
       },
-    );
+      method,
+      body: payload ? JSON.stringify(payload) : null,
+      ...options,
+    });
     if (!response.ok) {
       let error;
       try {
@@ -154,6 +153,18 @@ export abstract class IdMapperClient {
         return (await response.text()) as T;
       }
     }
+  }
+
+  @Cacheable()
+  protected async getUrlAndToken() {
+    const directus = await this.migrationClient.get();
+    //Remove trailing slash
+    const url = directus.url.toString().replace(/\/$/, '');
+    const token = await directus.getToken();
+    if (!token) {
+      throw new Error('Cannot get token from Directus');
+    }
+    return { url, token };
   }
 
   protected addToCache(idMap: IdMap) {
