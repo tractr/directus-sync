@@ -86,6 +86,15 @@ export class ConfigService {
     return this.requireOptions('configPath');
   }
 
+  @Cacheable()
+  getHooksConfig(collection: keyof typeof OptionsSchema.shape.hooks.shape) {
+    const hooks = this.getOptions('hooks');
+    if (!hooks) {
+      return undefined;
+    }
+    return hooks[collection];
+  }
+
   protected getOptions<T extends OptionName>(name: T): Options[T] | undefined {
     const options = this.flattenOptions();
     return options[name];

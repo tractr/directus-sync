@@ -5,6 +5,10 @@ export const TransformDataFunctionSchema = z
   .function()
   .args(DataListSchema)
   .returns(DataListSchema);
+export const TransformDataHooksSchema = z.object({
+  onLoad: TransformDataFunctionSchema.optional(),
+  onSave: TransformDataFunctionSchema.optional(),
+});
 
 export const OptionsFields = {
   // Global
@@ -25,12 +29,16 @@ export const OptionsFields = {
   collection: z.string().optional(),
   id: z.string().optional(),
   // Hooks
-  hooks: z.record(
-    z.object({
-      onLoad: TransformDataFunctionSchema.optional(),
-      onSave: TransformDataFunctionSchema.optional(),
-    }),
-  ),
+  hooks: z.object({
+    dashboards: TransformDataHooksSchema.optional(),
+    flows: TransformDataHooksSchema.optional(),
+    operations: TransformDataHooksSchema.optional(),
+    panels: TransformDataHooksSchema.optional(),
+    permissions: TransformDataHooksSchema.optional(),
+    roles: TransformDataHooksSchema.optional(),
+    settings: TransformDataHooksSchema.optional(),
+    webhooks: TransformDataHooksSchema.optional(),
+  }),
 };
 export const OptionsSchema = z.object(OptionsFields);
 
@@ -48,4 +56,6 @@ export const ConfigFileOptionsSchema = z.object({
   dumpPath: OptionsFields.dumpPath.optional(),
   collectionsPath: OptionsFields.collectionsPath.optional(),
   snapshotPath: OptionsFields.snapshotPath.optional(),
+  // Hooks config
+  hooks: OptionsFields.hooks.optional(),
 });
