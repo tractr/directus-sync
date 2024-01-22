@@ -17,6 +17,8 @@ export class FlowsCollection extends DirectusCollection<DirectusFlow> {
   protected readonly enableUpdate = true;
   protected readonly enableDelete = true;
 
+  protected readonly preserveIds = true;
+
   constructor(
     @Inject(LOGGER) baseLogger: pino.Logger,
     dataDiffer: FlowsDataDiffer,

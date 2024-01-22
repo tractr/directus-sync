@@ -4,6 +4,7 @@ import {
   DirectusId,
   Query,
   WithoutIdAndSyncId,
+  WithoutSyncId,
 } from './interfaces';
 import { MigrationClient } from '../../migration-client';
 
@@ -38,7 +39,7 @@ export abstract class DataClient<DirectusType extends DirectusBaseType> {
    * Inserts data into the target collection using the rest API.
    * Remove the id and the syncId from the item before inserting it.
    */
-  async create(item: WithoutIdAndSyncId<DirectusType>): Promise<DirectusType> {
+  async create(item: WithoutSyncId<DirectusType>): Promise<DirectusType> {
     const directus = await this.migrationClient.get();
     return await directus.request(await this.getInsertCommand(item));
   }
@@ -73,7 +74,7 @@ export abstract class DataClient<DirectusType extends DirectusBaseType> {
     | Promise<RestCommand<DirectusType[], object>>;
 
   protected abstract getInsertCommand(
-    item: WithoutIdAndSyncId<DirectusType>,
+    item: WithoutSyncId<DirectusType>,
   ):
     | RestCommand<DirectusType, object>
     | Promise<RestCommand<DirectusType, object>>;

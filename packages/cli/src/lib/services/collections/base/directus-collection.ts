@@ -1,9 +1,10 @@
 import { IdMap, IdMapperClient } from './id-mapper-client';
 import {
   DirectusBaseType,
+  DirectusId,
   UpdateItem,
   WithoutId,
-  WithoutIdAndSyncId,
+  WithoutSyncId,
   WithSyncId,
   WithSyncIdAndWithoutId,
 } from './interfaces';
@@ -23,6 +24,12 @@ export abstract class DirectusCollection<
   protected abstract readonly enableCreate: boolean;
   protected abstract readonly enableUpdate: boolean;
   protected abstract readonly enableDelete: boolean;
+
+  /**
+   * If true, the ids of the items will be used as sync ids.
+   * This allows to restore the same ids as the original table.
+   */
+  protected readonly preserveIds: boolean = false;
 
   constructor(
     protected readonly logger: pino.Logger,
@@ -131,7 +138,10 @@ export abstract class DirectusCollection<
       if (syncId) {
         output.push({ ...item, _syncId: syncId.sync_id });
       } else {
-        const newSyncId = await this.idMapper.create(item.id);
+        const newSyncId = await this.idMapper.create(
+          item.id,
+          this.preserveIds ? item.id.toString() : undefined,
+        );
         output.push({ ...item, _syncId: newSyncId });
       }
     }
@@ -163,9 +173,11 @@ export abstract class DirectusCollection<
 
       // If the id mapping was successful, create the item
       const { _syncId, ...rest } = mappedItem;
-      const newItem = await this.dataClient.create(
-        rest as unknown as WithoutIdAndSyncId<DirectusType>,
-      );
+      const createPayload = rest as unknown as WithoutSyncId<DirectusType>;
+      if (this.preserveIds) {
+        createPayload.id = _syncId as DirectusId;
+      }
+      const newItem = await this.dataClient.create(createPayload);
       this.logger.debug(sourceItem, `Created item`);
 
       // Create new entry in the id mapper
