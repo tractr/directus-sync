@@ -13,6 +13,7 @@ export class SettingsDataLoader extends DataLoader<DirectusSettings> {
       config.getCollectionsConfig().dumpPath,
       `${SETTINGS_COLLECTION}.json`,
     );
-    super(filePath);
+    const transformDataHooks = config.getHooksConfig(SETTINGS_COLLECTION);
+    super(filePath, transformDataHooks);
   }
 }

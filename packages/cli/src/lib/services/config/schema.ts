@@ -1,13 +1,20 @@
 import { z } from 'zod';
 
-export const DataListSchema = z.array(z.record(z.unknown()));
-export const TransformDataFunctionSchema = z
-  .function()
-  .args(DataListSchema)
-  .returns(DataListSchema);
 export const TransformDataHooksSchema = z.object({
-  onLoad: TransformDataFunctionSchema.optional(),
-  onSave: TransformDataFunctionSchema.optional(),
+  onLoad: z.function().optional(),
+  onDump: z.function().optional(),
+  onSave: z.function().optional(),
+});
+
+export const OptionsHooksSchema = z.object({
+  dashboards: TransformDataHooksSchema.optional(),
+  flows: TransformDataHooksSchema.optional(),
+  operations: TransformDataHooksSchema.optional(),
+  panels: TransformDataHooksSchema.optional(),
+  permissions: TransformDataHooksSchema.optional(),
+  roles: TransformDataHooksSchema.optional(),
+  settings: TransformDataHooksSchema.optional(),
+  webhooks: TransformDataHooksSchema.optional(),
 });
 
 export const OptionsFields = {
@@ -29,16 +36,7 @@ export const OptionsFields = {
   collection: z.string().optional(),
   id: z.string().optional(),
   // Hooks
-  hooks: z.object({
-    dashboards: TransformDataHooksSchema.optional(),
-    flows: TransformDataHooksSchema.optional(),
-    operations: TransformDataHooksSchema.optional(),
-    panels: TransformDataHooksSchema.optional(),
-    permissions: TransformDataHooksSchema.optional(),
-    roles: TransformDataHooksSchema.optional(),
-    settings: TransformDataHooksSchema.optional(),
-    webhooks: TransformDataHooksSchema.optional(),
-  }),
+  hooks: OptionsHooksSchema.optional(),
 };
 export const OptionsSchema = z.object(OptionsFields);
 
@@ -57,5 +55,5 @@ export const ConfigFileOptionsSchema = z.object({
   collectionsPath: OptionsFields.collectionsPath.optional(),
   snapshotPath: OptionsFields.snapshotPath.optional(),
   // Hooks config
-  hooks: OptionsFields.hooks.optional(),
+  hooks: OptionsHooksSchema.optional(),
 });

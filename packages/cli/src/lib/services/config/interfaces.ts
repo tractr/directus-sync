@@ -2,7 +2,9 @@ import { z } from 'zod';
 import {
   ConfigFileOptionsSchema,
   OptionsFields,
+  OptionsHooksSchema,
   OptionsSchema,
+  TransformDataHooksSchema,
 } from './schema';
 
 export type OptionName = keyof typeof OptionsFields;
@@ -11,12 +13,15 @@ export type Options = z.infer<typeof OptionsSchema>;
 
 export type ConfigFileOptions = z.infer<typeof ConfigFileOptionsSchema>;
 
-export type TransformDataFunction = <T>(data: T[]) => T[];
+export type TransformDataHookName = keyof typeof OptionsHooksSchema.shape;
 
-export interface TransformDataHooks {
-  onLoad?: TransformDataFunction;
-  onSave?: TransformDataFunction;
-}
+export type TransformDataFunction = <T = unknown>(
+  data: T[],
+) => T[] | Promise<T[]>;
+
+export type TransformDataHooks = {
+  [key in keyof typeof TransformDataHooksSchema.shape]?: TransformDataFunction;
+};
 
 interface DirectusConfigBase {
   url: string;

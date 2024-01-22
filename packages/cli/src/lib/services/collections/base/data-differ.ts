@@ -36,7 +36,7 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
    * Returns the diff between the dump and the target table.
    */
   async getDiff() {
-    const sourceData = this.dataLoader.getSourceData();
+    const sourceData = await this.dataLoader.getSourceData();
 
     const toCreate: WithSyncIdAndWithoutId<DirectusType>[] = [];
     const toUpdate: UpdateItem<DirectusType>[] = [];

@@ -5,6 +5,8 @@ import {
   DirectusConfigWithToken,
   OptionName,
   Options,
+  TransformDataHookName,
+  TransformDataHooks,
 } from './interfaces';
 import Path from 'path';
 import { Cacheable } from 'typescript-cacheable';
@@ -87,12 +89,14 @@ export class ConfigService {
   }
 
   @Cacheable()
-  getHooksConfig(collection: keyof typeof OptionsSchema.shape.hooks.shape) {
+  getHooksConfig(
+    collection: TransformDataHookName,
+  ): TransformDataHooks | undefined {
     const hooks = this.getOptions('hooks');
     if (!hooks) {
       return undefined;
     }
-    return hooks[collection];
+    return hooks[collection] as TransformDataHooks | undefined;
   }
 
   protected getOptions<T extends OptionName>(name: T): Options[T] | undefined {

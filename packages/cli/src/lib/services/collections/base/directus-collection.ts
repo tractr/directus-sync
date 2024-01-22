@@ -47,7 +47,7 @@ export abstract class DirectusCollection<
     const items = await this.dataClient.query({ limit: -1 });
     const mappedItems = await this.mapIdsOfItems(items);
     const itemsWithoutIds = this.removeIdsOfItems(mappedItems);
-    this.dataLoader.saveData(itemsWithoutIds);
+    await this.dataLoader.saveData(itemsWithoutIds, 'onDump');
     this.logger.debug(`Pulled ${mappedItems.length} items.`);
   }
 
@@ -55,10 +55,10 @@ export abstract class DirectusCollection<
    * This methods will change ids to sync ids and add users placeholders.
    */
   async postProcessPull() {
-    const items = this.dataLoader.getSourceData();
+    const items = await this.dataLoader.getSourceData();
     const mappedItems =
       await this.dataMapper.mapIdsToSyncIdAndRemoveIgnoredFields(items);
-    this.dataLoader.saveData(mappedItems);
+    await this.dataLoader.saveData(mappedItems, 'onSave');
     this.logger.debug(`Post-processed ${mappedItems.length} items.`);
   }
 

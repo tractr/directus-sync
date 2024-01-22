@@ -13,6 +13,7 @@ export class WebhooksDataLoader extends DataLoader<DirectusWebhook> {
       config.getCollectionsConfig().dumpPath,
       `${WEBHOOKS_COLLECTION}.json`,
     );
-    super(filePath);
+    const transformDataHooks = config.getHooksConfig(WEBHOOKS_COLLECTION);
+    super(filePath, transformDataHooks);
   }
 }

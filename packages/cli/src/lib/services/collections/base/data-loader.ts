@@ -12,23 +12,26 @@ export abstract class DataLoader<DirectusType extends DirectusBaseType> {
    * Returns the source data from the dump file, using readFileSync
    * and passes it through the data transformer.
    */
-  getSourceData(): WithSyncIdAndWithoutId<DirectusType>[] {
+  async getSourceData(): Promise<WithSyncIdAndWithoutId<DirectusType>[]> {
     const onLoad = this.transformDataHooks?.onLoad;
     const loadedData = readJsonSync(
       this.filePath,
     ) as WithSyncIdAndWithoutId<DirectusType>[];
-    return onLoad ? onLoad(loadedData) : loadedData;
+    return onLoad ? await onLoad(loadedData) : loadedData;
   }
 
   /**
    * Save the data to the dump file. The data is passed through the data transformer.
    */
-  saveData(data: WithSyncIdAndWithoutId<DirectusType>[]) {
+  async saveData(
+    data: WithSyncIdAndWithoutId<DirectusType>[],
+    applyHook: 'onDump' | 'onSave',
+  ) {
     // Sort data by _syncId to avoid git changes
     data.sort(this.getSortFunction());
-    const onSave = this.transformDataHooks?.onSave;
-    if (onSave) {
-      data = onSave(data);
+    const hook = this.transformDataHooks?.[applyHook];
+    if (hook) {
+      data = await hook(data);
     }
     writeJsonSync(this.filePath, data, { spaces: 2 });
   }
