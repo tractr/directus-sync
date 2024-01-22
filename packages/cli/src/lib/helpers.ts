@@ -67,6 +67,9 @@ export function getChildLogger(
  */
 export function loadJsonFilesRecursively<T>(dirPath: string): T[] {
   const files: T[] = [];
+  if (!existsSync(dirPath)) {
+    return files;
+  }
   const fileNames = readdirSync(dirPath);
   for (const fileName of fileNames) {
     const filePath = path.join(dirPath, fileName);
