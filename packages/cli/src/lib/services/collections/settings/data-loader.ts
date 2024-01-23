@@ -5,14 +5,16 @@ import { SETTINGS_COLLECTION } from './constants';
 import path from 'path';
 import { DirectusSettings } from './interfaces';
 import { ConfigService } from '../../config';
+import { MigrationClient } from '../../migration-client';
 
 @Service()
 export class SettingsDataLoader extends DataLoader<DirectusSettings> {
-  constructor(config: ConfigService) {
+  constructor(config: ConfigService, migrationClient: MigrationClient) {
     const filePath = path.join(
       config.getCollectionsConfig().dumpPath,
       `${SETTINGS_COLLECTION}.json`,
     );
-    super(filePath);
+    const hooks = config.getHooksConfig(SETTINGS_COLLECTION);
+    super(filePath, migrationClient, hooks);
   }
 }

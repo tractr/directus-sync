@@ -10,6 +10,8 @@ import { DASHBOARDS_COLLECTION } from './constants';
 import { DashboardsDataMapper } from './data-mapper';
 import { LOGGER } from '../../../constants';
 import { DirectusDashboard } from './interfaces';
+import { ConfigService } from '../../config';
+import { MigrationClient } from '../../migration-client';
 
 @Service()
 export class DashboardsCollection extends DirectusCollection<DirectusDashboard> {
@@ -24,6 +26,8 @@ export class DashboardsCollection extends DirectusCollection<DirectusDashboard> 
     dataClient: DashboardsDataClient,
     dataMapper: DashboardsDataMapper,
     idMapper: DashboardsIdMapperClient,
+    config: ConfigService,
+    migrationClient: MigrationClient,
   ) {
     super(
       getChildLogger(baseLogger, DASHBOARDS_COLLECTION),
@@ -32,6 +36,8 @@ export class DashboardsCollection extends DirectusCollection<DirectusDashboard> 
       dataClient,
       dataMapper,
       idMapper,
+      migrationClient,
+      config.getHooksConfig(DASHBOARDS_COLLECTION),
     );
   }
 }

@@ -16,7 +16,8 @@ for targeted updates and clearer oversight of your Directus configurations.
 # Requirements
 
 - Node.js 18 or higher
-- `directus-extension-sync` installed on your Directus instance. See the [installation instructions](#dependency-directus-extension-sync).
+- `directus-extension-sync` installed on your Directus instance. See
+  the [installation instructions](#dependency-directus-extension-sync).
 
 # Usage
 
@@ -145,6 +146,181 @@ module.exports = {
   snapshotPath: 'snapshot',
 };
 ```
+
+### Hooks
+
+In addition to the CLI commands, `directus-sync` also supports hooks. Hooks are JavaScript functions that are executed
+at specific points during the synchronization process. They can be used to transform the data coming from Directus or
+going to Directus.
+
+Hooks are defined in the configuration file using the `hooks` property. Under this property, you can define the
+collection
+name and the hook function to be executed.
+Available collection names are: `dashboards`, `flows`, `operations`, `panels`, `permissions`, `roles`, `settings`,
+and `webhooks`.
+
+For each collection, available hook functions are: `onQuery`, `onLoad`, `onSave`, and `onDump`.
+These can be asynchronous functions.
+
+During the `pull` command:
+
+- `onQuery` is executed just before the query is sent to Directus for get elements. It receives the query object as parameter and must
+  return the query object. The second parameter is the Directus client.
+- `onDump` is executed just after the data is retrieved from Directus and before it is saved to the dump files. The data
+  is the raw data received from Directus. The second parameter is the Directus client. It must return the data to be
+  saved to the dump files.
+- `onSave` is executed just before the cleaned data is saved to the dump files. The "cleaned" data is the data without
+  the columns that are ignored by `directus-sync` (such as `user_updated`) and with the relations replaced by the
+  SyncIDs. The first parameter is the cleaned data and the second parameter is the Directus client. It must return the
+  data to be saved to the dump files.
+
+During the `push` command:
+
+- `onLoad` is executed just after the data is loaded from the dump files. The data is the cleaned data, as described
+  above. The first parameter is the data coming from the JSON file and the second parameter is the Directus client.
+  It must return the data.
+
+#### Simple example
+
+Here is an example of a configuration file with hooks:
+
+```javascript
+// ./directus-sync.config.js
+module.exports = {
+  hooks: {
+    flows: {
+      onDump: (flows) => {
+        return flows.map((flow) => {
+          flow.name = `🧊 ${flow.name}`;
+          return flow;
+        });
+      },
+      onSave: (flows) => {
+        return flows.map((flow) => {
+          flow.name = `🔥 ${flow.name}`;
+          return flow;
+        });
+      },
+      onLoad: (flows) => {
+        return flows.map((flow) => {
+          flow.name = flow.name.replace('🔥 ', '');
+          return flow;
+        });
+      },
+    },
+  },
+};
+```
+
+> [!WARNING]  
+> The dump hook is called after the mapping of the SyncIDs. This means that the data received by the hook is already
+> tracked. If you filter out some elements, they will be deleted during the `push` command.
+
+#### Filtering out elements
+
+You can use `onQuery` hook to filter out elements. This hook is executed just before the query is sent to Directus, during the `pull` command.
+
+In the example below, the flows and operations whose name starts with `Test:` are filtered out and will not be tracked.
+
+```javascript
+// ./directus-sync.config.js
+const testPrefix = 'Test:';
+
+module.exports = {
+  hooks: {
+    flows: {
+      onQuery: (query, client) => {
+        query.filter = {
+          ...query.filter,
+          name: { _nstarts_with: testPrefix },
+        };
+        return query;
+      },
+    },
+    operations: {
+      onQuery: (query, client) => {
+        query.filter = {
+          ...query.filter,
+          flow: { name: { _nstarts_with: testPrefix } },
+        };
+        return query;
+      },
+    },
+  },
+};
+```
+
+> [!WARNING]
+> Directus-Sync may alter the query after this hook. For example, for `roles`, the query excludes the `admin` role.
+
+#### Using the Directus client
+
+The example below shows how to disable the flows whose name starts with `Test:` and add the flow name to the operation.
+
+```javascript
+const { readFlow } = require('@directus/sdk');
+
+const testPrefix = 'Test:';
+
+module.exports = {
+  hooks: {
+    flows: {
+      onDump: (flows) => {
+        return flows.map((flow) => {
+          flow.status = flow.name.startsWith(testPrefix)
+            ? 'inactive'
+            : 'active';
+        });
+      },
+    },
+    operations: {
+      onDump: async (operations, client) => {
+        for (const operation of operations) {
+          const flow = await client.request(readFlow(operation.flow));
+          if (flow) {
+            operation.name = `${flow.name}: ${operation.name}`;
+          }
+        }
+        return operations;
+      },
+    },
+  },
+};
+```
+
+### Lifecycle & hooks
+
+#### `Pull` command
+
+```mermaid
+flowchart
+  subgraph Pull[Get elements - for each collection]
+    direction TB
+		B[Create query for all elements]
+    -->|onQuery hook|C[Add collection-specific filters]
+    -->D[Get elements from Directus]
+    -->E[Get or create SyncId for each element. Start tracking]
+    -->F[Remove original Id of each element]
+    -->|onDump hook|G[Keep elements in memory]
+  end
+	subgraph Post[Link elements - for each collection]
+    direction TB
+		H[Get all elements from memory]
+    --> I[Replace relations ids by SyncIds]
+    --> J[Remove ignore fields]
+    --> K[Sort elements]
+    -->|onSave hook|L[Save to JSON file]
+  end
+ A[Pull command] --> Pull --> Post --> Z[End]
+```
+
+#### `Diff` command
+
+**Coming soon**
+
+#### `Push` command
+
+**Coming soon**
 
 ### Tracked Elements
 

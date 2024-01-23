@@ -4,14 +4,16 @@ import { PANELS_COLLECTION } from './constants';
 import path from 'path';
 import { DirectusPanel } from './interfaces';
 import { ConfigService } from '../../config';
+import { MigrationClient } from '../../migration-client';
 
 @Service()
 export class PanelsDataLoader extends DataLoader<DirectusPanel> {
-  constructor(config: ConfigService) {
+  constructor(config: ConfigService, migrationClient: MigrationClient) {
     const filePath = path.join(
       config.getCollectionsConfig().dumpPath,
       `${PANELS_COLLECTION}.json`,
     );
-    super(filePath);
+    const hooks = config.getHooksConfig(PANELS_COLLECTION);
+    super(filePath, migrationClient, hooks);
   }
 }

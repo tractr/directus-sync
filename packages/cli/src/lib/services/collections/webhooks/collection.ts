@@ -10,6 +10,8 @@ import { WEBHOOKS_COLLECTION } from './constants';
 import { WebhooksDataMapper } from './data-mapper';
 import { LOGGER } from '../../../constants';
 import { DirectusWebhook } from './interfaces';
+import { ConfigService } from '../../config';
+import { MigrationClient } from '../../migration-client';
 
 @Service()
 export class WebhooksCollection extends DirectusCollection<DirectusWebhook> {
@@ -24,6 +26,8 @@ export class WebhooksCollection extends DirectusCollection<DirectusWebhook> {
     dataClient: WebhooksDataClient,
     dataMapper: WebhooksDataMapper,
     idMapper: WebhooksIdMapperClient,
+    config: ConfigService,
+    migrationClient: MigrationClient,
   ) {
     super(
       getChildLogger(baseLogger, WEBHOOKS_COLLECTION),
@@ -32,6 +36,8 @@ export class WebhooksCollection extends DirectusCollection<DirectusWebhook> {
       dataClient,
       dataMapper,
       idMapper,
+      migrationClient,
+      config.getHooksConfig(WEBHOOKS_COLLECTION),
     );
   }
 }

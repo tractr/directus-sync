@@ -3,6 +3,8 @@ import {
   ConfigFileOptions,
   DirectusConfigWithCredentials,
   DirectusConfigWithToken,
+  HookCollectionName,
+  Hooks,
   OptionName,
   Options,
 } from './interfaces';
@@ -84,6 +86,15 @@ export class ConfigService {
   @Cacheable()
   getConfigFileLoaderConfig() {
     return this.requireOptions('configPath');
+  }
+
+  @Cacheable()
+  getHooksConfig(collection: HookCollectionName): Hooks {
+    const hooks = this.getOptions('hooks');
+    if (!hooks) {
+      return {};
+    }
+    return (hooks[collection] ?? {}) as Hooks;
   }
 
   protected getOptions<T extends OptionName>(name: T): Options[T] | undefined {

@@ -36,7 +36,7 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
    * Returns the diff between the dump and the target table.
    */
   async getDiff() {
-    const sourceData = this.dataLoader.getSourceData();
+    const sourceData = await this.dataLoader.getSourceData();
 
     const toCreate: WithSyncIdAndWithoutId<DirectusType>[] = [];
     const toUpdate: UpdateItem<DirectusType>[] = [];
@@ -81,7 +81,6 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
     const idMap = await this.idMapper.getBySyncId(sourceItem._syncId);
     if (idMap) {
       const targetItem = await this.dataClient
-
         .query({ filter: { id: idMap.local_id } } as Query<DirectusType>)
         .then((items) => items[0])
         .catch(() => {

@@ -10,6 +10,8 @@ import { PANELS_COLLECTION } from './constants';
 import { PanelsDataMapper } from './data-mapper';
 import { LOGGER } from '../../../constants';
 import { DirectusPanel } from './interfaces';
+import { ConfigService } from '../../config';
+import { MigrationClient } from '../../migration-client';
 
 @Service()
 export class PanelsCollection extends DirectusCollection<DirectusPanel> {
@@ -24,6 +26,8 @@ export class PanelsCollection extends DirectusCollection<DirectusPanel> {
     dataClient: PanelsDataClient,
     dataMapper: PanelsDataMapper,
     idMapper: PanelsIdMapperClient,
+    config: ConfigService,
+    migrationClient: MigrationClient,
   ) {
     super(
       getChildLogger(baseLogger, PANELS_COLLECTION),
@@ -32,6 +36,8 @@ export class PanelsCollection extends DirectusCollection<DirectusPanel> {
       dataClient,
       dataMapper,
       idMapper,
+      migrationClient,
+      config.getHooksConfig(PANELS_COLLECTION),
     );
   }
 }
