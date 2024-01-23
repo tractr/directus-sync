@@ -16,7 +16,8 @@ for targeted updates and clearer oversight of your Directus configurations.
 # Requirements
 
 - Node.js 18 or higher
-- `directus-extension-sync` installed on your Directus instance. See the [installation instructions](#dependency-directus-extension-sync).
+- `directus-extension-sync` installed on your Directus instance. See
+  the [installation instructions](#dependency-directus-extension-sync).
 
 # Usage
 
@@ -133,16 +134,112 @@ This is an example of a configuration file:
 ```javascript
 // ./directus-sync.config.js
 module.exports = {
-  extends: ['./directus-sync.config.base.js'],
-  debug: true,
-  directusUrl: 'https://directus.example.com',
-  directusToken: 'my-directus-token',
-  directusEmail: 'admin@example.com', // ignored if directusToken is provided
-  directusPassword: 'my-directus-password', // ignored if directusToken is provided
-  split: true,
-  dumpPath: './directus-config',
-  collectionsPath: 'collections',
-  snapshotPath: 'snapshot',
+    extends: ['./directus-sync.config.base.js'],
+    debug: true,
+    directusUrl: 'https://directus.example.com',
+    directusToken: 'my-directus-token',
+    directusEmail: 'admin@example.com', // ignored if directusToken is provided
+    directusPassword: 'my-directus-password', // ignored if directusToken is provided
+    split: true,
+    dumpPath: './directus-config',
+    collectionsPath: 'collections',
+    snapshotPath: 'snapshot',
+};
+```
+
+### Hooks
+
+In addition to the CLI commands, `directus-sync` also supports hooks. Hooks are JavaScript functions that are executed
+at specific points during the synchronization process. They can be used to transform the data coming from Directus or
+going to Directus.
+
+Hooks are defined in the configuration file using the `hooks` property. Under this property, you can define the
+collection
+name and the hook function to be executed.
+Available collection names are: `dashboards`, `flows`, `operations`, `panels`, `permissions`, `roles`, `settings`,
+and `webhooks`.
+
+For each collection, available hook functions are: `onLoad`, `onSave`, and `onDump`. These can be asynchronous
+functions.
+They receive the data to be processed and the Directus client as parameters.
+The return value of the function is the data, which can be modified.
+
+During the `pull` command:
+
+- `onDump` is executed just after the data is retrieved from Directus and before it is saved to the dump files.
+- `onSave` is executed just before the cleaned data is saved to the dump files. The "cleaned" data is the data without
+  the columns that are ignored by `directus-sync` (such as `id`, `user_updated`) and with the relations replaced by the
+  SyncIDs.
+
+During the `push` command:
+
+- `onLoad` is executed just after the data is loaded from the dump files. The data is the cleaned data, as described
+  above.
+
+#### Simple example
+
+Here is an example of a configuration file with hooks:
+
+```javascript
+// ./directus-sync.config.js
+module.exports = {
+    hooks: {
+        flows: {
+            onDump: (flows) => {
+                return flows.map((flow) => {
+                    flow.name = `🧊 ${flow.name}`;
+                    return flow;
+                });
+            },
+            onSave: (flows) => {
+                return flows.map((flow) => {
+                    flow.name = `🔥 ${flow.name}`;
+                    return flow;
+                });
+            },
+            onLoad: (flows) => {
+                return flows.map((flow) => {
+                    flow.name = flow.name.replace('🔥 ', '');
+                    return flow;
+                });
+            },
+        },
+    },
+};
+```
+
+#### Using the Directus client
+
+The example below shows how to filter out the flows whose name starts with `Test:` and the corresponding operations.
+
+```javascript
+// ./directus-sync.config.js
+const {readFlows} = require('@directus/sdk');
+
+const testPrefix = 'Test:';
+
+module.exports = {
+    hooks: {
+        flows: {
+            onDump: (flows) => {
+                return flows.filter((flow) => !flow.name.startsWith(testPrefix));
+            },
+        },
+        operations: {
+            onDump: async (operations, client) => {
+                const flowsToExclude = await client.request(
+                    readFlows({
+                        fields: ['id'],
+                        filter: {name: {_starts_with: testPrefix}},
+                    }),
+                );
+                const flowsIdsToExclude = flowsToExclude.map((flow) => flow.id);
+                return operations.filter(
+                    (operation) => !flowsIdsToExclude.includes(operation.flow),
+                );
+            },
+        },
+    },
 };
 ```
 
