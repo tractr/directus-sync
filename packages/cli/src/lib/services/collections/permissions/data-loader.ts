@@ -4,15 +4,17 @@ import { PERMISSIONS_COLLECTION } from './constants';
 import path from 'path';
 import { DirectusPermission } from './interfaces';
 import { ConfigService } from '../../config';
+import { MigrationClient } from '../../migration-client';
 
 @Service()
 export class PermissionsDataLoader extends DataLoader<DirectusPermission> {
-  constructor(config: ConfigService) {
+  constructor(config: ConfigService, migrationClient: MigrationClient) {
     const filePath = path.join(
       config.getCollectionsConfig().dumpPath,
       `${PERMISSIONS_COLLECTION}.json`,
     );
-    super(filePath);
+    const hooks = config.getHooksConfig(PERMISSIONS_COLLECTION);
+    super(filePath, migrationClient, hooks);
   }
 
   protected getSortFunction(): (

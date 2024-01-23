@@ -1,19 +1,20 @@
 import { DataLoader } from '../base';
+
 import { Service } from 'typedi';
-import { PANELS_COLLECTION } from './constants';
+import { TRANSLATIONS_COLLECTION } from './constants';
 import path from 'path';
-import { DirectusPanel } from './interfaces';
+import { DirectusTranslation } from './interfaces';
 import { ConfigService } from '../../config';
 import { MigrationClient } from '../../migration-client';
 
 @Service()
-export class PanelsDataLoader extends DataLoader<DirectusPanel> {
+export class TranslationsDataLoader extends DataLoader<DirectusTranslation> {
   constructor(config: ConfigService, migrationClient: MigrationClient) {
     const filePath = path.join(
       config.getCollectionsConfig().dumpPath,
-      `${PANELS_COLLECTION}.json`,
+      `${TRANSLATIONS_COLLECTION}.json`,
     );
-    const hooks = config.getHooksConfig(PANELS_COLLECTION);
+    const hooks = config.getHooksConfig(TRANSLATIONS_COLLECTION);
     super(filePath, migrationClient, hooks);
   }
 }

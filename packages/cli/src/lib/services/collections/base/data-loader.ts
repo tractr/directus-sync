@@ -1,26 +1,40 @@
 import { DirectusBaseType, WithSyncIdAndWithoutId } from './interfaces';
 import { readJsonSync, writeJsonSync } from 'fs-extra';
+import { Hooks } from '../../config';
+import { MigrationClient } from '../../migration-client';
 
 export abstract class DataLoader<DirectusType extends DirectusBaseType> {
-  constructor(protected readonly filePath: string) {}
+  constructor(
+    protected readonly filePath: string,
+    protected readonly migrationClient: MigrationClient,
+    protected readonly hooks: Hooks,
+  ) {}
 
   /**
    * Returns the source data from the dump file, using readFileSync
    * and passes it through the data transformer.
    */
-  getSourceData(): WithSyncIdAndWithoutId<DirectusType>[] {
-    return readJsonSync(
+  async getSourceData(): Promise<WithSyncIdAndWithoutId<DirectusType>[]> {
+    const { onLoad } = this.hooks;
+    const loadedData = readJsonSync(
       this.filePath,
     ) as WithSyncIdAndWithoutId<DirectusType>[];
+    return onLoad
+      ? await onLoad(loadedData, await this.migrationClient.get())
+      : loadedData;
   }
 
   /**
    * Save the data to the dump file. The data is passed through the data transformer.
    */
-  saveData(data: WithSyncIdAndWithoutId<DirectusType>[]) {
+  async saveData(data: WithSyncIdAndWithoutId<DirectusType>[]) {
     // Sort data by _syncId to avoid git changes
     data.sort(this.getSortFunction());
-    writeJsonSync(this.filePath, data, { spaces: 2 });
+    const { onSave } = this.hooks;
+    const transformedData = onSave
+      ? await onSave(data, await this.migrationClient.get())
+      : data;
+    writeJsonSync(this.filePath, transformedData, { spaces: 2 });
   }
 
   /**

@@ -10,12 +10,16 @@ import { FLOWS_COLLECTION } from './constants';
 import { FlowsDataMapper } from './data-mapper';
 import { LOGGER } from '../../../constants';
 import { DirectusFlow } from './interfaces';
+import { ConfigService } from '../../config';
+import { MigrationClient } from '../../migration-client';
 
 @Service()
 export class FlowsCollection extends DirectusCollection<DirectusFlow> {
   protected readonly enableCreate = true;
   protected readonly enableUpdate = true;
   protected readonly enableDelete = true;
+
+  protected readonly preserveIds = true;
 
   constructor(
     @Inject(LOGGER) baseLogger: pino.Logger,
@@ -24,6 +28,8 @@ export class FlowsCollection extends DirectusCollection<DirectusFlow> {
     dataClient: FlowsDataClient,
     dataMapper: FlowsDataMapper,
     idMapper: FlowsIdMapperClient,
+    config: ConfigService,
+    migrationClient: MigrationClient,
   ) {
     super(
       getChildLogger(baseLogger, FLOWS_COLLECTION),
@@ -32,6 +38,8 @@ export class FlowsCollection extends DirectusCollection<DirectusFlow> {
       dataClient,
       dataMapper,
       idMapper,
+      migrationClient,
+      config.getHooksConfig(FLOWS_COLLECTION),
     );
   }
 

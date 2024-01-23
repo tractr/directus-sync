@@ -7,6 +7,7 @@ import {
   PermissionsCollection,
   RolesCollection,
   SettingsCollection,
+  TranslationsCollection,
   WebhooksCollection,
 } from './services';
 import { createDumpFolders } from './helpers';
@@ -62,6 +63,7 @@ export function loadCollections() {
   // The collections are populated in the same order
   return [
     Container.get(SettingsCollection),
+    Container.get(TranslationsCollection),
     Container.get(WebhooksCollection),
     Container.get(FlowsCollection),
     Container.get(OperationsCollection),

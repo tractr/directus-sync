@@ -1,9 +1,11 @@
 import { IdMap, IdMapperClient } from './id-mapper-client';
 import {
   DirectusBaseType,
+  DirectusId,
+  Query,
   UpdateItem,
   WithoutId,
-  WithoutIdAndSyncId,
+  WithoutSyncId,
   WithSyncId,
   WithSyncIdAndWithoutId,
 } from './interfaces';
@@ -12,6 +14,8 @@ import { DataLoader } from './data-loader';
 import { DataDiffer } from './data-differ';
 import pino from 'pino';
 import { DataMapper } from './data-mapper';
+import { Hooks } from '../../config';
+import { MigrationClient } from '../../migration-client';
 
 /**
  * This class is responsible for merging the data from a dump to a target table.
@@ -24,6 +28,17 @@ export abstract class DirectusCollection<
   protected abstract readonly enableUpdate: boolean;
   protected abstract readonly enableDelete: boolean;
 
+  /**
+   * If true, the ids of the items will be used as sync ids.
+   * This allows to restore the same ids as the original table.
+   */
+  protected readonly preserveIds: boolean = false;
+
+  /**
+   * Used to keep data in memory between the pull and the postProcessPull.
+   */
+  protected tempData: WithSyncIdAndWithoutId<DirectusType>[] = [];
+
   constructor(
     protected readonly logger: pino.Logger,
     protected readonly dataDiffer: DataDiffer<DirectusType>,
@@ -31,16 +46,23 @@ export abstract class DirectusCollection<
     protected readonly dataClient: DataClient<DirectusType>,
     protected readonly dataMapper: DataMapper<DirectusType>,
     protected readonly idMapper: IdMapperClient,
+    protected readonly migrationClient: MigrationClient,
+    protected readonly hooks: Hooks,
   ) {}
 
   /**
    * Pull data from a table to a JSON file
    */
   async pull() {
-    const items = await this.dataClient.query({ limit: -1 });
+    const baseQuery: Query<DirectusType> = { limit: -1 };
+    const { onQuery } = this.hooks;
+    const transformedQuery = onQuery
+      ? await onQuery(baseQuery, await this.migrationClient.get())
+      : baseQuery;
+    const items = await this.dataClient.query(transformedQuery);
     const mappedItems = await this.mapIdsOfItems(items);
     const itemsWithoutIds = this.removeIdsOfItems(mappedItems);
-    this.dataLoader.saveData(itemsWithoutIds);
+    await this.setTempData(itemsWithoutIds);
     this.logger.debug(`Pulled ${mappedItems.length} items.`);
   }
 
@@ -48,10 +70,10 @@ export abstract class DirectusCollection<
    * This methods will change ids to sync ids and add users placeholders.
    */
   async postProcessPull() {
-    const items = this.dataLoader.getSourceData();
+    const items = this.getTempData();
     const mappedItems =
       await this.dataMapper.mapIdsToSyncIdAndRemoveIgnoredFields(items);
-    this.dataLoader.saveData(mappedItems);
+    await this.dataLoader.saveData(mappedItems);
     this.logger.debug(`Post-processed ${mappedItems.length} items.`);
   }
 
@@ -120,6 +142,23 @@ export abstract class DirectusCollection<
   }
 
   /**
+   * Temporary store the data in memory.
+   */
+  protected async setTempData(data: WithSyncIdAndWithoutId<DirectusType>[]) {
+    const { onDump } = this.hooks;
+    this.tempData = onDump
+      ? await onDump(data, await this.migrationClient.get())
+      : data;
+  }
+
+  /**
+   * Returns the data stored in memory.
+   */
+  protected getTempData(): WithSyncIdAndWithoutId<DirectusType>[] {
+    return this.tempData;
+  }
+
+  /**
    * For each item, try to get the mapped id if exists from the idMapper, or create it if not.
    */
   protected async mapIdsOfItems<T extends DirectusBaseType>(
@@ -131,7 +170,10 @@ export abstract class DirectusCollection<
       if (syncId) {
         output.push({ ...item, _syncId: syncId.sync_id });
       } else {
-        const newSyncId = await this.idMapper.create(item.id);
+        const newSyncId = await this.idMapper.create(
+          item.id,
+          this.preserveIds ? item.id.toString() : undefined,
+        );
         output.push({ ...item, _syncId: newSyncId });
       }
     }
@@ -163,9 +205,11 @@ export abstract class DirectusCollection<
 
       // If the id mapping was successful, create the item
       const { _syncId, ...rest } = mappedItem;
-      const newItem = await this.dataClient.create(
-        rest as unknown as WithoutIdAndSyncId<DirectusType>,
-      );
+      const createPayload = rest as unknown as WithoutSyncId<DirectusType>;
+      if (this.preserveIds) {
+        createPayload.id = _syncId as DirectusId;
+      }
+      const newItem = await this.dataClient.create(createPayload);
       this.logger.debug(sourceItem, `Created item`);
 
       // Create new entry in the id mapper

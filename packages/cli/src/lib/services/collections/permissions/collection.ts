@@ -10,6 +10,8 @@ import { PERMISSIONS_COLLECTION } from './constants';
 import { PermissionsDataMapper } from './data-mapper';
 import { LOGGER } from '../../../constants';
 import { DirectusPermission } from './interfaces';
+import { ConfigService } from '../../config';
+import { MigrationClient } from '../../migration-client';
 
 @Service()
 export class PermissionsCollection extends DirectusCollection<DirectusPermission> {
@@ -24,6 +26,8 @@ export class PermissionsCollection extends DirectusCollection<DirectusPermission
     dataClient: PermissionsDataClient,
     dataMapper: PermissionsDataMapper,
     idMapper: PermissionsIdMapperClient,
+    config: ConfigService,
+    migrationClient: MigrationClient,
   ) {
     super(
       getChildLogger(baseLogger, PERMISSIONS_COLLECTION),
@@ -32,6 +36,8 @@ export class PermissionsCollection extends DirectusCollection<DirectusPermission
       dataClient,
       dataMapper,
       idMapper,
+      migrationClient,
+      config.getHooksConfig(PERMISSIONS_COLLECTION),
     );
   }
 }

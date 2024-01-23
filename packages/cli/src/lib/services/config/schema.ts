@@ -1,5 +1,24 @@
 import { z } from 'zod';
 
+export const HooksSchema = z.object({
+  onLoad: z.function().optional(),
+  onDump: z.function().optional(),
+  onSave: z.function().optional(),
+  onQuery: z.function().optional(),
+});
+
+export const OptionsHooksSchema = z.object({
+  dashboards: HooksSchema.optional(),
+  flows: HooksSchema.optional(),
+  operations: HooksSchema.optional(),
+  panels: HooksSchema.optional(),
+  permissions: HooksSchema.optional(),
+  roles: HooksSchema.optional(),
+  settings: HooksSchema.optional(),
+  translations: HooksSchema.optional(),
+  webhooks: HooksSchema.optional(),
+});
+
 export const OptionsFields = {
   // Global
   configPath: z.string(),
@@ -18,6 +37,8 @@ export const OptionsFields = {
   // Untrack
   collection: z.string().optional(),
   id: z.string().optional(),
+  // Hooks
+  hooks: OptionsHooksSchema.optional(),
 };
 export const OptionsSchema = z.object(OptionsFields);
 
@@ -35,4 +56,6 @@ export const ConfigFileOptionsSchema = z.object({
   dumpPath: OptionsFields.dumpPath.optional(),
   collectionsPath: OptionsFields.collectionsPath.optional(),
   snapshotPath: OptionsFields.snapshotPath.optional(),
+  // Hooks config
+  hooks: OptionsHooksSchema.optional(),
 });
