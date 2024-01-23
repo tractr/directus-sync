@@ -315,11 +315,11 @@ flowchart
 
 #### `Diff` command
 
-__Coming soon__
+**Coming soon**
 
 #### `Push` command
 
-__Coming soon__
+**Coming soon**
 
 ### Tracked Elements
 
