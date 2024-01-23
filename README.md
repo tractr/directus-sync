@@ -134,16 +134,16 @@ This is an example of a configuration file:
 ```javascript
 // ./directus-sync.config.js
 module.exports = {
-    extends: ['./directus-sync.config.base.js'],
-    debug: true,
-    directusUrl: 'https://directus.example.com',
-    directusToken: 'my-directus-token',
-    directusEmail: 'admin@example.com', // ignored if directusToken is provided
-    directusPassword: 'my-directus-password', // ignored if directusToken is provided
-    split: true,
-    dumpPath: './directus-config',
-    collectionsPath: 'collections',
-    snapshotPath: 'snapshot',
+  extends: ['./directus-sync.config.base.js'],
+  debug: true,
+  directusUrl: 'https://directus.example.com',
+  directusToken: 'my-directus-token',
+  directusEmail: 'admin@example.com', // ignored if directusToken is provided
+  directusPassword: 'my-directus-password', // ignored if directusToken is provided
+  split: true,
+  dumpPath: './directus-config',
+  collectionsPath: 'collections',
+  snapshotPath: 'snapshot',
 };
 ```
 
@@ -183,28 +183,28 @@ Here is an example of a configuration file with hooks:
 ```javascript
 // ./directus-sync.config.js
 module.exports = {
-    hooks: {
-        flows: {
-            onDump: (flows) => {
-                return flows.map((flow) => {
-                    flow.name = `🧊 ${flow.name}`;
-                    return flow;
-                });
-            },
-            onSave: (flows) => {
-                return flows.map((flow) => {
-                    flow.name = `🔥 ${flow.name}`;
-                    return flow;
-                });
-            },
-            onLoad: (flows) => {
-                return flows.map((flow) => {
-                    flow.name = flow.name.replace('🔥 ', '');
-                    return flow;
-                });
-            },
-        },
+  hooks: {
+    flows: {
+      onDump: (flows) => {
+        return flows.map((flow) => {
+          flow.name = `🧊 ${flow.name}`;
+          return flow;
+        });
+      },
+      onSave: (flows) => {
+        return flows.map((flow) => {
+          flow.name = `🔥 ${flow.name}`;
+          return flow;
+        });
+      },
+      onLoad: (flows) => {
+        return flows.map((flow) => {
+          flow.name = flow.name.replace('🔥 ', '');
+          return flow;
+        });
+      },
     },
+  },
 };
 ```
 
@@ -214,34 +214,42 @@ The example below shows how to filter out the flows whose name starts with `Test
 
 ```javascript
 // ./directus-sync.config.js
-const {readFlows} = require('@directus/sdk');
+const { readFlows } = require('@directus/sdk');
 
 const testPrefix = 'Test:';
 
 module.exports = {
-    hooks: {
-        flows: {
-            onDump: (flows) => {
-                return flows.filter((flow) => !flow.name.startsWith(testPrefix));
-            },
-        },
-        operations: {
-            onDump: async (operations, client) => {
-                const flowsToExclude = await client.request(
-                    readFlows({
-                        fields: ['id'],
-                        filter: {name: {_starts_with: testPrefix}},
-                    }),
-                );
-                const flowsIdsToExclude = flowsToExclude.map((flow) => flow.id);
-                return operations.filter(
-                    (operation) => !flowsIdsToExclude.includes(operation.flow),
-                );
-            },
-        },
+  hooks: {
+    flows: {
+      onDump: (flows) => {
+        return flows.filter((flow) => !flow.name.startsWith(testPrefix));
+      },
     },
+    operations: {
+      onDump: async (operations, client) => {
+        const flowsToExclude = await client.request(
+          readFlows({
+            fields: ['id'],
+            filter: { name: { _starts_with: testPrefix } },
+          }),
+        );
+        const flowsIdsToExclude = flowsToExclude.map((flow) => flow.id);
+        return operations.filter(
+          (operation) => !flowsIdsToExclude.includes(operation.flow),
+        );
+      },
+    },
+  },
 };
 ```
+
+> [!WARNING]  
+> The dump hook is called after the mapping of the SyncIDs. This means that the data received by the hook is already
+> tracked. If you filter out some elements, they will be deleted during the `push` command.
+> In the previous example, the flows starting with `Test:` are not saved into the JSON files but are tracked.
+> Therefore, in this example, if you run `directus-sync push` after running `directus-sync pull`, those flows will be
+> considered as deleted, based on the JSON files, and removed from the Directus instance.
+> If you don't won't this behavior, you should use the `onReadQuery` hook instead of the `onDump` hook.
 
 ### Tracked Elements
 
