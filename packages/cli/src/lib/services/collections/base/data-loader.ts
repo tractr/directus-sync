@@ -27,17 +27,14 @@ export abstract class DataLoader<DirectusType extends DirectusBaseType> {
   /**
    * Save the data to the dump file. The data is passed through the data transformer.
    */
-  async saveData(
-    data: WithSyncIdAndWithoutId<DirectusType>[],
-    applyHook: 'onDump' | 'onSave',
-  ) {
+  async saveData(data: WithSyncIdAndWithoutId<DirectusType>[]) {
     // Sort data by _syncId to avoid git changes
     data.sort(this.getSortFunction());
-    const hook = this.hooks[applyHook];
-    if (hook) {
-      data = await hook(data, await this.migrationClient.get());
-    }
-    writeJsonSync(this.filePath, data, { spaces: 2 });
+    const { onSave } = this.hooks;
+    const transformedData = onSave
+      ? await onSave(data, await this.migrationClient.get())
+      : data;
+    writeJsonSync(this.filePath, transformedData, { spaces: 2 });
   }
 
   /**

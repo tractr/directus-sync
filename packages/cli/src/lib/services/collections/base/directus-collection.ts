@@ -34,6 +34,11 @@ export abstract class DirectusCollection<
    */
   protected readonly preserveIds: boolean = false;
 
+  /**
+   * Used to keep data in memory between the pull and the postProcessPull.
+   */
+  protected tempData: WithSyncIdAndWithoutId<DirectusType>[] = [];
+
   constructor(
     protected readonly logger: pino.Logger,
     protected readonly dataDiffer: DataDiffer<DirectusType>,
@@ -57,7 +62,7 @@ export abstract class DirectusCollection<
     const items = await this.dataClient.query(transformedQuery);
     const mappedItems = await this.mapIdsOfItems(items);
     const itemsWithoutIds = this.removeIdsOfItems(mappedItems);
-    await this.dataLoader.saveData(itemsWithoutIds, 'onDump');
+    await this.setTempData(itemsWithoutIds);
     this.logger.debug(`Pulled ${mappedItems.length} items.`);
   }
 
@@ -65,10 +70,10 @@ export abstract class DirectusCollection<
    * This methods will change ids to sync ids and add users placeholders.
    */
   async postProcessPull() {
-    const items = await this.dataLoader.getSourceData();
+    const items = this.getTempData();
     const mappedItems =
       await this.dataMapper.mapIdsToSyncIdAndRemoveIgnoredFields(items);
-    await this.dataLoader.saveData(mappedItems, 'onSave');
+    await this.dataLoader.saveData(mappedItems);
     this.logger.debug(`Post-processed ${mappedItems.length} items.`);
   }
 
@@ -134,6 +139,23 @@ export abstract class DirectusCollection<
     await this.removeDangling(dangling);
     // Clear the id mapper cache
     this.idMapper.clearCache();
+  }
+
+  /**
+   * Temporary store the data in memory.
+   */
+  protected async setTempData(data: WithSyncIdAndWithoutId<DirectusType>[]) {
+    const { onDump } = this.hooks;
+    this.tempData = onDump
+      ? await onDump(data, await this.migrationClient.get())
+      : data;
+  }
+
+  /**
+   * Returns the data stored in memory.
+   */
+  protected getTempData(): WithSyncIdAndWithoutId<DirectusType>[] {
+    return this.tempData;
   }
 
   /**
