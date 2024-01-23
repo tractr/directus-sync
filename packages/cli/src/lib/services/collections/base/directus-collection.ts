@@ -2,6 +2,7 @@ import { IdMap, IdMapperClient } from './id-mapper-client';
 import {
   DirectusBaseType,
   DirectusId,
+  Query,
   UpdateItem,
   WithoutId,
   WithoutSyncId,
@@ -13,6 +14,8 @@ import { DataLoader } from './data-loader';
 import { DataDiffer } from './data-differ';
 import pino from 'pino';
 import { DataMapper } from './data-mapper';
+import { Hooks } from '../../config';
+import { MigrationClient } from '../../migration-client';
 
 /**
  * This class is responsible for merging the data from a dump to a target table.
@@ -38,13 +41,20 @@ export abstract class DirectusCollection<
     protected readonly dataClient: DataClient<DirectusType>,
     protected readonly dataMapper: DataMapper<DirectusType>,
     protected readonly idMapper: IdMapperClient,
+    protected readonly migrationClient: MigrationClient,
+    protected readonly hooks: Hooks,
   ) {}
 
   /**
    * Pull data from a table to a JSON file
    */
   async pull() {
-    const items = await this.dataClient.query({ limit: -1 });
+    const baseQuery: Query<DirectusType> = { limit: -1 };
+    const { onQuery } = this.hooks;
+    const transformedQuery = onQuery
+      ? await onQuery(baseQuery, await this.migrationClient.get())
+      : baseQuery;
+    const items = await this.dataClient.query(transformedQuery);
     const mappedItems = await this.mapIdsOfItems(items);
     const itemsWithoutIds = this.removeIdsOfItems(mappedItems);
     await this.dataLoader.saveData(itemsWithoutIds, 'onDump');

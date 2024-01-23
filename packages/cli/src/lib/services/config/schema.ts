@@ -1,20 +1,21 @@
 import { z } from 'zod';
 
-export const TransformDataHooksSchema = z.object({
+export const HooksSchema = z.object({
   onLoad: z.function().optional(),
   onDump: z.function().optional(),
   onSave: z.function().optional(),
+  onQuery: z.function().optional(),
 });
 
 export const OptionsHooksSchema = z.object({
-  dashboards: TransformDataHooksSchema.optional(),
-  flows: TransformDataHooksSchema.optional(),
-  operations: TransformDataHooksSchema.optional(),
-  panels: TransformDataHooksSchema.optional(),
-  permissions: TransformDataHooksSchema.optional(),
-  roles: TransformDataHooksSchema.optional(),
-  settings: TransformDataHooksSchema.optional(),
-  webhooks: TransformDataHooksSchema.optional(),
+  dashboards: HooksSchema.optional(),
+  flows: HooksSchema.optional(),
+  operations: HooksSchema.optional(),
+  panels: HooksSchema.optional(),
+  permissions: HooksSchema.optional(),
+  roles: HooksSchema.optional(),
+  settings: HooksSchema.optional(),
+  webhooks: HooksSchema.optional(),
 });
 
 export const OptionsFields = {

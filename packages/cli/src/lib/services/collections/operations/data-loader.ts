@@ -13,8 +13,8 @@ export class OperationsDataLoader extends DataLoader<DirectusOperation> {
       config.getCollectionsConfig().dumpPath,
       `${OPERATIONS_COLLECTION}.json`,
     );
-    const transformDataHooks = config.getHooksConfig(OPERATIONS_COLLECTION);
-    super(filePath, migrationClient, transformDataHooks);
+    const hooks = config.getHooksConfig(OPERATIONS_COLLECTION);
+    super(filePath, migrationClient, hooks);
   }
 
   protected getSortFunction(): (

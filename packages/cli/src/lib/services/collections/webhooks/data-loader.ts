@@ -14,7 +14,7 @@ export class WebhooksDataLoader extends DataLoader<DirectusWebhook> {
       config.getCollectionsConfig().dumpPath,
       `${WEBHOOKS_COLLECTION}.json`,
     );
-    const transformDataHooks = config.getHooksConfig(WEBHOOKS_COLLECTION);
-    super(filePath, migrationClient, transformDataHooks);
+    const hooks = config.getHooksConfig(WEBHOOKS_COLLECTION);
+    super(filePath, migrationClient, hooks);
   }
 }

@@ -10,6 +10,8 @@ import { OPERATIONS_COLLECTION } from './constants';
 import { OperationsDataMapper } from './data-mapper';
 import { LOGGER } from '../../../constants';
 import { DirectusOperation } from './interfaces';
+import { ConfigService } from '../../config';
+import { MigrationClient } from '../../migration-client';
 
 @Service()
 export class OperationsCollection extends DirectusCollection<DirectusOperation> {
@@ -24,6 +26,8 @@ export class OperationsCollection extends DirectusCollection<DirectusOperation> 
     dataClient: OperationsDataClient,
     dataMapper: OperationsDataMapper,
     idMapper: OperationsIdMapperClient,
+    config: ConfigService,
+    migrationClient: MigrationClient,
   ) {
     super(
       getChildLogger(baseLogger, OPERATIONS_COLLECTION),
@@ -32,6 +36,8 @@ export class OperationsCollection extends DirectusCollection<DirectusOperation> 
       dataClient,
       dataMapper,
       idMapper,
+      migrationClient,
+      config.getHooksConfig(OPERATIONS_COLLECTION),
     );
   }
 }

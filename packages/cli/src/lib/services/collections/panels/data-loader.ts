@@ -13,7 +13,7 @@ export class PanelsDataLoader extends DataLoader<DirectusPanel> {
       config.getCollectionsConfig().dumpPath,
       `${PANELS_COLLECTION}.json`,
     );
-    const transformDataHooks = config.getHooksConfig(PANELS_COLLECTION);
-    super(filePath, migrationClient, transformDataHooks);
+    const hooks = config.getHooksConfig(PANELS_COLLECTION);
+    super(filePath, migrationClient, hooks);
   }
 }

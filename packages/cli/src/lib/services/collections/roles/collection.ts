@@ -10,6 +10,8 @@ import { ROLES_COLLECTION } from './constants';
 import { RolesDataMapper } from './data-mapper';
 import { LOGGER } from '../../../constants';
 import { DirectusRole } from './interfaces';
+import { ConfigService } from '../../config';
+import { MigrationClient } from '../../migration-client';
 
 @Service()
 export class RolesCollection extends DirectusCollection<DirectusRole> {
@@ -24,6 +26,8 @@ export class RolesCollection extends DirectusCollection<DirectusRole> {
     dataClient: RolesDataClient,
     dataMapper: RolesDataMapper,
     idMapper: RolesIdMapperClient,
+    config: ConfigService,
+    migrationClient: MigrationClient,
   ) {
     super(
       getChildLogger(baseLogger, ROLES_COLLECTION),
@@ -32,6 +36,8 @@ export class RolesCollection extends DirectusCollection<DirectusRole> {
       dataClient,
       dataMapper,
       idMapper,
+      migrationClient,
+      config.getHooksConfig(ROLES_COLLECTION),
     );
   }
 }

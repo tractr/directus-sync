@@ -1,13 +1,13 @@
 import { DirectusBaseType, WithSyncIdAndWithoutId } from './interfaces';
 import { readJsonSync, writeJsonSync } from 'fs-extra';
-import { TransformDataHooks } from '../../config';
+import { Hooks } from '../../config';
 import { MigrationClient } from '../../migration-client';
 
 export abstract class DataLoader<DirectusType extends DirectusBaseType> {
   constructor(
     protected readonly filePath: string,
     protected readonly migrationClient: MigrationClient,
-    protected readonly transformDataHooks?: TransformDataHooks,
+    protected readonly hooks: Hooks,
   ) {}
 
   /**
@@ -15,7 +15,7 @@ export abstract class DataLoader<DirectusType extends DirectusBaseType> {
    * and passes it through the data transformer.
    */
   async getSourceData(): Promise<WithSyncIdAndWithoutId<DirectusType>[]> {
-    const onLoad = this.transformDataHooks?.onLoad;
+    const { onLoad } = this.hooks;
     const loadedData = readJsonSync(
       this.filePath,
     ) as WithSyncIdAndWithoutId<DirectusType>[];
@@ -33,7 +33,7 @@ export abstract class DataLoader<DirectusType extends DirectusBaseType> {
   ) {
     // Sort data by _syncId to avoid git changes
     data.sort(this.getSortFunction());
-    const hook = this.transformDataHooks?.[applyHook];
+    const hook = this.hooks[applyHook];
     if (hook) {
       data = await hook(data, await this.migrationClient.get());
     }

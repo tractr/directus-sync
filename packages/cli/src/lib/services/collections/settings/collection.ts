@@ -10,6 +10,8 @@ import { SETTINGS_COLLECTION } from './constants';
 import { SettingsDataMapper } from './data-mapper';
 import { LOGGER } from '../../../constants';
 import { DirectusSettings } from './interfaces';
+import { ConfigService } from '../../config';
+import { MigrationClient } from '../../migration-client';
 
 @Service()
 export class SettingsCollection extends DirectusCollection<DirectusSettings> {
@@ -24,6 +26,8 @@ export class SettingsCollection extends DirectusCollection<DirectusSettings> {
     dataClient: SettingsDataClient,
     dataMapper: SettingsDataMapper,
     idMapper: SettingsIdMapperClient,
+    config: ConfigService,
+    migrationClient: MigrationClient,
   ) {
     super(
       getChildLogger(baseLogger, SETTINGS_COLLECTION),
@@ -32,6 +36,8 @@ export class SettingsCollection extends DirectusCollection<DirectusSettings> {
       dataClient,
       dataMapper,
       idMapper,
+      migrationClient,
+      config.getHooksConfig(SETTINGS_COLLECTION),
     );
   }
 }

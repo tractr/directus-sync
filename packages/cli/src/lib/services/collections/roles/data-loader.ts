@@ -13,7 +13,7 @@ export class RolesDataLoader extends DataLoader<DirectusRole> {
       config.getCollectionsConfig().dumpPath,
       `${ROLES_COLLECTION}.json`,
     );
-    const transformDataHooks = config.getHooksConfig(ROLES_COLLECTION);
-    super(filePath, migrationClient, transformDataHooks);
+    const hooks = config.getHooksConfig(ROLES_COLLECTION);
+    super(filePath, migrationClient, hooks);
   }
 }

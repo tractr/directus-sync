@@ -3,10 +3,10 @@ import {
   ConfigFileOptions,
   DirectusConfigWithCredentials,
   DirectusConfigWithToken,
+  HookCollectionName,
+  Hooks,
   OptionName,
   Options,
-  TransformDataHookName,
-  TransformDataHooks,
 } from './interfaces';
 import Path from 'path';
 import { Cacheable } from 'typescript-cacheable';
@@ -89,14 +89,12 @@ export class ConfigService {
   }
 
   @Cacheable()
-  getHooksConfig(
-    collection: TransformDataHookName,
-  ): TransformDataHooks | undefined {
+  getHooksConfig(collection: HookCollectionName): Hooks {
     const hooks = this.getOptions('hooks');
     if (!hooks) {
-      return undefined;
+      return {};
     }
-    return hooks[collection] as TransformDataHooks | undefined;
+    return (hooks[collection] ?? {}) as Hooks;
   }
 
   protected getOptions<T extends OptionName>(name: T): Options[T] | undefined {
