@@ -15,6 +15,7 @@ export const OptionsHooksSchema = z.object({
   permissions: HooksSchema.optional(),
   roles: HooksSchema.optional(),
   settings: HooksSchema.optional(),
+  translations: HooksSchema.optional(),
   webhooks: HooksSchema.optional(),
 });
 

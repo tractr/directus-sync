@@ -156,7 +156,7 @@ going to Directus.
 Hooks are defined in the configuration file using the `hooks` property. Under this property, you can define the
 collection
 name and the hook function to be executed.
-Available collection names are: `dashboards`, `flows`, `operations`, `panels`, `permissions`, `roles`, `settings`,
+Available collection names are: `dashboards`, `flows`, `operations`, `panels`, `permissions`, `roles`, `settings`, `translations`,
 and `webhooks`.
 
 For each collection, available hook functions are: `onQuery`, `onLoad`, `onSave`, and `onDump`.
@@ -333,6 +333,7 @@ flowchart
 - permissions
 - roles
 - settings
+- translations
 - webhooks
 
 For these collections, data changes are committed to the code, allowing for replication on other Directus instances. A
@@ -362,7 +363,7 @@ configurations and schema within Directus. Here is a step-by-step explanation of
 Upon execution of the `pull` command, `directus-sync` will:
 
 1. Scan the specified Directus collections, which include dashboards, flows, operations, panels, permissions, roles,
-   settings, and webhooks.
+   settings, translations and webhooks.
 2. Assign a SyncID to each element within these collections if it doesn't already have one.
 3. Commit the data of these collections into code, allowing for versioning and tracking of configuration changes.
 
