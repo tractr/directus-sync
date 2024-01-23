@@ -294,21 +294,22 @@ module.exports = {
 
 ```mermaid
 flowchart
-	subgraph Pull[Get data - for each collection]
+  subgraph Pull[Get elements - for each collection]
     direction TB
-		B[Query for all elements]
-    -->|onQuery hook|C[Get from Directus]
-    -->D[Get or create SyncId for each element. Start tracking]
-    -->E[Remove original Id of each element]
-    -->|onDump hook|F[Keep data in memory]
+		B[Create query for all elements]
+    -->|onQuery hook|C[Add collection-specific filters]
+    -->D[Get elements from Directus]
+    -->E[Get or create SyncId for each element. Start tracking]
+    -->F[Remove original Id of each element]
+    -->|onDump hook|G[Keep elements in memory]
   end
-	subgraph Post[Link data - fFor each collection]
+	subgraph Post[Link elements - for each collection]
     direction TB
-		G[Get all elements from memory]
-    --> H[Replace Ids by SyncIds]
-    --> I[Remove ignore fields]
-    --> J[Sort elements]
-    -->|onSave hook|P[Save cleaned data to JSON file]
+		H[Get all elements from memory]
+    --> I[Replace relations ids by SyncIds]
+    --> J[Remove ignore fields]
+    --> K[Sort elements]
+    -->|onSave hook|L[Save to JSON file]
   end
  A[Pull command] --> Pull --> Post --> Z[End]
 ```
