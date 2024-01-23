@@ -4,16 +4,17 @@ import { OPERATIONS_COLLECTION } from './constants';
 import path from 'path';
 import { DirectusOperation } from './interfaces';
 import { ConfigService } from '../../config';
+import { MigrationClient } from '../../migration-client';
 
 @Service()
 export class OperationsDataLoader extends DataLoader<DirectusOperation> {
-  constructor(config: ConfigService) {
+  constructor(config: ConfigService, migrationClient: MigrationClient) {
     const filePath = path.join(
       config.getCollectionsConfig().dumpPath,
       `${OPERATIONS_COLLECTION}.json`,
     );
     const transformDataHooks = config.getHooksConfig(OPERATIONS_COLLECTION);
-    super(filePath, transformDataHooks);
+    super(filePath, migrationClient, transformDataHooks);
   }
 
   protected getSortFunction(): (

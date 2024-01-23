@@ -4,15 +4,16 @@ import { DASHBOARDS_COLLECTION } from './constants';
 import path from 'path';
 import { DirectusDashboard } from './interfaces';
 import { ConfigService } from '../../config';
+import { MigrationClient } from '../../migration-client';
 
 @Service()
 export class DashboardsDataLoader extends DataLoader<DirectusDashboard> {
-  constructor(config: ConfigService) {
+  constructor(config: ConfigService, migrationClient: MigrationClient) {
     const filePath = path.join(
       config.getCollectionsConfig().dumpPath,
       `${DASHBOARDS_COLLECTION}.json`,
     );
     const transformDataHooks = config.getHooksConfig(DASHBOARDS_COLLECTION);
-    super(filePath, transformDataHooks);
+    super(filePath, migrationClient, transformDataHooks);
   }
 }

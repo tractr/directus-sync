@@ -6,6 +6,7 @@ import {
   OptionsSchema,
   TransformDataHooksSchema,
 } from './schema';
+import { MigrationClient } from '../migration-client';
 
 export type OptionName = keyof typeof OptionsFields;
 
@@ -17,6 +18,7 @@ export type TransformDataHookName = keyof typeof OptionsHooksSchema.shape;
 
 export type TransformDataFunction = <T = unknown>(
   data: T[],
+  directusClient: Awaited<ReturnType<typeof MigrationClient.prototype.get>>,
 ) => T[] | Promise<T[]>;
 
 export type TransformDataHooks = {

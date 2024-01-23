@@ -1,10 +1,12 @@
 import { DirectusBaseType, WithSyncIdAndWithoutId } from './interfaces';
 import { readJsonSync, writeJsonSync } from 'fs-extra';
 import { TransformDataHooks } from '../../config';
+import { MigrationClient } from '../../migration-client';
 
 export abstract class DataLoader<DirectusType extends DirectusBaseType> {
   constructor(
     protected readonly filePath: string,
+    protected readonly migrationClient: MigrationClient,
     protected readonly transformDataHooks?: TransformDataHooks,
   ) {}
 
@@ -17,7 +19,9 @@ export abstract class DataLoader<DirectusType extends DirectusBaseType> {
     const loadedData = readJsonSync(
       this.filePath,
     ) as WithSyncIdAndWithoutId<DirectusType>[];
-    return onLoad ? await onLoad(loadedData) : loadedData;
+    return onLoad
+      ? await onLoad(loadedData, await this.migrationClient.get())
+      : loadedData;
   }
 
   /**
@@ -31,7 +35,7 @@ export abstract class DataLoader<DirectusType extends DirectusBaseType> {
     data.sort(this.getSortFunction());
     const hook = this.transformDataHooks?.[applyHook];
     if (hook) {
-      data = await hook(data);
+      data = await hook(data, await this.migrationClient.get());
     }
     writeJsonSync(this.filePath, data, { spaces: 2 });
   }

@@ -4,14 +4,16 @@ import { FLOWS_COLLECTION } from './constants';
 import path from 'path';
 import { DirectusFlow } from './interfaces';
 import { ConfigService } from '../../config';
+import { MigrationClient } from '../../migration-client';
 
 @Service()
 export class FlowsDataLoader extends DataLoader<DirectusFlow> {
-  constructor(config: ConfigService) {
+  constructor(config: ConfigService, migrationClient: MigrationClient) {
     const filePath = path.join(
       config.getCollectionsConfig().dumpPath,
       `${FLOWS_COLLECTION}.json`,
     );
-    super(filePath);
+    const transformDataHooks = config.getHooksConfig(FLOWS_COLLECTION);
+    super(filePath, migrationClient, transformDataHooks);
   }
 }
