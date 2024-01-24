@@ -1,8 +1,16 @@
 import { Options } from './interfaces';
 
-export const DefaultConfig: Partial<Options> = {
+export const DefaultConfigPaths = [
+  './directus-sync.config.js',
+  './directus-sync.config.cjs',
+  './directus-sync.config.json',
+];
+
+export const DefaultConfig: Pick<
+  Options,
+  'debug' | 'dumpPath' | 'collectionsPath' | 'snapshotPath' | 'split' | 'force'
+> = {
   // Global
-  configPath: './directus-sync.config.js',
   debug: false,
   // Pull, diff, push
   dumpPath: './directus-config',

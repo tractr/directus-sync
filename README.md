@@ -81,7 +81,8 @@ Options are merged from the following sources, in order of precedence:
 These options can be used with any command to configure the operation of `directus-sync`:
 
 - `-c, --config-path <configPath>`
-  Change the path to the config file. The default is `"./directus-sync.config.js"`.
+  Change the path to the config file. Default paths are: `./directus-sync.config.js`, `./directus-sync.config.cjs` or
+  `./directus-sync.config.json`.
 
 - `-d, --debug`  
   Display additional logging information. Useful for debugging or verifying what `directus-sync` is doing under the
@@ -124,7 +125,7 @@ These options can be used with any command to configure the operation of `direct
 The `directus-sync` CLI also supports a configuration file. This file is optional. If it is not provided, the CLI will
 use the default values for the options.
 
-The default path for the configuration file is `./directus-sync.config.js`. You can change this path using the
+The default paths for the configuration file are `./directus-sync.config.js`, `./directus-sync.config.cjs` or `./directus-sync.config.json`. You can change this path using the
 `--config-path` option.
 
 The configuration file can extend another configuration file using the `extends` property.
