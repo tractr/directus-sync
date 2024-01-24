@@ -13,7 +13,7 @@ import { Cacheable } from 'typescript-cacheable';
 import { ConfigFileLoader } from './config-file-loader';
 import { zodParse } from '../../helpers';
 import deepmerge from 'deepmerge';
-import { DefaultConfig } from './default-config';
+import { DefaultConfig, DefaultConfigPaths } from './default-config';
 import { OptionsSchema } from './schema';
 
 @Service()
@@ -132,12 +132,20 @@ export class ConfigService {
 
   @Cacheable()
   protected getFileOptions(): ConfigFileOptions | undefined {
-    const configPath =
-      this.programOptions?.configPath ?? DefaultConfig.configPath;
-    if (!configPath) {
-      throw new Error('missing config file path');
+    const customConfigPath = this.programOptions?.configPath;
+    const possiblePaths = [
+      ...(customConfigPath ? [Path.resolve(customConfigPath)] : []),
+      ...DefaultConfigPaths.map((p) => Path.resolve(p)),
+    ];
+
+    // Try to load the config file from the possible paths
+    for (const configPath of possiblePaths) {
+      const config = new ConfigFileLoader(configPath).get();
+      if (config) {
+        return config;
+      }
     }
-    const configFullPath = Path.resolve(configPath);
-    return new ConfigFileLoader(configFullPath).get();
+
+    return undefined;
   }
 }
