@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.4.0 (2024-01-24)
+
+### Features
+
+- handle more config file paths ([#24](https://github.com/tractr/directus-sync/issues/24)) ([cad3398](https://github.com/tractr/directus-sync/commit/cad3398486c93d99fc49057920d0a42da6dc2d9f))
+
 ## 0.3.1 (2024-01-16)
 
 **Note:** Version bump only for package directus-extension-sync

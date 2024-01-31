@@ -3,6 +3,7 @@ import 'reflect-metadata';
 import { Option, program } from 'commander';
 import {
   DefaultConfig,
+  DefaultConfigPaths,
   disposeContext,
   initContext,
   logEndAndClose,
@@ -36,7 +37,9 @@ const directusPasswordOption = new Option(
 ).env('DIRECTUS_ADMIN_PASSWORD');
 const configPathOption = new Option(
   '-c, --config-path <configPath>',
-  `the path to the config file. Required for extended options (default "${DefaultConfig.configPath}")`,
+  `the path to the config file. Required for extended options (default paths: ${DefaultConfigPaths.join(
+    ', ',
+  )})`,
 );
 
 // Shared options

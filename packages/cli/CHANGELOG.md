@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.5.0 (2024-01-24)
+
+### Features
+
+- handle more config file paths ([#24](https://github.com/tractr/directus-sync/issues/24)) ([cad3398](https://github.com/tractr/directus-sync/commit/cad3398486c93d99fc49057920d0a42da6dc2d9f))
+
+# [0.4.0](https://github.com/tractr/directus-sync/compare/directus-sync@0.3.1...directus-sync@0.4.0) (2024-01-23)
+
+### Features
+
+- preserve flows ids, add hooks and handle translations collection ([#23](https://github.com/tractr/directus-sync/issues/23)) ([0b3faf9](https://github.com/tractr/directus-sync/commit/0b3faf963cc1fb7ec7abbb5d62500de77cc47059)), closes [#13](https://github.com/tractr/directus-sync/issues/13) [#20](https://github.com/tractr/directus-sync/issues/20) [#14](https://github.com/tractr/directus-sync/issues/14) [#13](https://github.com/tractr/directus-sync/issues/13) [#18](https://github.com/tractr/directus-sync/issues/18)
+
 ## 0.3.1 (2024-01-16)
 
 **Note:** Version bump only for package directus-sync

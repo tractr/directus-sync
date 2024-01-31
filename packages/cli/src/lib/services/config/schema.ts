@@ -21,7 +21,7 @@ export const OptionsHooksSchema = z.object({
 
 export const OptionsFields = {
   // Global
-  configPath: z.string(),
+  configPath: z.string().optional(),
   debug: z.boolean(),
   directusUrl: z.string(),
   directusToken: z.string().optional(),
