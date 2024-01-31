@@ -1,5 +1,6 @@
 export * from './base';
 export * from './flows';
+export * from './folders';
 export * from './settings';
 export * from './translations';
 export * from './webhooks';
