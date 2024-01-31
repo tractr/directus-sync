@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/tractr/directus-sync/compare/directus-sync@0.5.0...directus-sync@0.6.0) (2024-01-31)
+
+### Features
+
+- handle folders collection ([#29](https://github.com/tractr/directus-sync/issues/29)) ([b9ba5fb](https://github.com/tractr/directus-sync/commit/b9ba5fb9c7fca35bfd0a0ccba68fb001f22c36ce)), closes [#27](https://github.com/tractr/directus-sync/issues/27) [#28](https://github.com/tractr/directus-sync/issues/28)
+
 # 0.5.0 (2024-01-24)
 
 ### Features
