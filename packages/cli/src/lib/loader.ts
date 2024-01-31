@@ -2,6 +2,7 @@ import {
   ConfigService,
   DashboardsCollection,
   FlowsCollection,
+  FoldersCollection,
   OperationsCollection,
   PanelsCollection,
   PermissionsCollection,
@@ -63,6 +64,7 @@ export function loadCollections() {
   // The collections are populated in the same order
   return [
     Container.get(SettingsCollection),
+    Container.get(FoldersCollection),
     Container.get(TranslationsCollection),
     Container.get(WebhooksCollection),
     Container.get(FlowsCollection),

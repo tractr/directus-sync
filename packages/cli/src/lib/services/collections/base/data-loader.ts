@@ -16,9 +16,8 @@ export abstract class DataLoader<DirectusType extends DirectusBaseType> {
    */
   async getSourceData(): Promise<WithSyncIdAndWithoutId<DirectusType>[]> {
     const { onLoad } = this.hooks;
-    const loadedData = readJsonSync(
-      this.filePath,
-    ) as WithSyncIdAndWithoutId<DirectusType>[];
+    const loadedData: WithSyncIdAndWithoutId<DirectusType>[] =
+      readJsonSync(this.filePath, { throws: false }) || [];
     return onLoad
       ? await onLoad(loadedData, await this.migrationClient.get())
       : loadedData;

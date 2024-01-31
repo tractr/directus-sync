@@ -10,6 +10,7 @@ export const HooksSchema = z.object({
 export const OptionsHooksSchema = z.object({
   dashboards: HooksSchema.optional(),
   flows: HooksSchema.optional(),
+  folders: HooksSchema.optional(),
   operations: HooksSchema.optional(),
   panels: HooksSchema.optional(),
   permissions: HooksSchema.optional(),
