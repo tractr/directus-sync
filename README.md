@@ -385,8 +385,7 @@ configurations and schema within Directus. Here is a step-by-step explanation of
 Upon execution of the `pull` command, `directus-sync` will:
 
 1. Scan the specified Directus collections, which include dashboards, flows, folders, operations, panels, permissions,
-   presets, roles,
-   settings, translations and webhooks.
+   presets, roles, settings, translations and webhooks.
 2. Assign a SyncID to each element within these collections if it doesn't already have one.
 3. Commit the data of these collections into code, allowing for versioning and tracking of configuration changes.
 
