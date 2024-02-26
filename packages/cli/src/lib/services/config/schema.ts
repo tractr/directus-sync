@@ -14,6 +14,7 @@ export const OptionsHooksSchema = z.object({
   operations: HooksSchema.optional(),
   panels: HooksSchema.optional(),
   permissions: HooksSchema.optional(),
+  presets: HooksSchema.optional(),
   roles: HooksSchema.optional(),
   settings: HooksSchema.optional(),
   translations: HooksSchema.optional(),
