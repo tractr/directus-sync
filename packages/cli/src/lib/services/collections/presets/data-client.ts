@@ -8,6 +8,7 @@ import {
 import { Service } from 'typedi';
 import { MigrationClient } from '../../migration-client';
 import { DirectusPreset } from './interfaces';
+import deepmerge from 'deepmerge';
 
 @Service()
 export class PresetsDataClient extends DataClient<DirectusPreset> {
@@ -24,7 +25,15 @@ export class PresetsDataClient extends DataClient<DirectusPreset> {
   }
 
   protected getQueryCommand(query: Query<DirectusPreset>) {
-    return readPresets(query);
+    // Exclude user's personal presets from the dump
+    const newQuery = deepmerge(query, {
+      filter: {
+        user: {
+          _null: true,
+        },
+      },
+    });
+    return readPresets(newQuery);
   }
 
   protected getUpdateCommand(
