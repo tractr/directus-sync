@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "ts-node-esm src/index.ts",
+    "start": "ts-node src/index.ts",
     "test": "jest",
     "prepublishOnly": "cp ../../README.md ./README.md"
   },
