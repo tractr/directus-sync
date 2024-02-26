@@ -136,16 +136,16 @@ This is an example of a configuration file:
 ```javascript
 // ./directus-sync.config.js
 module.exports = {
-    extends: ['./directus-sync.config.base.js'],
-    debug: true,
-    directusUrl: 'https://directus.example.com',
-    directusToken: 'my-directus-token',
-    directusEmail: 'admin@example.com', // ignored if directusToken is provided
-    directusPassword: 'my-directus-password', // ignored if directusToken is provided
-    split: true,
-    dumpPath: './directus-config',
-    collectionsPath: 'collections',
-    snapshotPath: 'snapshot',
+  extends: ['./directus-sync.config.base.js'],
+  debug: true,
+  directusUrl: 'https://directus.example.com',
+  directusToken: 'my-directus-token',
+  directusEmail: 'admin@example.com', // ignored if directusToken is provided
+  directusPassword: 'my-directus-password', // ignored if directusToken is provided
+  split: true,
+  dumpPath: './directus-config',
+  collectionsPath: 'collections',
+  snapshotPath: 'snapshot',
 };
 ```
 
@@ -191,28 +191,28 @@ Here is an example of a configuration file with hooks:
 ```javascript
 // ./directus-sync.config.js
 module.exports = {
-    hooks: {
-        flows: {
-            onDump: (flows) => {
-                return flows.map((flow) => {
-                    flow.name = `🧊 ${flow.name}`;
-                    return flow;
-                });
-            },
-            onSave: (flows) => {
-                return flows.map((flow) => {
-                    flow.name = `🔥 ${flow.name}`;
-                    return flow;
-                });
-            },
-            onLoad: (flows) => {
-                return flows.map((flow) => {
-                    flow.name = flow.name.replace('🔥 ', '');
-                    return flow;
-                });
-            },
-        },
+  hooks: {
+    flows: {
+      onDump: (flows) => {
+        return flows.map((flow) => {
+          flow.name = `🧊 ${flow.name}`;
+          return flow;
+        });
+      },
+      onSave: (flows) => {
+        return flows.map((flow) => {
+          flow.name = `🔥 ${flow.name}`;
+          return flow;
+        });
+      },
+      onLoad: (flows) => {
+        return flows.map((flow) => {
+          flow.name = flow.name.replace('🔥 ', '');
+          return flow;
+        });
+      },
     },
+  },
 };
 ```
 
@@ -232,26 +232,26 @@ In the example below, the flows and operations whose name starts with `Test:` ar
 const testPrefix = 'Test:';
 
 module.exports = {
-    hooks: {
-        flows: {
-            onQuery: (query, client) => {
-                query.filter = {
-                    ...query.filter,
-                    name: {_nstarts_with: testPrefix},
-                };
-                return query;
-            },
-        },
-        operations: {
-            onQuery: (query, client) => {
-                query.filter = {
-                    ...query.filter,
-                    flow: {name: {_nstarts_with: testPrefix}},
-                };
-                return query;
-            },
-        },
+  hooks: {
+    flows: {
+      onQuery: (query, client) => {
+        query.filter = {
+          ...query.filter,
+          name: { _nstarts_with: testPrefix },
+        };
+        return query;
+      },
     },
+    operations: {
+      onQuery: (query, client) => {
+        query.filter = {
+          ...query.filter,
+          flow: { name: { _nstarts_with: testPrefix } },
+        };
+        return query;
+      },
+    },
+  },
 };
 ```
 
@@ -264,33 +264,33 @@ module.exports = {
 The example below shows how to disable the flows whose name starts with `Test:` and add the flow name to the operation.
 
 ```javascript
-const {readFlow} = require('@directus/sdk');
+const { readFlow } = require('@directus/sdk');
 
 const testPrefix = 'Test:';
 
 module.exports = {
-    hooks: {
-        flows: {
-            onDump: (flows) => {
-                return flows.map((flow) => {
-                    flow.status = flow.name.startsWith(testPrefix)
-                        ? 'inactive'
-                        : 'active';
-                });
-            },
-        },
-        operations: {
-            onDump: async (operations, client) => {
-                for (const operation of operations) {
-                    const flow = await client.request(readFlow(operation.flow));
-                    if (flow) {
-                        operation.name = `${flow.name}: ${operation.name}`;
-                    }
-                }
-                return operations;
-            },
-        },
+  hooks: {
+    flows: {
+      onDump: (flows) => {
+        return flows.map((flow) => {
+          flow.status = flow.name.startsWith(testPrefix)
+            ? 'inactive'
+            : 'active';
+        });
+      },
     },
+    operations: {
+      onDump: async (operations, client) => {
+        for (const operation of operations) {
+          const flow = await client.request(readFlow(operation.flow));
+          if (flow) {
+            operation.name = `${flow.name}: ${operation.name}`;
+          }
+        }
+        return operations;
+      },
+    },
+  },
 };
 ```
 
