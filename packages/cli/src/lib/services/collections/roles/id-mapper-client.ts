@@ -26,6 +26,10 @@ export class RolesIdMapperClient extends IdMapperClient {
     return super.getByLocalId(localId);
   }
 
+  /**
+   * The admin role is a special case, it cannot be synced.
+   * This method returns the real id of the admin role.
+   */
   getBySyncId(syncId: string): Promise<IdMap | undefined> {
     if (syncId === this.adminRolePlaceholder) {
       return this.getAdminRoleIdMap();
