@@ -6,6 +6,7 @@ import {
   OperationsCollection,
   PanelsCollection,
   PermissionsCollection,
+  PresetsCollection,
   RolesCollection,
   SettingsCollection,
   TranslationsCollection,
@@ -73,5 +74,6 @@ export function loadCollections() {
     Container.get(PermissionsCollection),
     Container.get(DashboardsCollection),
     Container.get(PanelsCollection),
+    Container.get(PresetsCollection),
   ];
 }

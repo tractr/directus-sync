@@ -125,7 +125,8 @@ These options can be used with any command to configure the operation of `direct
 The `directus-sync` CLI also supports a configuration file. This file is optional. If it is not provided, the CLI will
 use the default values for the options.
 
-The default paths for the configuration file are `./directus-sync.config.js`, `./directus-sync.config.cjs` or `./directus-sync.config.json`. You can change this path using the
+The default paths for the configuration file are `./directus-sync.config.js`, `./directus-sync.config.cjs`
+or `./directus-sync.config.json`. You can change this path using the
 `--config-path` option.
 
 The configuration file can extend another configuration file using the `extends` property.
@@ -157,7 +158,8 @@ going to Directus.
 Hooks are defined in the configuration file using the `hooks` property. Under this property, you can define the
 collection
 name and the hook function to be executed.
-Available collection names are: `dashboards`, `flows`, `folders`, `operations`, `panels`, `permissions`, `roles`, `settings`, `translations`,
+Available collection names
+are: `dashboards`, `flows`, `folders`, `operations`, `panels`, `permissions`, `presets`, `roles`, `settings`, `translations`,
 and `webhooks`.
 
 For each collection, available hook functions are: `onQuery`, `onLoad`, `onSave`, and `onDump`.
@@ -165,7 +167,8 @@ These can be asynchronous functions.
 
 During the `pull` command:
 
-- `onQuery` is executed just before the query is sent to Directus for get elements. It receives the query object as parameter and must
+- `onQuery` is executed just before the query is sent to Directus for get elements. It receives the query object as
+  parameter and must
   return the query object. The second parameter is the Directus client.
 - `onDump` is executed just after the data is retrieved from Directus and before it is saved to the dump files. The data
   is the raw data received from Directus. The second parameter is the Directus client. It must return the data to be
@@ -219,7 +222,8 @@ module.exports = {
 
 #### Filtering out elements
 
-You can use `onQuery` hook to filter out elements. This hook is executed just before the query is sent to Directus, during the `pull` command.
+You can use `onQuery` hook to filter out elements. This hook is executed just before the query is sent to Directus,
+during the `pull` command.
 
 In the example below, the flows and operations whose name starts with `Test:` are filtered out and will not be tracked.
 
@@ -252,7 +256,8 @@ module.exports = {
 ```
 
 > [!WARNING]
-> Directus-Sync may alter the query after this hook. For example, for `roles`, the query excludes the `admin` role.
+> Directus-Sync may alter the query after this hook. For example, for `roles`, the query excludes the current `admin`
+> role.
 
 #### Using the Directus client
 
@@ -333,6 +338,7 @@ flowchart
 - operations
 - panels
 - permissions
+- presets
 - roles
 - settings
 - translations
@@ -340,6 +346,20 @@ flowchart
 
 For these collections, data changes are committed to the code, allowing for replication on other Directus instances. A
 mapping table links Directus instance IDs with SyncIDs, managed by the `directus-extension-sync`.
+
+#### Roles
+
+Roles are tracked, but the _main_ administrator role is not tracked.
+This is because the administrator role is a system role and is automatically created by Directus.
+It will cause conflicts if it is tracked.
+
+The _main_ administrator is the role of the curent user, used to authenticate the `directus-sync` commands.
+
+#### Presets
+
+Global and role based presets are tracked (even the administrator role based presets).
+However, the users' presets are not tracked.
+This is because the users are not tracked and any relation with the users will cause conflicts.
 
 ## Dependency: `directus-extension-sync`
 
@@ -364,8 +384,8 @@ configurations and schema within Directus. Here is a step-by-step explanation of
 
 Upon execution of the `pull` command, `directus-sync` will:
 
-1. Scan the specified Directus collections, which include dashboards, flows, folders, operations, panels, permissions, roles,
-   settings, translations and webhooks.
+1. Scan the specified Directus collections, which include dashboards, flows, folders, operations, panels, permissions,
+   presets, roles, settings, translations and webhooks.
 2. Assign a SyncID to each element within these collections if it doesn't already have one.
 3. Commit the data of these collections into code, allowing for versioning and tracking of configuration changes.
 
@@ -374,7 +394,8 @@ maintaining the integrity and links between different entities.
 
 > [!NOTE]
 > The original IDs of the flows are preserved to maintain the URLs of the `webhook` type flows.
-> The original IDs of the folders are preserved to maintain the associations with fields of the `file` and `image` types.
+> The original IDs of the folders are preserved to maintain the associations with fields of the `file` and `image`
+> types.
 
 ### Mapping Table
 
