@@ -2,18 +2,19 @@ import { Inject, Service } from 'typedi';
 import { MigrationClient } from '../migration-client';
 import { schemaApply, schemaDiff, schemaSnapshot } from '@directus/sdk';
 import path from 'path';
-import { Collection, Field, Relation, Snapshot } from './interfaces';
+import {
+  Collection,
+  Field,
+  RawSchemaDiffOutput,
+  Relation,
+  SchemaDiffOutput,
+  Snapshot,
+} from './interfaces';
 import { mkdirpSync, readJsonSync, removeSync, writeJsonSync } from 'fs-extra';
 import { LOGGER } from '../../constants';
 import pino from 'pino';
 import { getChildLogger, loadJsonFilesRecursively } from '../../helpers';
 import { ConfigService } from '../config';
-
-interface SnapshotDiffDiff {
-  collections: unknown[];
-  fields: unknown[];
-  relations: unknown[];
-}
 
 const SNAPSHOT_JSON = 'snapshot.json';
 const INFO_JSON = 'info.json';
@@ -61,11 +62,13 @@ export class SnapshotClient {
    */
   async push() {
     const diff = await this.diffSnapshot();
-    if (!diff?.diff) {
+    if (!diff) {
+      this.logger.error('Could not get the diff from the Directus instance');
+    } else if (!diff.diff) {
       this.logger.info('No changes to apply');
     } else {
       const directus = await this.migrationClient.get();
-      await directus.request(schemaApply(diff));
+      await directus.request(schemaApply(diff as RawSchemaDiffOutput));
       this.logger.info('Changes applied');
     }
   }
@@ -75,10 +78,12 @@ export class SnapshotClient {
    */
   async diff() {
     const diff = await this.diffSnapshot();
-    if (!diff?.diff) {
+    if (!diff) {
+      this.logger.error('Could not get the diff from the Directus instance');
+    } else if (!diff.diff) {
       this.logger.info('No changes to apply');
     } else {
-      const { collections, fields, relations } = diff.diff as SnapshotDiffDiff;
+      const { collections, fields, relations } = diff.diff;
       if (collections) {
         this.logger.info(
           `Found ${collections.length} change${
@@ -183,10 +188,12 @@ export class SnapshotClient {
   /**
    * Get the diff from Directus instance
    */
-  protected async diffSnapshot() {
+  protected async diffSnapshot(): Promise<SchemaDiffOutput | undefined> {
     const directus = await this.migrationClient.get();
     const snapshot = this.loadData();
-    return await directus.request(schemaDiff(snapshot, this.force));
+    return (await directus.request(schemaDiff(snapshot, this.force))) as
+      | SchemaDiffOutput
+      | undefined;
   }
 
   /**
