@@ -1,6 +1,8 @@
 import 'dotenv/config';
 import 'reflect-metadata';
 import { Option, program } from 'commander';
+import { resolve } from 'path';
+import { readJSONSync } from 'fs-extra';
 import {
   DefaultConfig,
   DefaultConfigPaths,
@@ -65,7 +67,7 @@ const forceOption = new Option(
 );
 
 program
-  .version(process.env.npm_package_version ?? 'unknown')
+  .version(getVersion())
   .addOption(debugOption)
   .addOption(directusUrlOption)
   .addOption(directusTokenOption)
@@ -144,4 +146,13 @@ function wrapAction(action: () => Promise<void>) {
       .then(disposeContext)
       .then(logEndAndClose);
   };
+}
+
+function getVersion(): string {
+  try {
+    const { version } = readJSONSync(resolve(__dirname, '..', 'package.json')) as { version?: string };
+    return version ?? 'undefined';
+  } catch (e) {
+    return 'error';
+  }
 }
