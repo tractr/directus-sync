@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/tractr/directus-sync/compare/directus-sync@0.6.0...directus-sync@1.1.0) (2024-03-04)
+
+### Features
+
+- add presets sync support ([#32](https://github.com/tractr/directus-sync/issues/32)) ([451f711](https://github.com/tractr/directus-sync/commit/451f711a610a0bebc1bb1e2e05da9bcb1151f5c3))
+- better logging for diff issues ([#34](https://github.com/tractr/directus-sync/issues/34)) ([06c547d](https://github.com/tractr/directus-sync/commit/06c547d874c484b6358444b0d67010b9f50f8675))
+
 # [1.0.0](https://github.com/tractr/directus-sync/compare/directus-sync@0.6.0...directus-sync@1.0.0) (2024-02-26)
 
 ### Features
