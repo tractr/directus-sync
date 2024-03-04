@@ -150,7 +150,9 @@ function wrapAction(action: () => Promise<void>) {
 
 function getVersion(): string {
   try {
-    const { version } = readJSONSync(resolve(__dirname, '..', 'package.json')) as { version?: string };
+    const { version } = readJSONSync(
+      resolve(__dirname, '..', 'package.json'),
+    ) as { version?: string };
     return version ?? 'undefined';
   } catch (e) {
     return 'error';
