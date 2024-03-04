@@ -8,7 +8,7 @@ import {
   RawSchemaDiffOutput,
   Relation,
   SchemaDiffOutput,
-  Snapshot
+  Snapshot,
 } from './interfaces';
 import { mkdirpSync, readJsonSync, removeSync, writeJsonSync } from 'fs-extra';
 import { LOGGER } from '../../constants';
@@ -64,8 +64,7 @@ export class SnapshotClient {
     const diff = await this.diffSnapshot();
     if (!diff) {
       this.logger.error('Could not get the diff from the Directus instance');
-    }
-    else if (!diff.diff) {
+    } else if (!diff.diff) {
       this.logger.info('No changes to apply');
     } else {
       const directus = await this.migrationClient.get();
@@ -81,8 +80,7 @@ export class SnapshotClient {
     const diff = await this.diffSnapshot();
     if (!diff) {
       this.logger.error('Could not get the diff from the Directus instance');
-    }
-    else if (!diff.diff) {
+    } else if (!diff.diff) {
       this.logger.info('No changes to apply');
     } else {
       const { collections, fields, relations } = diff.diff;
@@ -193,7 +191,9 @@ export class SnapshotClient {
   protected async diffSnapshot(): Promise<SchemaDiffOutput | undefined> {
     const directus = await this.migrationClient.get();
     const snapshot = this.loadData();
-    return await directus.request(schemaDiff(snapshot, this.force)) as SchemaDiffOutput | undefined;
+    return (await directus.request(schemaDiff(snapshot, this.force))) as
+      | SchemaDiffOutput
+      | undefined;
   }
 
   /**

@@ -1,6 +1,8 @@
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export interface RawSchemaDiffOutput { hash: string, diff: Record<string, any>}
+export interface RawSchemaDiffOutput {
+  hash: string;
+  diff: Record<string, any>;
+}
 
 export interface SchemaDiffOutput {
   hash: string;
