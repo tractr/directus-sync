@@ -1,3 +1,18 @@
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export interface RawSchemaDiffOutput { hash: string, diff: Record<string, any>}
+
+export interface SchemaDiffOutput {
+  hash: string;
+  diff: SnapshotDiffDiff | null | undefined;
+}
+
+export interface SnapshotDiffDiff {
+  collections: unknown[];
+  fields: unknown[];
+  relations: unknown[];
+}
+
 export interface Snapshot {
   version: number;
   directus: string;
