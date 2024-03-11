@@ -59,6 +59,17 @@ export class ConfigService {
     };
   }
 
+  @Cacheable()
+  getSpecificationsConfig() {
+    const dumpPath = Path.resolve(this.requireOptions('dumpPath'));
+    const specificationsSubPath = this.requireOptions('specificationsPath');
+    const specificationsPath = Path.resolve(dumpPath, specificationsSubPath);
+    return {
+      dumpPath: specificationsPath,
+      specifications: this.requireOptions('specifications'),
+    };
+  }
+
   /**
    * Returns the Directus config, either with a token or with an email/password
    */
