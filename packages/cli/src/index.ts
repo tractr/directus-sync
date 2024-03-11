@@ -47,7 +47,7 @@ const configPathOption = new Option(
 // Shared options
 const noSplitOption = new Option(
   '--no-split',
-  `should the schema snapshot be split into multiple files (default "${DefaultConfig.split}")`,
+  `should split the schema snapshot into multiple files (default "${DefaultConfig.split}")`,
 );
 const dumpPathOption = new Option(
   '--dump-path <dumpPath>',
