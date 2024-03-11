@@ -47,7 +47,7 @@ const configPathOption = new Option(
 // Shared options
 const noSplitOption = new Option(
   '--no-split',
-  `should the schema snapshot be split into multiple files (default "${DefaultConfig.split}")`,
+  `should split the schema snapshot into multiple files (default "${DefaultConfig.split}")`,
 );
 const dumpPathOption = new Option(
   '--dump-path <dumpPath>',
@@ -64,6 +64,14 @@ const snapshotPathOption = new Option(
 const forceOption = new Option(
   '-f, --force',
   `force the diff of schema, even if the Directus version is different (default "${DefaultConfig.force}")`,
+);
+const specificationsPathOption = new Option(
+  '--specs-path <specsPath>',
+  `the path for the specifications dump (GraphQL & OpenAPI), relative to the dump path (default "${DefaultConfig.specsPath}")`,
+);
+const noSpecificationsOption = new Option(
+  '--no-specs',
+  `should dump the GraphQL & OpenAPI specifications (default "${DefaultConfig.specs}")`,
 );
 
 program
@@ -82,6 +90,8 @@ program
   .addOption(dumpPathOption)
   .addOption(collectionsPathOption)
   .addOption(snapshotPathOption)
+  .addOption(noSpecificationsOption)
+  .addOption(specificationsPathOption)
   .action(wrapAction(runPull));
 
 program
@@ -131,6 +141,9 @@ function cleanProgramOptions(programOptions: Record<string, unknown>) {
 function cleanCommandOptions(commandOptions: Record<string, unknown>) {
   if (commandOptions.split === true) {
     delete commandOptions.split;
+  }
+  if (commandOptions.specs === true) {
+    delete commandOptions.specs;
   }
   return commandOptions;
 }

@@ -8,7 +8,14 @@ export const DefaultConfigPaths = [
 
 export const DefaultConfig: Pick<
   Options,
-  'debug' | 'dumpPath' | 'collectionsPath' | 'snapshotPath' | 'split' | 'force'
+  | 'debug'
+  | 'dumpPath'
+  | 'collectionsPath'
+  | 'snapshotPath'
+  | 'split'
+  | 'force'
+  | 'specs'
+  | 'specsPath'
 > = {
   // Global
   debug: false,
@@ -17,6 +24,9 @@ export const DefaultConfig: Pick<
   collectionsPath: 'collections',
   snapshotPath: 'snapshot',
   split: true,
+  // Specifications
+  specs: true,
+  specsPath: 'specs',
   // Diff, push
   force: false,
 };

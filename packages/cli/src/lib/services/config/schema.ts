@@ -34,6 +34,9 @@ export const OptionsFields = {
   dumpPath: z.string(),
   collectionsPath: z.string(),
   snapshotPath: z.string(),
+  // Specifications
+  specs: z.boolean(),
+  specsPath: z.string(),
   // Diff, push
   force: z.boolean(),
   // Untrack
@@ -58,6 +61,9 @@ export const ConfigFileOptionsSchema = z.object({
   dumpPath: OptionsFields.dumpPath.optional(),
   collectionsPath: OptionsFields.collectionsPath.optional(),
   snapshotPath: OptionsFields.snapshotPath.optional(),
+  // Specifications config
+  specs: OptionsFields.specs.optional(),
+  specsPath: OptionsFields.specsPath.optional(),
   // Hooks config
   hooks: OptionsHooksSchema.optional(),
 });

@@ -40,6 +40,12 @@ npx directus-sync pull
 Retrieves the current schema and collections from Directus and stores them locally. This command does not modify the
 database.
 
+It also retrieves the specifications (GraphQL & OpenAPI) and stores them locally.
+It gets specifications from the `/server/specs/*` endpoints:
+
+- [OpenAPI](https://docs.directus.io/reference/system/server.html#get-openapi-specification)
+- [GraphQL SDL (Item & System scopes)](https://docs.directus.io/reference/system/server.html#get-graphql-schema)
+
 ### Diff
 
 ```shell
@@ -101,9 +107,6 @@ These options can be used with any command to configure the operation of `direct
 - `-p, --directus-password <directusPassword>`
   Provide the Directus password. Alternatively, set the `DIRECTUS_ADMIN_PASSWORD` environment variable.
 
-- `--no-split`  
-  Indicates whether the schema snapshot should be split into multiple files. By default, snapshots are split.
-
 - `--dump-path <dumpPath>`  
   Set the base path for the dump. This must be an absolute path. The default
   is `"./directus-config"`.
@@ -114,8 +117,17 @@ These options can be used with any command to configure the operation of `direct
 - `--snapshot-path <snapshotPath>`  
   Specify the path for the schema snapshot dump, relative to the dump path. The default is `"snapshot"`.
 
+- `--no-split`  
+  Indicates whether the schema snapshot should be split into multiple files. By default, snapshots are split.
+
 - `-f, --force`  
   Force the diff of schema, even if the Directus version is different. The default is `false`.
+
+- `--specs-path <specsPath>`  
+  Specify the path for the specifications dump (GraphQL & OpenAPI), relative to the dump path. The default is `"specs"`.
+
+- `--no-specs`  
+  Do not dump the specifications (GraphQL & OpenAPI). By default, specifications are dumped.
 
 - `-h, --help`  
   Display help information for the `directus-sync` commands.
@@ -146,6 +158,8 @@ module.exports = {
   dumpPath: './directus-config',
   collectionsPath: 'collections',
   snapshotPath: 'snapshot',
+  specsPath: 'specs',
+  specs: true,
 };
 ```
 
