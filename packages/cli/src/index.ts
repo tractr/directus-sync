@@ -142,6 +142,9 @@ function cleanCommandOptions(commandOptions: Record<string, unknown>) {
   if (commandOptions.split === true) {
     delete commandOptions.split;
   }
+  if (commandOptions.specs === true) {
+    delete commandOptions.specs;
+  }
   return commandOptions;
 }
 
