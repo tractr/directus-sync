@@ -15,7 +15,7 @@ export class TranslationsDataClient extends DataClient<DirectusTranslation> {
     super(migrationClient);
   }
 
-  protected getDeleteCommand(itemId: number) {
+  protected getDeleteCommand(itemId: string) {
     return deleteTranslation(itemId);
   }
 
@@ -28,7 +28,7 @@ export class TranslationsDataClient extends DataClient<DirectusTranslation> {
   }
 
   protected getUpdateCommand(
-    itemId: number,
+    itemId: string,
     diffItem: Partial<WithoutIdAndSyncId<DirectusTranslation>>,
   ) {
     return updateTranslation(itemId, diffItem);
