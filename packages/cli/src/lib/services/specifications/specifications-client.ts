@@ -14,7 +14,7 @@ import { ConfigService } from '../config';
 import { writeFileSync } from 'node:fs';
 
 const GRAPHQL_FILENAME = 'schema.graphql';
-// const SYSTEM_GRAPHQL_FILENAME = 'system.graphql';
+const SYSTEM_GRAPHQL_FILENAME = 'system.graphql';
 const OPENAPI_FILENAME = 'openapi.json';
 
 @Service()
@@ -44,9 +44,13 @@ export class SpecificationsClient {
       return;
     }
 
-    const graphql = await this.getGraphQL();
-    this.saveGraphQLData(graphql);
+    const graphql = await this.getGraphQL('item');
+    this.saveGraphQLData(graphql, GRAPHQL_FILENAME);
     this.logger.debug(`Saved GraphQL schema to ${this.dumpPath}`);
+
+    const systemGraphql = await this.getGraphQL('system');
+    this.saveGraphQLData(systemGraphql, SYSTEM_GRAPHQL_FILENAME);
+    this.logger.debug(`Saved System GraphQL schema to ${this.dumpPath}`);
 
     const openapi = await this.getOpenAPI();
     this.saveOpenAPIData(openapi);
@@ -56,9 +60,9 @@ export class SpecificationsClient {
   /**
    * Get GraphQL SDL from the server
    */
-  protected async getGraphQL() {
+  protected async getGraphQL(scope?: 'item' | 'system') {
     const directus = await this.migrationClient.get();
-    const response = await directus.request<Response>(readGraphqlSdl());
+    const response = await directus.request<Response>(readGraphqlSdl(scope));
     return await response.text();
   }
 
@@ -73,9 +77,9 @@ export class SpecificationsClient {
   /**
    * Save the GraphQL data to the dump file.
    */
-  protected saveGraphQLData(data: string): void {
+  protected saveGraphQLData(data: string, filename: string): void {
     mkdirpSync(this.dumpPath);
-    const filePath = path.join(this.dumpPath, GRAPHQL_FILENAME);
+    const filePath = path.join(this.dumpPath, filename);
     removeSync(filePath);
     writeFileSync(filePath, data);
   }
