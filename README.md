@@ -41,7 +41,7 @@ Retrieves the current schema and collections from Directus and stores them local
 database.
 
 It also retrieves the specifications (GraphQL & OpenAPI) and stores them locally.
-It gets specifications from the `/server/specs/*` endpoints: 
+It gets specifications from the `/server/specs/*` endpoints:
 
 - [OpenAPI](https://docs.directus.io/reference/system/server.html#get-openapi-specification)
 - [GraphQL SDL (Item & System scopes)](https://docs.directus.io/reference/system/server.html#get-graphql-schema)
@@ -89,33 +89,46 @@ These options can be used with any command to configure the operation of `direct
 - `-c, --config-path <configPath>`
   Change the path to the config file. Default paths are: `./directus-sync.config.js`, `./directus-sync.config.cjs` or
   `./directus-sync.config.json`.
+
 - `-d, --debug`  
   Display additional logging information. Useful for debugging or verifying what `directus-sync` is doing under the
   hood.
+
 - `-u, --directus-url <directusUrl>`  
   Specify the Directus instance URL. Alternatively, set the `DIRECTUS_URL` environment variable.
+
 - `-t, --directus-token <directusToken>`  
   Provide the Directus access token. Alternatively, set the `DIRECTUS_TOKEN` environment variable.
   If provided, the `directus-email` and `directus-password` options are ignored.
+
 - `-e, --directus-email <directusEmail> `  
   Provide the Directus email. Alternatively, set the `DIRECTUS_ADMIN_EMAIL` environment variable.
+
 - `-p, --directus-password <directusPassword>`
   Provide the Directus password. Alternatively, set the `DIRECTUS_ADMIN_PASSWORD` environment variable.
+
 - `--dump-path <dumpPath>`  
   Set the base path for the dump. This must be an absolute path. The default
   is `"./directus-config"`.
+
 - `--collections-path <collectionPath>`  
   Specify the path for the collections dump, relative to the dump path. The default is `"collections"`.
+
 - `--snapshot-path <snapshotPath>`  
   Specify the path for the schema snapshot dump, relative to the dump path. The default is `"snapshot"`.
+
 - `--no-split`  
   Indicates whether the schema snapshot should be split into multiple files. By default, snapshots are split.
+
 - `-f, --force`  
   Force the diff of schema, even if the Directus version is different. The default is `false`.
+
 - `--specs-path <specsPath>`  
   Specify the path for the specifications dump (GraphQL & OpenAPI), relative to the dump path. The default is `"specs"`.
+
 - `--no-specs`  
   Do not dump the specifications (GraphQL & OpenAPI). By default, specifications are dumped.
+
 - `-h, --help`  
   Display help information for the `directus-sync` commands.
 
