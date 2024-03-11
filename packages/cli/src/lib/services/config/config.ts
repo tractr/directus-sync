@@ -62,11 +62,11 @@ export class ConfigService {
   @Cacheable()
   getSpecificationsConfig() {
     const dumpPath = Path.resolve(this.requireOptions('dumpPath'));
-    const specificationsSubPath = this.requireOptions('specificationsPath');
+    const specificationsSubPath = this.requireOptions('specsPath');
     const specificationsPath = Path.resolve(dumpPath, specificationsSubPath);
     return {
       dumpPath: specificationsPath,
-      specifications: this.requireOptions('specifications'),
+      enabled: this.requireOptions('specs'),
     };
   }
 

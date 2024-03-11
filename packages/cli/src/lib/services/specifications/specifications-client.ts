@@ -31,9 +31,9 @@ export class SpecificationsClient {
     protected readonly migrationClient: MigrationClient,
   ) {
     this.logger = getChildLogger(baseLogger, 'snapshot');
-    const { dumpPath, specifications } = config.getSpecificationsConfig();
+    const { dumpPath, enabled } = config.getSpecificationsConfig();
     this.dumpPath = dumpPath;
-    this.enabled = specifications;
+    this.enabled = enabled;
   }
 
   /**

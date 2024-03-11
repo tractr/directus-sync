@@ -66,12 +66,12 @@ const forceOption = new Option(
   `force the diff of schema, even if the Directus version is different (default "${DefaultConfig.force}")`,
 );
 const specificationsPathOption = new Option(
-  '--specs-path <specificationsPath>',
-  `the path for the specifications dump (GraphQL & OpenAPI), relative to the dump path (default "${DefaultConfig.specificationsPath}")`,
+  '--specs-path <specsPath>',
+  `the path for the specifications dump (GraphQL & OpenAPI), relative to the dump path (default "${DefaultConfig.specsPath}")`,
 );
 const noSpecificationsOption = new Option(
   '--no-specs',
-  `should dump the GraphQL & OpenAPI specifications (default "${DefaultConfig.specifications}")`,
+  `should dump the GraphQL & OpenAPI specifications (default "${DefaultConfig.specs}")`,
 );
 
 program
