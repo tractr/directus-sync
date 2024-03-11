@@ -40,6 +40,12 @@ npx directus-sync pull
 Retrieves the current schema and collections from Directus and stores them locally. This command does not modify the
 database.
 
+It also retrieves the specifications (GraphQL & OpenAPI) and stores them locally.
+It gets specifications from the `/server/specs/*` endpoints: 
+
+- [OpenAPI](https://docs.directus.io/reference/system/server.html#get-openapi-specification)
+- [GraphQL SDL (Item & System scopes)](https://docs.directus.io/reference/system/server.html#get-graphql-schema)
+
 ### Diff
 
 ```shell
@@ -117,6 +123,12 @@ These options can be used with any command to configure the operation of `direct
 - `-f, --force`  
   Force the diff of schema, even if the Directus version is different. The default is `false`.
 
+- `--specs-path <specsPath>`  
+  Specify the path for the specifications dump (GraphQL & OpenAPI), relative to the dump path. The default is `"specs"`.
+
+- `--no-specs`  
+  Do not dump the specifications (GraphQL & OpenAPI). By default, specifications are dumped.
+
 - `-h, --help`  
   Display help information for the `directus-sync` commands.
 
@@ -146,6 +158,8 @@ module.exports = {
   dumpPath: './directus-config',
   collectionsPath: 'collections',
   snapshotPath: 'snapshot',
+  specsPath: 'specs',
+  specs: true,
 };
 ```
 
