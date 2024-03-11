@@ -13,7 +13,7 @@ import { getChildLogger } from '../../helpers';
 import { ConfigService } from '../config';
 import { writeFileSync } from 'node:fs';
 
-const GRAPHQL_FILENAME = 'schema.graphql';
+const ITEM_GRAPHQL_FILENAME = 'item.graphql';
 const SYSTEM_GRAPHQL_FILENAME = 'system.graphql';
 const OPENAPI_FILENAME = 'openapi.json';
 
@@ -44,12 +44,12 @@ export class SpecificationsClient {
       return;
     }
 
-    const graphql = await this.getGraphQL('item');
-    this.saveGraphQLData(graphql, GRAPHQL_FILENAME);
-    this.logger.debug(`Saved GraphQL schema to ${this.dumpPath}`);
+    const itemGraphQL = await this.getGraphQL('item');
+    this.saveGraphQLData(itemGraphQL, ITEM_GRAPHQL_FILENAME);
+    this.logger.debug(`Saved Item GraphQL schema to ${this.dumpPath}`);
 
-    const systemGraphql = await this.getGraphQL('system');
-    this.saveGraphQLData(systemGraphql, SYSTEM_GRAPHQL_FILENAME);
+    const systemGraphQL = await this.getGraphQL('system');
+    this.saveGraphQLData(systemGraphQL, SYSTEM_GRAPHQL_FILENAME);
     this.logger.debug(`Saved System GraphQL schema to ${this.dumpPath}`);
 
     const openapi = await this.getOpenAPI();
