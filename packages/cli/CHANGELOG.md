@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/tractr/directus-sync/compare/directus-sync@1.1.0...directus-sync@1.2.0) (2024-03-12)
+
+### Features
+
+- pull OpenAPI & GraphQL specifications ([#35](https://github.com/tractr/directus-sync/issues/35)) ([5d41d07](https://github.com/tractr/directus-sync/commit/5d41d07a67677f05aadf5a0b6bb22e76fd00f474))
+
 # [1.1.0](https://github.com/tractr/directus-sync/compare/directus-sync@0.6.0...directus-sync@1.1.0) (2024-03-04)
 
 ### Features
