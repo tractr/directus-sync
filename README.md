@@ -13,13 +13,13 @@ Moreover, `directus-sync` organizes backups into multiple files, significantly i
 easier to track and review changes. This thoughtful separation facilitates a smoother version control process, allowing
 for targeted updates and clearer oversight of your Directus configurations.
 
-# Requirements
+## Requirements
 
 - Node.js 18 or higher
 - `directus-extension-sync` installed on your Directus instance. See
   the [installation instructions](#dependency-directus-extension-sync).
 
-# Usage
+## Usage
 
 The CLI is available using the `npx` command.
 
@@ -29,9 +29,9 @@ npx directus-sync <command> [options]
 
 Here's how to use each command in the CLI:
 
-## Commands
+### Commands
 
-### Pull
+#### Pull
 
 ```shell
 npx directus-sync pull
@@ -46,7 +46,7 @@ It gets specifications from the `/server/specs/*` endpoints:
 - [OpenAPI](https://docs.directus.io/reference/system/server.html#get-openapi-specification)
 - [GraphQL SDL (Item & System scopes)](https://docs.directus.io/reference/system/server.html#get-graphql-schema)
 
-### Diff
+#### Diff
 
 ```shell
 npx directus-sync diff
@@ -55,7 +55,7 @@ npx directus-sync diff
 Analyzes and describes the difference (diff) between your local schema and collections and the state of the Directus
 instance. This command is non-destructive and does not apply any changes to the database.
 
-### Push
+#### Push
 
 ```shell
 npx directus-sync push
@@ -64,7 +64,7 @@ npx directus-sync push
 Applies the changes from your local environment to the Directus instance. This command pushes your local schema and
 collection configurations to Directus, updating the instance to reflect your local state.
 
-### Untrack
+#### Untrack
 
 ```shell
 npx directus-sync untrack --collection <collection> --id <id>
@@ -73,7 +73,7 @@ npx directus-sync untrack --collection <collection> --id <id>
 Removes tracking from an element within Directus. You must specify the collection and the ID of the element you wish to
 stop tracking.
 
-## Available options
+### Available options
 
 Options are merged from the following sources, in order of precedence:
 
@@ -82,7 +82,7 @@ Options are merged from the following sources, in order of precedence:
 3. Configuration file
 4. Default values
 
-### CLI and environment variables
+#### CLI and environment variables
 
 These options can be used with any command to configure the operation of `directus-sync`:
 
@@ -132,7 +132,7 @@ These options can be used with any command to configure the operation of `direct
 - `-h, --help`  
   Display help information for the `directus-sync` commands.
 
-### Configuration file
+#### Configuration file
 
 The `directus-sync` CLI also supports a configuration file. This file is optional. If it is not provided, the CLI will
 use the default values for the options.
@@ -163,7 +163,7 @@ module.exports = {
 };
 ```
 
-### Hooks
+#### Hooks
 
 In addition to the CLI commands, `directus-sync` also supports hooks. Hooks are JavaScript functions that are executed
 at specific points during the synchronization process. They can be used to transform the data coming from Directus or
@@ -198,7 +198,7 @@ During the `push` command:
   above. The first parameter is the data coming from the JSON file and the second parameter is the Directus client.
   It must return the data.
 
-#### Simple example
+##### Simple example
 
 Here is an example of a configuration file with hooks:
 
@@ -234,7 +234,7 @@ module.exports = {
 > The dump hook is called after the mapping of the SyncIDs. This means that the data received by the hook is already
 > tracked. If you filter out some elements, they will be deleted during the `push` command.
 
-#### Filtering out elements
+##### Filtering out elements
 
 You can use `onQuery` hook to filter out elements. This hook is executed just before the query is sent to Directus,
 during the `pull` command.
@@ -273,7 +273,7 @@ module.exports = {
 > Directus-Sync may alter the query after this hook. For example, for `roles`, the query excludes the current `admin`
 > role.
 
-#### Using the Directus client
+##### Using the Directus client
 
 The example below shows how to disable the flows whose name starts with `Test:` and add the flow name to the operation.
 
@@ -308,9 +308,9 @@ module.exports = {
 };
 ```
 
-### Lifecycle & hooks
+#### Lifecycle & hooks
 
-#### `Pull` command
+##### `Pull` command
 
 ```mermaid
 flowchart
@@ -334,15 +334,15 @@ flowchart
  A[Pull command] --> Pull --> Post --> Z[End]
 ```
 
-#### `Diff` command
+##### `Diff` command
 
 **Coming soon**
 
-#### `Push` command
+##### `Push` command
 
 **Coming soon**
 
-### Tracked Elements
+#### Tracked Elements
 
 `directus-sync` tracks the following Directus collections:
 
@@ -361,7 +361,7 @@ flowchart
 For these collections, data changes are committed to the code, allowing for replication on other Directus instances. A
 mapping table links Directus instance IDs with SyncIDs, managed by the `directus-extension-sync`.
 
-#### Roles
+##### Roles
 
 Roles are tracked, but the _main_ administrator role is not tracked.
 This is because the administrator role is a system role and is automatically created by Directus.
@@ -369,19 +369,19 @@ It will cause conflicts if it is tracked.
 
 The _main_ administrator is the role of the curent user, used to authenticate the `directus-sync` commands.
 
-#### Presets
+##### Presets
 
 Global and role based presets are tracked (even the administrator role based presets).
 However, the users' presets are not tracked.
 This is because the users are not tracked and any relation with the users will cause conflicts.
 
-## Dependency: `directus-extension-sync`
+### Dependency: `directus-extension-sync`
 
 To utilize the `directus-sync` tool, it is imperative to install the `directus-extension-sync` extension on your
 Directus instance. This extension acts as a bridge between `directus-sync` and Directus, managing the crucial mapping
 table that correlates the SyncIDs with Directus's internal IDs.
 
-### Installation
+#### Installation
 
 The `directus-extension-sync` must be added to each Directus instance involved in the synchronization process, whether
 as a source or a destination. Follow the installation instructions provided in
@@ -452,9 +452,9 @@ By following these mechanisms, `directus-sync` streamlines the development workf
 efficiently deployed to various environments, all while keeping the Directus instances synchronized and
 version-controlled.
 
-# Troubleshooting
+## Troubleshooting
 
-## Synchronization Failures Due to Firewall Configurations
+### Synchronization Failures Due to Firewall Configurations
 
 Some requests made by `directus-sync`, particularly during the **diff** process, can be blocked by certain firewall
 configurations.
