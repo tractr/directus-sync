@@ -14,6 +14,7 @@ easier to track and review changes. This thoughtful separation facilitates a smo
 for targeted updates and clearer oversight of your Directus configurations.
 
 <!-- TOC -->
+
 - [Directus Sync](#directus-sync)
   - [Requirements](#requirements)
   - [Usage](#usage)
