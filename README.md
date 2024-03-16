@@ -13,41 +13,43 @@ Moreover, `directus-sync` organizes backups into multiple files, significantly i
 easier to track and review changes. This thoughtful separation facilitates a smoother version control process, allowing
 for targeted updates and clearer oversight of your Directus configurations.
 
-<!-- TOC -->
+**Table of Contents**
 
-- [Directus Sync](#directus-sync)
-  - [Requirements](#requirements)
-  - [Usage](#usage)
-    - [Commands](#commands)
-      - [Pull](#pull)
-      - [Diff](#diff)
-      - [Push](#push)
-      - [Untrack](#untrack)
-    - [Available options](#available-options)
-      - [CLI and environment variables](#cli-and-environment-variables)
-      - [Configuration file](#configuration-file)
-      - [Hooks](#hooks)
-        - [Simple example](#simple-example)
-        - [Filtering out elements](#filtering-out-elements)
-        - [Using the Directus client](#using-the-directus-client)
-      - [Lifecycle & hooks](#lifecycle--hooks)
-        - [`Pull` command](#pull-command)
-        - [`Diff` command](#diff-command)
-        - [`Push` command](#push-command)
-      - [Tracked Elements](#tracked-elements)
-        - [Roles](#roles)
-        - [Presets](#presets)
-    - [Dependency: `directus-extension-sync`](#dependency-directus-extension-sync)
-      - [Installation](#installation)
-  - [How It Works](#how-it-works)
-    - [Tagging and Tracking](#tagging-and-tracking)
-    - [Mapping Table](#mapping-table)
-    - [Synchronization Process](#synchronization-process)
-    - [Schema Management](#schema-management)
-    - [Non-Tracked Elements and Ignored Fields](#non-tracked-elements-and-ignored-fields)
-    - [Strengths of `directus-sync`](#strengths-of-directus-sync)
-  - [Troubleshooting](#troubleshooting) \* [Synchronization Failures Due to Firewall Configurations](#synchronization-failures-due-to-firewall-configurations)
-  <!-- TOC -->
+<!-- TOC -->
+* [Directus Sync](#directus-sync)
+  * [Requirements](#requirements)
+  * [Usage](#usage)
+    * [Commands](#commands)
+      * [Pull](#pull)
+      * [Diff](#diff)
+      * [Push](#push)
+      * [Untrack](#untrack)
+    * [Available options](#available-options)
+      * [CLI and environment variables](#cli-and-environment-variables)
+      * [Configuration file](#configuration-file)
+      * [Hooks](#hooks)
+        * [Simple example](#simple-example)
+        * [Filtering out elements](#filtering-out-elements)
+        * [Using the Directus client](#using-the-directus-client)
+    * [Lifecycle & hooks](#lifecycle--hooks)
+      * [`Pull` command](#pull-command)
+      * [`Diff` command](#diff-command)
+      * [`Push` command](#push-command)
+    * [Tracked Elements](#tracked-elements)
+      * [Roles](#roles)
+      * [Presets](#presets)
+    * [Dependency: `directus-extension-sync`](#dependency-directus-extension-sync)
+      * [Installation](#installation)
+  * [How It Works](#how-it-works)
+    * [Tagging and Tracking](#tagging-and-tracking)
+    * [Mapping Table](#mapping-table)
+    * [Synchronization Process](#synchronization-process)
+    * [Schema Management](#schema-management)
+    * [Non-Tracked Elements and Ignored Fields](#non-tracked-elements-and-ignored-fields)
+    * [Strengths of `directus-sync`](#strengths-of-directus-sync)
+  * [Troubleshooting](#troubleshooting)
+    * [Synchronization Failures Due to Firewall Configurations](#synchronization-failures-due-to-firewall-configurations)
+<!-- TOC -->
 
 ## Requirements
 
@@ -344,9 +346,9 @@ module.exports = {
 };
 ```
 
-#### Lifecycle & hooks
+### Lifecycle & hooks
 
-##### `Pull` command
+#### `Pull` command
 
 ```mermaid
 flowchart
@@ -370,15 +372,15 @@ flowchart
  A[Pull command] --> Pull --> Post --> Z[End]
 ```
 
-##### `Diff` command
+#### `Diff` command
 
 **Coming soon**
 
-##### `Push` command
+#### `Push` command
 
 **Coming soon**
 
-#### Tracked Elements
+### Tracked Elements
 
 `directus-sync` tracks the following Directus collections:
 
@@ -397,7 +399,7 @@ flowchart
 For these collections, data changes are committed to the code, allowing for replication on other Directus instances. A
 mapping table links Directus instance IDs with SyncIDs, managed by the `directus-extension-sync`.
 
-##### Roles
+#### Roles
 
 Roles are tracked, but the _main_ administrator role is not tracked.
 This is because the administrator role is a system role and is automatically created by Directus.
@@ -405,7 +407,7 @@ It will cause conflicts if it is tracked.
 
 The _main_ administrator is the role of the curent user, used to authenticate the `directus-sync` commands.
 
-##### Presets
+#### Presets
 
 Global and role based presets are tracked (even the administrator role based presets).
 However, the users' presets are not tracked.
