@@ -47,6 +47,7 @@ for targeted updates and clearer oversight of your Directus configurations.
     * [Schema Management](#schema-management)
     * [Non-Tracked Elements and Ignored Fields](#non-tracked-elements-and-ignored-fields)
     * [Strengths of `directus-sync`](#strengths-of-directus-sync)
+  * [Use Cases](#use-cases)
   * [Troubleshooting](#troubleshooting)
     * [Synchronization Failures Due to Firewall Configurations](#synchronization-failures-due-to-firewall-configurations)
 <!-- TOC -->
@@ -489,6 +490,10 @@ what makes `directus-sync` a robust tool for managing Directus instances in a te
 By following these mechanisms, `directus-sync` streamlines the development workflow, allowing for local changes to be
 efficiently deployed to various environments, all while keeping the Directus instances synchronized and
 version-controlled.
+
+## Use Cases
+
+- [Dropdown for PostgreSQL Enum](./docs/use-cases/postgresql-enum/README.md)
 
 ## Troubleshooting
 
