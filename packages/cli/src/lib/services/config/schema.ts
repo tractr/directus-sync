@@ -44,6 +44,8 @@ export const OptionsFields = {
   id: z.string().optional(),
   // Hooks
   hooks: OptionsHooksSchema.optional(),
+  // Seed
+  seedPath: z.string().or(z.array(z.string())).optional(),
 };
 export const OptionsSchema = z.object(OptionsFields);
 
@@ -66,4 +68,6 @@ export const ConfigFileOptionsSchema = z.object({
   specsPath: OptionsFields.specsPath.optional(),
   // Hooks config
   hooks: OptionsHooksSchema.optional(),
+  // Seed config
+  seedPath: OptionsFields.seedPath.optional(),
 });
