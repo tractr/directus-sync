@@ -122,6 +122,8 @@ export const OptionsFields = {
   keep: z.enum(['first', 'last']).optional(),
   // Hooks
   hooks: OptionsHooksSchema.optional(),
+  // Seed
+  seedPath: z.string().or(z.array(z.string())).optional(),
 };
 export const OptionsSchema = z.object(OptionsFields);
 
@@ -156,4 +158,6 @@ export const ConfigFileOptionsSchema = z.object({
   specs: OptionsFields.specs.optional(),
   // Hooks config
   hooks: OptionsHooksSchema.optional(),
+  // Seed config
+  seedPath: OptionsFields.seedPath.optional(),
 });
