@@ -1,11 +1,14 @@
 import { Container } from 'typedi';
 import pino from 'pino';
-import { SnapshotClient } from '../services';
+import { MigrationClient, SnapshotClient } from '../services';
 import { loadCollections } from '../loader';
 import { LOGGER } from '../constants';
 
 export async function runPush() {
   const logger: pino.Logger = Container.get(LOGGER);
+
+  // Clear the cache
+  await Container.get(MigrationClient).clearCache();
 
   // Snapshot
   logger.info(`---- Push schema ----`);
