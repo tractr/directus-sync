@@ -32,7 +32,9 @@ export class PermissionsDataDiffer extends DataDiffer<DirectusPermission> {
    * Add more fields in the request to get id field
    * https://github.com/directus/directus/issues/21965
    */
-  protected async getExistingIds(localIds: string[]): Promise<{ id: DirectusId }[]> {
+  protected async getExistingIds(
+    localIds: string[],
+  ): Promise<{ id: DirectusId }[]> {
     const permissions = await this.dataClient.query({
       filter: {
         id: {

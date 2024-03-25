@@ -125,7 +125,9 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
    * Get the existing ids from the target table.
    * This allows overriding the query to include more fields.
    */
-  protected async getExistingIds(localIds: string[]): Promise<{ id: DirectusId }[]> {
+  protected async getExistingIds(
+    localIds: string[],
+  ): Promise<{ id: DirectusId }[]> {
     return await this.dataClient.query({
       filter: {
         id: {
@@ -134,7 +136,7 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
       },
       limit: -1,
       fields: ['id'],
-    } as Query<DirectusType>)
+    } as Query<DirectusType>);
   }
 
   /**
