@@ -1,6 +1,7 @@
 import {
   authentication,
   AuthenticationClient,
+  clearCache,
   createDirectus,
   DirectusClient,
   readMe,
@@ -11,9 +12,12 @@ import { Inject, Service } from 'typedi';
 import pino from 'pino';
 import { LOGGER } from '../constants';
 import { ConfigService, isDirectusConfigWithToken } from './config';
+import { getChildLogger } from '../helpers';
 
 @Service()
 export class MigrationClient {
+  protected readonly logger: pino.Logger;
+
   protected adminRoleId: string | undefined;
 
   protected client:
@@ -24,8 +28,10 @@ export class MigrationClient {
 
   constructor(
     protected readonly config: ConfigService,
-    @Inject(LOGGER) protected readonly logger: pino.Logger,
-  ) {}
+    @Inject(LOGGER) baseLogger: pino.Logger,
+  ) {
+    this.logger = getChildLogger(baseLogger, 'migration-client');
+  }
 
   async get() {
     if (!this.client) {
@@ -48,6 +54,15 @@ export class MigrationClient {
       this.adminRoleId = role as string;
     }
     return this.adminRoleId;
+  }
+
+  /**
+   * This method clears the cache of the Directus instance
+   */
+  async clearCache() {
+    const directus = await this.get();
+    await directus.request(clearCache());
+    this.logger.debug('Cache cleared');
   }
 
   protected async createClient() {
