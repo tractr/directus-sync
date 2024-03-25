@@ -1,4 +1,4 @@
-import { DataDiffer } from '../base';
+import { DataDiffer, DirectusId, Query } from '../base';
 import { Inject, Service } from 'typedi';
 import { PERMISSIONS_COLLECTION } from './constants';
 import pino from 'pino';
@@ -26,5 +26,23 @@ export class PermissionsDataDiffer extends DataDiffer<DirectusPermission> {
       dataMapper,
       idMapper,
     );
+  }
+
+  /**
+   * Add more fields in the request to get id field
+   * https://github.com/directus/directus/issues/21965
+   */
+  protected async getExistingIds(localIds: string[]): Promise<{ id: DirectusId }[]> {
+    const permissions = await this.dataClient.query({
+      filter: {
+        id: {
+          _in: localIds.map(Number),
+        },
+      },
+      limit: -1,
+      fields: ['id', 'role', 'collection', 'action'],
+    } as Query<DirectusPermission>);
+
+    return permissions.map(({ id }) => ({ id }));
   }
 }
