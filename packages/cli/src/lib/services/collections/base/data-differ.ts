@@ -112,21 +112,31 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
     // Find all items that are in the ids map
     const localIds = allIdsMap.map((item) => item.local_id);
     const existingIds = localIds.length
-      ? await this.dataClient.query<{ id: DirectusId }>({
-          filter: {
-            id: {
-              _in: localIds,
-            },
-          },
-          limit: -1,
-          fields: ['id'],
-        } as Query<DirectusType>)
+      ? await this.getExistingIds(localIds)
       : [];
     return allIdsMap.filter((item) => {
       return !existingIds.find(
         (existing) => existing.id.toString() === item.local_id,
       );
     });
+  }
+
+  /**
+   * Get the existing ids from the target table.
+   * This allows overriding the query to include more fields.
+   */
+  protected async getExistingIds(
+    localIds: string[],
+  ): Promise<{ id: DirectusId }[]> {
+    return await this.dataClient.query({
+      filter: {
+        id: {
+          _in: localIds,
+        },
+      },
+      limit: -1,
+      fields: ['id'],
+    } as Query<DirectusType>);
   }
 
   /**
