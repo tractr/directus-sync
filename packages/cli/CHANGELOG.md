@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/tractr/directus-sync/compare/directus-sync@1.3.0...directus-sync@1.4.0) (2024-03-25)
+
+
+### Bug Fixes
+
+* empty permissions since 10.10.x ([#39](https://github.com/tractr/directus-sync/issues/39)) ([9e61d26](https://github.com/tractr/directus-sync/commit/9e61d26184aee5d4f42ca7787a42197450771538))
+
+
+### Features
+
+* clear cache before process ([#40](https://github.com/tractr/directus-sync/issues/40)) ([d72502d](https://github.com/tractr/directus-sync/commit/d72502d1b1a8429ce464e5224ba79d6ff2bfcf3c))
+
+
+
+
+
 # [1.3.0](https://github.com/tractr/directus-sync/compare/directus-sync@1.1.0...directus-sync@1.3.0) (2024-03-12)
 
 ### Features
