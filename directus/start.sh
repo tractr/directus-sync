@@ -7,11 +7,12 @@ port=${1:-8055}
 dbPath="./db/${port}.db"
 
 # Copy the database file from the template
-#rm -f $dbPath
-#cp ./db/base.db $dbPath
+rm -f $dbPath
+cp ./db/base.db $dbPath
 
 # Start the server
 export PORT="${port}"
 export PUBLIC_URL="http://localhost:${port}/"
 export DB_FILENAME="${dbPath}"
+
 npm start
