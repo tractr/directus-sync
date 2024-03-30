@@ -1,6 +1,12 @@
-import { DirectusInstance, DirectusSync, DumpedCollection, getCollectionsContents, getSetupTimeout } from './sdk';
+import {
+  DirectusInstance,
+  DirectusSync,
+  DumpedCollection,
+  getCollectionsContents,
+  getSetupTimeout,
+} from './sdk';
 import Path from 'path';
-import {  rmSync } from 'fs-extra';
+import { rmSync } from 'fs-extra';
 
 describe('Pull configs', () => {
   const dumpPath = Path.resolve(__dirname, 'dumps/empty');

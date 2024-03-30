@@ -2,7 +2,9 @@ import path from 'path';
 import { CollectionsRecord } from './interfaces';
 import { existsSync } from 'fs-extra';
 
-export function getCollectionsPaths(dumpPath: string): CollectionsRecord<string> {
+export function getCollectionsPaths(
+  dumpPath: string,
+): CollectionsRecord<string> {
   return {
     dashboards: path.join(dumpPath, 'collections', 'dashboards.json'),
     flows: path.join(dumpPath, 'collections', 'flows.json'),
@@ -19,10 +21,13 @@ export function getCollectionsPaths(dumpPath: string): CollectionsRecord<string>
 }
 export function getCollectionsContents(dumpPath: string) {
   const paths = getCollectionsPaths(dumpPath);
-  return Object.entries(paths).reduce((acc, [key, path]) => {
-    return {
-      ...acc,
-      [key]: existsSync(path)  ? require(path) : undefined,
-    };
-  }, {} as CollectionsRecord<object[]>);
+  return Object.entries(paths).reduce(
+    (acc, [key, path]) => {
+      return {
+        ...acc,
+        [key]: existsSync(path) ? require(path) : undefined,
+      };
+    },
+    {} as CollectionsRecord<object[]>,
+  );
 }
