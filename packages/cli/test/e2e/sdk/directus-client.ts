@@ -46,10 +46,7 @@ export class DirectusClient {
   async loginAsAdmin() {
     const adminEmail = getenv.string('DIRECTUS_ADMIN_EMAIL');
     const adminPassword = getenv.string('DIRECTUS_ADMIN_PASSWORD');
-    const token = await this.client.login(
-      adminEmail,
-      adminPassword,
-    );
+    const token = await this.client.login(adminEmail, adminPassword);
     this.client.setToken(token.access_token);
     this.isLogged = true;
     return token;
@@ -84,11 +81,14 @@ export class DirectusClient {
     return token;
   }
 
-  async createUser(key: keyof DirectusClient['users'], override: Partial<DirectusUser<Collections>> = {}) {
+  async createUser(
+    key: keyof DirectusClient['users'],
+    override: Partial<DirectusUser<Collections>> = {},
+  ) {
     return (await this.client.request(
       createUser({
         ...this.users[key],
-        ...override
+        ...override,
       }),
     )) as DirectusUser<Collections>;
   }

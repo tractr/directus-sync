@@ -1,6 +1,6 @@
 /* eslint-env node */
 module.exports = {
-    ignorePatterns: ['dist/', 'node_modules/', '*.js', '*.cjs', '*.mjs'],
+    ignorePatterns: ['dist/', 'node_modules/', 'directus/', '*.js', '*.cjs', '*.mjs'],
     extends: [
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended-type-checked',

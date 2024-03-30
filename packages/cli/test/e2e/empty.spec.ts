@@ -18,8 +18,8 @@ describe('Pull configs', () => {
       dumpPath: dumpPath,
     });
   }, getSetupTimeout());
-  afterAll(async () => {
-    await instance.stop();
+  afterAll(() => {
+    instance.stop();
   }, getSetupTimeout());
 
   it('should pull even if nothing custom in Directus', async () => {
@@ -27,5 +27,4 @@ describe('Pull configs', () => {
     expect(output.stderr).toBe('');
     expect(output.stdout).toContain('Done');
   });
-
 });

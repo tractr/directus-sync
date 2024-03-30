@@ -1,4 +1,9 @@
-import { ChildProcess, ChildProcessWithoutNullStreams, exec, spawn, SpawnOptionsWithoutStdio } from 'child_process';
+import {
+  ChildProcessWithoutNullStreams,
+  exec,
+  spawn,
+  SpawnOptionsWithoutStdio,
+} from 'child_process';
 import { Observable } from 'rxjs';
 
 /**
@@ -6,15 +11,14 @@ import { Observable } from 'rxjs';
  */
 export function $(
   parts: TemplateStringsArray,
-  ...params: any[]
+  ...params: string[]
 ): Promise<{ stdout: string; stderr: string }> {
   // Glue the command and parameters together
   const cmd = parts.reduce((acc, part, i) => {
-    return acc + part + (params[i] || '');
+    return acc + part + (params[i] ?? '');
   }, '');
   return new Promise((resolve, reject) => {
-    let childProcess: ChildProcess;
-    childProcess = exec(
+    const childProcess = exec(
       cmd,
       (error: Error | null, stdout: string, stderr: string) => {
         if (error) {
