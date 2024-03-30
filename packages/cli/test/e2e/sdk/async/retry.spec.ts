@@ -3,7 +3,7 @@ import { retry } from './retry';
 describe('retry', () => {
   it('should retry until success', async () => {
     let counter = 0;
-    const run = async () => {
+    const run = () => {
       counter++;
       if (counter < 3) {
         throw new Error('error');
@@ -16,7 +16,7 @@ describe('retry', () => {
 
   it('should fail after max retries', async () => {
     let counter = 0;
-    const run = async () => {
+    const run = () => {
       counter++;
       throw new Error('error');
     };

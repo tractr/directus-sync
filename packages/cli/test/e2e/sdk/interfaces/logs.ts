@@ -5,10 +5,10 @@ export interface RawLog {
   msg: string;
 }
 
-export type EndLog = {
+export interface EndLog {
   type: 'end';
   msg: string;
-};
+}
 
 export interface PinoLog {
   level: number;

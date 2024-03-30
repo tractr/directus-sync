@@ -14,7 +14,7 @@ export interface Req {
   method: string;
   url: string;
   query: Query;
-  params: Params;
+  params: Record<string, string>;
   headers: ReqHeaders;
 }
 
@@ -29,8 +29,6 @@ export interface ReqHeaders {
   'user-agent': string;
   'accept-encoding': string;
 }
-
-export interface Params {}
 
 export interface Query {
   filter: string;

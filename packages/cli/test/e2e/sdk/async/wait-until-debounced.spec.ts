@@ -12,14 +12,14 @@ describe('waitUntilDebounced', () => {
         value += 1;
         done();
       },
-      (e) => done.fail(e),
+      (e: string) => done.fail(e),
     );
 
     sleep(5).then(
       () => {
         expect(value).toEqual(0);
       },
-      (e) => done.fail(e),
+      (e: string) => done.fail(e),
     );
   });
 
@@ -35,7 +35,7 @@ describe('waitUntilDebounced', () => {
         expect(value).toEqual(2);
         done();
       },
-      (e) => done.fail(e),
+      (e: string) => done.fail(e),
     );
   });
 });

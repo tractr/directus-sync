@@ -11,13 +11,13 @@ describe('waitUntil', () => {
         value += 1;
         done();
       },
-      (e) => done.fail(e),
+      (e: string) => done.fail(e),
     );
     sleep(5).then(
       () => {
         expect(value).toEqual(0);
       },
-      (e) => done.fail(e),
+      (e: string) => done.fail(e),
     );
   });
   it('Wait until but timeout', (done) => {

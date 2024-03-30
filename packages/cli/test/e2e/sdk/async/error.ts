@@ -1,4 +1,4 @@
-export type DirectusHttpError = {
+export interface DirectusHttpError {
   errors: [
     {
       message: string;
@@ -7,8 +7,8 @@ export type DirectusHttpError = {
       };
     },
   ];
-  response: {};
-};
+  response: Record<string, unknown>;
+}
 
 export async function expectDirectusError(
   promise: Promise<unknown>,

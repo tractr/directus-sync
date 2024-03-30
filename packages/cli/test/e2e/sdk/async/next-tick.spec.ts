@@ -8,7 +8,7 @@ describe('nextTick', () => {
         value += 1;
         done();
       },
-      (e) => done.fail(e),
+      (e: string) => done.fail(e),
     );
     expect(value).toEqual(0);
   });

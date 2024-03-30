@@ -1,5 +1,5 @@
 export function retry<T>(
-  run: () => Promise<T>,
+  run: () => Promise<T> | T,
   maxRetries = 3,
   sleepTime = 1000,
 ): Promise<T> {
