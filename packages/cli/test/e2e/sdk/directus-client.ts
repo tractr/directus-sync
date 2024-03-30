@@ -9,8 +9,9 @@ import {
   rest,
   RestClient,
 } from '@directus/sdk';
-import { Collections } from './interfaces';
 import * as getenv from 'getenv';
+
+type Collections = object;
 
 export class DirectusClient {
   protected readonly users = {
@@ -71,6 +72,18 @@ export class DirectusClient {
     this.isLogged = false;
   }
 
+  getToken(): Promise<string | null> {
+    return this.client.getToken();
+  }
+
+  async requireToken() {
+    const token = await this.getToken();
+    if (!token) {
+      throw new Error('Token is required');
+    }
+    return token;
+  }
+
   async createUser(key: keyof DirectusClient['users'], override: Partial<DirectusUser<Collections>> = {}) {
     return (await this.client.request(
       createUser({
@@ -85,12 +98,12 @@ export class DirectusClient {
   }
 
   protected createClient() {
-    return createDirectus<Collections>(this.getDirectusUrl())
+    return createDirectus<Collections>(this.getUrl())
       .with(rest())
       .with(authentication());
   }
 
-  protected getDirectusUrl() {
+  getUrl() {
     const host = getenv.string('DIRECTUS_HOST', 'localhost');
     return `http://${host}:${this.getPort()}`;
   }

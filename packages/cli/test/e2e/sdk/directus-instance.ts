@@ -16,9 +16,9 @@ import {
     Subscription,
     throwError,
 } from 'rxjs';
-import { take, timeout } from 'rxjs/operators';
+import { take, tap, timeout } from 'rxjs/operators';
 
-const DirectusWorkingDirectory = Path.resolve(__dirname, '../../../../../../directus');
+const DirectusWorkingDirectory = Path.resolve(__dirname, '../../../../../directus');
 
 export class DirectusInstance {
     protected readonly index = process.pid % 20000;
@@ -168,5 +168,16 @@ export class DirectusInstance {
           }),
           shareReplay(),
         );
+    }
+
+    /**
+     * Send every log to console. Useful for debugging
+     */
+    pipeLogsToConsole() {
+        if (this.$process) {
+            this.$process.pipe(
+              tap(log => console.log(log))
+            );
+        }
     }
 }
