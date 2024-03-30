@@ -1,6 +1,6 @@
-import { DirectusInstance, DirectusSync, getSetupTimeout } from './sdk';
+import { DirectusInstance, DirectusSync, DumpedCollection, getCollectionsContents, getSetupTimeout } from './sdk';
 import Path from 'path';
-import { rmSync } from 'fs-extra';
+import {  rmSync } from 'fs-extra';
 
 describe('Pull configs', () => {
   const dumpPath = Path.resolve(__dirname, 'dumps/empty');
@@ -26,5 +26,25 @@ describe('Pull configs', () => {
     const output = await sync.pull();
     expect(output.stderr).toBe('');
     expect(output.stdout).toContain('Done');
+
+    const collections = getCollectionsContents(dumpPath);
+    const keys = Object.keys(collections) as DumpedCollection[];
+    expect(keys).toEqual([
+      'dashboards',
+      'flows',
+      'folders',
+      'operations',
+      'panels',
+      'permissions',
+      'presets',
+      'roles',
+      'settings',
+      'translations',
+      'webhooks',
+    ]);
+
+    keys.forEach((key) => {
+      expect(collections[key]).toEqual([]);
+    });
   });
 });

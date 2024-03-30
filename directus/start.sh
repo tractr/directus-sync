@@ -12,7 +12,7 @@ cp ./db/base.db $dbPath
 
 # Start the server
 export PORT="${port}"
-export PUBLIC_URL="http://localhost:${port}/"
+export PUBLIC_URL="http://127.0.0.1:${port}/"
 export DB_FILENAME="${dbPath}"
 
 npm start

@@ -104,7 +104,7 @@ export class DirectusClient {
   }
 
   getUrl() {
-    const host = getenv.string('DIRECTUS_HOST', 'localhost');
+    const host = getenv.string('DIRECTUS_HOST', '127.0.0.1');
     return `http://${host}:${this.getPort()}`;
   }
 
