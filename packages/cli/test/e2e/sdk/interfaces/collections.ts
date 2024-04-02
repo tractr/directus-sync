@@ -12,5 +12,5 @@ export type DumpedCollection =
   | 'webhooks';
 
 export type CollectionsRecord<T> = {
-  [key in DumpedCollection]?: T;
+  [key in DumpedCollection]: T;
 };
