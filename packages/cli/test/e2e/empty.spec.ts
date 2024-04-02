@@ -4,7 +4,9 @@ import {
   DirectusSync,
   DumpedCollection,
   getCollectionsContents,
-  getSetupTimeout, notAdministratorRoles, notNullId,
+  getSetupTimeout,
+  notAdministratorRoles,
+  notNullId,
   notSystemPermissions,
 } from './sdk';
 import Path from 'path';
