@@ -1,7 +1,7 @@
 import { DirectusInstance, expectDirectusError, getSetupTimeout } from './sdk';
 
 describe('Sample test', () => {
-  const instance = new DirectusInstance('sample-test');
+  const instance = new DirectusInstance();
   const directus = instance.getDirectusClient();
 
   beforeAll(async () => {
@@ -10,7 +10,7 @@ describe('Sample test', () => {
   }, getSetupTimeout());
   afterAll(() => {
     instance.stop();
-  }, getSetupTimeout());
+  });
 
   it('should be able to create an user', async () => {
     const user = await directus.createUser('one', {

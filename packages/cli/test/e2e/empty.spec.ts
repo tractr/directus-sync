@@ -1,8 +1,8 @@
 import {
   DirectusInstance,
   DirectusSync,
+  getDumpedSystemCollectionsContents,
   getSetupTimeout,
-  getSystemCollectionsContents,
   getSystemCollectionsNames,
   notAdministratorRoles,
   notNullId,
@@ -28,7 +28,7 @@ import {
 
 describe('Empty instance configs', () => {
   const dumpPath = Path.resolve(__dirname, 'dumps/empty');
-  const instance = new DirectusInstance('sample-test');
+  const instance = new DirectusInstance();
   const directus = instance.getDirectusClient();
   let sync: DirectusSync;
 
@@ -42,16 +42,15 @@ describe('Empty instance configs', () => {
       dumpPath: dumpPath,
     });
   }, getSetupTimeout());
-  afterAll((done) => {
+  afterAll(() => {
     instance.stop();
-    done();
-  }, getSetupTimeout());
+  });
 
   it('should pull even if nothing custom in Directus', async () => {
     const output = await sync.pull();
     expect(output).toContain('Done');
 
-    const collections = getSystemCollectionsContents(dumpPath);
+    const collections = getDumpedSystemCollectionsContents(dumpPath);
     const keys = Object.keys(collections) as SystemCollection[];
     expect(keys).toEqual([
       'dashboards',

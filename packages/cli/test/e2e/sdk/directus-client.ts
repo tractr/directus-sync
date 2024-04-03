@@ -10,8 +10,17 @@ import {
   RestClient,
 } from '@directus/sdk';
 import * as getenv from 'getenv';
+import { SystemCollection } from './interfaces';
 
 type Collections = object;
+
+export interface IdMap {
+  id: number;
+  table: string;
+  sync_id: string;
+  local_id: string;
+  created_at: Date;
+}
 
 export class DirectusClient {
   protected readonly users = {
@@ -110,5 +119,41 @@ export class DirectusClient {
 
   protected getPort() {
     return getenv.int('DIRECTUS_PORT', this.port);
+  }
+
+  async getSyncIdMaps(table: SystemCollection) {
+    const response = await fetch(
+      `${this.getUrl()}/directus-extension-sync/table/${table}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          Authorization: `Bearer ${await this.requireToken()}`,
+        },
+      },
+    );
+    if (response.status !== 200) {
+      throw new Error(await response.text());
+    }
+    const data: IdMap[] = await response.json();
+    return data;
+  }
+
+  async getByLocalId(table: SystemCollection, localId: string | number) {
+    const response = await fetch(
+      `${this.getUrl()}/directus-extension-sync/table/${table}/local_id/${localId}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          Authorization: `Bearer ${await this.requireToken()}`,
+        },
+      },
+    );
+    if (response.status !== 200) {
+      throw new Error(await response.text());
+    }
+    const data: IdMap = await response.json();
+    return data;
   }
 }

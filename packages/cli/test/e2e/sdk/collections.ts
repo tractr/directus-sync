@@ -19,7 +19,7 @@ export function getSystemCollectionsPaths(
     webhooks: path.join(dumpPath, 'collections', 'webhooks.json'),
   };
 }
-export function getSystemCollectionsContents(dumpPath: string) {
+export function getDumpedSystemCollectionsContents(dumpPath: string) {
   const paths = getSystemCollectionsPaths(dumpPath);
   return Object.entries(paths).reduce(
     (acc, [key, path]) => {

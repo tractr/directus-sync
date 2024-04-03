@@ -26,7 +26,6 @@ const DirectusWorkingDirectory = Path.resolve(
 
 export class DirectusInstance {
   protected readonly index = process.pid % 20000;
-  protected readonly name: string;
   protected readonly setupTimeout = Math.max(getSetupTimeout() - 1000, 1000);
   protected readonly directusClient = new DirectusClient(
     this.getDirectusPort(),
@@ -34,10 +33,6 @@ export class DirectusInstance {
   protected processSubscription: Subscription | undefined;
   protected $process: Observable<Log> | undefined;
   protected processKiller = new Subject<NodeJS.Signals>();
-
-  constructor(name: string) {
-    this.name = name;
-  }
 
   getDirectusClient() {
     return this.directusClient;

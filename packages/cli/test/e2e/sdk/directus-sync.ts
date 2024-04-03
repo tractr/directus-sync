@@ -39,6 +39,7 @@ export class DirectusSync {
       this.options.token,
       `--directus-url`,
       this.options.url,
+      '--debug',
     ];
   }
 }
