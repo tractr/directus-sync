@@ -1,18 +1,44 @@
 import { DirectusSyncArgs } from './interfaces';
-import { $ } from './shell';
+import { streamCommand } from './shell';
+import { reduce, take } from 'rxjs/operators';
+import { filter, lastValueFrom } from 'rxjs';
 
 export class DirectusSync {
-  protected readonly globalOptions: string;
-
-  constructor(protected readonly options: DirectusSyncArgs) {
-    this.globalOptions = this.getOptionsString(options);
-  }
+  constructor(protected readonly options: DirectusSyncArgs) {}
 
   pull() {
-    return $`npm start -- ${this.globalOptions} pull --dump-path ${this.options.dumpPath}`;
+    return this.runCliCommand('pull', '--dump-path', this.options.dumpPath);
   }
 
-  protected getOptionsString(options: DirectusSyncArgs) {
-    return `--directus-token ${options.token} --directus-url ${options.url}`;
+  push() {
+    return this.runCliCommand('push', '--dump-path', this.options.dumpPath);
+  }
+
+  diff() {
+    return this.runCliCommand('diff', '--dump-path', this.options.dumpPath);
+  }
+
+  protected runCliCommand(...args: string[]) {
+    return lastValueFrom(
+      streamCommand('npm', [
+        'start',
+        '--',
+        ...this.getOptionsArgs(),
+        ...args,
+      ]).pipe(
+        reduce((acc, line) => acc + '\n' + line, ''),
+        filter((output) => output.includes('Done!')),
+        take(1),
+      ),
+    );
+  }
+
+  protected getOptionsArgs(): string[] {
+    return [
+      `--directus-token`,
+      this.options.token,
+      `--directus-url`,
+      this.options.url,
+    ];
   }
 }

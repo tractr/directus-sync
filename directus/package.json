@@ -7,7 +7,7 @@
     "bootstrap": "directus bootstrap"
   },
   "dependencies": {
-    "directus": "^10.10.4",
+    "directus": "^10.10.5",
     "sqlite3": "^5.1.7"
   }
 }

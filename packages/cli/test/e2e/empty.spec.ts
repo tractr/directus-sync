@@ -1,13 +1,14 @@
 import {
-  CollectionsRecord,
   DirectusInstance,
   DirectusSync,
-  DumpedCollection,
-  getCollectionsContents,
   getSetupTimeout,
+  getSystemCollectionsContents,
+  getSystemCollectionsNames,
   notAdministratorRoles,
   notNullId,
   notSystemPermissions,
+  SystemCollection,
+  SystemCollectionsRecord,
 } from './sdk';
 import Path from 'path';
 import { rmSync } from 'fs-extra';
@@ -25,7 +26,7 @@ import {
   readWebhooks,
 } from '@directus/sdk';
 
-describe('Pull configs', () => {
+describe('Empty instance configs', () => {
   const dumpPath = Path.resolve(__dirname, 'dumps/empty');
   const instance = new DirectusInstance('sample-test');
   const directus = instance.getDirectusClient();
@@ -41,17 +42,17 @@ describe('Pull configs', () => {
       dumpPath: dumpPath,
     });
   }, getSetupTimeout());
-  afterAll(() => {
+  afterAll((done) => {
     instance.stop();
+    done();
   }, getSetupTimeout());
 
   it('should pull even if nothing custom in Directus', async () => {
     const output = await sync.pull();
-    expect(output.stderr).toBe('');
-    expect(output.stdout).toContain('Done');
+    expect(output).toContain('Done');
 
-    const collections = getCollectionsContents(dumpPath);
-    const keys = Object.keys(collections) as DumpedCollection[];
+    const collections = getSystemCollectionsContents(dumpPath);
+    const keys = Object.keys(collections) as SystemCollection[];
     expect(keys).toEqual([
       'dashboards',
       'flows',
@@ -75,7 +76,7 @@ describe('Pull configs', () => {
     await sync.pull();
     const client = directus.get();
 
-    const all: CollectionsRecord<unknown[]> = {
+    const all: SystemCollectionsRecord<unknown[]> = {
       dashboards: await client.request(readDashboards()),
       flows: await client.request(readFlows()),
       folders: await client.request(readFolders()),
@@ -91,7 +92,52 @@ describe('Pull configs', () => {
       webhooks: await client.request(readWebhooks()),
     };
 
-    const keys = Object.keys(all) as DumpedCollection[];
+    const keys = Object.keys(all) as SystemCollection[];
+    keys.forEach((key) => {
+      expect(all[key]).toEqual([]);
+    });
+  });
+
+  it('should not see any diff if nothing is created', async () => {
+    await sync.pull();
+    const output = await sync.diff();
+
+    expect(output).toContain('[snapshot] No changes to apply');
+
+    const collections = getSystemCollectionsNames();
+
+    for (const collection of collections) {
+      expect(output).toContain(`[${collection}] Dangling id maps: 0 item(s)`);
+      expect(output).toContain(`[${collection}] To create: 0 item(s)`);
+      expect(output).toContain(`[${collection}] To update: 0 item(s)`);
+      expect(output).toContain(`[${collection}] To delete: 0 item(s)`);
+      expect(output).toContain(`[${collection}] Unchanged: 0 item(s)`);
+    }
+  });
+
+  it('should not create any entries in Directus on push', async () => {
+    await sync.pull();
+    await sync.push();
+
+    const client = directus.get();
+
+    const all: SystemCollectionsRecord<unknown[]> = {
+      dashboards: await client.request(readDashboards()),
+      flows: await client.request(readFlows()),
+      folders: await client.request(readFolders()),
+      operations: await client.request(readOperations()),
+      panels: await client.request(readPanels()),
+      permissions: (await client.request(readPermissions())).filter(
+        notSystemPermissions,
+      ),
+      presets: await client.request(readPresets()),
+      roles: (await client.request(readRoles())).filter(notAdministratorRoles),
+      settings: [await client.request(readSettings())].filter(notNullId),
+      translations: await client.request(readTranslations()),
+      webhooks: await client.request(readWebhooks()),
+    };
+
+    const keys = Object.keys(all) as SystemCollection[];
     keys.forEach((key) => {
       expect(all[key]).toEqual([]);
     });

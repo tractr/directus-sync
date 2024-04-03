@@ -1,45 +1,20 @@
 import {
   ChildProcessWithoutNullStreams,
-  exec,
   spawn,
   SpawnOptionsWithoutStdio,
 } from 'child_process';
-import { Observable } from 'rxjs';
-
-/**
- * Executes shell command and return as a Promise.
- */
-export function $(
-  parts: TemplateStringsArray,
-  ...params: string[]
-): Promise<{ stdout: string; stderr: string }> {
-  // Glue the command and parameters together
-  const cmd = parts.reduce((acc, part, i) => {
-    return acc + part + (params[i] ?? '');
-  }, '');
-  return new Promise((resolve, reject) => {
-    const childProcess = exec(
-      cmd,
-      (error: Error | null, stdout: string, stderr: string) => {
-        if (error) {
-          reject(error);
-        }
-        resolve({ stdout, stderr });
-        if (childProcess) {
-          childProcess.kill();
-        }
-      },
-    );
-  });
-}
+import { Observable, Subscription } from 'rxjs';
 
 export function streamCommand(
   command: string,
   args: string[] = [],
   opts?: SpawnOptionsWithoutStdio,
+  killer?: Observable<NodeJS.Signals>,
 ): Observable<string> {
-  return new Observable((observer) => {
-    const process: ChildProcessWithoutNullStreams = spawn(command, args, opts);
+  let process: ChildProcessWithoutNullStreams;
+  let killerSubscription: Subscription | undefined;
+  const observable = new Observable<string>((observer) => {
+    process = spawn(command, args, { shell: true, ...(opts ?? {}) });
     // Pipe stdout
     process.stdout.on('data', (data: Buffer) => {
       data
@@ -67,7 +42,17 @@ export function streamCommand(
 
     // Kill the process if the subscription is closed
     return () => {
-      process.kill();
+      process.kill('SIGKILL');
     };
   });
+
+  // Listen to killer observable and kill the process
+  if (killer) {
+    killerSubscription = killer.subscribe((signal) => {
+      process.kill(signal);
+      killerSubscription?.unsubscribe();
+    });
+  }
+
+  return observable;
 }

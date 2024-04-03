@@ -1,16 +1,20 @@
-export type DumpedCollection =
-  | 'dashboards'
-  | 'flows'
-  | 'folders'
-  | 'operations'
-  | 'panels'
-  | 'permissions'
-  | 'presets'
-  | 'roles'
-  | 'settings'
-  | 'translations'
-  | 'webhooks';
+import { ValueOf } from 'ts-essentials';
 
-export type CollectionsRecord<T> = {
-  [key in DumpedCollection]: T;
+export type SystemCollectionsNames = [
+  'dashboards',
+  'flows',
+  'folders',
+  'operations',
+  'panels',
+  'permissions',
+  'presets',
+  'roles',
+  'settings',
+  'translations',
+  'webhooks',
+];
+export type SystemCollection = ValueOf<SystemCollectionsNames>;
+
+export type SystemCollectionsRecord<T> = {
+  [key in SystemCollection]: T;
 };

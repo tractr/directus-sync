@@ -1,10 +1,10 @@
 import path from 'path';
-import { CollectionsRecord } from './interfaces';
+import { SystemCollectionsNames, SystemCollectionsRecord } from './interfaces';
 import { existsSync } from 'fs-extra';
 
-export function getCollectionsPaths(
+export function getSystemCollectionsPaths(
   dumpPath: string,
-): CollectionsRecord<string> {
+): SystemCollectionsRecord<string> {
   return {
     dashboards: path.join(dumpPath, 'collections', 'dashboards.json'),
     flows: path.join(dumpPath, 'collections', 'flows.json'),
@@ -19,8 +19,8 @@ export function getCollectionsPaths(
     webhooks: path.join(dumpPath, 'collections', 'webhooks.json'),
   };
 }
-export function getCollectionsContents(dumpPath: string) {
-  const paths = getCollectionsPaths(dumpPath);
+export function getSystemCollectionsContents(dumpPath: string) {
+  const paths = getSystemCollectionsPaths(dumpPath);
   return Object.entries(paths).reduce(
     (acc, [key, path]) => {
       return {
@@ -28,6 +28,22 @@ export function getCollectionsContents(dumpPath: string) {
         [key]: existsSync(path) ? require(path) : undefined,
       };
     },
-    {} as CollectionsRecord<object[]>,
+    {} as SystemCollectionsRecord<object[]>,
   );
+}
+
+export function getSystemCollectionsNames(): SystemCollectionsNames {
+  return [
+    'dashboards',
+    'flows',
+    'folders',
+    'operations',
+    'panels',
+    'permissions',
+    'presets',
+    'roles',
+    'settings',
+    'translations',
+    'webhooks',
+  ];
 }

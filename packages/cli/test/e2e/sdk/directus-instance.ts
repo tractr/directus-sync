@@ -13,6 +13,7 @@ import {
   Observable,
   of,
   shareReplay,
+  Subject,
   Subscription,
   throwError,
 } from 'rxjs';
@@ -32,6 +33,7 @@ export class DirectusInstance {
   );
   protected processSubscription: Subscription | undefined;
   protected $process: Observable<Log> | undefined;
+  protected processKiller = new Subject<NodeJS.Signals>();
 
   constructor(name: string) {
     this.name = name;
@@ -50,9 +52,8 @@ export class DirectusInstance {
   }
 
   stop() {
-    if (this.processSubscription) {
-      this.processSubscription.unsubscribe();
-    }
+    this.processKiller.next('SIGTERM');
+    this.processSubscription?.unsubscribe();
     delete this.processSubscription;
     delete this.$process;
   }
@@ -154,9 +155,14 @@ export class DirectusInstance {
    * If not JSON, emit as { type: 'raw' content: string }.
    */
   protected getDirectusProcess(): Observable<Log> {
-    return streamCommand('./start.sh', [this.getDirectusPort().toString()], {
-      cwd: DirectusWorkingDirectory,
-    }).pipe(
+    return streamCommand(
+      './start.sh',
+      [this.getDirectusPort().toString()],
+      {
+        cwd: DirectusWorkingDirectory,
+      },
+      this.processKiller,
+    ).pipe(
       // Try to parse the line as JSON
       map((line) => {
         try {

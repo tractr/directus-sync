@@ -1,4 +1,5 @@
 package-lock.json
 node_modules
 db/*.db
+logs/*.log
 !.env
