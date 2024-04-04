@@ -9,4 +9,4 @@ export * from './permission';
 export * from './preset';
 export * from './settings';
 export * from './translation';
-export * from './webhooks';
+export * from './webhook';
