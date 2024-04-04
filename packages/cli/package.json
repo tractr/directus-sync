@@ -20,6 +20,7 @@
   },
   "license": "GPL-3.0",
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@types/fs-extra": "^11.0.4",
     "@types/getenv": "^1.0.3",
     "@types/http-errors": "^2.0.4",
