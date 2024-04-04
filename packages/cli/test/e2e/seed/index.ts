@@ -1,4 +1,4 @@
-export * from './icon';
+export * from './helpers';
 export * from './dasboard';
 export * from './flow';
 export * from './folder';
@@ -6,3 +6,7 @@ export * from './operation';
 export * from './panel';
 export * from './role';
 export * from './permission';
+export * from './preset';
+export * from './settings';
+export * from './translation';
+export * from './webhooks';

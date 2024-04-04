@@ -3,7 +3,7 @@ import { DirectusFolder } from '@directus/sdk';
 
 export function getFolder(parent?: string): Omit<DirectusFolder<object>, 'id'> {
   return {
-    name: faker.lorem.sentence({ min: 1, max: 2 }),
+    name: faker.lorem.words({ min: 1, max: 2 }),
     parent: parent ?? null,
   };
 }

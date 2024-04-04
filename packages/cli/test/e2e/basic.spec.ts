@@ -1,5 +1,6 @@
 import {
   DirectusInstance,
+  DirectusSettingsExtra,
   DirectusSync,
   getDumpedSystemCollectionsContents,
   getSetupTimeout,
@@ -13,8 +14,13 @@ import {
   createOperation,
   createPanel,
   createPermission,
+  createPreset,
   createRole,
+  createTranslation,
+  createWebhook,
+  DirectusSettings,
   updateFlow,
+  updateSettings,
 } from '@directus/sdk';
 import {
   getDashboard,
@@ -23,7 +29,11 @@ import {
   getOperation,
   getPanel,
   getPermission,
+  getPreset,
   getRole,
+  getSettings,
+  getTranslation,
+  getWebhook,
 } from './seed';
 
 describe('Empty instance configs', () => {
@@ -61,6 +71,14 @@ describe('Empty instance configs', () => {
     const permission = await client.request(
       createPermission(getPermission(role.id, 'dashboards', 'update')),
     );
+    const preset = await client.request(createPreset(getPreset()));
+    const settings = (await client.request(
+      updateSettings(getSettings()),
+    )) as never as DirectusSettings<object> & DirectusSettingsExtra;
+    const translation = await client.request(
+      createTranslation(getTranslation()),
+    );
+    const webhook = await client.request(createWebhook(getWebhook()));
 
     // --------------------------------------------------------------------
     // Update flow with operation
@@ -86,6 +104,14 @@ describe('Empty instance configs', () => {
     expect(output).toContain('[roles] Post-processed 1 items');
     expect(output).toContain('[permissions] Pulled 1 items');
     expect(output).toContain('[permissions] Post-processed 1 items');
+    expect(output).toContain('[presets] Pulled 1 items');
+    expect(output).toContain('[presets] Post-processed 1 items');
+    expect(output).toContain('[settings] Pulled 1 items');
+    expect(output).toContain('[settings] Post-processed 1 items');
+    expect(output).toContain('[translations] Pulled 1 items');
+    expect(output).toContain('[translations] Post-processed 1 items');
+    expect(output).toContain('[webhooks] Pulled 1 items');
+    expect(output).toContain('[webhooks] Post-processed 1 items');
 
     // --------------------------------------------------------------------
     // Check created sync id
@@ -96,6 +122,10 @@ describe('Empty instance configs', () => {
     expect((await directus.getSyncIdMaps('panels')).length).toBe(1);
     expect((await directus.getSyncIdMaps('roles')).length).toBe(1);
     expect((await directus.getSyncIdMaps('permissions')).length).toBe(1);
+    expect((await directus.getSyncIdMaps('presets')).length).toBe(1);
+    expect((await directus.getSyncIdMaps('settings')).length).toBe(1);
+    expect((await directus.getSyncIdMaps('translations')).length).toBe(1);
+    expect((await directus.getSyncIdMaps('webhooks')).length).toBe(1);
 
     // --------------------------------------------------------------------
     // Check if the content was dumped correctly
@@ -188,6 +218,73 @@ describe('Empty instance configs', () => {
         validation: permission.validation,
         presets: permission.presets,
         fields: permission.fields,
+      },
+    ]);
+    expect(collections.presets).toEqual([
+      {
+        _syncId: (await directus.getByLocalId('presets', preset.id)).sync_id,
+        bookmark: preset.bookmark,
+        role: preset.role,
+        user: undefined,
+        collection: preset.collection,
+        search: preset.search,
+        layout: preset.layout,
+        layout_query: preset.layout_query,
+        layout_options: preset.layout_options,
+        refresh_interval: preset.refresh_interval,
+        filter: preset.filter,
+        icon: preset.icon,
+        color: preset.color,
+      },
+    ]);
+    expect(collections.settings).toEqual([
+      {
+        _syncId: (await directus.getByLocalId('settings', settings.id)).sync_id,
+        project_name: settings.project_name,
+        project_color: settings.project_color,
+        public_note: settings.public_note,
+        auth_login_attempts: settings.auth_login_attempts,
+        auth_password_policy: settings.auth_password_policy,
+        storage_asset_transform: settings.storage_asset_transform,
+        storage_asset_presets: settings.storage_asset_presets,
+        custom_css: settings.custom_css,
+        storage_default_folder: settings.storage_default_folder,
+        basemaps: settings.basemaps,
+        mapbox_key: settings.mapbox_key,
+        module_bar: settings.module_bar,
+        project_descriptor: settings.project_descriptor,
+        default_language: settings.default_language,
+        custom_aspect_ratios: settings.custom_aspect_ratios,
+        default_appearance: settings.default_appearance,
+        default_theme_light: settings.default_theme_light,
+        theme_light_overrides: settings.theme_light_overrides,
+        default_theme_dark: settings.default_theme_dark,
+        theme_dark_overrides: settings.theme_dark_overrides,
+        report_error_url: settings.report_error_url,
+        report_bug_url: settings.report_bug_url,
+        report_feature_url: settings.report_feature_url,
+      },
+    ]);
+    expect(collections.translations).toEqual([
+      {
+        _syncId: (await directus.getByLocalId('translations', translation.id))
+          .sync_id,
+        key: translation.key,
+        value: translation.value,
+        language: translation.language,
+      },
+    ]);
+    expect(collections.webhooks).toEqual([
+      {
+        _syncId: (await directus.getByLocalId('webhooks', webhook.id)).sync_id,
+        name: webhook.name,
+        method: webhook.method,
+        url: webhook.url,
+        status: webhook.status,
+        data: webhook.data,
+        actions: webhook.actions,
+        collections: webhook.collections,
+        headers: webhook.headers,
       },
     ]);
   });

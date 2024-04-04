@@ -28,7 +28,11 @@ export function streamCommand(
 
     // Pipe stderr
     process.stderr.on('data', (data: Buffer) => {
-      observer.error(new Error(data.toString()));
+      const content = data.toString();
+      if (content.includes('Update available!')) {
+        return;
+      }
+      observer.error(content);
     });
 
     // Complete the observable when the process completes

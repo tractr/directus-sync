@@ -18,7 +18,7 @@ export function getOperation(
       : {};
 
   return {
-    name: faker.lorem.sentence({ min: 1, max: 2 }),
+    name: faker.lorem.words({ min: 1, max: 2 }),
     key: faker.lorem.slug(2),
     type: type,
     position_x: faker.number.int({ min: 20, max: 100 }),
