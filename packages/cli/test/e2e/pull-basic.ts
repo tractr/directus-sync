@@ -37,7 +37,7 @@ import {
 } from './seed';
 
 describe('Pull from an instance with one item for each collection', () => {
-  const dumpPath = Path.resolve(__dirname, 'dumps/basic');
+  const dumpPath = Path.resolve(__dirname, 'dumps/pull-basic');
   const instance = new DirectusInstance();
   const directus = instance.getDirectusClient();
   let sync: DirectusSync;
