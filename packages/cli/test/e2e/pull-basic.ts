@@ -36,7 +36,7 @@ import {
   getWebhook,
 } from './seed';
 
-describe('Empty instance configs', () => {
+describe('Pull from an instance with one item for each collection', () => {
   const dumpPath = Path.resolve(__dirname, 'dumps/basic');
   const instance = new DirectusInstance();
   const directus = instance.getDirectusClient();
