@@ -10,7 +10,7 @@ import Path from 'path';
 import { rmSync } from 'fs-extra';
 import { readAllSystemCollections } from './utils';
 
-describe('Empty instance configs', () => {
+describe('Pull, diff and push without data', () => {
   const dumpPath = Path.resolve(__dirname, 'dumps/empty');
   const instance = new DirectusInstance();
   const directus = instance.getDirectusClient();
