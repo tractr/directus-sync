@@ -11,7 +11,8 @@ import { rmSync } from 'fs-extra';
 import { readAllSystemCollections } from './utils';
 
 describe('Pull, diff and push without data', () => {
-  const dumpPath = Path.resolve(__dirname, 'dumps/empty');
+  const fileName = Path.basename(__filename, '.spec.ts');
+  const dumpPath = Path.resolve(__dirname, 'dumps', fileName);
   const instance = new DirectusInstance();
   const directus = instance.getDirectusClient();
   let sync: DirectusSync;

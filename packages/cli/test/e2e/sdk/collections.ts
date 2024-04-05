@@ -28,7 +28,7 @@ export function getDumpedSystemCollectionsContents(dumpPath: string) {
         [key]: existsSync(path) ? readJSONSync(path) : undefined,
       };
     },
-    {} as SystemCollectionsRecord<object[]>,
+    {} as SystemCollectionsRecord<{ _syncId: string }[]>,
   );
 }
 

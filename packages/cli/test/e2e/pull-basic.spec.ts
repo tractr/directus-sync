@@ -10,7 +10,8 @@ import { rmSync } from 'fs-extra';
 import { createOneItemInEachSystemCollection } from './utils';
 
 describe('Pull from an instance with one item for each collection', () => {
-  const dumpPath = Path.resolve(__dirname, 'dumps/pull-basic');
+  const fileName = Path.basename(__filename, '.spec.ts');
+  const dumpPath = Path.resolve(__dirname, 'dumps', fileName);
   const instance = new DirectusInstance();
   const directus = instance.getDirectusClient();
   const systemCollections = getSystemCollectionsNames();
@@ -112,7 +113,7 @@ describe('Pull from an instance with one item for each collection', () => {
         options: operation.options,
         resolve: operation.resolve,
         reject: operation.reject,
-        flow: operation.flow,
+        flow: (await directus.getByLocalId('flows', flow.id)).sync_id,
       },
     ]);
     expect(collections.panels).toEqual([

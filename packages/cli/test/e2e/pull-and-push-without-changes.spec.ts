@@ -10,10 +10,8 @@ import { rmSync } from 'fs-extra';
 import { createOneItemInEachSystemCollection } from './utils';
 
 describe('Pull, diff and push without changes', () => {
-  const dumpPath = Path.resolve(
-    __dirname,
-    'dumps/pull-and-push-without-changes.spec.ts',
-  );
+  const fileName = Path.basename(__filename, '.spec.ts');
+  const dumpPath = Path.resolve(__dirname, 'dumps', fileName);
   const instance = new DirectusInstance();
   const directus = instance.getDirectusClient();
   let sync: DirectusSync;
@@ -85,6 +83,7 @@ describe('Pull, diff and push without changes', () => {
     for (const collection of collections) {
       expect(output).toContain(`[${collection}] Deleted 0 dangling items`);
       expect(output).toContain(`[${collection}] Created 0 items`);
+      expect(output).toContain(`[${collection}] Updated 0 items`);
       if (collection !== 'settings') {
         expect(output).toContain(`[${collection}] Deleted 0 items`);
       }

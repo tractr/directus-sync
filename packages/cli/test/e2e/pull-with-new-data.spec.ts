@@ -13,7 +13,8 @@ import {
 } from './utils';
 
 describe('Pull 2 times from an instance', () => {
-  const dumpPath = Path.resolve(__dirname, 'dumps/pull-with-new-data');
+  const fileName = Path.basename(__filename, '.spec.ts');
+  const dumpPath = Path.resolve(__dirname, 'dumps', fileName);
   const instance = new DirectusInstance();
   const directus = instance.getDirectusClient();
   const systemCollections = getSystemCollectionsNames();
