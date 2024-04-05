@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc",
     "start": "ts-node src/index.ts",
-    "test": "jest",
+    "test": "rm -f .env && cp test.env .env && jest",
     "prepublishOnly": "cp ../../README.md ./README.md"
   },
   "keywords": [],

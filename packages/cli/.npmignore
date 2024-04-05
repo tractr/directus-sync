@@ -6,6 +6,7 @@ test/
 .env
 .gitignore
 example.env
+test.env
 jest.config.js
 tsconfig.json
 directus-sync.config.*
