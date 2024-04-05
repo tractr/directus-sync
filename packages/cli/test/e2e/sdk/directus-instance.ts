@@ -1,7 +1,7 @@
 import { getSetupTimeout } from './config';
 import { streamCommand } from './shell';
 import { sleep } from './async';
-import { EndLog, Log, PinoLog, RawLog } from './interfaces';
+import { EndLog, Log, RawLog } from './interfaces';
 import { DirectusClient } from './directus-client';
 import Path from 'path';
 import {
@@ -12,12 +12,13 @@ import {
   mergeMap,
   Observable,
   of,
-  shareReplay,
+  share,
   Subject,
   Subscription,
   throwError,
 } from 'rxjs';
 import { take, tap, timeout } from 'rxjs/operators';
+import { isPinoHTTPLog, isPinoLog } from './helpers';
 
 const DirectusWorkingDirectory = Path.resolve(
   __dirname,
@@ -79,7 +80,7 @@ export class DirectusInstance {
       this.$process.pipe(
         // Keep track of the last logs
         map((log) => {
-          lastLogs.push(log.msg);
+          lastLogs.push(this.formatLogMessage(log));
           if (lastLogs.length > lastLogsLength) {
             lastLogs.shift();
           }
@@ -88,7 +89,12 @@ export class DirectusInstance {
         // Check if the log is an error
         mergeMap((log) => {
           if (failureLogPredicate(log)) {
-            return throwError(() => new Error(`Log is an error: ${log.msg}`));
+            return throwError(
+              () =>
+                new Error(
+                  `Log triggered failure: ${this.formatLogMessage(log)}`,
+                ),
+            );
           }
           return of(log);
         }),
@@ -127,17 +133,17 @@ export class DirectusInstance {
   protected async waitForDirectusToBeReady(maxRetry = 3): Promise<void> {
     const log = await this.waitForLog(
       (log) => {
-        if (!(log as PinoLog).msg) {
+        if (!isPinoLog(log)) {
           return false;
         }
-        return (log as PinoLog).msg.includes('Server started at http:');
+        return log.msg.includes('Server started at http:');
       },
       () => false,
       this.setupTimeout,
     );
     if ((log as EndLog).type === 'end') {
       if (maxRetry <= 0) {
-        throw new Error(log.msg);
+        throw new Error(this.formatLogMessage(log));
       }
       await this.waitForDirectusToBeReady(maxRetry - 1);
     }
@@ -166,8 +172,18 @@ export class DirectusInstance {
           return { type: 'raw', msg: line } as RawLog;
         }
       }),
-      shareReplay(),
+      share(),
     );
+  }
+
+  /**
+   * Format the log message to be more readable
+   */
+  protected formatLogMessage(log: Log) {
+    if (isPinoHTTPLog(log)) {
+      return `${log.req.method} ${log.req.url} (Status: ${log.res.statusCode}, Message: ${log.msg})`;
+    }
+    return log.msg;
   }
 
   /**

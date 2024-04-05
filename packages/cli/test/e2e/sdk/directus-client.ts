@@ -8,6 +8,7 @@ import {
   readMe,
   rest,
   RestClient,
+  serverPing,
 } from '@directus/sdk';
 import * as getenv from 'getenv';
 import { SystemCollection } from './interfaces';
@@ -104,6 +105,10 @@ export class DirectusClient {
 
   async me() {
     return (await this.client.request(readMe())) as DirectusUser<Collections>;
+  }
+
+  async ping() {
+    return this.client.request(serverPing());
   }
 
   protected createClient() {
