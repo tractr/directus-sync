@@ -1,6 +1,6 @@
 import { DirectusInstance, expectDirectusError, getSetupTimeout } from './sdk';
 
-describe('Sample test', () => {
+describe('Test Directus client', () => {
   const instance = new DirectusInstance();
   const directus = instance.getDirectusClient();
 
