@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { getIcon } from './helpers';
+import { getIcon } from '../helpers';
 import { DirectusPreset } from '@directus/sdk';
 
 export function getPreset(

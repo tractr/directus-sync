@@ -1,6 +1,6 @@
 import path from 'path';
 import { SystemCollectionsNames, SystemCollectionsRecord } from './interfaces';
-import { existsSync } from 'fs-extra';
+import { existsSync, readJSONSync } from 'fs-extra';
 
 export function getSystemCollectionsPaths(
   dumpPath: string,
@@ -25,7 +25,7 @@ export function getDumpedSystemCollectionsContents(dumpPath: string) {
     (acc, [key, path]) => {
       return {
         ...acc,
-        [key]: existsSync(path) ? require(path) : undefined,
+        [key]: existsSync(path) ? readJSONSync(path) : undefined,
       };
     },
     {} as SystemCollectionsRecord<object[]>,

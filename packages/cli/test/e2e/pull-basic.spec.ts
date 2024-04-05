@@ -1,45 +1,19 @@
 import {
   DirectusInstance,
-  DirectusSettingsExtra,
   DirectusSync,
   getDumpedSystemCollectionsContents,
   getSetupTimeout,
+  getSystemCollectionsNames,
 } from './sdk';
 import Path from 'path';
 import { rmSync } from 'fs-extra';
-import {
-  createDashboard,
-  createFlow,
-  createFolder,
-  createOperation,
-  createPanel,
-  createPermission,
-  createPreset,
-  createRole,
-  createTranslation,
-  createWebhook,
-  DirectusSettings,
-  updateFlow,
-  updateSettings,
-} from '@directus/sdk';
-import {
-  getDashboard,
-  getFlow,
-  getFolder,
-  getOperation,
-  getPanel,
-  getPermission,
-  getPreset,
-  getRole,
-  getSettings,
-  getTranslation,
-  getWebhook,
-} from './seed';
+import { createOneItemInEachSystemCollection } from './seed';
 
 describe('Pull from an instance with one item for each collection', () => {
   const dumpPath = Path.resolve(__dirname, 'dumps/pull-basic');
   const instance = new DirectusInstance();
   const directus = instance.getDirectusClient();
+  const systemCollections = getSystemCollectionsNames();
   let sync: DirectusSync;
 
   beforeAll(async () => {
@@ -60,29 +34,19 @@ describe('Pull from an instance with one item for each collection', () => {
     // --------------------------------------------------------------------
     // Create content using Directus SDK
     const client = directus.get();
-    const dashboard = await client.request(createDashboard(getDashboard()));
-    const flow = await client.request(createFlow(getFlow()));
-    const folder = await client.request(createFolder(getFolder()));
-    const operation = await client.request(
-      createOperation(getOperation(flow.id)),
-    );
-    const panel = await client.request(createPanel(getPanel(dashboard.id)));
-    const role = await client.request(createRole(getRole()));
-    const permission = await client.request(
-      createPermission(getPermission(role.id, 'dashboards', 'update')),
-    );
-    const preset = await client.request(createPreset(getPreset()));
-    const settings = (await client.request(
-      updateSettings(getSettings()),
-    )) as never as DirectusSettings<object> & DirectusSettingsExtra;
-    const translation = await client.request(
-      createTranslation(getTranslation()),
-    );
-    const webhook = await client.request(createWebhook(getWebhook()));
-
-    // --------------------------------------------------------------------
-    // Update flow with operation
-    await client.request(updateFlow(flow.id, { operation: operation.id }));
+    const {
+      dashboard,
+      flow,
+      folder,
+      operation,
+      panel,
+      role,
+      permission,
+      preset,
+      settings,
+      translation,
+      webhook,
+    } = await createOneItemInEachSystemCollection(client);
 
     // --------------------------------------------------------------------
     // Pull the content from Directus
@@ -90,42 +54,16 @@ describe('Pull from an instance with one item for each collection', () => {
 
     // --------------------------------------------------------------------
     // Check if the logs reports new content
-    expect(output).toContain('[dashboards] Pulled 1 items');
-    expect(output).toContain('[dashboards] Post-processed 1 items');
-    expect(output).toContain('[flows] Pulled 1 items');
-    expect(output).toContain('[flows] Post-processed 1 items');
-    expect(output).toContain('[folders] Pulled 1 items');
-    expect(output).toContain('[folders] Post-processed 1 items');
-    expect(output).toContain('[operations] Pulled 1 items');
-    expect(output).toContain('[operations] Post-processed 1 items');
-    expect(output).toContain('[panels] Pulled 1 items');
-    expect(output).toContain('[panels] Post-processed 1 items');
-    expect(output).toContain('[roles] Pulled 1 items');
-    expect(output).toContain('[roles] Post-processed 1 items');
-    expect(output).toContain('[permissions] Pulled 1 items');
-    expect(output).toContain('[permissions] Post-processed 1 items');
-    expect(output).toContain('[presets] Pulled 1 items');
-    expect(output).toContain('[presets] Post-processed 1 items');
-    expect(output).toContain('[settings] Pulled 1 items');
-    expect(output).toContain('[settings] Post-processed 1 items');
-    expect(output).toContain('[translations] Pulled 1 items');
-    expect(output).toContain('[translations] Post-processed 1 items');
-    expect(output).toContain('[webhooks] Pulled 1 items');
-    expect(output).toContain('[webhooks] Post-processed 1 items');
+    for (const collection of systemCollections) {
+      expect(output).toContain(`[${collection}] Pulled 1 items`);
+      expect(output).toContain(`[${collection}] Post-processed 1 items`);
+    }
 
     // --------------------------------------------------------------------
     // Check created sync id
-    expect((await directus.getSyncIdMaps('dashboards')).length).toBe(1);
-    expect((await directus.getSyncIdMaps('flows')).length).toBe(1);
-    expect((await directus.getSyncIdMaps('folders')).length).toBe(1);
-    expect((await directus.getSyncIdMaps('operations')).length).toBe(1);
-    expect((await directus.getSyncIdMaps('panels')).length).toBe(1);
-    expect((await directus.getSyncIdMaps('roles')).length).toBe(1);
-    expect((await directus.getSyncIdMaps('permissions')).length).toBe(1);
-    expect((await directus.getSyncIdMaps('presets')).length).toBe(1);
-    expect((await directus.getSyncIdMaps('settings')).length).toBe(1);
-    expect((await directus.getSyncIdMaps('translations')).length).toBe(1);
-    expect((await directus.getSyncIdMaps('webhooks')).length).toBe(1);
+    for (const collection of systemCollections) {
+      expect((await directus.getSyncIdMaps(collection)).length).toBe(1);
+    }
 
     // --------------------------------------------------------------------
     // Check if the content was dumped correctly

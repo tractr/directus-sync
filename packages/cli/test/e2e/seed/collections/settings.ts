@@ -1,6 +1,6 @@
 import { DirectusSettings } from '@directus/sdk';
 import { faker } from '@faker-js/faker';
-import { DirectusSettingsExtra } from '../sdk';
+import { DirectusSettingsExtra } from '../../sdk';
 
 export function getSettings(): Omit<
   DirectusSettings<object>,
@@ -15,7 +15,7 @@ export function getSettings(): Omit<
   return {
     project_name: faker.lorem.word(),
     project_color: '#6644FF',
-    public_note: faker.lorem.sentence(5),
+    public_note: faker.lorem.sentence({ min: 3, max: 5 }),
     auth_login_attempts: faker.number.int({ min: 5, max: 50 }),
     auth_password_policy: '/^.{8,}$/',
     storage_asset_transform: 'none',

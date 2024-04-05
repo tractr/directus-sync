@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { getIcon } from './helpers';
+import { getIcon } from '../helpers';
 import { DirectusDashboard } from '@directus/sdk';
 
 export function getDashboard(): Omit<
@@ -9,7 +9,7 @@ export function getDashboard(): Omit<
   return {
     name: faker.lorem.words({ min: 1, max: 2 }),
     icon: getIcon(),
-    note: faker.lorem.sentence({ min: 3, max: 5 }),
+    note: faker.lorem.sentence({ min: 10, max: 20 }),
     color: faker.color.rgb({ casing: 'upper' }),
   };
 }

@@ -1,5 +1,5 @@
 import { DirectusPermission } from '@directus/sdk';
-import { SystemCollection } from '../sdk';
+import { SystemCollection } from '../../sdk';
 import { faker } from '@faker-js/faker';
 
 export function getPermission(

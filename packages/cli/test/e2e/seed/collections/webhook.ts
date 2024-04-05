@@ -1,6 +1,6 @@
 import { DirectusWebhook } from '@directus/sdk';
 import { faker } from '@faker-js/faker';
-import { getAction, getStatus } from './helpers';
+import { getAction, getStatus } from '../helpers';
 
 export function getWebhook(): Omit<DirectusWebhook<object>, 'id'> {
   return {

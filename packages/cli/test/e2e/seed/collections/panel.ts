@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { getIcon } from './helpers';
+import { getIcon } from '../helpers';
 import { DirectusPanel } from '@directus/sdk';
 
 export function getPanel(
@@ -27,7 +27,7 @@ export function getPanel(
           minimumFractionDigits: 1,
         }
       : {
-          text: faker.lorem.sentence({ min: 3, max: 5 }),
+          text: faker.lorem.sentence({ min: 10, max: 20 }),
           whiteSpace: 'pre-wrap',
           color: faker.color.rgb({ casing: 'upper' }),
           textAlign: 'left',
@@ -43,7 +43,7 @@ export function getPanel(
     icon: getIcon(),
     color: faker.color.rgb({ casing: 'upper' }),
     show_header: faker.datatype.boolean(),
-    note: faker.lorem.sentence({ min: 3, max: 5 }),
+    note: faker.lorem.sentence({ min: 10, max: 20 }),
     type: type,
     position_x: faker.number.int({ min: 1, max: 20 }),
     position_y: faker.number.int({ min: 1, max: 20 }),

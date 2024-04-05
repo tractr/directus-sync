@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { getIcon, getStatus } from './helpers';
+import { getIcon, getStatus } from '../helpers';
 import { DirectusFlow } from '@directus/sdk';
 
 export function getFlow(
@@ -18,7 +18,7 @@ export function getFlow(
     name: faker.lorem.words({ min: 1, max: 2 }),
     icon: getIcon(),
     color: faker.color.rgb({ casing: 'upper' }),
-    description: faker.lorem.sentence({ min: 3, max: 5 }),
+    description: faker.lorem.sentence({ min: 10, max: 20 }),
     status: getStatus(),
     trigger: trigger,
     accountability: faker.helpers.arrayElement([
