@@ -10,7 +10,6 @@ describe('waitUntilDebounced', () => {
     waitUntilDebounced(interval(10)).then(
       () => {
         value += 1;
-        done();
       },
       (e: string) => done.fail(e),
     );
@@ -18,6 +17,7 @@ describe('waitUntilDebounced', () => {
     sleep(5).then(
       () => {
         expect(value).toEqual(0);
+        done();
       },
       (e: string) => done.fail(e),
     );

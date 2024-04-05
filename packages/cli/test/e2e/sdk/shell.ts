@@ -46,7 +46,7 @@ export function streamCommand(
 
     // Kill the process if the subscription is closed
     return () => {
-      process.kill('SIGKILL');
+      process.exitCode === null && process.kill('SIGKILL');
     };
   });
 

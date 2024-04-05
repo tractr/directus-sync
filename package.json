@@ -17,7 +17,8 @@
     "test": "lerna run test",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,gql,mjs}\"",
     "lint": "eslint --fix .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "cd directus && npm install"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.0.3",

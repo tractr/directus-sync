@@ -4,7 +4,8 @@
   "description": "This is a Directus instance for e2e tests",
   "scripts": {
     "start": "directus start",
-    "bootstrap": "directus bootstrap"
+    "bootstrap": "directus bootstrap",
+    "postinstall": "./bootstrap.sh"
   },
   "dependencies": {
     "directus": "10.10.4",
