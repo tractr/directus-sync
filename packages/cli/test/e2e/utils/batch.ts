@@ -21,6 +21,17 @@ import {
   deleteWebhooks,
   DirectusClient,
   DirectusSettings,
+  readDashboards,
+  readFlows,
+  readFolders,
+  readOperations,
+  readPanels,
+  readPermissions,
+  readPresets,
+  readRoles,
+  readSettings,
+  readTranslations,
+  readWebhooks,
   RestClient,
   updateFlow,
   updateSettings,
@@ -37,9 +48,15 @@ import {
   getSettings,
   getTranslation,
   getWebhook,
-} from './collections';
-import { DirectusSettingsExtra, SystemCollectionsRecordPartial } from '../sdk';
-import { DirectusId } from '../../../src/lib';
+} from '../seed';
+import {
+  DirectusId,
+  DirectusSettingsExtra,
+  notAdministratorRoles,
+  notNullId,
+  notSystemPermissions,
+  SystemCollectionsRecordPartial,
+} from '../sdk';
 
 export async function createOneItemInEachSystemCollection(
   client: DirectusClient<object> & RestClient<object>,
@@ -115,4 +132,24 @@ export async function deleteItemsFromSystemCollections(
   if (ids.translations?.length) {
     await client.request(deleteTranslations(ids.translations as string[]));
   }
+}
+
+export async function readAllSystemCollections(
+  client: DirectusClient<object> & RestClient<object>,
+) {
+  return {
+    dashboards: await client.request(readDashboards()),
+    flows: await client.request(readFlows()),
+    folders: await client.request(readFolders()),
+    operations: await client.request(readOperations()),
+    panels: await client.request(readPanels()),
+    permissions: (await client.request(readPermissions())).filter(
+      notSystemPermissions,
+    ),
+    presets: await client.request(readPresets()),
+    roles: (await client.request(readRoles())).filter(notAdministratorRoles),
+    settings: [await client.request(readSettings())].filter(notNullId),
+    translations: await client.request(readTranslations()),
+    webhooks: await client.request(readWebhooks()),
+  };
 }

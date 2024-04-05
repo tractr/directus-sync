@@ -7,7 +7,7 @@ import {
 } from './sdk';
 import Path from 'path';
 import { rmSync } from 'fs-extra';
-import { createOneItemInEachSystemCollection } from './seed';
+import { createOneItemInEachSystemCollection } from './utils';
 
 describe('Pull from an instance with one item for each collection', () => {
   const dumpPath = Path.resolve(__dirname, 'dumps/pull-basic');

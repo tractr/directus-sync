@@ -1,5 +1,7 @@
 import { ValueOf } from 'ts-essentials';
 
+export type DirectusId = number | string;
+
 export type SystemCollectionsNames = [
   'dashboards',
   'flows',

@@ -4,27 +4,11 @@ import {
   getDumpedSystemCollectionsContents,
   getSetupTimeout,
   getSystemCollectionsNames,
-  notAdministratorRoles,
-  notNullId,
-  notSystemPermissions,
   SystemCollection,
-  SystemCollectionsRecord,
 } from './sdk';
 import Path from 'path';
 import { rmSync } from 'fs-extra';
-import {
-  readDashboards,
-  readFlows,
-  readFolders,
-  readOperations,
-  readPanels,
-  readPermissions,
-  readPresets,
-  readRoles,
-  readSettings,
-  readTranslations,
-  readWebhooks,
-} from '@directus/sdk';
+import { readAllSystemCollections } from './utils';
 
 describe('Empty instance configs', () => {
   const dumpPath = Path.resolve(__dirname, 'dumps/empty');
@@ -74,23 +58,7 @@ describe('Empty instance configs', () => {
   it('should not create any entries in Directus', async () => {
     await sync.pull();
     const client = directus.get();
-
-    const all: SystemCollectionsRecord<unknown[]> = {
-      dashboards: await client.request(readDashboards()),
-      flows: await client.request(readFlows()),
-      folders: await client.request(readFolders()),
-      operations: await client.request(readOperations()),
-      panels: await client.request(readPanels()),
-      permissions: (await client.request(readPermissions())).filter(
-        notSystemPermissions,
-      ),
-      presets: await client.request(readPresets()),
-      roles: (await client.request(readRoles())).filter(notAdministratorRoles),
-      settings: [await client.request(readSettings())].filter(notNullId),
-      translations: await client.request(readTranslations()),
-      webhooks: await client.request(readWebhooks()),
-    };
-
+    const all = await readAllSystemCollections(client);
     const keys = Object.keys(all) as SystemCollection[];
     keys.forEach((key) => {
       expect(all[key]).toEqual([]);
@@ -117,25 +85,8 @@ describe('Empty instance configs', () => {
   it('should not create any entries in Directus on push', async () => {
     await sync.pull();
     await sync.push();
-
     const client = directus.get();
-
-    const all: SystemCollectionsRecord<unknown[]> = {
-      dashboards: await client.request(readDashboards()),
-      flows: await client.request(readFlows()),
-      folders: await client.request(readFolders()),
-      operations: await client.request(readOperations()),
-      panels: await client.request(readPanels()),
-      permissions: (await client.request(readPermissions())).filter(
-        notSystemPermissions,
-      ),
-      presets: await client.request(readPresets()),
-      roles: (await client.request(readRoles())).filter(notAdministratorRoles),
-      settings: [await client.request(readSettings())].filter(notNullId),
-      translations: await client.request(readTranslations()),
-      webhooks: await client.request(readWebhooks()),
-    };
-
+    const all = await readAllSystemCollections(client);
     const keys = Object.keys(all) as SystemCollection[];
     keys.forEach((key) => {
       expect(all[key]).toEqual([]);

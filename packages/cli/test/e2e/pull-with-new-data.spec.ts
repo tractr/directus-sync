@@ -10,7 +10,7 @@ import { rmSync } from 'fs-extra';
 import {
   createOneItemInEachSystemCollection,
   deleteItemsFromSystemCollections,
-} from './seed';
+} from './utils';
 
 describe('Pull 2 times from an instance', () => {
   const dumpPath = Path.resolve(__dirname, 'dumps/pull-with-new-data');
