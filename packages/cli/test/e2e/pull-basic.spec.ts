@@ -1,4 +1,5 @@
 import {
+  debug,
   DirectusInstance,
   DirectusSync,
   getDumpedSystemCollectionsContents,
@@ -56,8 +57,10 @@ describe('Pull from an instance with one item for each collection', () => {
     // --------------------------------------------------------------------
     // Check if the logs reports new content
     for (const collection of systemCollections) {
-      expect(output).toContain(`[${collection}] Pulled 1 items`);
-      expect(output).toContain(`[${collection}] Post-processed 1 items`);
+      expect(output).toContainEqual(debug(`[${collection}] Pulled 1 items.`));
+      expect(output).toContainEqual(
+        debug(`[${collection}] Post-processed 1 items.`),
+      );
     }
 
     // --------------------------------------------------------------------

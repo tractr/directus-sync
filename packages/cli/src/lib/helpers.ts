@@ -6,10 +6,10 @@ import {
   statSync,
 } from 'fs-extra';
 import { z, ZodError, ZodSchema } from 'zod';
-import pino from 'pino';
+import pino, { LoggerOptions } from 'pino';
 import { Container } from 'typedi';
 import path from 'path';
-import { LOGGER } from './constants';
+import { LOGGER, LOGGER_TRANSPORT } from './constants';
 import { ConfigService } from './services';
 
 export function createDumpFolders() {
@@ -27,24 +27,6 @@ export function createDumpFolders() {
     logger.info('Create dump folder for snapshot');
     mkdirpSync(snapshotConfig.dumpPath);
   }
-}
-
-/**
- * Helper for logging error.
- */
-export function logErrorAndStop(error: string | Error, code = 1) {
-  const logger: pino.Logger = Container.get(LOGGER);
-  logger.error(error);
-  process.exit(code);
-}
-
-/**
- * Helper for logging success.
- */
-export function logEndAndClose() {
-  const logger: pino.Logger = Container.get(LOGGER);
-  logger.info(`✅  Done!`);
-  process.exit(0);
 }
 
 /**
@@ -103,4 +85,17 @@ export function zodParse<T extends ZodSchema>(
     const fullMessage = errorContext ? `${errorContext}: ${message}` : message;
     throw new Error(fullMessage);
   }
+}
+
+export function getPinoTransport(): LoggerOptions['transport'] {
+  // Allow to override the log output when running as a programmatic way (not CLI, i.e. tests)
+  if (Container.has(LOGGER_TRANSPORT)) {
+    return Container.get(LOGGER_TRANSPORT);
+  }
+  return {
+    target: 'pino-pretty',
+    options: {
+      colorize: true,
+    },
+  };
 }

@@ -4,6 +4,7 @@ import {
   getDumpedSystemCollectionsContents,
   getSetupTimeout,
   getSystemCollectionsNames,
+  info,
   SystemCollection,
 } from './sdk';
 import Path from 'path';
@@ -32,8 +33,7 @@ describe('Pull, diff and push without data', () => {
   });
 
   it('should pull even if nothing custom in Directus', async () => {
-    const output = await sync.pull();
-    expect(output).toContain('Done');
+    await sync.pull();
 
     const collections = getDumpedSystemCollectionsContents(dumpPath);
     const keys = Object.keys(collections) as SystemCollection[];
@@ -70,16 +70,26 @@ describe('Pull, diff and push without data', () => {
     await sync.pull();
     const output = await sync.diff();
 
-    expect(output).toContain('[snapshot] No changes to apply');
+    expect(output).toContainEqual(info('[snapshot] No changes to apply'));
 
     const collections = getSystemCollectionsNames();
 
     for (const collection of collections) {
-      expect(output).toContain(`[${collection}] Dangling id maps: 0 item(s)`);
-      expect(output).toContain(`[${collection}] To create: 0 item(s)`);
-      expect(output).toContain(`[${collection}] To update: 0 item(s)`);
-      expect(output).toContain(`[${collection}] To delete: 0 item(s)`);
-      expect(output).toContain(`[${collection}] Unchanged: 0 item(s)`);
+      expect(output).toContainEqual(
+        info(`[${collection}] Dangling id maps: 0 item(s)`),
+      );
+      expect(output).toContainEqual(
+        info(`[${collection}] To create: 0 item(s)`),
+      );
+      expect(output).toContainEqual(
+        info(`[${collection}] To update: 0 item(s)`),
+      );
+      expect(output).toContainEqual(
+        info(`[${collection}] To delete: 0 item(s)`),
+      );
+      expect(output).toContainEqual(
+        info(`[${collection}] Unchanged: 0 item(s)`),
+      );
     }
   });
 

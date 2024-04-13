@@ -3,6 +3,7 @@ import {
   DirectusSync,
   getSetupTimeout,
   getSystemCollectionsNames,
+  info,
 } from './sdk';
 import Path from 'path';
 import { rmSync } from 'fs-extra';
@@ -59,21 +60,41 @@ describe('Pull, flush everything and push', () => {
   it('should detect diff', async () => {
     const output = await sync.diff();
     const collections = getSystemCollectionsNames();
-    expect(output).toContain('[snapshot] No changes to apply');
+    expect(output).toContainEqual(info('[snapshot] No changes to apply'));
 
     for (const collection of collections) {
       if (collection === 'settings') {
-        expect(output).toContain(`[${collection}] Dangling id maps: 0 item(s)`);
-        expect(output).toContain(`[${collection}] To create: 0 item(s)`);
-        expect(output).toContain(`[${collection}] To update: 0 item(s)`);
-        expect(output).toContain(`[${collection}] To delete: 0 item(s)`);
-        expect(output).toContain(`[${collection}] Unchanged: 1 item(s)`);
+        expect(output).toContainEqual(
+          info(`[${collection}] Dangling id maps: 0 item(s)`),
+        );
+        expect(output).toContainEqual(
+          info(`[${collection}] To create: 0 item(s)`),
+        );
+        expect(output).toContainEqual(
+          info(`[${collection}] To update: 0 item(s)`),
+        );
+        expect(output).toContainEqual(
+          info(`[${collection}] To delete: 0 item(s)`),
+        );
+        expect(output).toContainEqual(
+          info(`[${collection}] Unchanged: 1 item(s)`),
+        );
       } else {
-        expect(output).toContain(`[${collection}] Dangling id maps: 1 item(s)`);
-        expect(output).toContain(`[${collection}] To create: 1 item(s)`);
-        expect(output).toContain(`[${collection}] To update: 0 item(s)`);
-        expect(output).toContain(`[${collection}] To delete: 0 item(s)`);
-        expect(output).toContain(`[${collection}] Unchanged: 0 item(s)`);
+        expect(output).toContainEqual(
+          info(`[${collection}] Dangling id maps: 1 item(s)`),
+        );
+        expect(output).toContainEqual(
+          info(`[${collection}] To create: 1 item(s)`),
+        );
+        expect(output).toContainEqual(
+          info(`[${collection}] To update: 0 item(s)`),
+        );
+        expect(output).toContainEqual(
+          info(`[${collection}] To delete: 0 item(s)`),
+        );
+        expect(output).toContainEqual(
+          info(`[${collection}] Unchanged: 0 item(s)`),
+        );
       }
     }
   });
@@ -83,18 +104,22 @@ describe('Pull, flush everything and push', () => {
     const client = directus.get();
     const output = await sync.push();
     const collections = getSystemCollectionsNames();
-    expect(output).toContain('[snapshot] No changes to apply');
+    expect(output).toContainEqual(info('[snapshot] No changes to apply'));
 
     for (const collection of collections) {
       if (collection === 'settings') {
-        expect(output).toContain(`[${collection}] Deleted 0 dangling items`);
-        expect(output).toContain(`[${collection}] Created 0 items`);
-        expect(output).toContain(`[${collection}] Updated 0 items`);
+        expect(output).toContainEqual(
+          info(`[${collection}] Deleted 0 dangling items`),
+        );
+        expect(output).toContainEqual(info(`[${collection}] Created 0 items`));
+        expect(output).toContainEqual(info(`[${collection}] Updated 0 items`));
       } else {
-        expect(output).toContain(`[${collection}] Deleted 1 dangling items`);
-        expect(output).toContain(`[${collection}] Created 1 items`);
-        expect(output).toContain(`[${collection}] Updated 0 items`);
-        expect(output).toContain(`[${collection}] Deleted 0 items`);
+        expect(output).toContainEqual(
+          info(`[${collection}] Deleted 1 dangling items`),
+        );
+        expect(output).toContainEqual(info(`[${collection}] Created 1 items`));
+        expect(output).toContainEqual(info(`[${collection}] Updated 0 items`));
+        expect(output).toContainEqual(info(`[${collection}] Deleted 0 items`));
       }
     }
 

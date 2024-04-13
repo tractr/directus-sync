@@ -3,6 +3,7 @@ import {
   DirectusSync,
   getSetupTimeout,
   getSystemCollectionsNames,
+  info,
   isPinoHTTPLog,
 } from './sdk';
 import Path from 'path';
@@ -39,16 +40,26 @@ describe('Pull, diff and push without changes', () => {
   it('no diff if no changes', async () => {
     const output = await sync.diff();
 
-    expect(output).toContain('[snapshot] No changes to apply');
+    expect(output).toContainEqual(info('[snapshot] No changes to apply'));
 
     const collections = getSystemCollectionsNames();
 
     for (const collection of collections) {
-      expect(output).toContain(`[${collection}] Dangling id maps: 0 item(s)`);
-      expect(output).toContain(`[${collection}] To create: 0 item(s)`);
-      expect(output).toContain(`[${collection}] To update: 0 item(s)`);
-      expect(output).toContain(`[${collection}] To delete: 0 item(s)`);
-      expect(output).toContain(`[${collection}] Unchanged: 1 item(s)`);
+      expect(output).toContainEqual(
+        info(`[${collection}] Dangling id maps: 0 item(s)`),
+      );
+      expect(output).toContainEqual(
+        info(`[${collection}] To create: 0 item(s)`),
+      );
+      expect(output).toContainEqual(
+        info(`[${collection}] To update: 0 item(s)`),
+      );
+      expect(output).toContainEqual(
+        info(`[${collection}] To delete: 0 item(s)`),
+      );
+      expect(output).toContainEqual(
+        info(`[${collection}] Unchanged: 1 item(s)`),
+      );
     }
   });
 
@@ -79,13 +90,15 @@ describe('Pull, diff and push without changes', () => {
     // Analyze the output
     const output = await pushPromise;
     const collections = getSystemCollectionsNames();
-    expect(output).toContain('[snapshot] No changes to apply');
+    expect(output).toContainEqual(info('[snapshot] No changes to apply'));
     for (const collection of collections) {
-      expect(output).toContain(`[${collection}] Deleted 0 dangling items`);
-      expect(output).toContain(`[${collection}] Created 0 items`);
-      expect(output).toContain(`[${collection}] Updated 0 items`);
+      expect(output).toContainEqual(
+        info(`[${collection}] Deleted 0 dangling items`),
+      );
+      expect(output).toContainEqual(info(`[${collection}] Created 0 items`));
+      expect(output).toContainEqual(info(`[${collection}] Updated 0 items`));
       if (collection !== 'settings') {
-        expect(output).toContain(`[${collection}] Deleted 0 items`);
+        expect(output).toContainEqual(info(`[${collection}] Deleted 0 items`));
       }
     }
   });

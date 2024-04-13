@@ -27,3 +27,31 @@ export function isPinoHTTPLog(log: Log): log is PinoHTTPLog {
 export function isPinoLog(log: Log): log is PinoLog {
   return !!(log as PinoLog).msg;
 }
+
+export function debug(message: string) {
+  return {
+    level: 20,
+    msg: message,
+  };
+}
+
+export function info(message: string) {
+  return {
+    level: 30,
+    msg: message,
+  };
+}
+
+export function warn(message: string) {
+  return {
+    level: 40,
+    msg: message,
+  };
+}
+
+export function error(message: string) {
+  return {
+    level: 50,
+    msg: message,
+  };
+}
