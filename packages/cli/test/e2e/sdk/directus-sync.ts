@@ -65,7 +65,7 @@ export class DirectusSync {
     // Clean the container
     Container.reset();
 
-    // Remove the log file
+    // Remove the log file (disable next line for debugging)
     // rmSync(logFilePath, { force: true });
 
     // Allow running another command
