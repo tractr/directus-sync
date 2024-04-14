@@ -20,5 +20,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm install
       - run: npm run lint
-      - run: npm run test
+      # Build before testing. Tests needs the api package to be built
       - run: npm run build
+      - run: npm run test
