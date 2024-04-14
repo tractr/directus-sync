@@ -26,14 +26,19 @@ const DirectusWorkingDirectory = Path.resolve(
 );
 
 export class DirectusInstance {
-  protected readonly index = process.pid % 20000;
+  protected static indexShift = 0;
+  protected readonly index: number;
+  protected readonly directusClient: DirectusClient;
   protected readonly setupTimeout = Math.max(getSetupTimeout() - 1000, 1000);
-  protected readonly directusClient = new DirectusClient(
-    this.getDirectusPort(),
-  );
   protected processSubscription: Subscription | undefined;
   protected $process: Observable<Log> | undefined;
   protected processKiller = new Subject<NodeJS.Signals>();
+
+  constructor() {
+    this.index = (process.pid % 20000) + DirectusInstance.indexShift; // Avoid port collision
+    DirectusInstance.indexShift += 1;
+    this.directusClient = new DirectusClient(this.getDirectusPort());
+  }
 
   getDirectusClient() {
     return this.directusClient;
