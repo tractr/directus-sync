@@ -4,4 +4,6 @@ module.exports = {
   testEnvironment: 'node',
   setupFiles: ['<rootDir>/jest.setup.ts'],
   testTimeout: 60000,
+  maxWorkers: 1,
+  maxConcurrency: 1,
 };
