@@ -18,7 +18,7 @@
     "type": "git",
     "url": "https://github.com/tractr/directus-sync.git"
   },
-  "license": "MIT",
+  "license": "GPL-3.0",
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
     "@types/http-errors": "^2.0.4",

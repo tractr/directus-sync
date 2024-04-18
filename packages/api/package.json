@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/tractr/directus-sync.git"
   },
-  "license": "MIT",
+  "license": "GPL-3.0",
   "keywords": [
     "directus",
     "directus-extension",
