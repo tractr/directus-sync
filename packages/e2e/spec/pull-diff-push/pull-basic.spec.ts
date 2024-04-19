@@ -1,5 +1,6 @@
 import {
-  debug, DirectusClient,
+  debug,
+  DirectusClient,
   DirectusInstance,
   DirectusSync,
   getDumpedSystemCollectionsContents,
