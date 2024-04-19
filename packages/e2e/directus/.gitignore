@@ -1,0 +1,7 @@
+db/*
+uploads/*
+extensions/displays/*
+extensions/interfaces/*
+extensions/layouts/*
+extensions/modules/*
+!.gitkeep

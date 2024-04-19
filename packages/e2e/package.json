@@ -1,0 +1,34 @@
+{
+  "name": "e2e",
+  "version": "1.0.0",
+  "description": "Runs end-to-end tests on a Directus instance",
+  "main": "index.js",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "bootstrap": "directus bootstrap",
+    "test": "jasmine",
+    "build-test": "npm run build && npm run test"
+  },
+  "keywords": [],
+  "author": "Edouard Demotes-Mainard <edouard@tractr.net>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tractr/directus-sync.git"
+  },
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "@types/fs-extra": "^11.0.4",
+    "@types/jasmine": "^5.1.4",
+    "directus": "10.10.4",
+    "directus-sync": "file:../cli",
+    "dotenv": "^16.4.5",
+    "fs-extra": "^11.2.0",
+    "jasmine": "^5.1.0",
+    "rxjs": "^7.8.1",
+    "typedi": "^0.10.0",
+    "typescript": "5.4.2"
+  }
+}
