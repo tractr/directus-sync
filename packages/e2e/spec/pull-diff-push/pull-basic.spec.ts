@@ -10,8 +10,7 @@ import Path from 'path';
 import fs from 'fs-extra';
 
 describe('Pull from an instance with one item for each collection', () => {
-  const fileName = 'pull-basic';
-  const dumpPath = Path.resolve('dumps', fileName);
+  const dumpPath = Path.resolve('dumps', 'pull-basic');
   const instance = new DirectusInstance();
   const directus = instance.getDirectusClient();
   const systemCollections = getSystemCollectionsNames();
@@ -26,7 +25,7 @@ describe('Pull from an instance with one item for each collection', () => {
       url: directus.getUrl(),
       dumpPath: dumpPath,
     });
-  }, 10000);
+  });
   afterAll(() => {
     instance.stop();
   });
