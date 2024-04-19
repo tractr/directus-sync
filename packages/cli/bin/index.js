@@ -1,2 +1,3 @@
 #! /usr/bin/env node
-require('../dist');
+const { run } = require('../dist');
+void run();

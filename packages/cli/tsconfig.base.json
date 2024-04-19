@@ -6,6 +6,7 @@
     "strict": true,
     "module": "commonjs",
     "sourceMap": true,
+    "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noFallthroughCasesInSwitch": true,
