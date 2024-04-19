@@ -65,34 +65,18 @@ describe('Pull, flush everything and push', () => {
         expect(output).toContain(
           info(`[${collection}] Dangling id maps: 0 item(s)`),
         );
-        expect(output).toContain(
-          info(`[${collection}] To create: 0 item(s)`),
-        );
-        expect(output).toContain(
-          info(`[${collection}] To update: 0 item(s)`),
-        );
-        expect(output).toContain(
-          info(`[${collection}] To delete: 0 item(s)`),
-        );
-        expect(output).toContain(
-          info(`[${collection}] Unchanged: 1 item(s)`),
-        );
+        expect(output).toContain(info(`[${collection}] To create: 0 item(s)`));
+        expect(output).toContain(info(`[${collection}] To update: 0 item(s)`));
+        expect(output).toContain(info(`[${collection}] To delete: 0 item(s)`));
+        expect(output).toContain(info(`[${collection}] Unchanged: 1 item(s)`));
       } else {
         expect(output).toContain(
           info(`[${collection}] Dangling id maps: 1 item(s)`),
         );
-        expect(output).toContain(
-          info(`[${collection}] To create: 1 item(s)`),
-        );
-        expect(output).toContain(
-          info(`[${collection}] To update: 0 item(s)`),
-        );
-        expect(output).toContain(
-          info(`[${collection}] To delete: 0 item(s)`),
-        );
-        expect(output).toContain(
-          info(`[${collection}] Unchanged: 0 item(s)`),
-        );
+        expect(output).toContain(info(`[${collection}] To create: 1 item(s)`));
+        expect(output).toContain(info(`[${collection}] To update: 0 item(s)`));
+        expect(output).toContain(info(`[${collection}] To delete: 0 item(s)`));
+        expect(output).toContain(info(`[${collection}] Unchanged: 0 item(s)`));
       }
     }
   });
