@@ -1,4 +1,5 @@
 import {
+  DirectusClient,
   DirectusInstance,
   DirectusSync,
   getSystemCollectionsNames,
@@ -14,8 +15,8 @@ import {
 
 describe('Pull, flush everything and push', () => {
   const dumpPath = Path.resolve('dumps', 'pull-flush-and-push');
-  const instance = new DirectusInstance();
-  const directus = instance.getDirectusClient();
+  let instance: DirectusInstance;
+  let directus: DirectusClient;
   let sync: DirectusSync;
   let originalData: Awaited<
     ReturnType<typeof createOneItemInEachSystemCollection>
@@ -23,6 +24,8 @@ describe('Pull, flush everything and push', () => {
 
   beforeAll(async () => {
     fs.rmSync(dumpPath, { recursive: true, force: true });
+    instance = new DirectusInstance();
+    directus = instance.getDirectusClient();
     await instance.start();
     await directus.loginAsAdmin();
     sync = new DirectusSync({

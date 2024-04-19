@@ -1,5 +1,5 @@
 import {
-  debug,
+  debug, DirectusClient,
   DirectusInstance,
   DirectusSync,
   getDumpedSystemCollectionsContents,
@@ -11,13 +11,14 @@ import fs from 'fs-extra';
 
 describe('Pull from an instance with one item for each collection', () => {
   const dumpPath = Path.resolve('dumps', 'pull-basic');
-  const instance = new DirectusInstance();
-  const directus = instance.getDirectusClient();
-  const systemCollections = getSystemCollectionsNames();
+  let instance: DirectusInstance;
+  let directus: DirectusClient;
   let sync: DirectusSync;
 
   beforeAll(async () => {
     fs.rmSync(dumpPath, { recursive: true, force: true });
+    instance = new DirectusInstance();
+    directus = instance.getDirectusClient();
     await instance.start();
     await directus.loginAsAdmin();
     sync = new DirectusSync({
@@ -31,6 +32,8 @@ describe('Pull from an instance with one item for each collection', () => {
   });
 
   it('should pull items from Directus', async () => {
+    const systemCollections = getSystemCollectionsNames();
+
     // --------------------------------------------------------------------
     // Create content using Directus SDK
     const client = directus.get();

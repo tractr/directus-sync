@@ -1,4 +1,5 @@
 import {
+  DirectusClient,
   DirectusInstance,
   DirectusSync,
   getDumpedSystemCollectionsContents,
@@ -12,12 +13,14 @@ import { readAllSystemCollections } from '../helpers/utils/index.js';
 
 describe('Pull, diff and push without data', () => {
   const dumpPath = Path.resolve('dumps', 'pull-and-push-without-data');
-  const instance = new DirectusInstance();
-  const directus = instance.getDirectusClient();
+  let instance: DirectusInstance;
+  let directus: DirectusClient;
   let sync: DirectusSync;
 
   beforeAll(async () => {
     fs.rmSync(dumpPath, { recursive: true, force: true });
+    instance = new DirectusInstance();
+    directus = instance.getDirectusClient();
     await instance.start();
     await directus.loginAsAdmin();
     sync = new DirectusSync({

@@ -12,11 +12,20 @@ export interface ServerOptions {
   logLevel?: string; // Default to 'fatal'
 }
 
+let serverIsRunning = false;
+
 export async function startServer({
   hostname = '0.0.0.0',
   port,
   logLevel = 'fatal',
 }: ServerOptions): Promise<Subject<void>> {
+  // Ensure no more than one server is running
+  if (serverIsRunning) {
+    throw new Error('A server is already running');
+  }
+
+  serverIsRunning = true;
+
   // Create a subject to terminate the server
   const killer = new Subject<void>();
 
@@ -42,13 +51,16 @@ export async function startServer({
       process.send?.('ready');
     })
     .once('error', (err: Error & { code: string }) => {
+      serverIsRunning = false;
       if (err?.code === 'EADDRINUSE') {
         console.error(`Port ${port} is already in use`);
       }
       throw err;
     })
     .once('close', () => {
+      serverIsRunning = false;
       process.env = { ...originalEnvs };
+      // fs.rmSync(dbFilePath, { force: true });
       killer.complete();
     });
 

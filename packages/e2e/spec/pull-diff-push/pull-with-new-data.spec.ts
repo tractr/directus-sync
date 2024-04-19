@@ -1,5 +1,5 @@
 import {
-  debug,
+  debug, DirectusClient,
   DirectusInstance,
   DirectusSync,
   getDumpedSystemCollectionsContents,
@@ -14,13 +14,14 @@ import {
 
 describe('Pull 2 times from an instance', () => {
   const dumpPath = Path.resolve('dumps', 'pull-with-new-data');
-  const instance = new DirectusInstance();
-  const directus = instance.getDirectusClient();
-  const systemCollections = getSystemCollectionsNames();
+  let instance: DirectusInstance;
+  let directus: DirectusClient;
   let sync: DirectusSync;
 
   beforeAll(async () => {
     fs.rmSync(dumpPath, { recursive: true, force: true });
+    instance = new DirectusInstance();
+    directus = instance.getDirectusClient();
     await instance.start();
     await directus.loginAsAdmin();
     sync = new DirectusSync({
@@ -34,6 +35,8 @@ describe('Pull 2 times from an instance', () => {
   });
 
   it('should override previous pulled data', async () => {
+    const systemCollections = getSystemCollectionsNames();
+
     // --------------------------------------------------------------------
     // Create content using Directus SDK
     const client = directus.get();
