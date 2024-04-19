@@ -126,7 +126,7 @@ export class DirectusClient {
   }
 
   getUrl() {
-    return this.url
+    return this.url;
   }
 
   async getSyncIdMaps(table: SystemCollection) {

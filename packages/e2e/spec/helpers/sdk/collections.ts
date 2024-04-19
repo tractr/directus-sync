@@ -1,5 +1,8 @@
 import path from 'path';
-import { SystemCollectionsNames, SystemCollectionsRecord } from './interfaces/index.js';
+import {
+  SystemCollectionsNames,
+  SystemCollectionsRecord,
+} from './interfaces/index.js';
 import fs from 'fs-extra';
 
 export function getSystemCollectionsPaths(
@@ -28,7 +31,9 @@ export function getDumpedSystemCollectionsContents(dumpPath: string) {
         [key]: fs.existsSync(path) ? fs.readJSONSync(path) : undefined,
       };
     },
-    {} as SystemCollectionsRecord<{ _syncId: string, [key: string]: unknown }[]>,
+    {} as SystemCollectionsRecord<
+      { _syncId: string; [key: string]: unknown }[]
+    >,
   );
 }
 

@@ -44,7 +44,9 @@ export class DirectusSync {
 
     // Run the command
     const program = createProgram();
-    await program.parseAsync([...this.getOptionsArgs(), ...args], { from: 'user' });
+    await program.parseAsync([...this.getOptionsArgs(), ...args], {
+      from: 'user',
+    });
 
     // Wait for the command to finish and loggers to flush
     await sleep(500);

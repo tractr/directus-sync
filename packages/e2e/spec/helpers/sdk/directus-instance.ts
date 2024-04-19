@@ -11,7 +11,6 @@ export class DirectusInstance {
   protected readonly serverLogLevel = 'fatal'; // 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace'
 
   constructor() {
-
     // Find a port that is not in use
     // Avoid port collision if multiple instances are running in the same process
     this.index = (process.pid % 23000) + DirectusInstance.indexShift;
@@ -40,7 +39,6 @@ export class DirectusInstance {
     delete this.serverKiller;
   }
 
-
   protected getDirectusPort() {
     return 8060 + this.index;
   }
@@ -50,7 +48,7 @@ export class DirectusInstance {
     const startTime = Date.now();
     while (timePassed < timeout) {
       try {
-        const ping=  await this.directusClient.ping();
+        const ping = await this.directusClient.ping();
         if (ping === 'pong') {
           return;
         }
