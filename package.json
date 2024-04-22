@@ -14,6 +14,7 @@
     "lerna": "lerna",
     "clean": "lerna clean",
     "build": "lerna run build",
+    "bootstrap": "lerna run bootstrap",
     "test": "lerna run test",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,gql,mjs}\"",
     "lint": "eslint --fix .",
@@ -30,5 +31,11 @@
     "lerna": "^8.1.2",
     "prettier": "^3.2.5",
     "typescript": "^5.4.2"
+  },
+  "optionalDependencies": {
+    "@nx/nx-darwin-arm64": "18.0.4",
+    "@nx/nx-darwin-x64": "18.0.4",
+    "@nx/nx-linux-x64-gnu": "18.0.4",
+    "@nx/nx-win32-x64-msvc": "18.0.4"
   }
 }

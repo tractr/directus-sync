@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 
 # Define the database path
-dbPath="./directus/db/base.db"
+dbOutputPath="./directus/db/base.db"
 
-# Copy the database file from the template
-rm -f $dbPath
+# Load the .env file
+export $(cat .env | xargs)
 
-# Load the .env file and override the db path
-source ./.env
-export DB_FILENAME="$dbPath"
+# remove existing database
+rm -f $DB_FILENAME
+rm -f $dbOutputPath
 
 # Start the install
-npm run bootstrap
+npm run directus bootstrap
+
+# Copy the database to the output path
+cp $DB_FILENAME $dbOutputPath
