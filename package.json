@@ -31,9 +31,5 @@
     "lerna": "^8.1.2",
     "prettier": "^3.2.5",
     "typescript": "^5.4.2"
-  },
-  "optionalDependencies": {
-    "@nx/nx-linux-x64-gnu": "18.0.4",
-    "@napi-rs/snappy-linux-x64-gnu": "7.2.2"
   }
 }
