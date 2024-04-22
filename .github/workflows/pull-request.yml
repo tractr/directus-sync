@@ -22,4 +22,5 @@ jobs:
       - run: npm run lint
       # Build before testing. Tests needs the api package to be built
       - run: npm run build
+      - run: npm run bootstrap
       - run: npm run test
