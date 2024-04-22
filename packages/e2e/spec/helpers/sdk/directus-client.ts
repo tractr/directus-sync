@@ -9,6 +9,7 @@ import {
   rest,
   RestClient,
   serverPing,
+  readActivities
 } from '@directus/sdk';
 import { SystemCollection } from './interfaces/index.js';
 import getenv from 'getenv';
@@ -115,18 +116,14 @@ export class DirectusClient {
   }
 
   protected createClient() {
-    return createDirectus<Collections>(this.getUrl())
+    return createDirectus<Collections>(this.url)
       .with(rest())
       .with(authentication());
   }
 
-  getUrl() {
-    return this.url;
-  }
-
   async getSyncIdMaps(table: SystemCollection) {
     const response = await fetch(
-      `${this.getUrl()}/directus-extension-sync/table/${table}`,
+      `${this.url}/directus-extension-sync/table/${table}`,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -144,7 +141,7 @@ export class DirectusClient {
 
   async getByLocalId(table: SystemCollection, localId: string | number) {
     const response = await fetch(
-      `${this.getUrl()}/directus-extension-sync/table/${table}/local_id/${localId}`,
+      `${this.url}/directus-extension-sync/table/${table}/local_id/${localId}`,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -158,5 +155,18 @@ export class DirectusClient {
     }
     const data: IdMap = await response.json();
     return data;
+  }
+
+  async getActivities(from: Date | number = Date.now(), limit= -1) {
+    const fromDate = new Date(from);
+    return this.client.request(readActivities({
+      sort: 'timestamp',
+      limit,
+      filter: {
+        timestamp: {
+          _gte: fromDate.toISOString(),
+        }
+      }
+    }));
   }
 }

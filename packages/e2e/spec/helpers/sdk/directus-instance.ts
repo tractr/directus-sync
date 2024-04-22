@@ -9,15 +9,17 @@ export class DirectusInstance {
   protected serverKiller: Subject<void> | undefined;
 
   constructor() {
-    const port = getenv.int('PORT');
-    const hostname = getenv.string('HOST');
-    const url = `http://${hostname}:${port}`;
-
-    this.directusClient = new DirectusClient(url);
+    this.directusClient = new DirectusClient(this.getUrl());
   }
 
   getDirectusClient() {
     return this.directusClient;
+  }
+
+  getUrl() {
+    const port = getenv.int('PORT');
+    const hostname = getenv.string('HOST');
+    return `http://${hostname}:${port}`;
   }
 
   async start() {

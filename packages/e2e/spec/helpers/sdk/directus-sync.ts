@@ -44,6 +44,7 @@ export class DirectusSync {
     // Create a new log file for each command
     const logFilePath = this.getLogFilePath(args[0]);
     fs.rmSync(logFilePath, { force: true });
+    fs.ensureFileSync(logFilePath);
     Container.set(LOGGER_TRANSPORT, this.getLogTransport(logFilePath));
 
     // Run the command

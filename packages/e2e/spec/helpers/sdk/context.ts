@@ -50,9 +50,10 @@ export class Context {
       fs.rmSync(dumpPath, { recursive: true, force: true });
     }
     const directus = this.getDirectus();
+    const instance = this.getInstance();
     return new DirectusSync({
       token: await directus.requireToken(),
-      url: directus.getUrl(),
+      url: instance.getUrl(),
       dumpPath,
     });
   }
