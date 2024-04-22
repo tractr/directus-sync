@@ -2,13 +2,11 @@ import {
   Context,
   getSystemCollectionsNames,
   info,
-  createOneItemInEachSystemCollection
+  createOneItemInEachSystemCollection,
 } from '../helpers/index.js';
 
 export const pullAndPushWithoutChanges = (context: Context) => {
-
   it('no diff if no changes', async () => {
-
     // Init sync client
     const sync = await context.getSync('pull-and-push-without-changes');
     const directus = context.getDirectus();
@@ -70,4 +68,4 @@ export const pullAndPushWithoutChanges = (context: Context) => {
       }
     }
   });
-}
+};

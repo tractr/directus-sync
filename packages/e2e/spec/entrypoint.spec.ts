@@ -13,7 +13,6 @@ import {
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
 describe('Pull and check if ids are preserved for some collections', () => {
-
   // ---------------------------------------------------
   // Global setup
   const context = new Context();
@@ -38,5 +37,4 @@ describe('Pull and check if ids are preserved for some collections', () => {
   pullBasic(context);
   pushFlushAndPush(context);
   pullWithNewData(context);
-
 });

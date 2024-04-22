@@ -3,11 +3,11 @@ import {
   getDumpedSystemCollectionsContents,
   getSystemCollectionsNames,
   createOneItemInEachSystemCollection,
-  deleteItemsFromSystemCollections, Context,
+  deleteItemsFromSystemCollections,
+  Context,
 } from '../helpers/index.js';
 
 export const pullWithNewData = (context: Context) => {
-
   it('should override previous pulled data', async () => {
     // Init sync client
     const sync = await context.getSync('pull-with-new-data');
@@ -23,7 +23,9 @@ export const pullWithNewData = (context: Context) => {
     // --------------------------------------------------------------------
     // Pull the content from Directus and save results
     await sync.pull();
-    const firstCollections = getDumpedSystemCollectionsContents(sync.getDumpPath());
+    const firstCollections = getDumpedSystemCollectionsContents(
+      sync.getDumpPath(),
+    );
 
     // --------------------------------------------------------------------
     // Delete the content
@@ -68,7 +70,9 @@ export const pullWithNewData = (context: Context) => {
 
     // --------------------------------------------------------------------
     // Check if the content was dumped correctly
-    const secondCollections = getDumpedSystemCollectionsContents(sync.getDumpPath());
+    const secondCollections = getDumpedSystemCollectionsContents(
+      sync.getDumpPath(),
+    );
 
     expect(firstCollections.dashboards).not.toEqual(
       secondCollections.dashboards,

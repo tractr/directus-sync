@@ -10,8 +10,7 @@ import {
 } from '../helpers/index.js';
 
 export const pushFlushAndPush = (context: Context) => {
-
-  const initialize = async(sync: DirectusSync, directus: DirectusClient) => {
+  const initialize = async (sync: DirectusSync, directus: DirectusClient) => {
     const client = directus.get();
     const originalData = await createOneItemInEachSystemCollection(client);
     await sync.pull();
@@ -28,11 +27,10 @@ export const pushFlushAndPush = (context: Context) => {
       translations: [originalData.translation.id],
       webhooks: [originalData.webhook.id],
     });
-    return originalData
-  }
+    return originalData;
+  };
 
   it('should detect diff', async () => {
-
     // Init sync client
     const sync = await context.getSync('pull-flush-and-push');
     const directus = context.getDirectus();
@@ -64,7 +62,6 @@ export const pushFlushAndPush = (context: Context) => {
   });
 
   it('should recreate entries in Directus, same as original, and remove dangling ids', async () => {
-
     // Init sync client
     const sync = await context.getSync('pull-flush-and-push');
     const directus = context.getDirectus();

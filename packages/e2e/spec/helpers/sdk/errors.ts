@@ -42,6 +42,6 @@ export function wrapDirectusError<T>(error: T, context: string): T | Error {
   if (isHttpError(error)) {
     return new Error(`Error in ${context}: ${error.errors[0].message}`);
   } else {
-    return error
+    return error;
   }
 }

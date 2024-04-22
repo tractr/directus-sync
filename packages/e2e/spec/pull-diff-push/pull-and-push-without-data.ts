@@ -4,11 +4,10 @@ import {
   getSystemCollectionsNames,
   info,
   SystemCollection,
-  readAllSystemCollections
+  readAllSystemCollections,
 } from '../helpers/index.js';
 
 export const pullAndPushWithoutData = (context: Context) => {
-
   it('should pull even if nothing custom in Directus', async () => {
     // Init sync client
     const sync = await context.getSync('pull-and-push-without-data');

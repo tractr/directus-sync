@@ -55,4 +55,3 @@ export function error(message: string) {
     msg: message,
   };
 }
-

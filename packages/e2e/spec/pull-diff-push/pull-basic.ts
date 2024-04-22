@@ -3,13 +3,11 @@ import {
   debug,
   getDumpedSystemCollectionsContents,
   getSystemCollectionsNames,
-  createOneItemInEachSystemCollection
+  createOneItemInEachSystemCollection,
 } from '../helpers/index.js';
 
 export const pullBasic = (context: Context) => {
-
   it('should pull items from Directus', async () => {
-
     // Init sync client
     const sync = await context.getSync('pull-basic');
     const directus = context.getDirectus();

@@ -1,11 +1,10 @@
 import {
   Context,
   getDumpedSystemCollectionsContents,
-  createOneItemInEachSystemCollection
+  createOneItemInEachSystemCollection,
 } from '../helpers/index.js';
 
 export const preserveIds = (context: Context) => {
-
   it('should preserve some uuid from Directus', async () => {
     // Init sync client
     const sync = await context.getSync('preserve-ids');
@@ -53,4 +52,4 @@ export const preserveIds = (context: Context) => {
       getSyncId(collections.webhooks),
     );
   });
-}
+};

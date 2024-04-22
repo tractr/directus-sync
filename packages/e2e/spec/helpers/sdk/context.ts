@@ -10,7 +10,7 @@ const dumpBaseDirectory = Path.resolve('dumps');
 export class Context {
   protected readonly sqlite: SqliteClient = new SqliteClient();
   protected readonly instance: DirectusInstance = new DirectusInstance();
-  protected readonly directus =  this.instance.getDirectusClient();
+  protected readonly directus = this.instance.getDirectusClient();
 
   async setup() {
     await this.sqlite.reset();

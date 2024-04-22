@@ -9,7 +9,6 @@ const testDbPath = path.resolve(directusBaseFolder, 'db', 'test.db');
 type Row<T = never> = Record<string, unknown> & T;
 
 export class SqliteClient {
-
   protected readonly baseDb: sqlite3.Database;
   protected readonly testDb: sqlite3.Database;
 
@@ -36,7 +35,6 @@ export class SqliteClient {
     await truncateTables(this.testDb, testTables);
     await copyTables(this.baseDb, this.testDb, baseTables);
   }
-
 }
 
 /*
@@ -53,7 +51,7 @@ function getTables(db: sqlite3.Database) {
         } else {
           resolve(rows.map((row) => row.name));
         }
-      }
+      },
     );
   });
 }
@@ -76,14 +74,21 @@ function truncateTable(db: sqlite3.Database, table: string) {
   });
 }
 
-
-async function copyTables(source: sqlite3.Database, destination: sqlite3.Database, tables: string[]) {
+async function copyTables(
+  source: sqlite3.Database,
+  destination: sqlite3.Database,
+  tables: string[],
+) {
   for (const table of tables) {
     await copyTable(source, destination, table);
   }
 }
 
-async function copyTable(source: sqlite3.Database, destination: sqlite3.Database, table: string) {
+async function copyTable(
+  source: sqlite3.Database,
+  destination: sqlite3.Database,
+  table: string,
+) {
   const rows = await getRows(source, table);
   for (const row of rows) {
     await insertRow(destination, table, row);
@@ -92,34 +97,29 @@ async function copyTable(source: sqlite3.Database, destination: sqlite3.Database
 
 function getRows(db: sqlite3.Database, table: string) {
   return new Promise<Row[]>((resolve, reject) => {
-   db.all(
-      `SELECT * FROM ${table}`,
-      (error, rows: Row[]) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(rows);
-        }
+    db.all(`SELECT * FROM ${table}`, (error, rows: Row[]) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(rows);
       }
-    );
+    });
   });
 }
 
 function insertRow(db: sqlite3.Database, table: string, row: Row) {
   const columns = Object.keys(row).join(', ');
   const values = Object.values(row)
-    .map((value) => `${safeValue(value)}`).join(', ');
+    .map((value) => `${safeValue(value)}`)
+    .join(', ');
   return new Promise<void>((resolve, reject) => {
-    db.run(
-      `INSERT INTO ${table} (${columns}) VALUES (${values})`,
-      (error) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
+    db.run(`INSERT INTO ${table} (${columns}) VALUES (${values})`, (error) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
       }
-    );
+    });
   });
 }
 

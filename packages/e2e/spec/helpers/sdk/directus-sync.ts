@@ -103,6 +103,4 @@ export class DirectusSync {
     const fileName = command ? `${command}-${id}` : id;
     return Path.resolve(logDirectory, `${fileName}.log`);
   }
-
-
 }
