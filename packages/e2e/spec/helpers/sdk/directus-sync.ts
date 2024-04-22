@@ -7,7 +7,7 @@ import Path from 'path';
 import fs from 'fs-extra';
 import { sleep } from './async/index.js';
 
-const TempLogDirectory = Path.resolve('logs');
+const logDirectory = Path.resolve('logs');
 
 export class DirectusSync {
   /**
@@ -17,6 +17,10 @@ export class DirectusSync {
   protected running = false;
 
   constructor(protected readonly options: DirectusSyncArgs) {}
+
+  getDumpPath() {
+    return this.options.dumpPath;
+  }
 
   pull() {
     return this.runCliCommand('pull', '--dump-path', this.options.dumpPath);
@@ -97,6 +101,8 @@ export class DirectusSync {
   protected getLogFilePath(command?: string) {
     const id = uuidV4();
     const fileName = command ? `${command}-${id}` : id;
-    return Path.resolve(TempLogDirectory, `${fileName}.log`);
+    return Path.resolve(logDirectory, `${fileName}.log`);
   }
+
+
 }

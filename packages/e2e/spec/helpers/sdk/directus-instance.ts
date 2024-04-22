@@ -1,25 +1,19 @@
 import { sleep } from './async/index.js';
 import { DirectusClient } from './directus-client.js';
 import { Subject } from 'rxjs';
-import { startServer, getAdminCredentials } from './directus-server.js';
+import { startServer } from './directus-server.js';
+import getenv from 'getenv';
 
 export class DirectusInstance {
-  protected static indexShift = 0;
-  protected readonly index: number;
   protected readonly directusClient: DirectusClient;
   protected serverKiller: Subject<void> | undefined;
-  protected readonly serverLogLevel = 'fatal'; // 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace'
 
   constructor() {
-    // Find a port that is not in use
-    // Avoid port collision if multiple instances are running in the same process
-    this.index = (process.pid % 23000) + DirectusInstance.indexShift;
-    DirectusInstance.indexShift += 1;
+    const port = getenv.int('PORT');
+    const hostname = getenv.string('HOST');
+    const url = `http://${hostname}:${port}`;
 
-    const url = `http://127.0.0.1:${this.getDirectusPort()}`;
-    const { email, password } = getAdminCredentials();
     this.directusClient = new DirectusClient(url);
-    this.directusClient.setAdminCredentials(email, password);
   }
 
   getDirectusClient() {
@@ -27,20 +21,13 @@ export class DirectusInstance {
   }
 
   async start() {
-    this.serverKiller = await startServer({
-      port: this.getDirectusPort(),
-      logLevel: this.serverLogLevel,
-    });
+    this.serverKiller = await startServer();
     await this.waitForDirectusToBeReady();
   }
 
   stop() {
     this.serverKiller?.next();
     delete this.serverKiller;
-  }
-
-  protected getDirectusPort() {
-    return 8060 + this.index;
   }
 
   protected async waitForDirectusToBeReady(timeout = 30000): Promise<void> {

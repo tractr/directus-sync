@@ -1,42 +1,21 @@
 import {
-  DirectusClient,
-  DirectusInstance,
-  DirectusSync,
+  Context,
   getDumpedSystemCollectionsContents,
   getSystemCollectionsNames,
   info,
   SystemCollection,
-} from '../helpers/sdk/index.js';
-import Path from 'path';
-import fs from 'fs-extra';
-import { readAllSystemCollections } from '../helpers/utils/index.js';
+  readAllSystemCollections
+} from '../helpers/index.js';
 
-describe('Pull, diff and push without data', () => {
-  const dumpPath = Path.resolve('dumps', 'pull-and-push-without-data');
-  let instance: DirectusInstance;
-  let directus: DirectusClient;
-  let sync: DirectusSync;
-
-  beforeAll(async () => {
-    fs.rmSync(dumpPath, { recursive: true, force: true });
-    instance = new DirectusInstance();
-    directus = instance.getDirectusClient();
-    await instance.start();
-    await directus.loginAsAdmin();
-    sync = new DirectusSync({
-      token: await directus.requireToken(),
-      url: directus.getUrl(),
-      dumpPath: dumpPath,
-    });
-  });
-  afterAll(() => {
-    instance.stop();
-  });
+export const pullAndPushWithoutData = (context: Context) => {
 
   it('should pull even if nothing custom in Directus', async () => {
+    // Init sync client
+    const sync = await context.getSync('pull-and-push-without-data');
+
     await sync.pull();
 
-    const collections = getDumpedSystemCollectionsContents(dumpPath);
+    const collections = getDumpedSystemCollectionsContents(sync.getDumpPath());
     const keys = Object.keys(collections) as SystemCollection[];
     expect(keys).toEqual([
       'dashboards',
@@ -58,6 +37,10 @@ describe('Pull, diff and push without data', () => {
   });
 
   it('should not create any entries in Directus', async () => {
+    // Init sync client
+    const sync = await context.getSync('pull-and-push-without-data');
+    const directus = context.getDirectus();
+
     await sync.pull();
     const client = directus.get();
     const all = await readAllSystemCollections(client);
@@ -68,6 +51,9 @@ describe('Pull, diff and push without data', () => {
   });
 
   it('should not see any diff if nothing is created', async () => {
+    // Init sync client
+    const sync = await context.getSync('pull-and-push-without-data');
+
     await sync.pull();
     const output = await sync.diff();
 
@@ -87,6 +73,10 @@ describe('Pull, diff and push without data', () => {
   });
 
   it('should not create any entries in Directus on push', async () => {
+    // Init sync client
+    const sync = await context.getSync('pull-and-push-without-data');
+    const directus = context.getDirectus();
+
     await sync.pull();
     await sync.push();
     const client = directus.get();
@@ -96,4 +86,4 @@ describe('Pull, diff and push without data', () => {
       expect(all[key]).toEqual([]);
     });
   });
-});
+};

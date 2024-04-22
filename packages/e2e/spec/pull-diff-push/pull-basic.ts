@@ -1,38 +1,19 @@
 import {
+  Context,
   debug,
-  DirectusClient,
-  DirectusInstance,
-  DirectusSync,
   getDumpedSystemCollectionsContents,
   getSystemCollectionsNames,
-} from '../helpers/sdk/index.js';
-import { createOneItemInEachSystemCollection } from '../helpers/utils/index.js';
-import Path from 'path';
-import fs from 'fs-extra';
+  createOneItemInEachSystemCollection
+} from '../helpers/index.js';
 
-describe('Pull from an instance with one item for each collection', () => {
-  const dumpPath = Path.resolve('dumps', 'pull-basic');
-  let instance: DirectusInstance;
-  let directus: DirectusClient;
-  let sync: DirectusSync;
-
-  beforeAll(async () => {
-    fs.rmSync(dumpPath, { recursive: true, force: true });
-    instance = new DirectusInstance();
-    directus = instance.getDirectusClient();
-    await instance.start();
-    await directus.loginAsAdmin();
-    sync = new DirectusSync({
-      token: await directus.requireToken(),
-      url: directus.getUrl(),
-      dumpPath: dumpPath,
-    });
-  });
-  afterAll(() => {
-    instance.stop();
-  });
+export const pullBasic = (context: Context) => {
 
   it('should pull items from Directus', async () => {
+
+    // Init sync client
+    const sync = await context.getSync('pull-basic');
+    const directus = context.getDirectus();
+
     const systemCollections = getSystemCollectionsNames();
 
     // --------------------------------------------------------------------
@@ -73,7 +54,7 @@ describe('Pull from an instance with one item for each collection', () => {
 
     // --------------------------------------------------------------------
     // Check if the content was dumped correctly
-    const collections = getDumpedSystemCollectionsContents(dumpPath);
+    const collections = getDumpedSystemCollectionsContents(sync.getDumpPath());
     expect(collections.dashboards).toEqual([
       {
         _syncId: (await directus.getByLocalId('dashboards', dashboard.id))
@@ -232,4 +213,4 @@ describe('Pull from an instance with one item for each collection', () => {
       },
     ]);
   });
-});
+};

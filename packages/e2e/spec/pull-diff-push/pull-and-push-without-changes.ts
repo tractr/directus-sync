@@ -1,48 +1,25 @@
 import {
-  DirectusClient,
-  DirectusInstance,
-  DirectusSync,
+  Context,
   getSystemCollectionsNames,
   info,
-} from '../helpers/sdk/index.js';
-import Path from 'path';
-import fs from 'fs-extra';
-import { createOneItemInEachSystemCollection } from '../helpers/utils/index.js';
+  createOneItemInEachSystemCollection
+} from '../helpers/index.js';
 
-describe('Pull, diff and push without changes', () => {
-  const dumpPath = Path.resolve('dumps', 'pull-and-push-without-changes');
-  let instance: DirectusInstance;
-  let directus: DirectusClient;
-  let sync: DirectusSync;
+export const pullAndPushWithoutChanges = (context: Context) => {
 
-  beforeAll(async () => {
-    fs.rmSync(dumpPath, { recursive: true, force: true });
-    instance = new DirectusInstance();
-    directus = instance.getDirectusClient();
-    await instance.start();
-    await directus.loginAsAdmin();
-    sync = new DirectusSync({
-      token: await directus.requireToken(),
-      url: directus.getUrl(),
-      dumpPath: dumpPath,
-    });
+  it('no diff if no changes', async () => {
 
-    // -----------------------------------
+    // Init sync client
+    const sync = await context.getSync('pull-and-push-without-changes');
+    const directus = context.getDirectus();
+
     // Populate the instance with some data and pull them
     await createOneItemInEachSystemCollection(directus.get());
     await sync.pull();
-    // -----------------------------------
-  });
-  afterAll(() => {
-    instance.stop();
-  });
-
-  it('no diff if no changes', async () => {
-    const output = await sync.diff();
-
-    expect(output).toContain(info('[snapshot] No changes to apply'));
-
     const collections = getSystemCollectionsNames();
+
+    const output = await sync.diff();
+    expect(output).toContain(info('[snapshot] No changes to apply'));
 
     for (const collection of collections) {
       expect(output).toContain(
@@ -56,11 +33,12 @@ describe('Pull, diff and push without changes', () => {
   });
 
   it('should not create or update any entries in Directus', async () => {
+    // Init sync client
+    const sync = await context.getSync('pull-and-push-without-changes', false);
+
     // Push the data back to Directus and trigger a ping in order to detect the end of the push
-    const pushPromise = sync.push().then(async (output) => {
-      await directus.ping();
-      return output;
-    });
+    const collections = getSystemCollectionsNames();
+    const output = await sync.push();
 
     // Throw an error if a mutation is done during the push
     // await instance.waitForLog(
@@ -80,8 +58,6 @@ describe('Pull, diff and push without changes', () => {
     // );
 
     // Analyze the output
-    const output = await pushPromise;
-    const collections = getSystemCollectionsNames();
     expect(output).toContain(info('[snapshot] No changes to apply'));
     for (const collection of collections) {
       expect(output).toContain(
@@ -94,4 +70,4 @@ describe('Pull, diff and push without changes', () => {
       }
     }
   });
-});
+}

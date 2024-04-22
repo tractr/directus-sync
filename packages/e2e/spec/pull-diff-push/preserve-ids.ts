@@ -1,39 +1,19 @@
 import {
-  DirectusClient,
-  DirectusInstance,
-  DirectusSync,
+  Context,
   getDumpedSystemCollectionsContents,
-} from '../helpers/sdk/index.js';
-import Path from 'path';
-import fs from 'fs-extra';
-import { createOneItemInEachSystemCollection } from '../helpers/utils/index.js';
+  createOneItemInEachSystemCollection
+} from '../helpers/index.js';
 
-describe('Pull and check if ids are preserved for some collections', () => {
-  const dumpPath = Path.resolve('dumps', 'preserve-ids');
-  let instance: DirectusInstance;
-  let directus: DirectusClient;
-  let sync: DirectusSync;
-
-  beforeAll(async () => {
-    fs.rmSync(dumpPath, { recursive: true, force: true });
-    instance = new DirectusInstance();
-    directus = instance.getDirectusClient();
-    await instance.start();
-    await directus.loginAsAdmin();
-    sync = new DirectusSync({
-      token: await directus.requireToken(),
-      url: directus.getUrl(),
-      dumpPath: dumpPath,
-    });
-  });
-  afterAll(() => {
-    instance.stop();
-  });
+export const preserveIds = (context: Context) => {
 
   it('should preserve some uuid from Directus', async () => {
+    // Init sync client
+    const sync = await context.getSync('preserve-ids');
+    const dumpPath = sync.getDumpPath();
+
     // --------------------------------------------------------------------
     // Create content using Directus SDK
-    const client = directus.get();
+    const client = context.getDirectus().get();
     const original = await createOneItemInEachSystemCollection(client);
 
     // --------------------------------------------------------------------
@@ -73,4 +53,4 @@ describe('Pull and check if ids are preserved for some collections', () => {
       getSyncId(collections.webhooks),
     );
   });
-});
+}

@@ -1,41 +1,18 @@
 import {
   debug,
-  DirectusClient,
-  DirectusInstance,
-  DirectusSync,
   getDumpedSystemCollectionsContents,
   getSystemCollectionsNames,
-} from '../helpers/sdk/index.js';
-import Path from 'path';
-import fs from 'fs-extra';
-import {
   createOneItemInEachSystemCollection,
-  deleteItemsFromSystemCollections,
-} from '../helpers/utils/index.js';
+  deleteItemsFromSystemCollections, Context,
+} from '../helpers/index.js';
 
-describe('Pull 2 times from an instance', () => {
-  const dumpPath = Path.resolve('dumps', 'pull-with-new-data');
-  let instance: DirectusInstance;
-  let directus: DirectusClient;
-  let sync: DirectusSync;
-
-  beforeAll(async () => {
-    fs.rmSync(dumpPath, { recursive: true, force: true });
-    instance = new DirectusInstance();
-    directus = instance.getDirectusClient();
-    await instance.start();
-    await directus.loginAsAdmin();
-    sync = new DirectusSync({
-      token: await directus.requireToken(),
-      url: directus.getUrl(),
-      dumpPath: dumpPath,
-    });
-  });
-  afterAll(() => {
-    instance.stop();
-  });
+export const pullWithNewData = (context: Context) => {
 
   it('should override previous pulled data', async () => {
+    // Init sync client
+    const sync = await context.getSync('pull-with-new-data');
+    const directus = context.getDirectus();
+
     const systemCollections = getSystemCollectionsNames();
 
     // --------------------------------------------------------------------
@@ -46,7 +23,7 @@ describe('Pull 2 times from an instance', () => {
     // --------------------------------------------------------------------
     // Pull the content from Directus and save results
     await sync.pull();
-    const firstCollections = getDumpedSystemCollectionsContents(dumpPath);
+    const firstCollections = getDumpedSystemCollectionsContents(sync.getDumpPath());
 
     // --------------------------------------------------------------------
     // Delete the content
@@ -91,7 +68,7 @@ describe('Pull 2 times from an instance', () => {
 
     // --------------------------------------------------------------------
     // Check if the content was dumped correctly
-    const secondCollections = getDumpedSystemCollectionsContents(dumpPath);
+    const secondCollections = getDumpedSystemCollectionsContents(sync.getDumpPath());
 
     expect(firstCollections.dashboards).not.toEqual(
       secondCollections.dashboards,
@@ -113,4 +90,4 @@ describe('Pull 2 times from an instance', () => {
     );
     expect(firstCollections.webhooks).not.toEqual(secondCollections.webhooks);
   });
-});
+};

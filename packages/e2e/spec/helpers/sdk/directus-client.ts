@@ -11,6 +11,7 @@ import {
   serverPing,
 } from '@directus/sdk';
 import { SystemCollection } from './interfaces/index.js';
+import getenv from 'getenv';
 
 type Collections = object;
 
@@ -38,12 +39,9 @@ export class DirectusClient {
     },
   };
 
-  protected adminEmail: string | undefined;
-  protected adminPassword: string | undefined;
-
   protected isLogged = false;
 
-  protected readonly client: BaseDirectusClient<Collections> &
+  protected client: BaseDirectusClient<Collections> &
     RestClient<Collections> &
     AuthenticationClient<Collections>;
 
@@ -51,25 +49,22 @@ export class DirectusClient {
     this.client = this.createClient();
   }
 
+  reset() {
+    this.client = this.createClient();
+  }
+
   get() {
     return this.client;
   }
-
-  setAdminCredentials(email: string, password: string) {
-    this.adminEmail = email;
-    this.adminPassword = password;
-  }
-
   async loginAsAdmin() {
-    if (!this.adminEmail || !this.adminPassword) {
-      throw new Error('Admin credentials are not set');
-    }
-    const token = await this.client.login(this.adminEmail, this.adminPassword);
+    const token = await this.client.login(
+      getenv.string('ADMIN_EMAIL'),
+      getenv.string('ADMIN_PASSWORD'),
+    );
     this.client.setToken(token.access_token);
     this.isLogged = true;
     return token;
   }
-
   async loginAsUser(email: string, password: string) {
     const token = await this.client.login(email, password);
     this.client.setToken(token.access_token);

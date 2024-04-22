@@ -37,3 +37,11 @@ export function isHttpError(error: unknown): error is DirectusHttpError {
     (error as DirectusHttpError).errors[0].message
   );
 }
+
+export function wrapDirectusError<T>(error: T, context: string): T | Error {
+  if (isHttpError(error)) {
+    return new Error(`Error in ${context}: ${error.errors[0].message}`);
+  } else {
+    return error
+  }
+}

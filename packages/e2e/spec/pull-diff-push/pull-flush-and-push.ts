@@ -1,43 +1,19 @@
 import {
+  Context,
   DirectusClient,
-  DirectusInstance,
   DirectusSync,
   getSystemCollectionsNames,
   info,
-} from '../helpers/sdk/index.js';
-import Path from 'path';
-import fs from 'fs-extra';
-import {
   createOneItemInEachSystemCollection,
   deleteItemsFromSystemCollections,
   readAllSystemCollections,
-} from '../helpers/utils/index.js';
+} from '../helpers/index.js';
 
-describe('Pull, flush everything and push', () => {
-  const dumpPath = Path.resolve('dumps', 'pull-flush-and-push');
-  let instance: DirectusInstance;
-  let directus: DirectusClient;
-  let sync: DirectusSync;
-  let originalData: Awaited<
-    ReturnType<typeof createOneItemInEachSystemCollection>
-  >;
+export const pushFlushAndPush = (context: Context) => {
 
-  beforeAll(async () => {
-    fs.rmSync(dumpPath, { recursive: true, force: true });
-    instance = new DirectusInstance();
-    directus = instance.getDirectusClient();
-    await instance.start();
-    await directus.loginAsAdmin();
-    sync = new DirectusSync({
-      token: await directus.requireToken(),
-      url: directus.getUrl(),
-      dumpPath: dumpPath,
-    });
-
-    // -----------------------------------
-    // Populate the instance with some data and pull then delete it
+  const initialize = async(sync: DirectusSync, directus: DirectusClient) => {
     const client = directus.get();
-    originalData = await createOneItemInEachSystemCollection(client);
+    const originalData = await createOneItemInEachSystemCollection(client);
     await sync.pull();
     // Delete the content
     await deleteItemsFromSystemCollections(client, {
@@ -52,13 +28,16 @@ describe('Pull, flush everything and push', () => {
       translations: [originalData.translation.id],
       webhooks: [originalData.webhook.id],
     });
-    // -----------------------------------
-  });
-  afterAll(() => {
-    instance.stop();
-  });
+    return originalData
+  }
 
   it('should detect diff', async () => {
+
+    // Init sync client
+    const sync = await context.getSync('pull-flush-and-push');
+    const directus = context.getDirectus();
+    await initialize(sync, directus);
+
     const output = await sync.diff();
     const collections = getSystemCollectionsNames();
     expect(output).toContain(info('[snapshot] No changes to apply'));
@@ -85,6 +64,12 @@ describe('Pull, flush everything and push', () => {
   });
 
   it('should recreate entries in Directus, same as original, and remove dangling ids', async () => {
+
+    // Init sync client
+    const sync = await context.getSync('pull-flush-and-push');
+    const directus = context.getDirectus();
+    const originalData = await initialize(sync, directus);
+
     // Push the data back to Directus and analyze the output
     const client = directus.get();
     const output = await sync.push();
@@ -292,4 +277,4 @@ describe('Pull, flush everything and push', () => {
       }),
     );
   });
-});
+};
