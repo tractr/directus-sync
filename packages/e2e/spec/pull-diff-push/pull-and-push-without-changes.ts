@@ -23,10 +23,18 @@ export const pullAndPushWithoutChanges = (context: Context) => {
       expect(diffOutput).toContain(
         info(`[${collection}] Dangling id maps: 0 item(s)`),
       );
-      expect(diffOutput).toContain(info(`[${collection}] To create: 0 item(s)`));
-      expect(diffOutput).toContain(info(`[${collection}] To update: 0 item(s)`));
-      expect(diffOutput).toContain(info(`[${collection}] To delete: 0 item(s)`));
-      expect(diffOutput).toContain(info(`[${collection}] Unchanged: 1 item(s)`));
+      expect(diffOutput).toContain(
+        info(`[${collection}] To create: 0 item(s)`),
+      );
+      expect(diffOutput).toContain(
+        info(`[${collection}] To update: 0 item(s)`),
+      );
+      expect(diffOutput).toContain(
+        info(`[${collection}] To delete: 0 item(s)`),
+      );
+      expect(diffOutput).toContain(
+        info(`[${collection}] Unchanged: 1 item(s)`),
+      );
     }
 
     // Push the data back to Directus and trigger a ping in order to detect the end of the push
@@ -34,9 +42,9 @@ export const pullAndPushWithoutChanges = (context: Context) => {
     const pushOutput = await sync.push();
 
     const activities = await directus.getActivities(beforePushDate);
-    expect(activities.filter(a => a.action === 'create')).toEqual([]);
-    expect(activities.filter(a => a.action === 'update')).toEqual([]);
-    expect(activities.filter(a => a.action === 'delete')).toEqual([]);
+    expect(activities.filter((a) => a.action === 'create')).toEqual([]);
+    expect(activities.filter((a) => a.action === 'update')).toEqual([]);
+    expect(activities.filter((a) => a.action === 'delete')).toEqual([]);
 
     // Analyze the output
     expect(pushOutput).toContain(info('[snapshot] No changes to apply'));

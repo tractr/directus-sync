@@ -9,7 +9,7 @@ import {
   rest,
   RestClient,
   serverPing,
-  readActivities
+  readActivities,
 } from '@directus/sdk';
 import { SystemCollection } from './interfaces/index.js';
 import getenv from 'getenv';
@@ -157,16 +157,18 @@ export class DirectusClient {
     return data;
   }
 
-  async getActivities(from: Date | number = Date.now(), limit= -1) {
+  async getActivities(from: Date | number = Date.now(), limit = -1) {
     const fromDate = new Date(from);
-    return this.client.request(readActivities({
-      sort: 'timestamp',
-      limit,
-      filter: {
-        timestamp: {
-          _gte: fromDate.toISOString(),
-        }
-      }
-    }));
+    return this.client.request(
+      readActivities({
+        sort: 'timestamp',
+        limit,
+        filter: {
+          timestamp: {
+            _gte: fromDate.toISOString(),
+          },
+        },
+      }),
+    );
   }
 }
