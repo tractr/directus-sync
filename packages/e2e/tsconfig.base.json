@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es6",
     "lib": ["ES2019", "DOM"],
+    "types": ["jasmine", "node"],
     "moduleResolution": "node",
     "strict": true,
     "module": "esnext",
