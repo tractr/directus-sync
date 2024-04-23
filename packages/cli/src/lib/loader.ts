@@ -12,10 +12,10 @@ import {
   TranslationsCollection,
   WebhooksCollection,
 } from './services';
-import { createDumpFolders } from './helpers';
+import { createDumpFolders, getPinoTransport } from './helpers';
 import { Container } from 'typedi';
 import Logger from 'pino';
-import { LOGGER } from './constants'; // eslint-disable-next-line @typescript-eslint/require-await
+import { LOGGER } from './constants';
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function initContext(
@@ -26,12 +26,7 @@ export async function initContext(
   Container.set(
     LOGGER,
     Logger({
-      transport: {
-        target: 'pino-pretty',
-        options: {
-          colorize: true,
-        },
-      },
+      transport: getPinoTransport(),
       level: 'error',
     }),
   );
@@ -43,12 +38,7 @@ export async function initContext(
   Container.set(
     LOGGER,
     Logger({
-      transport: {
-        target: 'pino-pretty',
-        options: {
-          colorize: true,
-        },
-      },
+      transport: getPinoTransport(),
       level: config.getLoggerConfig().level,
     }),
   );

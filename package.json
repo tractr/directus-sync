@@ -14,6 +14,7 @@
     "lerna": "lerna",
     "clean": "lerna clean",
     "build": "lerna run build",
+    "bootstrap": "lerna run bootstrap",
     "test": "lerna run test",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,gql,mjs}\"",
     "lint": "eslint --fix .",

@@ -1,0 +1,12 @@
+[
+  {
+    "name": "capto",
+    "icon": "alarm_off",
+    "description": "Agnosco decipio tandem utor maxime calco sol enim vinculum vulgus tolero demo cogo.",
+    "ip_access": ["131.68.30.42", "171.192.196.63"],
+    "enforce_tfa": false,
+    "admin_access": false,
+    "app_access": false,
+    "_syncId": "52183adc-3e8e-4746-abd2-ee8dfc58efd5"
+  }
+]
