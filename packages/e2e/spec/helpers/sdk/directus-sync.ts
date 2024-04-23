@@ -62,7 +62,12 @@ export class DirectusSync {
       .split('\n')
       .map((line) => {
         try {
-          return JSON.parse(line);
+          // Remove all characters before the first '{'
+          const start = line.indexOf('{');
+          if (start === -1) {
+            return null;
+          }
+          return JSON.parse(line.slice(start));
         } catch {
           return null;
         }
@@ -95,7 +100,7 @@ export class DirectusSync {
   protected getLogTransport(logFilePath: string): LoggerOptions['transport'] {
     return {
       target: 'pino/file',
-      options: { destination: logFilePath, mkdir: true, append: false },
+      options: { destination: logFilePath, mkdir: true, append: true },
     };
   }
 
