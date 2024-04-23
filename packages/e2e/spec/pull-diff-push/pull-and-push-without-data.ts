@@ -10,7 +10,7 @@ import {
 export const pullAndPushWithoutData = (context: Context) => {
   it('should pull even if nothing custom in Directus', async () => {
     // Init sync client
-    const sync = await context.getSync('pull-and-push-without-data');
+    const sync = await context.getSync('temp/pull-and-push-without-data');
 
     await sync.pull();
 
@@ -37,7 +37,7 @@ export const pullAndPushWithoutData = (context: Context) => {
 
   it('should not create any entries in Directus', async () => {
     // Init sync client
-    const sync = await context.getSync('pull-and-push-without-data');
+    const sync = await context.getSync('temp/pull-and-push-without-data');
     const directus = context.getDirectus();
 
     await sync.pull();
@@ -51,7 +51,7 @@ export const pullAndPushWithoutData = (context: Context) => {
 
   it('should not see any diff if nothing is created', async () => {
     // Init sync client
-    const sync = await context.getSync('pull-and-push-without-data');
+    const sync = await context.getSync('temp/pull-and-push-without-data');
 
     await sync.pull();
     const output = await sync.diff();
@@ -73,7 +73,7 @@ export const pullAndPushWithoutData = (context: Context) => {
 
   it('should not create any entries in Directus on push', async () => {
     // Init sync client
-    const sync = await context.getSync('pull-and-push-without-data');
+    const sync = await context.getSync('temp/pull-and-push-without-data');
     const directus = context.getDirectus();
 
     await sync.pull();

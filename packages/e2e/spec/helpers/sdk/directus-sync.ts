@@ -54,7 +54,7 @@ export class DirectusSync {
     });
 
     // Wait for the command to finish and loggers to flush
-    await sleep(500);
+    await sleep(100);
 
     // Read the log file
     const logsContent = fs.readFileSync(logFilePath, 'utf-8');

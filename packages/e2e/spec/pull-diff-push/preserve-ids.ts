@@ -7,7 +7,7 @@ import {
 export const preserveIds = (context: Context) => {
   it('should preserve some uuid from Directus', async () => {
     // Init sync client
-    const sync = await context.getSync('preserve-ids');
+    const sync = await context.getSync('temp/preserve-ids');
     const dumpPath = sync.getDumpPath();
 
     // --------------------------------------------------------------------

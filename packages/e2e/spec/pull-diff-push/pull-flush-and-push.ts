@@ -32,7 +32,7 @@ export const pushFlushAndPush = (context: Context) => {
 
   it('should detect diff', async () => {
     // Init sync client
-    const sync = await context.getSync('pull-flush-and-push');
+    const sync = await context.getSync('temp/pull-flush-and-push');
     const directus = context.getDirectus();
     await initialize(sync, directus);
 
@@ -63,7 +63,7 @@ export const pushFlushAndPush = (context: Context) => {
 
   it('should recreate entries in Directus, same as original, and remove dangling ids', async () => {
     // Init sync client
-    const sync = await context.getSync('pull-flush-and-push');
+    const sync = await context.getSync('temp/pull-flush-and-push');
     const directus = context.getDirectus();
     const originalData = await initialize(sync, directus);
 

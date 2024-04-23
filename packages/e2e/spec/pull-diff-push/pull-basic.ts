@@ -9,7 +9,7 @@ import {
 export const pullBasic = (context: Context) => {
   it('should pull items from Directus', async () => {
     // Init sync client
-    const sync = await context.getSync('pull-basic');
+    const sync = await context.getSync('temp/pull-basic');
     const directus = context.getDirectus();
 
     const systemCollections = getSystemCollectionsNames();

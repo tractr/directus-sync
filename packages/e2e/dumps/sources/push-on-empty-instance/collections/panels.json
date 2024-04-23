@@ -1,0 +1,26 @@
+[
+  {
+    "dashboard": "08976416-fb3a-4918-b18c-85ab1259d7f1",
+    "name": "absque",
+    "icon": "account_box",
+    "color": "#6BC131",
+    "show_header": true,
+    "note": "Utor avarus quis tamen cauda ager cursim architecto vis tersus vulnus adicio vigilo debeo pecto.",
+    "type": "label",
+    "position_x": 5,
+    "position_y": 12,
+    "width": 44,
+    "height": 32,
+    "options": {
+      "text": "Accedo debitis tandem sophismata acervus absorbeo culpo alveus accendo creta annus nisi amet vinculum illo caries aegrotatio.",
+      "whiteSpace": "pre-wrap",
+      "color": "#8AE888",
+      "textAlign": "left",
+      "fontWeight": 300,
+      "fontStyle": "oblique",
+      "fontSize": "32px",
+      "font": "serif"
+    },
+    "_syncId": "ae3bfe17-23b2-4447-9e0d-fd351d69032b"
+  }
+]

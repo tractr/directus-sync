@@ -1,0 +1,22 @@
+[
+  {
+    "name": "timor",
+    "method": "POST",
+    "url": "https://informal-yahoo.info",
+    "status": "inactive",
+    "data": false,
+    "actions": [
+      "update"
+    ],
+    "collections": [
+      "directus_sync_id_map"
+    ],
+    "headers": [
+      {
+        "header": "X-aegre-utrimque-error",
+        "value": "z2jnUdkwTUvILJVdXvBmIZdvhsAS7B7x"
+      }
+    ],
+    "_syncId": "6f587ebb-d9c4-4dad-aa35-e8e203eba9c3"
+  }
+]

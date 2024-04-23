@@ -10,7 +10,7 @@ import {
 export const pullWithNewData = (context: Context) => {
   it('should override previous pulled data', async () => {
     // Init sync client
-    const sync = await context.getSync('pull-with-new-data');
+    const sync = await context.getSync('temp/pull-with-new-data');
     const directus = context.getDirectus();
 
     const systemCollections = getSystemCollectionsNames();
