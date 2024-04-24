@@ -5,7 +5,7 @@ import {
 } from '../helpers/index.js';
 
 export const onSaveDuplicate = (context: Context) => {
-  fit('can duplicate data on saving and dumping', async () => {
+  it('can duplicate data on saving and dumping', async () => {
     // Init sync client
     const sync = await context.getSync(
       'temp/on-save-duplicate',

@@ -1,6 +1,20 @@
 import { ValueOf } from 'ts-essentials';
+import {
+  DirectusDashboard,
+  DirectusFlow,
+  DirectusFolder,
+  DirectusOperation,
+  DirectusPanel,
+  DirectusPermission,
+  DirectusPreset,
+  DirectusRole,
+  DirectusSettings,
+  DirectusTranslation,
+  DirectusWebhook,
+} from '@directus/sdk';
 
 export type DirectusId = number | string;
+export type Schema = object;
 
 export type SystemCollectionsNames = [
   'dashboards',
@@ -15,6 +29,20 @@ export type SystemCollectionsNames = [
   'translations',
   'webhooks',
 ];
+export interface SystemCollectionsTypes {
+  dashboards: DirectusDashboard<Schema>;
+  flows: DirectusFlow<Schema>;
+  folders: DirectusFolder<Schema>;
+  operations: DirectusOperation<Schema>;
+  panels: DirectusPanel<Schema>;
+  permissions: DirectusPermission<Schema>;
+  presets: DirectusPreset<Schema>;
+  roles: DirectusRole<Schema>;
+  settings: DirectusSettings<Schema>;
+  translations: DirectusTranslation<Schema>;
+  webhooks: DirectusWebhook<Schema>;
+}
+
 export type SystemCollection = ValueOf<SystemCollectionsNames>;
 
 export type SystemCollectionsRecord<T> = {
@@ -23,3 +51,12 @@ export type SystemCollectionsRecord<T> = {
 export type SystemCollectionsRecordPartial<T> = {
   [key in SystemCollection]?: T;
 };
+
+export type SystemCollectionsContent<Extra = void> = {
+  [key in SystemCollection]: (Extra &
+    Partial<SystemCollectionsTypes[key]> &
+    Record<string, unknown>)[];
+};
+export type SystemCollectionsContentWithSyncId = SystemCollectionsContent<{
+  _syncId: string;
+}>;
