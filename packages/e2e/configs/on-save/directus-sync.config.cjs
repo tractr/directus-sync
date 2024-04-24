@@ -1,89 +1,89 @@
 module.exports = {
   hooks: {
     dashboards: {
-      onDump: (dashboards) => {
+      onSave: (dashboards) => {
         return dashboards.map((dashboard) => {
-          dashboard.name = `[onDump dashboard] ${dashboard.name}`;
+          dashboard.name = `[onSave dashboard] ${dashboard.name}`;
           return dashboard;
         });
       },
     },
     flows: {
-      onDump: (flows) => {
+      onSave: (flows) => {
         return flows.map((flow) => {
-          flow.name = `[onDump flow] ${flow.name}`;
+          flow.name = `[onSave flow] ${flow.name}`;
           return flow;
         });
       },
     },
     folders: {
-      onDump: (folders) => {
+      onSave: (folders) => {
         return folders.map((folder) => {
-          folder.name = `[onDump folder] ${folder.name}`;
+          folder.name = `[onSave folder] ${folder.name}`;
           return folder;
         });
       },
     },
     operations: {
-      onDump: (operations) => {
+      onSave: (operations) => {
         return operations.map((operation) => {
-          operation.name = `[onDump operation] ${operation.name}`;
+          operation.name = `[onSave operation] ${operation.name}`;
           return operation;
         });
       },
     },
     panels: {
-      onDump: (panels) => {
+      onSave: (panels) => {
         return panels.map((panel) => {
-          panel.name = `[onDump panel] ${panel.name}`;
+          panel.name = `[onSave panel] ${panel.name}`;
           return panel;
         });
       },
     },
     roles: {
-      onDump: (roles) => {
+      onSave: (roles) => {
         return roles.map((role) => {
-          role.name = `[onDump role] ${role.name}`;
+          role.name = `[onSave role] ${role.name}`;
           return role;
         });
       },
     },
     permissions: {
-      onDump: (permissions) => {
+      onSave: (permissions) => {
         return permissions.map((permission) => {
-          permission.collection = `[onDump permission] ${permission.collection}`;
+          permission.collection = `[onSave permission] ${permission.collection}`;
           return permission;
         });
       },
     },
     presets: {
-      onDump: (presets) => {
+      onSave: (presets) => {
         return presets.map((preset) => {
-          preset.bookmark = `[onDump preset] ${preset.bookmark}`;
+          preset.bookmark = `[onSave preset] ${preset.bookmark}`;
           return preset;
         });
       },
     },
     settings: {
-      onDump: (settings) => {
+      onSave: (settings) => {
         return settings.map((setting) => {
-          setting.project_name = `[onDump settings] ${setting.project_name}`;
+          setting.project_name = `[onSave settings] ${setting.project_name}`;
           return setting;
         });
       },
     },
     translations: {
-      onDump: (translations) => {
+      onSave: (translations) => {
         return translations.map((translation) => {
-          translation.value = `[onDump translation] ${translation.value}`;
+          translation.value = `[onSave translation] ${translation.value}`;
           return translation;
         });
       },
     },
     webhooks: {
-      onDump: (webhooks) => {
+      onSave: (webhooks) => {
         return webhooks.map((webhook) => {
-          webhook.name = `[onDump webhook] ${webhook.name}`;
+          webhook.name = `[onSave webhook] ${webhook.name}`;
           return webhook;
         });
       },

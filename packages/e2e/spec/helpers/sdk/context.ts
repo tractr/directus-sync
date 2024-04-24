@@ -56,7 +56,9 @@ export class Context {
       token: await directus.requireToken(),
       url: instance.getUrl(),
       dumpPath,
-      configPath: configPath ? Path.resolve(configBaseDirectory, configPath) : undefined,
+      configPath: configPath
+        ? Path.resolve(configBaseDirectory, configPath)
+        : undefined,
     });
   }
 }
