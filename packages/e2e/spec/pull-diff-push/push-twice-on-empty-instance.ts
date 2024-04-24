@@ -3,7 +3,10 @@ import { Context, getSystemCollectionsNames, info } from '../helpers/index.js';
 export const pushTwiceOnEmptyInstance = (context: Context) => {
   it('push twice on an empty instance', async () => {
     // Init sync client
-    const sync = await context.getSync('sources/push-on-empty-instance', false);
+    const sync = await context.getSync(
+      'sources/one-item-per-collection',
+      false,
+    );
     const directus = context.getDirectus();
     const collections = getSystemCollectionsNames();
 
