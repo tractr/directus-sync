@@ -6,6 +6,7 @@ import { SqliteClient } from './sqlite-client.js';
 import { sleep } from './async/index.js';
 
 const dumpBaseDirectory = Path.resolve('dumps');
+const configBaseDirectory = Path.resolve('configs');
 
 export class Context {
   protected readonly sqlite: SqliteClient = new SqliteClient();
@@ -44,7 +45,7 @@ export class Context {
     return this.instance;
   }
 
-  async getSync(dumpFolder: string, clearDumpPath = true) {
+  async getSync(dumpFolder: string, clearDumpPath = true, configPath?: string) {
     const dumpPath = Path.resolve(dumpBaseDirectory, dumpFolder);
     if (clearDumpPath) {
       fs.rmSync(dumpPath, { recursive: true, force: true });
@@ -55,6 +56,7 @@ export class Context {
       token: await directus.requireToken(),
       url: instance.getUrl(),
       dumpPath,
+      configPath: configPath ? Path.resolve(configBaseDirectory, configPath) : undefined,
     });
   }
 }
