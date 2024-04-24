@@ -1,8 +1,4 @@
-import {
-  Context,
-  getSystemCollectionsNames,
-  info,
-} from '../helpers/index.js';
+import { Context, getSystemCollectionsNames, info } from '../helpers/index.js';
 
 export const pushOnEmptyInstance = (context: Context) => {
   it('diff and push on an empty instance', async () => {
@@ -44,7 +40,8 @@ export const pushOnEmptyInstance = (context: Context) => {
         continue;
       }
       const created = activities.filter(
-        (a) => a.action === 'create' && a.collection === `directus_${collection}`,
+        (a) =>
+          a.action === 'create' && a.collection === `directus_${collection}`,
       );
       expect(created.length).withContext(collection).toEqual(1);
     }
