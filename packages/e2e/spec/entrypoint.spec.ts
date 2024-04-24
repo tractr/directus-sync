@@ -12,7 +12,7 @@ import {
   pushTwiceOnEmptyInstance,
 } from './pull-diff-push/index.js';
 import { pushWithDependencies } from './dependencies/index.js';
-import { onDump, onSave } from './hooks/index.js';
+import { onDump, onSave, onSaveDuplicate } from './hooks/index.js';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
@@ -48,4 +48,5 @@ describe('Pull and check if ids are preserved for some collections', () => {
 
   onDump(context);
   onSave(context);
+  onSaveDuplicate(context);
 });

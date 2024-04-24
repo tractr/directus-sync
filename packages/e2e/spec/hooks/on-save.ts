@@ -41,7 +41,9 @@ export const onSave = (context: Context) => {
     const savedDashboard = collections.dashboards[0];
     expect(savedDashboard).toBeDefined();
     if (savedDashboard) {
-      expect(savedDashboard.name).toEqual(`[onSave dashboard] ${dashboard.name}`);
+      expect(savedDashboard.name).toEqual(
+        `[onSave dashboard] ${dashboard.name}`,
+      );
     }
 
     expect(collections.flows.length).toEqual(1);
@@ -62,7 +64,9 @@ export const onSave = (context: Context) => {
     const savedOperation = collections.operations[0];
     expect(savedOperation).toBeDefined();
     if (savedOperation) {
-      expect(savedOperation.name).toEqual(`[onSave operation] ${operation.name}`);
+      expect(savedOperation.name).toEqual(
+        `[onSave operation] ${operation.name}`,
+      );
     }
 
     expect(collections.panels.length).toEqual(1);
@@ -92,7 +96,9 @@ export const onSave = (context: Context) => {
     const savedPreset = collections.presets[0];
     expect(savedPreset).toBeDefined();
     if (savedPreset) {
-      expect(savedPreset.bookmark).toEqual(`[onSave preset] ${preset.bookmark}`);
+      expect(savedPreset.bookmark).toEqual(
+        `[onSave preset] ${preset.bookmark}`,
+      );
     }
 
     expect(collections.settings.length).toEqual(1);

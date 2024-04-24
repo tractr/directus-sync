@@ -41,7 +41,9 @@ export const onDump = (context: Context) => {
     const dumpedDashboard = collections.dashboards[0];
     expect(dumpedDashboard).toBeDefined();
     if (dumpedDashboard) {
-      expect(dumpedDashboard.name).toEqual(`[onDump dashboard] ${dashboard.name}`);
+      expect(dumpedDashboard.name).toEqual(
+        `[onDump dashboard] ${dashboard.name}`,
+      );
     }
 
     expect(collections.flows.length).toEqual(1);
@@ -62,7 +64,9 @@ export const onDump = (context: Context) => {
     const dumpedOperation = collections.operations[0];
     expect(dumpedOperation).toBeDefined();
     if (dumpedOperation) {
-      expect(dumpedOperation.name).toEqual(`[onDump operation] ${operation.name}`);
+      expect(dumpedOperation.name).toEqual(
+        `[onDump operation] ${operation.name}`,
+      );
     }
 
     expect(collections.panels.length).toEqual(1);
@@ -92,7 +96,9 @@ export const onDump = (context: Context) => {
     const dumpedPreset = collections.presets[0];
     expect(dumpedPreset).toBeDefined();
     if (dumpedPreset) {
-      expect(dumpedPreset.bookmark).toEqual(`[onDump preset] ${preset.bookmark}`);
+      expect(dumpedPreset.bookmark).toEqual(
+        `[onDump preset] ${preset.bookmark}`,
+      );
     }
 
     expect(collections.settings.length).toEqual(1);
