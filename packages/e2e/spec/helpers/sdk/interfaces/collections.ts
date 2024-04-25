@@ -52,6 +52,10 @@ export type SystemCollectionsRecordPartial<T> = {
   [key in SystemCollection]?: T;
 };
 
+export type SystemCollectionsPartial = {
+  [key in SystemCollection]?: Partial<SystemCollectionsTypes[key]>;
+};
+
 export type SystemCollectionsContent<Extra = void> = {
   [key in SystemCollection]: (Extra &
     Partial<SystemCollectionsTypes[key]> &
