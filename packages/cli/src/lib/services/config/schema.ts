@@ -45,13 +45,18 @@ export const OptionsFields = {
   directusEmail: z.string().optional(),
   directusPassword: z.string().optional(),
   // Pull, diff, push
-  split: z.boolean(),
   dumpPath: z.string(),
+  // Collections
   collectionsPath: z.string(),
+  excludeCollections: z.array(CollectionEnum).optional(),
+  onlyCollections: z.array(CollectionEnum).optional(),
+  // Snapshot
   snapshotPath: z.string(),
+  snapshot: z.boolean(),
+  split: z.boolean(),
   // Specifications
-  specs: z.boolean(),
   specsPath: z.string(),
+  specs: z.boolean(),
   // Diff, push
   force: z.boolean(),
   // Untrack
@@ -59,9 +64,6 @@ export const OptionsFields = {
   id: z.string().optional(),
   // Hooks
   hooks: OptionsHooksSchema.optional(),
-  // Exclusion and Inclusion
-  excludeCollections: z.array(CollectionEnum).optional(),
-  onlyCollections: z.array(CollectionEnum).optional(),
 };
 export const OptionsSchema = z.object(OptionsFields);
 

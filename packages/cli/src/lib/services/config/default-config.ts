@@ -11,27 +11,30 @@ export const DefaultConfig: Pick<
   | 'debug'
   | 'dumpPath'
   | 'collectionsPath'
-  | 'snapshotPath'
-  | 'split'
-  | 'force'
-  | 'specs'
-  | 'specsPath'
   | 'excludeCollections'
   | 'onlyCollections'
+  | 'snapshotPath'
+  | 'snapshot'
+  | 'split'
+  | 'specsPath'
+  | 'specs'
+  | 'force'
 > = {
   // Global
   debug: false,
   // Pull, diff, push
   dumpPath: './directus-config',
+  // Collections
   collectionsPath: 'collections',
-  snapshotPath: 'snapshot',
-  split: true,
-  // Specifications
-  specs: true,
-  specsPath: 'specs',
-  // Diff, push
-  force: false,
-  // Exclusion and Inclusion
   excludeCollections: [],
   onlyCollections: [],
+  // Snapshot
+  snapshotPath: 'snapshot',
+  snapshot: true,
+  split: true,
+  // Specifications
+  specsPath: 'specs',
+  specs: true,
+  // Diff, push
+  force: false,
 };

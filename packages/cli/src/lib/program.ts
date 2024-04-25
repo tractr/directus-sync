@@ -92,26 +92,37 @@ export function createProgram() {
   );
 
   // Shared options
-  const noSplitOption = new Option(
-    '--no-split',
-    `should split the schema snapshot into multiple files (default "${DefaultConfig.split}")`,
-  );
   const dumpPathOption = new Option(
     '--dump-path <dumpPath>',
     `the base path for the dump (default "${DefaultConfig.dumpPath}")`,
   );
+
   const collectionsPathOption = new Option(
     '--collections-path <collectionPath>',
     `the path for the collections dump, relative to the dump path (default "${DefaultConfig.collectionsPath}")`,
   );
+  const excludeCollectionsOption = new Option(
+    '-x, --exclude-collections <excludeCollections>',
+    `comma separated list of collections to exclude from the process (default to none)`,
+  ).argParser(commaSeparatedList);
+  const onlyCollectionsOption = new Option(
+    '-o, --only-collections <onlyCollections>',
+    `comma separated list of collections to include in the process (default to all)`,
+  ).argParser(commaSeparatedList);
+
   const snapshotPathOption = new Option(
     '--snapshot-path <snapshotPath>',
     `the path for the schema snapshot dump, relative to the dump path (default "${DefaultConfig.snapshotPath}")`,
   );
-  const forceOption = new Option(
-    '-f, --force',
-    `force the diff of schema, even if the Directus version is different (default "${DefaultConfig.force}")`,
+  const noSnapshotOption = new Option(
+    '--no-snapshot',
+    `should pull and push the Directus schema (default "${DefaultConfig.snapshot}")`,
   );
+  const noSplitOption = new Option(
+    '--no-split',
+    `should split the schema snapshot into multiple files (default "${DefaultConfig.split}")`,
+  );
+
   const specificationsPathOption = new Option(
     '--specs-path <specsPath>',
     `the path for the specifications dump (GraphQL & OpenAPI), relative to the dump path (default "${DefaultConfig.specsPath}")`,
@@ -120,14 +131,11 @@ export function createProgram() {
     '--no-specs',
     `should dump the GraphQL & OpenAPI specifications (default "${DefaultConfig.specs}")`,
   );
-  const excludeCollectionsOption = new Option(
-    '-x, --exclude-collections <excludeCollections>',
-    `comma separated list of collections to exclude from the process`,
-  ).argParser(commaSeparatedList);
-  const onlyCollectionsOption = new Option(
-    '-o, --only-collections <onlyCollections>',
-    `comma separated list of collections to include in the process`,
-  ).argParser(commaSeparatedList);
+
+  const forceOption = new Option(
+    '-f, --force',
+    `force the diff of schema, even if the Directus version is different (default "${DefaultConfig.force}")`,
+  );
 
   program
     .version(getVersion())
@@ -141,14 +149,15 @@ export function createProgram() {
   program
     .command('pull')
     .description('get the schema and collections and store them locally')
-    .addOption(noSplitOption)
     .addOption(dumpPathOption)
     .addOption(collectionsPathOption)
-    .addOption(snapshotPathOption)
-    .addOption(noSpecificationsOption)
-    .addOption(specificationsPathOption)
     .addOption(excludeCollectionsOption)
     .addOption(onlyCollectionsOption)
+    .addOption(snapshotPathOption)
+    .addOption(noSnapshotOption)
+    .addOption(noSplitOption)
+    .addOption(specificationsPathOption)
+    .addOption(noSpecificationsOption)
     .action(wrapAction(program, runPull));
 
   program
@@ -156,25 +165,27 @@ export function createProgram() {
     .description(
       'describe the schema and collections diff. Does not modify the database.',
     )
-    .addOption(noSplitOption)
     .addOption(dumpPathOption)
     .addOption(collectionsPathOption)
-    .addOption(snapshotPathOption)
-    .addOption(forceOption)
     .addOption(excludeCollectionsOption)
     .addOption(onlyCollectionsOption)
+    .addOption(snapshotPathOption)
+    .addOption(noSnapshotOption)
+    .addOption(noSplitOption)
+    .addOption(forceOption)
     .action(wrapAction(program, runDiff));
 
   program
     .command('push')
     .description('push the schema and collections')
-    .addOption(noSplitOption)
     .addOption(dumpPathOption)
     .addOption(collectionsPathOption)
-    .addOption(snapshotPathOption)
-    .addOption(forceOption)
     .addOption(excludeCollectionsOption)
     .addOption(onlyCollectionsOption)
+    .addOption(snapshotPathOption)
+    .addOption(noSnapshotOption)
+    .addOption(noSplitOption)
+    .addOption(forceOption)
     .action(wrapAction(program, runPush));
 
   program
