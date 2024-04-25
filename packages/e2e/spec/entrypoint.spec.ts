@@ -19,6 +19,7 @@ import {
   onSave,
   onSaveDuplicate,
 } from './hooks/index.js';
+import { excludeSomeCollections } from './exclude/index.js';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
@@ -57,4 +58,6 @@ describe('Pull and check if ids are preserved for some collections', () => {
   onSaveDuplicate(context);
   onLoad(context);
   onQuery(context);
+
+  excludeSomeCollections(context);
 });

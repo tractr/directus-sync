@@ -22,16 +22,31 @@ export class DirectusSync {
     return this.options.dumpPath;
   }
 
-  pull() {
-    return this.runCliCommand('pull', '--dump-path', this.options.dumpPath);
+  pull(args?: string[]) {
+    return this.runCliCommand(
+      'pull',
+      '--dump-path',
+      this.options.dumpPath,
+      ...(args ?? []),
+    );
   }
 
-  push() {
-    return this.runCliCommand('push', '--dump-path', this.options.dumpPath);
+  push(args?: string[]) {
+    return this.runCliCommand(
+      'push',
+      '--dump-path',
+      this.options.dumpPath,
+      ...(args ?? []),
+    );
   }
 
-  diff() {
-    return this.runCliCommand('diff', '--dump-path', this.options.dumpPath);
+  diff(args?: string[]) {
+    return this.runCliCommand(
+      'diff',
+      '--dump-path',
+      this.options.dumpPath,
+      ...(args ?? []),
+    );
   }
 
   protected async runCliCommand(...args: string[]) {
