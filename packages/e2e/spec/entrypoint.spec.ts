@@ -19,7 +19,7 @@ import {
   onSave,
   onSaveDuplicate,
 } from './hooks/index.js';
-import { excludeSomeCollections } from './exclude/index.js';
+import { excludeSomeCollections } from './exclude-include/index.js';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
