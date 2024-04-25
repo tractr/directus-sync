@@ -88,13 +88,16 @@ export class DirectusSync {
   }
 
   protected getOptionsArgs(): string[] {
-    return [
+    const requiredArgs = [
       `--directus-token`,
       this.options.token,
       `--directus-url`,
       this.options.url,
       '--debug',
     ];
+    return this.options.configPath
+      ? [...requiredArgs, `--config-path`, this.options.configPath]
+      : requiredArgs;
   }
 
   protected getLogTransport(logFilePath: string): LoggerOptions['transport'] {

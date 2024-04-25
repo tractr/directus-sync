@@ -55,29 +55,51 @@ import {
   notAdministratorRoles,
   notNullId,
   notSystemPermissions,
+  SystemCollectionsPartial,
   SystemCollectionsRecordPartial,
 } from '../sdk/index.js';
 
 export async function createOneItemInEachSystemCollection(
   client: DirectusClient<object> & RestClient<object>,
+  override?: SystemCollectionsPartial,
 ) {
-  const dashboard = await client.request(createDashboard(getDashboard()));
-  const flow = await client.request(createFlow(getFlow()));
-  const folder = await client.request(createFolder(getFolder()));
+  const dashboard = await client.request(
+    createDashboard({ ...getDashboard(), ...override?.dashboards }),
+  );
+
+  const flow = await client.request(
+    createFlow({ ...getFlow(), ...override?.flows }),
+  );
+  const folder = await client.request(
+    createFolder({ ...getFolder(), ...override?.folders }),
+  );
   const operation = await client.request(
-    createOperation(getOperation(flow.id)),
+    createOperation({ ...getOperation(flow.id), ...override?.operations }),
   );
-  const panel = await client.request(createPanel(getPanel(dashboard.id)));
-  const role = await client.request(createRole(getRole()));
+  const panel = await client.request(
+    createPanel({ ...getPanel(dashboard.id), ...override?.panels }),
+  );
+  const role = await client.request(
+    createRole({ ...getRole(), ...override?.roles }),
+  );
   const permission = await client.request(
-    createPermission(getPermission(role.id, 'dashboards', 'update')),
+    createPermission({
+      ...getPermission(role.id, 'dashboards', 'update'),
+      ...override?.permissions,
+    }),
   );
-  const preset = await client.request(createPreset(getPreset()));
+  const preset = await client.request(
+    createPreset({ ...getPreset(), ...override?.presets }),
+  );
   const settings = (await client.request(
-    updateSettings(getSettings()),
+    updateSettings({ ...getSettings(), ...override?.settings }),
   )) as never as DirectusSettings<object> & DirectusSettingsExtra;
-  const translation = await client.request(createTranslation(getTranslation()));
-  const webhook = await client.request(createWebhook(getWebhook()));
+  const translation = await client.request(
+    createTranslation({ ...getTranslation(), ...override?.translations }),
+  );
+  const webhook = await client.request(
+    createWebhook({ ...getWebhook(), ...override?.webhooks }),
+  );
 
   // --------------------------------------------------------------------
   // Update flow with operation

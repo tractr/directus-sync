@@ -9,7 +9,7 @@
     "build": "rm -rf dist && tsc",
     "directus": "directus",
     "bootstrap": "./bootstrap.sh",
-    "test": "jasmine",
+    "test": "rm -f ./logs/*.log && jasmine",
     "build-test": "npm run build && npm run test"
   },
   "keywords": [],

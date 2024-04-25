@@ -1,12 +1,15 @@
 import { Context, getSystemCollectionsNames, info } from '../helpers/index.js';
 
-export const pushOnEmptyInstance = (context: Context) => {
-  it('diff and push on an empty instance', async () => {
+const expectedAmount = (collection: string) => {
+  if (collection === 'flows') return 1;
+  if (collection === 'operations') return 3;
+  return 0;
+};
+
+export const pushWithDependencies = (context: Context) => {
+  it('push with dependencies on an empty instance', async () => {
     // Init sync client
-    const sync = await context.getSync(
-      'sources/one-item-per-collection',
-      false,
-    );
+    const sync = await context.getSync('sources/multiple-dependencies', false);
     const directus = context.getDirectus();
     const collections = getSystemCollectionsNames();
 
@@ -18,7 +21,9 @@ export const pushOnEmptyInstance = (context: Context) => {
         info(`[${collection}] Dangling id maps: 0 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(`[${collection}] To create: 1 item(s)`),
+        info(
+          `[${collection}] To create: ${expectedAmount(collection)} item(s)`,
+        ),
       );
       expect(diffOutput).toContain(
         info(`[${collection}] To update: 0 item(s)`),
@@ -46,16 +51,26 @@ export const pushOnEmptyInstance = (context: Context) => {
         (a) =>
           a.action === 'create' && a.collection === `directus_${collection}`,
       );
-      expect(created.length).withContext(collection).toEqual(1);
+      expect(created.length)
+        .withContext(collection)
+        .toEqual(expectedAmount(collection));
     }
 
     // Analyze the output
     expect(pushOutput).toContain(info('[snapshot] No changes to apply'));
+    expect(pushOutput).toContain(info('---- Push: iteration 1 ----'));
+    expect(pushOutput).toContain(info('---- Push: iteration 2 ----'));
+    expect(pushOutput).toContain(info('---- Push: iteration 3 ----'));
+    expect(pushOutput).toContain(info('---- Push: iteration 4 ----'));
+    expect(pushOutput).not.toContain(info('---- Push: iteration 5 ----'));
+
     for (const collection of collections) {
       expect(pushOutput).toContain(
         info(`[${collection}] Deleted 0 dangling items`),
       );
-      expect(pushOutput).toContain(info(`[${collection}] Created 1 items`));
+      expect(pushOutput).toContain(
+        info(`[${collection}] Created ${expectedAmount(collection)} items`),
+      );
       expect(pushOutput).toContain(info(`[${collection}] Updated 0 items`));
       if (collection !== 'settings') {
         expect(pushOutput).toContain(info(`[${collection}] Deleted 0 items`));

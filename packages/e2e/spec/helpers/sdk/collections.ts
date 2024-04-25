@@ -1,5 +1,6 @@
 import path from 'path';
 import {
+  SystemCollectionsContentWithSyncId,
   SystemCollectionsNames,
   SystemCollectionsRecord,
 } from './interfaces/index.js';
@@ -24,17 +25,12 @@ export function getSystemCollectionsPaths(
 }
 export function getDumpedSystemCollectionsContents(dumpPath: string) {
   const paths = getSystemCollectionsPaths(dumpPath);
-  return Object.entries(paths).reduce(
-    (acc, [key, path]) => {
-      return {
-        ...acc,
-        [key]: fs.existsSync(path) ? fs.readJSONSync(path) : undefined,
-      };
-    },
-    {} as SystemCollectionsRecord<
-      { _syncId: string; [key: string]: unknown }[]
-    >,
-  );
+  return Object.entries(paths).reduce((acc, [key, path]) => {
+    return {
+      ...acc,
+      [key]: fs.existsSync(path) ? fs.readJSONSync(path) : undefined,
+    };
+  }, {} as SystemCollectionsContentWithSyncId);
 }
 
 export function getSystemCollectionsNames(): SystemCollectionsNames {
