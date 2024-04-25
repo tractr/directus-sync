@@ -3,7 +3,7 @@ import {
   ConfigFileOptions,
   DirectusConfigWithCredentials,
   DirectusConfigWithToken,
-  HookCollectionName,
+  CollectionName,
   Hooks,
   OptionName,
   Options,
@@ -14,7 +14,7 @@ import { ConfigFileLoader } from './config-file-loader';
 import { zodParse } from '../../helpers';
 import deepmerge from 'deepmerge';
 import { DefaultConfig, DefaultConfigPaths } from './default-config';
-import { OptionsSchema } from './schema';
+import { CollectionsList, OptionsSchema } from './schema';
 
 @Service()
 export class ConfigService {
@@ -100,12 +100,20 @@ export class ConfigService {
   }
 
   @Cacheable()
-  getHooksConfig(collection: HookCollectionName): Hooks {
+  getHooksConfig(collection: CollectionName): Hooks {
     const hooks = this.getOptions('hooks');
     if (!hooks) {
       return {};
     }
     return (hooks[collection] ?? {}) as Hooks;
+  }
+
+  @Cacheable()
+  getCollectionsToProcess() {
+    const exclude = this.requireOptions('excludeCollections');
+    const only =this.requireOptions('onlyCollections');
+    const list = only.length > 0 ? only : CollectionsList;
+    return list.filter((collection) => !exclude.includes(collection));
   }
 
   protected getOptions<T extends OptionName>(name: T): Options[T] | undefined {

@@ -1,12 +1,27 @@
 import { z } from 'zod';
 
+export const CollectionsList = [
+  'dashboards',
+  'flows',
+  'folders',
+  'operations',
+  'panels',
+  'permissions',
+  'presets',
+  'roles',
+  'settings',
+  'translations',
+  'webhooks',
+] as const;
+
+export const CollectionEnum = z.enum(CollectionsList);
+
 export const HooksSchema = z.object({
   onLoad: z.function().optional(),
   onDump: z.function().optional(),
   onSave: z.function().optional(),
   onQuery: z.function().optional(),
 });
-
 export const OptionsHooksSchema = z.object({
   dashboards: HooksSchema.optional(),
   flows: HooksSchema.optional(),
@@ -19,7 +34,8 @@ export const OptionsHooksSchema = z.object({
   settings: HooksSchema.optional(),
   translations: HooksSchema.optional(),
   webhooks: HooksSchema.optional(),
-});
+} satisfies { [key in z.infer<typeof CollectionEnum>]: z.Schema; });
+
 
 export const OptionsFields = {
   // Global
@@ -44,6 +60,9 @@ export const OptionsFields = {
   id: z.string().optional(),
   // Hooks
   hooks: OptionsHooksSchema.optional(),
+  // Exclusion and Inclusion
+  excludeCollections: z.array(CollectionEnum).optional(),
+  onlyCollections: z.array(CollectionEnum).optional(),
 };
 export const OptionsSchema = z.object(OptionsFields);
 
@@ -66,4 +85,7 @@ export const ConfigFileOptionsSchema = z.object({
   specsPath: OptionsFields.specsPath.optional(),
   // Hooks config
   hooks: OptionsHooksSchema.optional(),
+  // Exclusion and Inclusion
+  excludeCollections: OptionsFields.excludeCollections.optional(),
+  onlyCollections: OptionsFields.onlyCollections.optional(),
 });

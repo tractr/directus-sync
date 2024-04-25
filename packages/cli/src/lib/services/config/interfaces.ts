@@ -2,8 +2,8 @@ import type { z } from 'zod';
 import type {
   ConfigFileOptionsSchema,
   OptionsFields,
-  OptionsHooksSchema,
   OptionsSchema,
+  CollectionEnum
 } from './schema';
 import type { MigrationClient } from '../migration-client';
 import type { DirectusBaseType, Query } from '../collections';
@@ -14,7 +14,11 @@ export type Options = z.infer<typeof OptionsSchema>;
 
 export type ConfigFileOptions = z.infer<typeof ConfigFileOptionsSchema>;
 
-export type HookCollectionName = keyof typeof OptionsHooksSchema.shape;
+export type CollectionName = z.infer<typeof CollectionEnum>;
+
+export type CollectionRecord<T> = {
+  [key in CollectionName]: T;
+}
 
 export type TransformDataFunction = <T = unknown>(
   data: T[],
