@@ -170,6 +170,12 @@ These options can be used with any command to configure the operation of `direct
 - `--no-specs`  
   Do not dump the specifications (GraphQL & OpenAPI). By default, specifications are dumped.
 
+- `-o, --only-collections <onlyCollections>`
+  Comma-separated list of directus collections to include during `pull` `push` or `diff` process.
+ 
+- `-x, --exclude-collections <excludeCollections>`  
+  Comma-separated list of directus collections to exclude during `pull` `push` or `diff`. Can be used along with `only-collections`.
+
 - `-h, --help`  
   Display help information for the `directus-sync` commands.
 
@@ -201,6 +207,8 @@ module.exports = {
   snapshotPath: 'snapshot',
   specsPath: 'specs',
   specs: true,
+  onlyCollections: ['roles', 'permissions', 'settings'],
+  excludeCollections: ['settings'],
 };
 ```
 

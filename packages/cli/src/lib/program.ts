@@ -54,6 +54,13 @@ function getVersion(): string {
   }
 }
 
+/**
+ * Split a comma separated list
+ */
+function commaSeparatedList(value: string) {
+  return value.split(',').map((v) => v.trim());
+}
+
 export function createProgram() {
   const program = createCommand();
   // Global options
@@ -113,6 +120,14 @@ export function createProgram() {
     '--no-specs',
     `should dump the GraphQL & OpenAPI specifications (default "${DefaultConfig.specs}")`,
   );
+  const excludeCollectionsOption = new Option(
+    '-x, --exclude-collections <excludeCollections>',
+    `comma separated list of collections to exclude from the process`,
+  ).argParser(commaSeparatedList);
+  const onlyCollectionsOption = new Option(
+    '-o, --only-collections <onlyCollections>',
+    `comma separated list of collections to include in the process`,
+  ).argParser(commaSeparatedList);
 
   program
     .version(getVersion())
@@ -132,6 +147,8 @@ export function createProgram() {
     .addOption(snapshotPathOption)
     .addOption(noSpecificationsOption)
     .addOption(specificationsPathOption)
+    .addOption(excludeCollectionsOption)
+    .addOption(onlyCollectionsOption)
     .action(wrapAction(program, runPull));
 
   program
@@ -144,6 +161,8 @@ export function createProgram() {
     .addOption(collectionsPathOption)
     .addOption(snapshotPathOption)
     .addOption(forceOption)
+    .addOption(excludeCollectionsOption)
+    .addOption(onlyCollectionsOption)
     .action(wrapAction(program, runDiff));
 
   program
@@ -154,6 +173,8 @@ export function createProgram() {
     .addOption(collectionsPathOption)
     .addOption(snapshotPathOption)
     .addOption(forceOption)
+    .addOption(excludeCollectionsOption)
+    .addOption(onlyCollectionsOption)
     .action(wrapAction(program, runPush));
 
   program

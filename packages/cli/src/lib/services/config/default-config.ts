@@ -16,6 +16,8 @@ export const DefaultConfig: Pick<
   | 'force'
   | 'specs'
   | 'specsPath'
+  | 'excludeCollections'
+  | 'onlyCollections'
 > = {
   // Global
   debug: false,
@@ -29,4 +31,7 @@ export const DefaultConfig: Pick<
   specsPath: 'specs',
   // Diff, push
   force: false,
+  // Exclusion and Inclusion
+  excludeCollections: [],
+  onlyCollections: [],
 };
