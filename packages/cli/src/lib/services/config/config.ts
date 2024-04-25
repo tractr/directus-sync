@@ -111,7 +111,7 @@ export class ConfigService {
   @Cacheable()
   getCollectionsToProcess() {
     const exclude = this.requireOptions('excludeCollections');
-    const only =this.requireOptions('onlyCollections');
+    const only = this.requireOptions('onlyCollections');
     const list = only.length > 0 ? only : CollectionsList;
     return list.filter((collection) => !exclude.includes(collection));
   }

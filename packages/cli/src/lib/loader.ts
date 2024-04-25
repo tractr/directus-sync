@@ -68,7 +68,9 @@ export function loadCollections() {
     panels: PanelsCollection,
     presets: PresetsCollection,
   } as const satisfies CollectionRecord<unknown>;
-  type CollectionInstance = InstanceType<DictionaryValues<typeof collectionsConstructors>>;
+  type CollectionInstance = InstanceType<
+    DictionaryValues<typeof collectionsConstructors>
+  >;
 
   // Get the collections to process
   const config = Container.get(ConfigService);
@@ -78,8 +80,14 @@ export function loadCollections() {
   const output: CollectionInstance[] = [];
   for (const collection of collectionsToProcess) {
     const collectionConstructor = collectionsConstructors[collection];
-    output.push(Container.get(collectionConstructor as Token<InstanceType<typeof collectionConstructor>>));
+    output.push(
+      Container.get(
+        collectionConstructor as Token<
+          InstanceType<typeof collectionConstructor>
+        >,
+      ),
+    );
   }
 
-  return output
+  return output;
 }

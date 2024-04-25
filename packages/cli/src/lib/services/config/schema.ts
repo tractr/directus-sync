@@ -34,8 +34,7 @@ export const OptionsHooksSchema = z.object({
   settings: HooksSchema.optional(),
   translations: HooksSchema.optional(),
   webhooks: HooksSchema.optional(),
-} satisfies { [key in z.infer<typeof CollectionEnum>]: z.Schema; });
-
+} satisfies { [key in z.infer<typeof CollectionEnum>]: z.Schema });
 
 export const OptionsFields = {
   // Global

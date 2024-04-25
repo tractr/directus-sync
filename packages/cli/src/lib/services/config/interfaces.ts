@@ -3,7 +3,7 @@ import type {
   ConfigFileOptionsSchema,
   OptionsFields,
   OptionsSchema,
-  CollectionEnum
+  CollectionEnum,
 } from './schema';
 import type { MigrationClient } from '../migration-client';
 import type { DirectusBaseType, Query } from '../collections';
@@ -18,7 +18,7 @@ export type CollectionName = z.infer<typeof CollectionEnum>;
 
 export type CollectionRecord<T> = {
   [key in CollectionName]: T;
-}
+};
 
 export type TransformDataFunction = <T = unknown>(
   data: T[],
