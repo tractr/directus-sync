@@ -56,6 +56,7 @@ export class ConfigService {
       dumpPath: snapshotPath,
       splitFiles: this.requireOptions('split'),
       force: this.requireOptions('force'),
+      enabled: this.requireOptions('snapshot'),
     };
   }
 

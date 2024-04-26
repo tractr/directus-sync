@@ -45,13 +45,18 @@ export const OptionsFields = {
   directusEmail: z.string().optional(),
   directusPassword: z.string().optional(),
   // Pull, diff, push
-  split: z.boolean(),
   dumpPath: z.string(),
+  // Collections
   collectionsPath: z.string(),
+  excludeCollections: z.array(CollectionEnum).optional(),
+  onlyCollections: z.array(CollectionEnum).optional(),
+  // Snapshot
   snapshotPath: z.string(),
+  snapshot: z.boolean(),
+  split: z.boolean(),
   // Specifications
-  specs: z.boolean(),
   specsPath: z.string(),
+  specs: z.boolean(),
   // Diff, push
   force: z.boolean(),
   // Untrack
@@ -59,9 +64,6 @@ export const OptionsFields = {
   id: z.string().optional(),
   // Hooks
   hooks: OptionsHooksSchema.optional(),
-  // Exclusion and Inclusion
-  excludeCollections: z.array(CollectionEnum).optional(),
-  onlyCollections: z.array(CollectionEnum).optional(),
 };
 export const OptionsSchema = z.object(OptionsFields);
 
@@ -75,16 +77,18 @@ export const ConfigFileOptionsSchema = z.object({
   directusEmail: OptionsFields.directusEmail.optional(),
   directusPassword: OptionsFields.directusPassword.optional(),
   // Dump config
-  split: OptionsFields.split.optional(),
   dumpPath: OptionsFields.dumpPath.optional(),
+  // Collections config
   collectionsPath: OptionsFields.collectionsPath.optional(),
-  snapshotPath: OptionsFields.snapshotPath.optional(),
-  // Specifications config
-  specs: OptionsFields.specs.optional(),
-  specsPath: OptionsFields.specsPath.optional(),
-  // Hooks config
-  hooks: OptionsHooksSchema.optional(),
-  // Exclusion and Inclusion
   excludeCollections: OptionsFields.excludeCollections.optional(),
   onlyCollections: OptionsFields.onlyCollections.optional(),
+  // Snapshot config
+  snapshotPath: OptionsFields.snapshotPath.optional(),
+  snapshot: OptionsFields.snapshot.optional(),
+  split: OptionsFields.split.optional(),
+  // Specifications config
+  specsPath: OptionsFields.specsPath.optional(),
+  specs: OptionsFields.specs.optional(),
+  // Hooks config
+  hooks: OptionsHooksSchema.optional(),
 });

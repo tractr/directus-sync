@@ -155,14 +155,20 @@ These options can be used with any command to configure the operation of `direct
 - `--collections-path <collectionPath>`  
   Specify the path for the collections dump, relative to the dump path. The default is `"collections"`.
 
+- `-o, --only-collections <onlyCollections>`
+  Comma-separated list of directus collections to include during `pull` `push` or `diff` process.
+
+- `-x, --exclude-collections <excludeCollections>`  
+  Comma-separated list of directus collections to exclude during `pull` `push` or `diff`. Can be used along with `only-collections`.
+
 - `--snapshot-path <snapshotPath>`  
   Specify the path for the schema snapshot dump, relative to the dump path. The default is `"snapshot"`.
 
+- `--no-snapshot`
+  Do not pull and push the Directus schema. By default, the schema is pulled and pushed.
+
 - `--no-split`  
   Indicates whether the schema snapshot should be split into multiple files. By default, snapshots are split.
-
-- `-f, --force`  
-  Force the diff of schema, even if the Directus version is different. The default is `false`.
 
 - `--specs-path <specsPath>`  
   Specify the path for the specifications dump (GraphQL & OpenAPI), relative to the dump path. The default is `"specs"`.
@@ -170,11 +176,8 @@ These options can be used with any command to configure the operation of `direct
 - `--no-specs`  
   Do not dump the specifications (GraphQL & OpenAPI). By default, specifications are dumped.
 
-- `-o, --only-collections <onlyCollections>`
-  Comma-separated list of directus collections to include during `pull` `push` or `diff` process.
- 
-- `-x, --exclude-collections <excludeCollections>`  
-  Comma-separated list of directus collections to exclude during `pull` `push` or `diff`. Can be used along with `only-collections`.
+- `-f, --force`  
+  Force the diff of schema, even if the Directus version is different. The default is `false`.
 
 - `-h, --help`  
   Display help information for the `directus-sync` commands.
@@ -201,14 +204,15 @@ module.exports = {
   directusToken: 'my-directus-token',
   directusEmail: 'admin@example.com', // ignored if directusToken is provided
   directusPassword: 'my-directus-password', // ignored if directusToken is provided
-  split: true,
   dumpPath: './directus-config',
   collectionsPath: 'collections',
-  snapshotPath: 'snapshot',
-  specsPath: 'specs',
-  specs: true,
   onlyCollections: ['roles', 'permissions', 'settings'],
   excludeCollections: ['settings'],
+  snapshotPath: 'snapshot',
+  snapshot: true,
+  split: true,
+  specsPath: 'specs',
+  specs: true,
 };
 ```
 

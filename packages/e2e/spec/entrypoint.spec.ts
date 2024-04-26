@@ -22,6 +22,7 @@ import {
 import {
   excludeSomeCollections,
   includeSomeCollections,
+  noSnapshot,
 } from './exclude-include/index.js';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
@@ -64,4 +65,5 @@ describe('Pull and check if ids are preserved for some collections', () => {
 
   excludeSomeCollections(context);
   includeSomeCollections(context);
+  noSnapshot(context);
 });

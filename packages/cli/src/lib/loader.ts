@@ -1,6 +1,7 @@
 import { DictionaryValues } from 'ts-essentials';
 import {
   CollectionRecord,
+  CollectionsList,
   ConfigService,
   DashboardsCollection,
   FlowsCollection,
@@ -18,6 +19,7 @@ import { createDumpFolders, getPinoTransport } from './helpers';
 import { Container, Token } from 'typedi';
 import Logger from 'pino';
 import { LOGGER } from './constants';
+import pino from 'pino';
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function initContext(
@@ -74,7 +76,11 @@ export function loadCollections() {
 
   // Get the collections to process
   const config = Container.get(ConfigService);
+  const logger: pino.Logger = Container.get(LOGGER);
   const collectionsToProcess = config.getCollectionsToProcess();
+  const excludedCollections = CollectionsList.filter(
+    (collection) => !collectionsToProcess.includes(collection),
+  );
 
   // Initialize the collections
   const output: CollectionInstance[] = [];
@@ -87,6 +93,10 @@ export function loadCollections() {
         >,
       ),
     );
+  }
+
+  if (excludedCollections.length > 0) {
+    logger.debug(`Excluded collections: ${excludedCollections.join(', ')}`);
   }
 
   return output;
