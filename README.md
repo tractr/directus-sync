@@ -391,8 +391,9 @@ module.exports = {
     snapshot: {
       /**
        * @param {Snapshot} snapshot
+       * @param {DirectusClient} client
        */
-      onLoad: (snapshot, client) => {
+      onLoad: async (snapshot, client) => {
         // Remove some fields from the snapshot
         const fieldsToExclude = {
           my_model: ['date_created', 'user_created'],
