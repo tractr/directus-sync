@@ -367,8 +367,9 @@ module.exports = {
 
 #### Snapshot hooks
 
-Like the collections hooks, the snapshot hooks are defined in the configuration file using the `hooks.snapshot` property. Under
-this property, you can define the hook function to be executed.
+Like the collections hooks, the snapshot hooks are defined in the configuration file using the `hooks.snapshot`
+property. Under
+this property, you can define the hook functions to be executed.
 
 Available hook functions are: `onLoad`, `onSave`:
 
@@ -376,8 +377,9 @@ Available hook functions are: `onLoad`, `onSave`:
   it is sent to Directus.
 - `onSave` is executed during the `pull` process, just before the data is saved to the files.
 
-This function can be asynchronous. It receives the snapshot object and the Directus client as parameters and must return
-the snapshot object.
+> [!NOTE]
+> This function can be **asynchronous**. It receives the snapshot object and the Directus client as parameters and must
+> return the snapshot object.
 
 Here is an example of a configuration file that exclude some fields when loading the snapshot. This will be similar for
 the `onSave` hook.
