@@ -367,7 +367,7 @@ module.exports = {
 
 #### Snapshot hooks
 
-Like the collections hooks, the snapshot hooks are defined in the configuration file using the `hooks` property. Under
+Like the collections hooks, the snapshot hooks are defined in the configuration file using the `hooks.snapshot` property. Under
 this property, you can define the hook function to be executed.
 
 Available hook functions are: `onLoad`, `onSave`:
