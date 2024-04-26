@@ -18,6 +18,7 @@ import {
   collectionsOnQuery,
   collectionsOnSave,
   collectionsOnSaveDuplicate,
+  snapshotOnLoad,
 } from './hooks/index.js';
 import {
   excludeSomeCollections,
@@ -62,6 +63,8 @@ describe('Pull and check if ids are preserved for some collections', () => {
   collectionsOnSaveDuplicate(context);
   collectionsOnLoad(context);
   collectionsOnQuery(context);
+
+  snapshotOnLoad(context);
 
   excludeSomeCollections(context);
   includeSomeCollections(context);
