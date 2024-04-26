@@ -10,6 +10,7 @@ import {
   pullWithNewData,
   pushOnEmptyInstance,
   pushTwiceOnEmptyInstance,
+  pullAndPushWithChanges,
 } from './pull-diff-push/index.js';
 import { pushWithDependencies } from './dependencies/index.js';
 import {
@@ -29,7 +30,7 @@ import {
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
-describe('Pull and check if ids are preserved for some collections', () => {
+describe('Tests entrypoint ->', () => {
   // ---------------------------------------------------
   // Global setup
   const context = new Context();
@@ -50,6 +51,7 @@ describe('Pull and check if ids are preserved for some collections', () => {
   // Tests
   preserveIds(context);
   pullAndPushWithoutChanges(context);
+  pullAndPushWithChanges(context);
   pullAndPushWithoutData(context);
   pullBasic(context);
   pushFlushAndPush(context);
