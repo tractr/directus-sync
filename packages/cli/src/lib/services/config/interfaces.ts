@@ -7,6 +7,7 @@ import type {
 } from './schema';
 import type { MigrationClient } from '../migration-client';
 import type { DirectusBaseType, Query } from '../collections';
+import type { Snapshot } from '../snapshot';
 
 export type OptionName = keyof typeof OptionsFields;
 
@@ -30,11 +31,21 @@ export type TransformQueryFunction = <T = Query<DirectusBaseType>>(
   directusClient: Awaited<ReturnType<typeof MigrationClient.prototype.get>>,
 ) => T | Promise<T>;
 
-export interface Hooks {
+export type TransformSnapshotFunction = (
+  snapshot: Snapshot,
+  directusClient: Awaited<ReturnType<typeof MigrationClient.prototype.get>>,
+) => Snapshot | Promise<Snapshot>;
+
+export interface CollectionHooks {
   onLoad?: TransformDataFunction;
   onDump?: TransformDataFunction;
   onSave?: TransformDataFunction;
   onQuery?: TransformQueryFunction;
+}
+
+export interface SnapshotHooks {
+  onLoad?: TransformSnapshotFunction;
+  onSave?: TransformSnapshotFunction;
 }
 
 interface DirectusConfigBase {

@@ -37,7 +37,7 @@ export class PermissionsCollection extends DirectusCollection<DirectusPermission
       dataMapper,
       idMapper,
       migrationClient,
-      config.getHooksConfig(PERMISSIONS_COLLECTION),
+      config.getCollectionHooksConfig(PERMISSIONS_COLLECTION),
     );
   }
 }

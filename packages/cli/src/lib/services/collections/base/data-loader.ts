@@ -1,13 +1,13 @@
 import { DirectusBaseType, WithSyncIdAndWithoutId } from './interfaces';
 import { readJsonSync, writeJsonSync } from 'fs-extra';
-import { Hooks } from '../../config';
+import { CollectionHooks } from '../../config';
 import { MigrationClient } from '../../migration-client';
 
 export abstract class DataLoader<DirectusType extends DirectusBaseType> {
   constructor(
     protected readonly filePath: string,
     protected readonly migrationClient: MigrationClient,
-    protected readonly hooks: Hooks,
+    protected readonly hooks: CollectionHooks,
   ) {}
 
   /**

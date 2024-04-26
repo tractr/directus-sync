@@ -37,7 +37,7 @@ export class PanelsCollection extends DirectusCollection<DirectusPanel> {
       dataMapper,
       idMapper,
       migrationClient,
-      config.getHooksConfig(PANELS_COLLECTION),
+      config.getCollectionHooksConfig(PANELS_COLLECTION),
     );
   }
 }

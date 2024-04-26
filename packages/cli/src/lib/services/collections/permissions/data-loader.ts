@@ -13,7 +13,7 @@ export class PermissionsDataLoader extends DataLoader<DirectusPermission> {
       config.getCollectionsConfig().dumpPath,
       `${PERMISSIONS_COLLECTION}.json`,
     );
-    const hooks = config.getHooksConfig(PERMISSIONS_COLLECTION);
+    const hooks = config.getCollectionHooksConfig(PERMISSIONS_COLLECTION);
     super(filePath, migrationClient, hooks);
   }
 

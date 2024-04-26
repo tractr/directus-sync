@@ -37,7 +37,7 @@ export class WebhooksCollection extends DirectusCollection<DirectusWebhook> {
       dataMapper,
       idMapper,
       migrationClient,
-      config.getHooksConfig(WEBHOOKS_COLLECTION),
+      config.getCollectionHooksConfig(WEBHOOKS_COLLECTION),
     );
   }
 }
