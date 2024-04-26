@@ -8,7 +8,7 @@ export const collectionsOnSave = (context: Context) => {
   it('ensure on save hook can change the data', async () => {
     // Init sync client
     const sync = await context.getSync(
-      'temp/on-save',
+      'temp/collections-on-save',
       true,
       'collections-on-save/directus-sync.config.cjs',
     );

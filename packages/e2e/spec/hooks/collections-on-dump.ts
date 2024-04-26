@@ -8,7 +8,7 @@ export const collectionsOnDump = (context: Context) => {
   it('ensure on dump hook can change the data', async () => {
     // Init sync client
     const sync = await context.getSync(
-      'temp/on-dump',
+      'temp/collections-on-dump',
       true,
       'collections-on-dump/directus-sync.config.cjs',
     );

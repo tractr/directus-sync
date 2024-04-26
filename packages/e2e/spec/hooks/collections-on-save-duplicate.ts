@@ -8,7 +8,7 @@ export const collectionsOnSaveDuplicate = (context: Context) => {
   it('can duplicate data on saving and dumping', async () => {
     // Init sync client
     const sync = await context.getSync(
-      'temp/on-save-duplicate',
+      'temp/collections-on-save-duplicate',
       true,
       'collections-on-save-duplicate/directus-sync.config.cjs',
     );

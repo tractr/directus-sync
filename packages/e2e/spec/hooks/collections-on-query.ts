@@ -9,7 +9,7 @@ export const collectionsOnQuery = (context: Context) => {
   it('ensure on query hook can filter the content', async () => {
     // Init sync client
     const sync = await context.getSync(
-      'temp/on-query',
+      'temp/collections-on-query',
       true,
       'collections-on-query/directus-sync.config.cjs',
     );
