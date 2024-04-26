@@ -77,16 +77,18 @@ export const ConfigFileOptionsSchema = z.object({
   directusEmail: OptionsFields.directusEmail.optional(),
   directusPassword: OptionsFields.directusPassword.optional(),
   // Dump config
-  split: OptionsFields.split.optional(),
   dumpPath: OptionsFields.dumpPath.optional(),
+  // Collections config
   collectionsPath: OptionsFields.collectionsPath.optional(),
-  snapshotPath: OptionsFields.snapshotPath.optional(),
-  // Specifications config
-  specs: OptionsFields.specs.optional(),
-  specsPath: OptionsFields.specsPath.optional(),
-  // Hooks config
-  hooks: OptionsHooksSchema.optional(),
-  // Exclusion and Inclusion
   excludeCollections: OptionsFields.excludeCollections.optional(),
   onlyCollections: OptionsFields.onlyCollections.optional(),
+  // Snapshot config
+  snapshotPath: OptionsFields.snapshotPath.optional(),
+  snapshot: OptionsFields.snapshot.optional(),
+  split: OptionsFields.split.optional(),
+  // Specifications config
+  specsPath: OptionsFields.specsPath.optional(),
+  specs: OptionsFields.specs.optional(),
+  // Hooks config
+  hooks: OptionsHooksSchema.optional(),
 });
