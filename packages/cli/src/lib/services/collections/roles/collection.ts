@@ -37,7 +37,7 @@ export class RolesCollection extends DirectusCollection<DirectusRole> {
       dataMapper,
       idMapper,
       migrationClient,
-      config.getHooksConfig(ROLES_COLLECTION),
+      config.getCollectionHooksConfig(ROLES_COLLECTION),
     );
   }
 }

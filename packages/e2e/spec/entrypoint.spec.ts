@@ -13,11 +13,13 @@ import {
 } from './pull-diff-push/index.js';
 import { pushWithDependencies } from './dependencies/index.js';
 import {
-  onDump,
-  onLoad,
-  onQuery,
-  onSave,
-  onSaveDuplicate,
+  collectionsOnDump,
+  collectionsOnLoad,
+  collectionsOnQuery,
+  collectionsOnSave,
+  collectionsOnSaveDuplicate,
+  snapshotOnLoad,
+  snapshotOnSave,
 } from './hooks/index.js';
 import {
   excludeSomeCollections,
@@ -57,11 +59,14 @@ describe('Pull and check if ids are preserved for some collections', () => {
 
   pushWithDependencies(context);
 
-  onDump(context);
-  onSave(context);
-  onSaveDuplicate(context);
-  onLoad(context);
-  onQuery(context);
+  collectionsOnDump(context);
+  collectionsOnSave(context);
+  collectionsOnSaveDuplicate(context);
+  collectionsOnLoad(context);
+  collectionsOnQuery(context);
+
+  snapshotOnLoad(context);
+  snapshotOnSave(context);
 
   excludeSomeCollections(context);
   includeSomeCollections(context);

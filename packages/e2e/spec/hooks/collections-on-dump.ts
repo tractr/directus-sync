@@ -4,13 +4,13 @@ import {
   getDumpedSystemCollectionsContents,
 } from '../helpers/index.js';
 
-export const onDump = (context: Context) => {
+export const collectionsOnDump = (context: Context) => {
   it('ensure on dump hook can change the data', async () => {
     // Init sync client
     const sync = await context.getSync(
-      'temp/on-dump',
+      'temp/collections-on-dump',
       true,
-      'on-dump/directus-sync.config.cjs',
+      'collections-on-dump/directus-sync.config.cjs',
     );
     const directus = context.getDirectus();
 

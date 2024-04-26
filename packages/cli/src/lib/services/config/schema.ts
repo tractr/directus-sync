@@ -16,25 +16,30 @@ export const CollectionsList = [
 
 export const CollectionEnum = z.enum(CollectionsList);
 
-export const HooksSchema = z.object({
+export const CollectionHooksSchema = z.object({
   onLoad: z.function().optional(),
   onDump: z.function().optional(),
   onSave: z.function().optional(),
   onQuery: z.function().optional(),
 });
+export const SnapshotHooksSchema = z.object({
+  onLoad: z.function().optional(),
+  onSave: z.function().optional(),
+});
 export const OptionsHooksSchema = z.object({
-  dashboards: HooksSchema.optional(),
-  flows: HooksSchema.optional(),
-  folders: HooksSchema.optional(),
-  operations: HooksSchema.optional(),
-  panels: HooksSchema.optional(),
-  permissions: HooksSchema.optional(),
-  presets: HooksSchema.optional(),
-  roles: HooksSchema.optional(),
-  settings: HooksSchema.optional(),
-  translations: HooksSchema.optional(),
-  webhooks: HooksSchema.optional(),
-} satisfies { [key in z.infer<typeof CollectionEnum>]: z.Schema });
+  dashboards: CollectionHooksSchema.optional(),
+  flows: CollectionHooksSchema.optional(),
+  folders: CollectionHooksSchema.optional(),
+  operations: CollectionHooksSchema.optional(),
+  panels: CollectionHooksSchema.optional(),
+  permissions: CollectionHooksSchema.optional(),
+  presets: CollectionHooksSchema.optional(),
+  roles: CollectionHooksSchema.optional(),
+  settings: CollectionHooksSchema.optional(),
+  translations: CollectionHooksSchema.optional(),
+  webhooks: CollectionHooksSchema.optional(),
+  snapshot: SnapshotHooksSchema.optional(),
+} satisfies { [key in z.infer<typeof CollectionEnum> | 'snapshot']: z.Schema });
 
 export const OptionsFields = {
   // Global

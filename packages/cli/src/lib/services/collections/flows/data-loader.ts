@@ -13,7 +13,7 @@ export class FlowsDataLoader extends DataLoader<DirectusFlow> {
       config.getCollectionsConfig().dumpPath,
       `${FLOWS_COLLECTION}.json`,
     );
-    const hooks = config.getHooksConfig(FLOWS_COLLECTION);
+    const hooks = config.getCollectionHooksConfig(FLOWS_COLLECTION);
     super(filePath, migrationClient, hooks);
   }
 }

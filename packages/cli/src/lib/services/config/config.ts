@@ -4,7 +4,8 @@ import {
   DirectusConfigWithCredentials,
   DirectusConfigWithToken,
   CollectionName,
-  Hooks,
+  CollectionHooks,
+  SnapshotHooks,
   OptionName,
   Options,
 } from './interfaces';
@@ -101,12 +102,23 @@ export class ConfigService {
   }
 
   @Cacheable()
-  getHooksConfig(collection: CollectionName): Hooks {
+  getCollectionHooksConfig(collection: CollectionName): CollectionHooks {
     const hooks = this.getOptions('hooks');
     if (!hooks) {
       return {};
     }
-    return (hooks[collection] ?? {}) as Hooks;
+    // Type assertion is needed because the schema does not define the function arguments
+    return (hooks[collection] ?? {}) as CollectionHooks;
+  }
+
+  @Cacheable()
+  getSnapshotHooksConfig(): SnapshotHooks {
+    const hooks = this.getOptions('hooks');
+    if (!hooks) {
+      return {};
+    }
+    // Type assertion is needed because the schema does not define the function arguments
+    return (hooks.snapshot ?? {}) as SnapshotHooks;
   }
 
   @Cacheable()

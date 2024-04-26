@@ -4,13 +4,13 @@ import {
   readAllSystemCollections,
 } from '../helpers/index.js';
 
-export const onLoad = (context: Context) => {
+export const collectionsOnLoad = (context: Context) => {
   it('ensure on load hook can change the data', async () => {
     // Init sync client
     const sync = await context.getSync(
       'sources/one-item-per-collection',
       false,
-      'on-load/directus-sync.config.cjs',
+      'collections-on-load/directus-sync.config.cjs',
     );
     const directus = context.getDirectus();
 

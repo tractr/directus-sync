@@ -5,13 +5,13 @@ import {
   readAllSystemCollections,
 } from '../helpers/index.js';
 
-export const onQuery = (context: Context) => {
+export const collectionsOnQuery = (context: Context) => {
   it('ensure on query hook can filter the content', async () => {
     // Init sync client
     const sync = await context.getSync(
-      'temp/on-query',
+      'temp/collections-on-query',
       true,
-      'on-query/directus-sync.config.cjs',
+      'collections-on-query/directus-sync.config.cjs',
     );
     const directus = context.getDirectus();
 

@@ -14,7 +14,7 @@ import { mkdirpSync, readJsonSync, removeSync, writeJsonSync } from 'fs-extra';
 import { LOGGER } from '../../constants';
 import pino from 'pino';
 import { getChildLogger, loadJsonFilesRecursively } from '../../helpers';
-import { ConfigService } from '../config';
+import { ConfigService, SnapshotHooks } from '../config';
 
 const SNAPSHOT_JSON = 'snapshot.json';
 const INFO_JSON = 'info.json';
@@ -32,6 +32,8 @@ export class SnapshotClient {
 
   protected readonly logger: pino.Logger;
 
+  protected readonly hooks: SnapshotHooks;
+
   constructor(
     config: ConfigService,
     @Inject(LOGGER) baseLogger: pino.Logger,
@@ -42,6 +44,7 @@ export class SnapshotClient {
     this.dumpPath = dumpPath;
     this.splitFiles = splitFiles;
     this.force = force;
+    this.hooks = config.getSnapshotHooksConfig();
   }
 
   /**
@@ -49,7 +52,11 @@ export class SnapshotClient {
    */
   async pull() {
     const snapshot = await this.getSnapshot();
-    const numberOfFiles = this.saveData(snapshot);
+    const { onSave } = this.hooks;
+    const transformedSnapshot = onSave
+      ? await onSave(snapshot, await this.migrationClient.get())
+      : snapshot;
+    const numberOfFiles = this.saveData(transformedSnapshot);
     this.logger.debug(
       `Saved ${numberOfFiles} file${numberOfFiles > 1 ? 's' : ''} to ${
         this.dumpPath
@@ -190,10 +197,14 @@ export class SnapshotClient {
    */
   protected async diffSnapshot(): Promise<SchemaDiffOutput | undefined> {
     const directus = await this.migrationClient.get();
+    const { onLoad } = this.hooks;
     const snapshot = this.loadData();
-    return (await directus.request(schemaDiff(snapshot, this.force))) as
-      | SchemaDiffOutput
-      | undefined;
+    const transformedSnapshot = onLoad
+      ? await onLoad(snapshot, await this.migrationClient.get())
+      : snapshot;
+    return (await directus.request(
+      schemaDiff(transformedSnapshot, this.force),
+    )) as SchemaDiffOutput | undefined;
   }
 
   /**

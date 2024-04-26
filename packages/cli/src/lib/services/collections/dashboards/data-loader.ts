@@ -13,7 +13,7 @@ export class DashboardsDataLoader extends DataLoader<DirectusDashboard> {
       config.getCollectionsConfig().dumpPath,
       `${DASHBOARDS_COLLECTION}.json`,
     );
-    const hooks = config.getHooksConfig(DASHBOARDS_COLLECTION);
+    const hooks = config.getCollectionHooksConfig(DASHBOARDS_COLLECTION);
     super(filePath, migrationClient, hooks);
   }
 }

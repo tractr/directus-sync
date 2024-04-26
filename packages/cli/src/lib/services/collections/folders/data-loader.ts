@@ -14,7 +14,7 @@ export class FoldersDataLoader extends DataLoader<DirectusFolder> {
       config.getCollectionsConfig().dumpPath,
       `${FOLDERS_COLLECTION}.json`,
     );
-    const hooks = config.getHooksConfig(FOLDERS_COLLECTION);
+    const hooks = config.getCollectionHooksConfig(FOLDERS_COLLECTION);
     super(filePath, migrationClient, hooks);
   }
 }
