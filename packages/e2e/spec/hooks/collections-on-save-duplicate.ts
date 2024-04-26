@@ -4,7 +4,7 @@ import {
   getDumpedSystemCollectionsContents,
 } from '../helpers/index.js';
 
-export const onSaveDuplicate = (context: Context) => {
+export const collectionsOnSaveDuplicate = (context: Context) => {
   it('can duplicate data on saving and dumping', async () => {
     // Init sync client
     const sync = await context.getSync(
