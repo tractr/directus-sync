@@ -21,7 +21,8 @@ import {
 } from './hooks/index.js';
 import {
   excludeSomeCollections,
-  includeSomeCollections, noSnapshot,
+  includeSomeCollections,
+  noSnapshot,
 } from './exclude-include/index.js';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;

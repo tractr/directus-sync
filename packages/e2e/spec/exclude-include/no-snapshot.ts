@@ -1,7 +1,4 @@
-import {
-  Context,
-  debug,
-} from '../helpers/index.js';
+import { Context, debug } from '../helpers/index.js';
 import Path from 'path';
 import fs from 'fs-extra';
 
@@ -29,7 +26,10 @@ export const noSnapshot = (context: Context) => {
 
   it('should not diff schema from Directus', async () => {
     // Init sync client
-    const sync = await context.getSync('sources/one-item-per-collection', false);
+    const sync = await context.getSync(
+      'sources/one-item-per-collection',
+      false,
+    );
 
     // --------------------------------------------------------------------
     // Pull the content from Directus
@@ -39,12 +39,14 @@ export const noSnapshot = (context: Context) => {
     // Check that the snapshot was ignored
     expect(output).toContain(debug('Snapshot is disabled'));
     expect(output).not.toContain(debug('[snapshot] No changes to apply'));
-
   });
 
   it('should not diff schema from Directus', async () => {
     // Init sync client
-    const sync = await context.getSync('sources/one-item-per-collection', false);
+    const sync = await context.getSync(
+      'sources/one-item-per-collection',
+      false,
+    );
 
     // --------------------------------------------------------------------
     // Pull the content from Directus
@@ -54,6 +56,5 @@ export const noSnapshot = (context: Context) => {
     // Check that the snapshot was ignored
     expect(output).toContain(debug('Snapshot is disabled'));
     expect(output).not.toContain(debug('[snapshot] No changes to apply'));
-
   });
 };
