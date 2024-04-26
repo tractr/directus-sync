@@ -11,7 +11,7 @@ export const collectionsOnQuery = (context: Context) => {
     const sync = await context.getSync(
       'temp/on-query',
       true,
-      'on-query/directus-sync.config.cjs',
+      'collections-on-query/directus-sync.config.cjs',
     );
     const directus = context.getDirectus();
 

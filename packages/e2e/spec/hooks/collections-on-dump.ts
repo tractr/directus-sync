@@ -10,7 +10,7 @@ export const collectionsOnDump = (context: Context) => {
     const sync = await context.getSync(
       'temp/on-dump',
       true,
-      'on-dump/directus-sync.config.cjs',
+      'collections-on-dump/directus-sync.config.cjs',
     );
     const directus = context.getDirectus();
 

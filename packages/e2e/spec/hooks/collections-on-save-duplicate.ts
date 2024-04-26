@@ -10,7 +10,7 @@ export const collectionsOnSaveDuplicate = (context: Context) => {
     const sync = await context.getSync(
       'temp/on-save-duplicate',
       true,
-      'on-save-duplicate/directus-sync.config.cjs',
+      'collections-on-save-duplicate/directus-sync.config.cjs',
     );
     const directus = context.getDirectus();
 
