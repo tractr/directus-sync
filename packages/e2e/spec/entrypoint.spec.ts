@@ -10,7 +10,8 @@ import {
   pullWithNewData,
   pushOnEmptyInstance,
   pushTwiceOnEmptyInstance,
-  pullAndPushWithChanges, pullAndPushWithDeletions,
+  pullAndPushWithChanges,
+  pullAndPushWithDeletions,
 } from './pull-diff-push/index.js';
 import { pushWithDependencies } from './dependencies/index.js';
 import {

@@ -1,13 +1,17 @@
 import {
   Context,
   getSystemCollectionsNames,
-  info, readAllSystemCollections,
+  info,
+  readAllSystemCollections,
 } from '../helpers/index.js';
 
 export const pullAndPushWithDeletions = (context: Context) => {
   it('should detect and apply deletions', async () => {
     // Init sync client
-    const syncInit = await context.getSync('sources/one-item-per-collection', false);
+    const syncInit = await context.getSync(
+      'sources/one-item-per-collection',
+      false,
+    );
     const directus = context.getDirectus();
     const client = directus.get();
 
@@ -46,16 +50,15 @@ export const pullAndPushWithDeletions = (context: Context) => {
     const data = await readAllSystemCollections(client);
     for (const collection of collections) {
       const count = collection === 'settings' ? 1 : 0;
-      expect(data[collection].length)
-        .withContext(collection)
-        .toEqual(count);
+      expect(data[collection].length).withContext(collection).toEqual(count);
     }
 
     // Analyze the output
     // Operations are deleted with the flows (cascade)
     // Panels are deleted with the dashboards (cascade)
     // Settings is not deleted
-    const expectCount = (collection: string) => ['operations', 'panels', 'settings'].includes(collection) ? 0 : 1;
+    const expectCount = (collection: string) =>
+      ['operations', 'panels', 'settings'].includes(collection) ? 0 : 1;
     expect(pushOutput).toContain(info('[snapshot] No changes to apply'));
     for (const collection of collections) {
       expect(pushOutput).toContain(
@@ -64,7 +67,9 @@ export const pullAndPushWithDeletions = (context: Context) => {
       expect(pushOutput).toContain(info(`[${collection}] Created 0 items`));
       expect(pushOutput).toContain(info(`[${collection}] Updated 0 items`));
       if (collection !== 'settings') {
-        expect(pushOutput).toContain(info(`[${collection}] Deleted ${expectCount(collection)} items`));
+        expect(pushOutput).toContain(
+          info(`[${collection}] Deleted ${expectCount(collection)} items`),
+        );
       }
 
       // Nothing created, updated or deleted
@@ -76,7 +81,9 @@ export const pullAndPushWithDeletions = (context: Context) => {
     // Check deleted sync id
     // Todo: Should clean up the sync id maps for cascading deletion
     for (const collection of collections) {
-      expect((await directus.getSyncIdMaps(collection)).length).toBe(expectCount(collection) ? 0 : 1);
+      expect((await directus.getSyncIdMaps(collection)).length).toBe(
+        expectCount(collection) ? 0 : 1,
+      );
     }
   });
 };
