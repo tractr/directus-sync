@@ -10,7 +10,7 @@ import {
   pullWithNewData,
   pushOnEmptyInstance,
   pushTwiceOnEmptyInstance,
-  pullAndPushWithChanges,
+  pullAndPushWithChanges, pullAndPushWithDeletions,
 } from './pull-diff-push/index.js';
 import { pushWithDependencies } from './dependencies/index.js';
 import {
@@ -52,6 +52,7 @@ describe('Tests entrypoint ->', () => {
   preserveIds(context);
   pullAndPushWithoutChanges(context);
   pullAndPushWithChanges(context);
+  pullAndPushWithDeletions(context);
   pullAndPushWithoutData(context);
   pullBasic(context);
   pushFlushAndPush(context);
