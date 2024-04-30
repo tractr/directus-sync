@@ -33,10 +33,10 @@ export type BaseSchema = object;
 export type Query<T extends DirectusBaseType> = DirectusQuery<BaseSchema, T>;
 
 export type Command<T> = RestCommand<T, object>; // Shortcode for RestCommand
-export type RestCommandBuilderOutput<T> = Command<T> | Promise<Command<T>>;
+export type SingleRestCommand<T> = Command<T> | Promise<Command<T>>;
 
-export type MultipleRestCommandBuilderOutput<T> =
+export type MultipleRestCommand<T> =
   | Command<T>
-  | [Command<T>, ...Command<T>[]]
+  | [...Command<object>[], Command<T>]
   | Promise<Command<T>>
-  | Promise<[Command<T>, ...Command<T>[]]>;
+  | Promise<[...Command<object>[], Command<T>]>;

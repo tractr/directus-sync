@@ -1,0 +1,38 @@
+[
+  {
+    "name": "blanditiis crustulum",
+    "key": "adfectus-tres",
+    "type": "log",
+    "position_x": 98,
+    "position_y": 6,
+    "options": {},
+    "resolve": "da4b7413-d028-4504-9231-b4c5acae9e45",
+    "reject": null,
+    "flow": "937b6da6-0bcf-4151-bcfa-949ab380d47c",
+    "_syncId": "04b328da-2c12-476e-a10d-17a86e4639f2"
+  },
+  {
+    "name": "blanditiis crustulum",
+    "key": "adfectus-tres",
+    "type": "log",
+    "position_x": 98,
+    "position_y": 6,
+    "options": {},
+    "resolve": null,
+    "reject": null,
+    "flow": "937b6da6-0bcf-4151-bcfa-949ab380d47c",
+    "_syncId": "08976416-fb3a-4918-b18c-85ab1259d7f1"
+  },
+  {
+    "name": "blanditiis crustulum",
+    "key": "adfectus-tres",
+    "type": "log",
+    "position_x": 98,
+    "position_y": 6,
+    "options": {},
+    "resolve": "08976416-fb3a-4918-b18c-85ab1259d7f1",
+    "reject": null,
+    "flow": "937b6da6-0bcf-4151-bcfa-949ab380d47c",
+    "_syncId": "da4b7413-d028-4504-9231-b4c5acae9e45"
+  }
+]

@@ -13,7 +13,10 @@ import {
   pullAndPushWithChanges,
   pullAndPushWithDeletions,
 } from './pull-diff-push/index.js';
-import { pushWithDependencies } from './dependencies/index.js';
+import {
+  pushWithDependencies,
+  updateWithDependencies,
+} from './dependencies/index.js';
 import {
   collectionsOnDump,
   collectionsOnLoad,
@@ -62,6 +65,7 @@ describe('Tests entrypoint ->', () => {
   pushTwiceOnEmptyInstance(context);
 
   pushWithDependencies(context);
+  updateWithDependencies(context);
 
   collectionsOnDump(context);
   collectionsOnSave(context);
