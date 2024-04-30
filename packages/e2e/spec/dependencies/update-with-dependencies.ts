@@ -1,7 +1,7 @@
 import { Context, info } from '../helpers/index.js';
 
 export const updateWithDependencies = (context: Context) => {
-  fit('reverse 2 operations dependencies', async () => {
+  it('reverse 2 operations dependencies', async () => {
     // Init sync client
     const syncInit = await context.getSync(
       'sources/multiple-dependencies',
