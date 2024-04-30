@@ -1,4 +1,4 @@
-import { DataClient, Query, WithoutIdAndSyncId } from '../base';
+import { Command, DataClient, Query, WithoutIdAndSyncId } from '../base';
 import {
   createTranslation,
   deleteTranslation,
@@ -31,6 +31,16 @@ export class TranslationsDataClient extends DataClient<DirectusTranslation> {
     itemId: string,
     diffItem: Partial<WithoutIdAndSyncId<DirectusTranslation>>,
   ) {
+    // Workaround for error "Invalid payload. Duplicate key and language combination."
+    // when updating key and language at the same time.
+    if (diffItem.key && diffItem.language) {
+      const { key, ...rest } = diffItem; // Remove key from diffItem
+      // Update in two steps
+      return [
+        updateTranslation(itemId, { key }),
+        updateTranslation(itemId, rest),
+      ] as [Command<DirectusTranslation>, Command<DirectusTranslation>];
+    }
     return updateTranslation(itemId, diffItem);
   }
 }

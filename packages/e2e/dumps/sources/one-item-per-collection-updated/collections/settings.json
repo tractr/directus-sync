@@ -1,0 +1,29 @@
+[
+  {
+    "project_name": "verbum",
+    "project_color": "#6644FF",
+    "public_note": "Solus uterque calculus universe.",
+    "auth_login_attempts": 22,
+    "auth_password_policy": "/^.{8,}$/",
+    "storage_asset_transform": "none",
+    "storage_asset_presets": null,
+    "custom_css": "body {\n  --v-button-background-color: #6644FF !important;\n}\n",
+    "storage_default_folder": null,
+    "basemaps": null,
+    "mapbox_key": "iJI1csFZ0dG4Ub3Ec1xJFoKjEVEifS8k",
+    "module_bar": null,
+    "project_descriptor": "Test project",
+    "default_language": "en-US",
+    "custom_aspect_ratios": null,
+    "default_appearance": "light",
+    "default_theme_light": "Directus Default",
+    "theme_light_overrides": {
+      "borderRadius": "2px"
+    },
+    "default_theme_dark": null,
+    "theme_dark_overrides": {
+      "borderRadius": "1px"
+    },
+    "_syncId": "26aa9eb5-11af-44cb-9f5b-073c55b57974"
+  }
+]

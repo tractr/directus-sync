@@ -1,5 +1,7 @@
-import { RestCommand } from '@directus/sdk';
 import {
+  Command,
+  MultipleRestCommand,
+  SingleRestCommand,
   DirectusBaseType,
   DirectusId,
   Query,
@@ -40,8 +42,9 @@ export abstract class DataClient<DirectusType extends DirectusBaseType> {
    * Remove the id and the syncId from the item before inserting it.
    */
   async create(item: WithoutSyncId<DirectusType>): Promise<DirectusType> {
-    const directus = await this.migrationClient.get();
-    return await directus.request(await this.getInsertCommand(item));
+    return await this.executeCommandsInSequence(
+      await this.getInsertCommand(item),
+    );
   }
 
   /**
@@ -52,8 +55,7 @@ export abstract class DataClient<DirectusType extends DirectusBaseType> {
     itemId: DirectusId,
     diffItem: Partial<WithoutIdAndSyncId<DirectusType>>,
   ): Promise<DirectusType> {
-    const directus = await this.migrationClient.get();
-    return await directus.request(
+    return await this.executeCommandsInSequence(
       await this.getUpdateCommand(itemId, diffItem),
     );
   }
@@ -63,32 +65,58 @@ export abstract class DataClient<DirectusType extends DirectusBaseType> {
    * The id is the local id.
    */
   async delete(itemId: DirectusId): Promise<DirectusType> {
+    return await this.executeCommandsInSequence(
+      await this.getDeleteCommand(itemId),
+    );
+  }
+
+  /**
+   * Execute commands in sequence and return the last result.
+   */
+  protected async executeCommandsInSequence(
+    commands:
+      | Command<DirectusType>
+      | [...Command<object>[], Command<DirectusType>],
+  ): Promise<DirectusType> {
     const directus = await this.migrationClient.get();
-    return await directus.request(await this.getDeleteCommand(itemId));
+    const [preCommands, lastCommand] = this.splitCommands(commands);
+    for (const command of preCommands) {
+      await directus.request(command);
+    }
+    return await directus.request(lastCommand);
+  }
+
+  /**
+   * Split the pre-commands and the final command.
+   */
+  protected splitCommands(
+    commands:
+      | Command<DirectusType>
+      | [...Command<object>[], Command<DirectusType>],
+  ): [Command<object>[], Command<DirectusType>] {
+    if (Array.isArray(commands)) {
+      const lastCommand = commands[commands.length - 1]!;
+      const preCommands = commands.slice(0, -1);
+      return [preCommands, lastCommand];
+    } else {
+      return [[], commands];
+    }
   }
 
   protected abstract getQueryCommand(
     query: Query<DirectusType>,
-  ):
-    | RestCommand<DirectusType[], object>
-    | Promise<RestCommand<DirectusType[], object>>;
+  ): SingleRestCommand<DirectusType>;
 
   protected abstract getInsertCommand(
     item: WithoutSyncId<DirectusType>,
-  ):
-    | RestCommand<DirectusType, object>
-    | Promise<RestCommand<DirectusType, object>>;
+  ): MultipleRestCommand<DirectusType>;
 
   protected abstract getUpdateCommand(
     itemId: DirectusId,
     diffItem: Partial<WithoutIdAndSyncId<DirectusType>>,
-  ):
-    | RestCommand<DirectusType, object>
-    | Promise<RestCommand<DirectusType, object>>;
+  ): MultipleRestCommand<DirectusType>;
 
   protected abstract getDeleteCommand(
     itemId: DirectusId,
-  ):
-    | RestCommand<DirectusType, object>
-    | Promise<RestCommand<DirectusType, object>>;
+  ): MultipleRestCommand<DirectusType>;
 }
