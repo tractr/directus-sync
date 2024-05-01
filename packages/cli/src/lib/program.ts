@@ -9,6 +9,7 @@ import {
   runDiff,
   runPull,
   runPush,
+  runRemovePermissionDuplicates,
   runUntrack,
 } from './index';
 
@@ -204,6 +205,18 @@ export function createProgram() {
     )
     .requiredOption('-i, --id <id>', 'the id of the element to untrack')
     .action(wrapAction(program, runUntrack));
+
+  helpers
+    .command('remove-permission-duplicates')
+    .description(
+      'remove conflicts in permissions when there are duplicated groups "role + collection + action".',
+    )
+    .option(
+      '-k, --keep <keep>',
+      `the permission to keep in case of conflict: "first" or "last" (default "${DefaultConfig.keep}")`,
+      'last',
+    )
+    .action(wrapAction(program, runRemovePermissionDuplicates));
 
   return program;
 }

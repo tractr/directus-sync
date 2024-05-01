@@ -19,6 +19,7 @@ export const DefaultConfig: Pick<
   | 'specsPath'
   | 'specs'
   | 'force'
+  | 'keep'
 > = {
   // Global
   debug: false,
@@ -37,4 +38,6 @@ export const DefaultConfig: Pick<
   specs: true,
   // Diff, push
   force: false,
+  // Remove Permission Duplicates
+  keep: 'last',
 };
