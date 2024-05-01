@@ -31,7 +31,7 @@ export const pushOnEmptyInstance = (context: Context) => {
       );
     }
 
-    // Push the data to Directus and trigger a ping in order to detect the end of the push
+    // Push the data to Directus
     const beforePushDate = new Date();
     const pushOutput = await sync.push();
 

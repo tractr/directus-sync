@@ -71,7 +71,7 @@ export const excludeSomeCollections = (context: Context) => {
     const systemCollections = getSystemCollectionsNames();
 
     // --------------------------------------------------------------------
-    // Push the data to Directus and trigger a ping in order to detect the end of the push
+    // Push the data to Directus
     const beforePushDate = new Date();
     const collectionsToExclude = ['roles', 'permissions', 'translations'];
     const output = await sync.push([
