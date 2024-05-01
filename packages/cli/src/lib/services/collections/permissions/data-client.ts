@@ -1,7 +1,8 @@
 import { Command, DataClient, Query, WithoutIdAndSyncId } from '../base';
 import {
   createPermission,
-  deletePermission, deletePermissions,
+  deletePermission,
+  deletePermissions,
   readPermissions,
   updatePermission,
 } from '@directus/sdk';
@@ -17,12 +18,9 @@ import { PERMISSIONS_COLLECTION } from './constants';
 export class PermissionsDataClient extends DataClient<DirectusPermission> {
   constructor(
     @Inject(LOGGER) baseLogger: pino.Logger,
-    migrationClient: MigrationClient
+    migrationClient: MigrationClient,
   ) {
-    super(
-      getChildLogger(baseLogger, PERMISSIONS_COLLECTION),
-      migrationClient
-    );
+    super(getChildLogger(baseLogger, PERMISSIONS_COLLECTION), migrationClient);
   }
 
   /**
@@ -40,7 +38,34 @@ export class PermissionsDataClient extends DataClient<DirectusPermission> {
     return deletePermission(itemId);
   }
 
-  protected getInsertCommand(item: WithoutIdAndSyncId<DirectusPermission>) {
+  protected async getInsertCommand(
+    item: WithoutIdAndSyncId<DirectusPermission>,
+  ) {
+    // Check if a similar permission already exists and remove it
+    // Discussed in https://github.com/directus/directus/issues/21965
+    const directus = await this.migrationClient.get();
+    const permissions = await directus.request(
+      readPermissions({
+        filter: {
+          role: item.role ? { _eq: item.role as string } : { _null: true },
+          collection: { _eq: item.collection },
+          action: { _eq: item.action },
+        },
+        fields: ['id'],
+      }),
+    );
+    const existingPermissions = permissions.map((p) => p.id).filter(Boolean);
+
+    if (existingPermissions.length) {
+      this.logger.warn(
+        `Found duplicate permissions for ${item.collection}.${item.action} with role ${(item.role as string) ?? 'null'}. Deleting them.`,
+      );
+      return [
+        deletePermissions(existingPermissions),
+        createPermission(item),
+      ] as [...Command<object>[], Command<DirectusPermission>];
+    }
+
     return createPermission(item);
   }
 
