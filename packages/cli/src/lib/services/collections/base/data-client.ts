@@ -9,12 +9,16 @@ import {
   WithoutSyncId,
 } from './interfaces';
 import { MigrationClient } from '../../migration-client';
+import pino from 'pino';
 
 /**
  * This class is responsible for calling CRUD operations on the target collection using the rest API.
  */
 export abstract class DataClient<DirectusType extends DirectusBaseType> {
-  constructor(protected readonly migrationClient: MigrationClient) {}
+  constructor(
+    protected readonly logger: pino.Logger,
+    protected readonly migrationClient: MigrationClient,
+  ) {}
 
   /**
    * Request data from the target collection using the rest API.

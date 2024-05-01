@@ -5,14 +5,21 @@ import {
   readDashboards,
   updateDashboard,
 } from '@directus/sdk';
-import { Service } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { MigrationClient } from '../../migration-client';
 import { DirectusDashboard } from './interfaces';
+import { LOGGER } from '../../../constants';
+import pino from 'pino';
+import { getChildLogger } from '../../../helpers';
+import { DASHBOARDS_COLLECTION } from './constants';
 
 @Service()
 export class DashboardsDataClient extends DataClient<DirectusDashboard> {
-  constructor(migrationClient: MigrationClient) {
-    super(migrationClient);
+  constructor(
+    @Inject(LOGGER) baseLogger: pino.Logger,
+    migrationClient: MigrationClient
+  ) {
+    super(getChildLogger(baseLogger, DASHBOARDS_COLLECTION), migrationClient);
   }
 
   protected getDeleteCommand(itemId: string) {

@@ -1,18 +1,28 @@
-import { DataClient, Query, WithoutIdAndSyncId } from '../base';
+import { Command, DataClient, Query, WithoutIdAndSyncId } from '../base';
 import {
   createPermission,
-  deletePermission,
+  deletePermission, deletePermissions,
   readPermissions,
   updatePermission,
 } from '@directus/sdk';
-import { Service } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { MigrationClient } from '../../migration-client';
 import { DirectusPermission } from './interfaces';
+import { LOGGER } from '../../../constants';
+import pino from 'pino';
+import { getChildLogger } from '../../../helpers';
+import { PERMISSIONS_COLLECTION } from './constants';
 
 @Service()
 export class PermissionsDataClient extends DataClient<DirectusPermission> {
-  constructor(migrationClient: MigrationClient) {
-    super(migrationClient);
+  constructor(
+    @Inject(LOGGER) baseLogger: pino.Logger,
+    migrationClient: MigrationClient
+  ) {
+    super(
+      getChildLogger(baseLogger, PERMISSIONS_COLLECTION),
+      migrationClient
+    );
   }
 
   /**

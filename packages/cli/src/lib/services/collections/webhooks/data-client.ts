@@ -5,14 +5,18 @@ import {
   readWebhooks,
   updateWebhook,
 } from '@directus/sdk';
-import { Service } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { MigrationClient } from '../../migration-client';
 import { DirectusWebhook } from './interfaces';
+import { LOGGER } from '../../../constants';
+import pino from 'pino';
+import { getChildLogger } from '../../../helpers';
+import { WEBHOOKS_COLLECTION } from './constants';
 
 @Service()
 export class WebhooksDataClient extends DataClient<DirectusWebhook> {
-  constructor(migrationClient: MigrationClient) {
-    super(migrationClient);
+  constructor(@Inject(LOGGER) baseLogger: pino.Logger, migrationClient: MigrationClient) {
+    super(getChildLogger(baseLogger, WEBHOOKS_COLLECTION), migrationClient);
   }
 
   protected getDeleteCommand(itemId: number) {

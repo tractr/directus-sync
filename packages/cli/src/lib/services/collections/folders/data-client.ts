@@ -5,14 +5,18 @@ import {
   readFolders,
   updateFolder,
 } from '@directus/sdk';
-import { Service } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { MigrationClient } from '../../migration-client';
 import { DirectusFolder } from './interfaces';
+import { LOGGER } from '../../../constants';
+import pino from 'pino';
+import { getChildLogger } from '../../../helpers';
+import { FOLDERS_COLLECTION } from './constants';
 
 @Service()
 export class FoldersDataClient extends DataClient<DirectusFolder> {
-  constructor(migrationClient: MigrationClient) {
-    super(migrationClient);
+  constructor(@Inject(LOGGER) baseLogger: pino.Logger, migrationClient: MigrationClient) {
+    super(getChildLogger(baseLogger, FOLDERS_COLLECTION), migrationClient);
   }
 
   protected getDeleteCommand(itemId: string) {
