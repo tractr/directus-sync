@@ -126,8 +126,8 @@ export default defineEndpoint(async (router, { database, logger }) => {
         req.body,
         z.object({ keep: z.enum(['first', 'last']).default('last') }),
       );
-      await permissions.removeDuplicates(keep);
-      res.status(204).send();
+      const deletedPermissions = await permissions.removeDuplicates(keep);
+      res.status(200).send({ deletedPermissions });
     } catch (e) {
       next(e);
     }

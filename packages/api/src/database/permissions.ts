@@ -8,6 +8,13 @@ interface Permission {
   action: string;
 }
 
+interface DeletedPermission {
+  role: string;
+  collection: string;
+  action: string;
+  ids: string[];
+}
+
 export class Permissions {
   protected readonly tableName = 'directus_permissions';
 
@@ -21,6 +28,7 @@ export class Permissions {
    */
   async removeDuplicates(keep: 'first' | 'last') {
     const roles = await this.getRolesCollectionsAndActions();
+    const output: DeletedPermission[] = [];
 
     for (const [role, collections] of roles) {
       for (const [collection, actions] of collections) {
@@ -39,8 +47,11 @@ export class Permissions {
             const [toKeep, ...rest] = (
               keep === 'first' ? permissions : permissions.reverse()
             ) as [Permission, ...Permission[]];
+
             const ids = rest.map((permission) => permission.id);
             await this.database(this.tableName).whereIn('id', ids).delete();
+
+            output.push({ role, collection, action, ids });
             this.logger.info(
               `Deleted ${ids.length} duplicated permissions, keeping permission ${toKeep.id}`,
             );
@@ -48,6 +59,8 @@ export class Permissions {
         }
       }
     }
+
+    return output;
   }
 
   protected async getRolesCollectionsAndActions() {

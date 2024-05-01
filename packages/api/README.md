@@ -35,6 +35,12 @@ SyncIDs. These endpoints include:
 - `DELETE /directus-extension-sync/table/:table/sync_id/:sync_id`: Remove a mapping by SyncID.
 - `DELETE /directus-extension-sync/table/:table/local_id/:local_id`: Remove a mapping by local ID.
 
+
+### Helpers
+
+- `DELETE /directus-extension-sync/helpers/permissions/duplicates`: Remove conflicts in permissions when there are
+  duplicated groups "role + collection + action".
+
 ## Development
 
 Link the package to a development Directus instance:
