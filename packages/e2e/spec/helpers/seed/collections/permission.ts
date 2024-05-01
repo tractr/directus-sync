@@ -3,7 +3,7 @@ import { SystemCollection } from '../../sdk/index.js';
 import { faker } from '@faker-js/faker';
 
 export function getPermission(
-  role: string,
+  role: string | null,
   collection: SystemCollection,
   action: 'create' | 'read' | 'update' | 'delete' | 'share',
 ): Omit<DirectusPermission<object>, 'id'> {

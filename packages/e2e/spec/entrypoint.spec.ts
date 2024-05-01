@@ -31,6 +31,7 @@ import {
   includeSomeCollections,
   noSnapshot,
 } from './exclude-include/index.js';
+import { insertDuplicatePermissions } from './permissions/index.js';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
@@ -79,4 +80,6 @@ describe('Tests entrypoint ->', () => {
   excludeSomeCollections(context);
   includeSomeCollections(context);
   noSnapshot(context);
+
+  insertDuplicatePermissions(context);
 });
