@@ -191,7 +191,11 @@ export function createProgram() {
     .addOption(forceOption)
     .action(wrapAction(program, runPush));
 
-  program
+  const helpers = program
+    .command('helpers')
+    .description('a set of helper utilities');
+
+  helpers
     .command('untrack')
     .description('stop tracking of an element')
     .requiredOption(
