@@ -16,7 +16,10 @@ import { PRESETS_COLLECTION } from './constants';
 
 @Service()
 export class PresetsDataClient extends DataClient<DirectusPreset> {
-  constructor(@Inject(LOGGER) baseLogger: pino.Logger, migrationClient: MigrationClient) {
+  constructor(
+    @Inject(LOGGER) baseLogger: pino.Logger,
+    migrationClient: MigrationClient,
+  ) {
     super(getChildLogger(baseLogger, PRESETS_COLLECTION), migrationClient);
   }
 

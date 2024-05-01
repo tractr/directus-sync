@@ -11,7 +11,9 @@ import { FLOWS_COLLECTION } from './constants';
 @Service()
 export class FlowsDataClient extends DataClient<DirectusFlow> {
   constructor(
-    @Inject(LOGGER) baseLogger: pino.Logger,migrationClient: MigrationClient) {
+    @Inject(LOGGER) baseLogger: pino.Logger,
+    migrationClient: MigrationClient,
+  ) {
     super(getChildLogger(baseLogger, FLOWS_COLLECTION), migrationClient);
   }
 

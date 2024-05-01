@@ -16,7 +16,10 @@ import { OPERATIONS_COLLECTION } from './constants';
 
 @Service()
 export class OperationsDataClient extends DataClient<DirectusOperation> {
-  constructor(@Inject(LOGGER) baseLogger: pino.Logger, migrationClient: MigrationClient) {
+  constructor(
+    @Inject(LOGGER) baseLogger: pino.Logger,
+    migrationClient: MigrationClient,
+  ) {
     super(getChildLogger(baseLogger, OPERATIONS_COLLECTION), migrationClient);
   }
 

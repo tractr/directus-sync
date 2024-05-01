@@ -10,7 +10,10 @@ import { SETTINGS_COLLECTION } from './constants';
 
 @Service()
 export class SettingsDataClient extends DataClient<DirectusSettings> {
-  constructor(@Inject(LOGGER) baseLogger: pino.Logger, migrationClient: MigrationClient) {
+  constructor(
+    @Inject(LOGGER) baseLogger: pino.Logger,
+    migrationClient: MigrationClient,
+  ) {
     super(getChildLogger(baseLogger, SETTINGS_COLLECTION), migrationClient);
   }
 

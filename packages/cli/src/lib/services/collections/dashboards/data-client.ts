@@ -17,7 +17,7 @@ import { DASHBOARDS_COLLECTION } from './constants';
 export class DashboardsDataClient extends DataClient<DirectusDashboard> {
   constructor(
     @Inject(LOGGER) baseLogger: pino.Logger,
-    migrationClient: MigrationClient
+    migrationClient: MigrationClient,
   ) {
     super(getChildLogger(baseLogger, DASHBOARDS_COLLECTION), migrationClient);
   }

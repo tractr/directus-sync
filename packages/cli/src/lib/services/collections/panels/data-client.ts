@@ -15,7 +15,10 @@ import { PANELS_COLLECTION } from './constants';
 
 @Service()
 export class PanelsDataClient extends DataClient<DirectusPanel> {
-  constructor(@Inject(LOGGER) baseLogger: pino.Logger, migrationClient: MigrationClient) {
+  constructor(
+    @Inject(LOGGER) baseLogger: pino.Logger,
+    migrationClient: MigrationClient,
+  ) {
     super(getChildLogger(baseLogger, PANELS_COLLECTION), migrationClient);
   }
 

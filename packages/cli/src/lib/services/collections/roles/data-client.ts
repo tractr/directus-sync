@@ -11,7 +11,10 @@ import { ROLES_COLLECTION } from './constants';
 
 @Service()
 export class RolesDataClient extends DataClient<DirectusRole> {
-  constructor(@Inject(LOGGER) baseLogger: pino.Logger, migrationClient: MigrationClient) {
+  constructor(
+    @Inject(LOGGER) baseLogger: pino.Logger,
+    migrationClient: MigrationClient,
+  ) {
     super(getChildLogger(baseLogger, ROLES_COLLECTION), migrationClient);
   }
 

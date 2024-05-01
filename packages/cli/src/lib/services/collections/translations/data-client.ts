@@ -15,7 +15,10 @@ import { TRANSLATIONS_COLLECTION } from './constants';
 
 @Service()
 export class TranslationsDataClient extends DataClient<DirectusTranslation> {
-  constructor(@Inject(LOGGER) baseLogger: pino.Logger, migrationClient: MigrationClient) {
+  constructor(
+    @Inject(LOGGER) baseLogger: pino.Logger,
+    migrationClient: MigrationClient,
+  ) {
     super(getChildLogger(baseLogger, TRANSLATIONS_COLLECTION), migrationClient);
   }
 

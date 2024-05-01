@@ -15,7 +15,10 @@ import { WEBHOOKS_COLLECTION } from './constants';
 
 @Service()
 export class WebhooksDataClient extends DataClient<DirectusWebhook> {
-  constructor(@Inject(LOGGER) baseLogger: pino.Logger, migrationClient: MigrationClient) {
+  constructor(
+    @Inject(LOGGER) baseLogger: pino.Logger,
+    migrationClient: MigrationClient,
+  ) {
     super(getChildLogger(baseLogger, WEBHOOKS_COLLECTION), migrationClient);
   }
 

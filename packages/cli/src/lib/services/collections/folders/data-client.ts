@@ -15,7 +15,10 @@ import { FOLDERS_COLLECTION } from './constants';
 
 @Service()
 export class FoldersDataClient extends DataClient<DirectusFolder> {
-  constructor(@Inject(LOGGER) baseLogger: pino.Logger, migrationClient: MigrationClient) {
+  constructor(
+    @Inject(LOGGER) baseLogger: pino.Logger,
+    migrationClient: MigrationClient,
+  ) {
     super(getChildLogger(baseLogger, FOLDERS_COLLECTION), migrationClient);
   }
 
