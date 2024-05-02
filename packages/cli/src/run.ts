@@ -3,9 +3,7 @@ import pino from 'pino';
 import { Container } from 'typedi';
 
 function getLogger(): pino.Logger | Console {
-  return Container.has(LOGGER) ?
-    Container.get(LOGGER) :
-    console;
+  return Container.has(LOGGER) ? Container.get(LOGGER) : console;
 }
 
 export function run() {
