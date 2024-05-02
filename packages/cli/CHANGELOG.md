@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/tractr/directus-sync/compare/directus-sync@1.4.0...directus-sync@1.5.0) (2024-05-02)
+
+
+### Bug Fixes
+
+* **cli:** handle "record not unique" errors on operations ([#60](https://github.com/tractr/directus-sync/issues/60)) ([b1c8f0b](https://github.com/tractr/directus-sync/commit/b1c8f0b249373a0bd6637d7bb1935df20bf4a340))
+* permission duplicates ([#62](https://github.com/tractr/directus-sync/issues/62)) ([5f0a105](https://github.com/tractr/directus-sync/commit/5f0a10507563493347ff9230f505a205cb652dc5))
+
+
+### Features
+
+* **cli:** add excludeCollections and onlyCollections options ([#52](https://github.com/tractr/directus-sync/issues/52)) ([e5e0451](https://github.com/tractr/directus-sync/commit/e5e0451950b2e892d918442b28fa147bb0daa09d))
+* **cli:** add hooks for snapshot ([#56](https://github.com/tractr/directus-sync/issues/56)) ([51a28bb](https://github.com/tractr/directus-sync/commit/51a28bba0abb145c494998282b804c4aba369e63))
+* **cli:** add option to ignore snapshot ([#54](https://github.com/tractr/directus-sync/issues/54)) ([a32b294](https://github.com/tractr/directus-sync/commit/a32b294d96325beb30bd73051c789513966a67a8))
+
+
+
+
+
 # [1.4.0](https://github.com/tractr/directus-sync/compare/directus-sync@1.3.0...directus-sync@1.4.0) (2024-03-25)
 
 
