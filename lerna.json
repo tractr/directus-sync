@@ -5,7 +5,8 @@
     "version": {
       "conventionalCommits": true,
       "message": "chore(release): bump version [skip ci]",
-      "yes": true
+      "yes": true,
+      "private": false
     },
     "publish": {
       "yes": true
