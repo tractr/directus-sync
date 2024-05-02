@@ -36,7 +36,7 @@ export abstract class ExtensionClient {
         if (response.status === 404 && response.statusText === 'Not Found') {
           error = createHttpError(
             response.status,
-            `${response.statusText}: Did you add directus-extension-sync to Directus?`,
+            `${response.statusText}: Did you add directus-extension-sync to Directus? Please check the version of the extension as well.`,
           );
         } else {
           error = createHttpError(response.status, response.statusText);

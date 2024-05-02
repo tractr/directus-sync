@@ -1,7 +1,5 @@
-import { Context, getPermission, getRole, warn } from '../helpers/index.js';
+import { Context, newPermission, newRole, warn } from '../helpers/index.js';
 import {
-  createPermission,
-  createRole,
   deletePermissions,
   DirectusPermission,
   readPermissions,
@@ -17,14 +15,10 @@ export const insertDuplicatePermissions = (context: Context) => {
     const client = directus.get();
 
     // Create existing resources
-    const role = await client.request(createRole(getRole()));
+    const role = await newRole(client);
     const initialPermissions = [
-      await client.request(
-        createPermission(getPermission(role.id, 'panels', 'update')),
-      ),
-      await client.request(
-        createPermission(getPermission(null, 'panels', 'delete')),
-      ),
+      await newPermission(client, role.id, 'panels', 'update'),
+      await newPermission(client, null, 'panels', 'delete'),
     ];
 
     // Dump the data
@@ -36,18 +30,10 @@ export const insertDuplicatePermissions = (context: Context) => {
     );
 
     // Create new permissions
-    await client.request(
-      createPermission(getPermission(role.id, 'panels', 'update')),
-    );
-    await client.request(
-      createPermission(getPermission(role.id, 'panels', 'create')),
-    );
-    await client.request(
-      createPermission(getPermission(null, 'panels', 'delete')),
-    );
-    await client.request(
-      createPermission(getPermission(null, 'panels', 'read')),
-    );
+    await newPermission(client, role.id, 'panels', 'update');
+    await newPermission(client, role.id, 'panels', 'create');
+    await newPermission(client, null, 'panels', 'delete');
+    await newPermission(client, null, 'panels', 'read');
 
     // Push back the data
     const beforePushDate = new Date();

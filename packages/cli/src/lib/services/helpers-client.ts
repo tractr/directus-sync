@@ -28,13 +28,11 @@ export class HelpersClient extends ExtensionClient {
 
   async removePermissionDuplicates() {
     const { keep } = this.config.getRemovePermissionDuplicatesConfig();
-    const results = await this.fetch<DeletedPermission[]>(
-      '/helpers/permissions/duplicates',
-      'DELETE',
-      { keep },
-    );
+    const results = await this.fetch<{
+      deletedPermissions: DeletedPermission[];
+    }>('/helpers/permissions/duplicates', 'DELETE', { keep });
 
-    for (const result of results) {
+    for (const result of results.deletedPermissions ?? []) {
       this.logger.info(
         `Deleted ${result.ids.length} duplicated permissions for role ${result.role ?? null}, collection ${result.collection}, action ${result.action}`,
       );

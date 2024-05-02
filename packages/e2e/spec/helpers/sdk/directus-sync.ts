@@ -49,6 +49,15 @@ export class DirectusSync {
     );
   }
 
+  removePermissionDuplicates(keep: 'last' | 'first') {
+    return this.runCliCommand(
+      'helpers',
+      'remove-permission-duplicates',
+      '--keep',
+      keep,
+    );
+  }
+
   protected async runCliCommand(...args: string[]) {
     // Avoid running multiple commands at the same time
     if (this.running) {
