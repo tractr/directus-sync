@@ -13,7 +13,7 @@ export class OperationsDataLoader extends DataLoader<DirectusOperation> {
       config.getCollectionsConfig().dumpPath,
       `${OPERATIONS_COLLECTION}.json`,
     );
-    const hooks = config.getHooksConfig(OPERATIONS_COLLECTION);
+    const hooks = config.getCollectionHooksConfig(OPERATIONS_COLLECTION);
     super(filePath, migrationClient, hooks);
   }
 

@@ -14,7 +14,7 @@ import { DataLoader } from './data-loader';
 import { DataDiffer } from './data-differ';
 import pino from 'pino';
 import { DataMapper } from './data-mapper';
-import { Hooks } from '../../config';
+import { CollectionHooks } from '../../config';
 import { MigrationClient } from '../../migration-client';
 
 /**
@@ -47,7 +47,7 @@ export abstract class DirectusCollection<
     protected readonly dataMapper: DataMapper<DirectusType>,
     protected readonly idMapper: IdMapperClient,
     protected readonly migrationClient: MigrationClient,
-    protected readonly hooks: Hooks,
+    protected readonly hooks: CollectionHooks,
   ) {}
 
   /**

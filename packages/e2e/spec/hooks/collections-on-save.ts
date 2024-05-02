@@ -4,13 +4,13 @@ import {
   getDumpedSystemCollectionsContents,
 } from '../helpers/index.js';
 
-export const onSave = (context: Context) => {
+export const collectionsOnSave = (context: Context) => {
   it('ensure on save hook can change the data', async () => {
     // Init sync client
     const sync = await context.getSync(
-      'temp/on-save',
+      'temp/collections-on-save',
       true,
-      'on-save/directus-sync.config.cjs',
+      'collections-on-save/directus-sync.config.cjs',
     );
     const directus = context.getDirectus();
 

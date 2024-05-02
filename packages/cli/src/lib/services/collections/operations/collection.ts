@@ -37,7 +37,7 @@ export class OperationsCollection extends DirectusCollection<DirectusOperation> 
       dataMapper,
       idMapper,
       migrationClient,
-      config.getHooksConfig(OPERATIONS_COLLECTION),
+      config.getCollectionHooksConfig(OPERATIONS_COLLECTION),
     );
   }
 }

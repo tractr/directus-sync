@@ -37,7 +37,7 @@ export class TranslationsCollection extends DirectusCollection<DirectusTranslati
       dataMapper,
       idMapper,
       migrationClient,
-      config.getHooksConfig(TRANSLATIONS_COLLECTION),
+      config.getCollectionHooksConfig(TRANSLATIONS_COLLECTION),
     );
   }
 }

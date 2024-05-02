@@ -1,5 +1,5 @@
-import { DirectusSyncArgs, PinoLog } from './interfaces/index.js';
-import { createProgram, LOGGER_TRANSPORT } from 'directus-sync';
+import { DirectusId, DirectusSyncArgs, PinoLog } from './interfaces/index.js';
+import { CollectionName, createProgram, LOGGER_TRANSPORT } from 'directus-sync';
 import { LoggerOptions } from 'pino';
 import { Container } from 'typedi';
 import { v4 as uuidV4 } from 'uuid';
@@ -22,16 +22,51 @@ export class DirectusSync {
     return this.options.dumpPath;
   }
 
-  pull() {
-    return this.runCliCommand('pull', '--dump-path', this.options.dumpPath);
+  pull(args?: string[]) {
+    return this.runCliCommand(
+      'pull',
+      '--dump-path',
+      this.options.dumpPath,
+      ...(args ?? []),
+    );
   }
 
-  push() {
-    return this.runCliCommand('push', '--dump-path', this.options.dumpPath);
+  push(args?: string[]) {
+    return this.runCliCommand(
+      'push',
+      '--dump-path',
+      this.options.dumpPath,
+      ...(args ?? []),
+    );
   }
 
-  diff() {
-    return this.runCliCommand('diff', '--dump-path', this.options.dumpPath);
+  diff(args?: string[]) {
+    return this.runCliCommand(
+      'diff',
+      '--dump-path',
+      this.options.dumpPath,
+      ...(args ?? []),
+    );
+  }
+
+  untrack(collection: CollectionName, id: DirectusId) {
+    return this.runCliCommand(
+      'helpers',
+      'untrack',
+      '--collection',
+      collection,
+      '--id',
+      id.toString(),
+    );
+  }
+
+  removePermissionDuplicates(keep: 'last' | 'first') {
+    return this.runCliCommand(
+      'helpers',
+      'remove-permission-duplicates',
+      '--keep',
+      keep,
+    );
   }
 
   protected async runCliCommand(...args: string[]) {

@@ -30,7 +30,7 @@ export class SpecificationsClient {
     @Inject(LOGGER) baseLogger: pino.Logger,
     protected readonly migrationClient: MigrationClient,
   ) {
-    this.logger = getChildLogger(baseLogger, 'snapshot');
+    this.logger = getChildLogger(baseLogger, 'specifications');
     const { dumpPath, enabled } = config.getSpecificationsConfig();
     this.dumpPath = dumpPath;
     this.enabled = enabled;

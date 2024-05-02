@@ -10,19 +10,36 @@ import {
   pullWithNewData,
   pushOnEmptyInstance,
   pushTwiceOnEmptyInstance,
+  pullAndPushWithChanges,
+  pullAndPushWithDeletions,
 } from './pull-diff-push/index.js';
-import { pushWithDependencies } from './dependencies/index.js';
 import {
-  onDump,
-  onLoad,
-  onQuery,
-  onSave,
-  onSaveDuplicate,
+  pushWithDependencies,
+  updateWithDependencies,
+} from './dependencies/index.js';
+import {
+  collectionsOnDump,
+  collectionsOnLoad,
+  collectionsOnQuery,
+  collectionsOnSave,
+  collectionsOnSaveDuplicate,
+  snapshotOnLoad,
+  snapshotOnSave,
 } from './hooks/index.js';
+import {
+  excludeSomeCollections,
+  includeSomeCollections,
+  noSnapshot,
+} from './exclude-include/index.js';
+import {
+  insertDuplicatedPermissions,
+  removePermissionDuplicates,
+} from './permissions/index.js';
+import { removeTrackedItem } from './untrack/index.js';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
-describe('Pull and check if ids are preserved for some collections', () => {
+describe('Tests entrypoint ->', () => {
   // ---------------------------------------------------
   // Global setup
   const context = new Context();
@@ -43,6 +60,8 @@ describe('Pull and check if ids are preserved for some collections', () => {
   // Tests
   preserveIds(context);
   pullAndPushWithoutChanges(context);
+  pullAndPushWithChanges(context);
+  pullAndPushWithDeletions(context);
   pullAndPushWithoutData(context);
   pullBasic(context);
   pushFlushAndPush(context);
@@ -51,10 +70,23 @@ describe('Pull and check if ids are preserved for some collections', () => {
   pushTwiceOnEmptyInstance(context);
 
   pushWithDependencies(context);
+  updateWithDependencies(context);
 
-  onDump(context);
-  onSave(context);
-  onSaveDuplicate(context);
-  onLoad(context);
-  onQuery(context);
+  collectionsOnDump(context);
+  collectionsOnSave(context);
+  collectionsOnSaveDuplicate(context);
+  collectionsOnLoad(context);
+  collectionsOnQuery(context);
+
+  snapshotOnLoad(context);
+  snapshotOnSave(context);
+
+  excludeSomeCollections(context);
+  includeSomeCollections(context);
+  noSnapshot(context);
+
+  insertDuplicatedPermissions(context);
+  removePermissionDuplicates(context);
+
+  removeTrackedItem(context);
 });

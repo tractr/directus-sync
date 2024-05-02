@@ -39,7 +39,7 @@ export class FoldersCollection extends DirectusCollection<DirectusFolder> {
       dataMapper,
       idMapper,
       migrationClient,
-      config.getHooksConfig(FOLDERS_COLLECTION),
+      config.getCollectionHooksConfig(FOLDERS_COLLECTION),
     );
   }
 }

@@ -35,6 +35,9 @@ import {
   RestClient,
   updateFlow,
   updateSettings,
+  readCollections,
+  readFields,
+  readRelations,
 } from '@directus/sdk';
 import {
   getDashboard,
@@ -173,5 +176,15 @@ export async function readAllSystemCollections(
     settings: [await client.request(readSettings())].filter(notNullId),
     translations: await client.request(readTranslations()),
     webhooks: await client.request(readWebhooks()),
+  };
+}
+
+export async function readAllCollectionsFieldsAndRelations(
+  client: DirectusClient<object> & RestClient<object>,
+) {
+  return {
+    collections: await client.request(readCollections()),
+    fields: await client.request(readFields()),
+    relations: await client.request(readRelations()),
   };
 }

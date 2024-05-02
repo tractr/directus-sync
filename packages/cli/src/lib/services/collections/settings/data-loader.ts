@@ -14,7 +14,7 @@ export class SettingsDataLoader extends DataLoader<DirectusSettings> {
       config.getCollectionsConfig().dumpPath,
       `${SETTINGS_COLLECTION}.json`,
     );
-    const hooks = config.getHooksConfig(SETTINGS_COLLECTION);
+    const hooks = config.getCollectionHooksConfig(SETTINGS_COLLECTION);
     super(filePath, migrationClient, hooks);
   }
 }

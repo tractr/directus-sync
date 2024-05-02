@@ -9,6 +9,7 @@ import {
   runDiff,
   runPull,
   runPush,
+  runRemovePermissionDuplicates,
   runUntrack,
 } from './index';
 
@@ -23,6 +24,9 @@ function cleanProgramOptions(programOptions: Record<string, unknown>) {
  * Remove some default values from the command options that overrides the config file
  */
 function cleanCommandOptions(commandOptions: Record<string, unknown>) {
+  if (commandOptions.snapshot === true) {
+    delete commandOptions.snapshot;
+  }
   if (commandOptions.split === true) {
     delete commandOptions.split;
   }
@@ -52,6 +56,13 @@ function getVersion(): string {
   } catch (e) {
     return 'error';
   }
+}
+
+/**
+ * Split a comma separated list
+ */
+function commaSeparatedList(value: string) {
+  return value.split(',').map((v) => v.trim());
 }
 
 export function createProgram() {
@@ -85,26 +96,37 @@ export function createProgram() {
   );
 
   // Shared options
-  const noSplitOption = new Option(
-    '--no-split',
-    `should split the schema snapshot into multiple files (default "${DefaultConfig.split}")`,
-  );
   const dumpPathOption = new Option(
     '--dump-path <dumpPath>',
     `the base path for the dump (default "${DefaultConfig.dumpPath}")`,
   );
+
   const collectionsPathOption = new Option(
     '--collections-path <collectionPath>',
     `the path for the collections dump, relative to the dump path (default "${DefaultConfig.collectionsPath}")`,
   );
+  const excludeCollectionsOption = new Option(
+    '-x, --exclude-collections <excludeCollections>',
+    `comma separated list of collections to exclude from the process (default to none)`,
+  ).argParser(commaSeparatedList);
+  const onlyCollectionsOption = new Option(
+    '-o, --only-collections <onlyCollections>',
+    `comma separated list of collections to include in the process (default to all)`,
+  ).argParser(commaSeparatedList);
+
   const snapshotPathOption = new Option(
     '--snapshot-path <snapshotPath>',
     `the path for the schema snapshot dump, relative to the dump path (default "${DefaultConfig.snapshotPath}")`,
   );
-  const forceOption = new Option(
-    '-f, --force',
-    `force the diff of schema, even if the Directus version is different (default "${DefaultConfig.force}")`,
+  const noSnapshotOption = new Option(
+    '--no-snapshot',
+    `should pull and push the Directus schema (default "${DefaultConfig.snapshot}")`,
   );
+  const noSplitOption = new Option(
+    '--no-split',
+    `should split the schema snapshot into multiple files (default "${DefaultConfig.split}")`,
+  );
+
   const specificationsPathOption = new Option(
     '--specs-path <specsPath>',
     `the path for the specifications dump (GraphQL & OpenAPI), relative to the dump path (default "${DefaultConfig.specsPath}")`,
@@ -112,6 +134,11 @@ export function createProgram() {
   const noSpecificationsOption = new Option(
     '--no-specs',
     `should dump the GraphQL & OpenAPI specifications (default "${DefaultConfig.specs}")`,
+  );
+
+  const forceOption = new Option(
+    '-f, --force',
+    `force the diff of schema, even if the Directus version is different (default "${DefaultConfig.force}")`,
   );
 
   program
@@ -126,12 +153,15 @@ export function createProgram() {
   program
     .command('pull')
     .description('get the schema and collections and store them locally')
-    .addOption(noSplitOption)
     .addOption(dumpPathOption)
     .addOption(collectionsPathOption)
+    .addOption(excludeCollectionsOption)
+    .addOption(onlyCollectionsOption)
     .addOption(snapshotPathOption)
-    .addOption(noSpecificationsOption)
+    .addOption(noSnapshotOption)
+    .addOption(noSplitOption)
     .addOption(specificationsPathOption)
+    .addOption(noSpecificationsOption)
     .action(wrapAction(program, runPull));
 
   program
@@ -139,24 +169,34 @@ export function createProgram() {
     .description(
       'describe the schema and collections diff. Does not modify the database.',
     )
-    .addOption(noSplitOption)
     .addOption(dumpPathOption)
     .addOption(collectionsPathOption)
+    .addOption(excludeCollectionsOption)
+    .addOption(onlyCollectionsOption)
     .addOption(snapshotPathOption)
+    .addOption(noSnapshotOption)
+    .addOption(noSplitOption)
     .addOption(forceOption)
     .action(wrapAction(program, runDiff));
 
   program
     .command('push')
     .description('push the schema and collections')
-    .addOption(noSplitOption)
     .addOption(dumpPathOption)
     .addOption(collectionsPathOption)
+    .addOption(excludeCollectionsOption)
+    .addOption(onlyCollectionsOption)
     .addOption(snapshotPathOption)
+    .addOption(noSnapshotOption)
+    .addOption(noSplitOption)
     .addOption(forceOption)
     .action(wrapAction(program, runPush));
 
-  program
+  const helpers = program
+    .command('helpers')
+    .description('a set of helper utilities');
+
+  helpers
     .command('untrack')
     .description('stop tracking of an element')
     .requiredOption(
@@ -165,6 +205,18 @@ export function createProgram() {
     )
     .requiredOption('-i, --id <id>', 'the id of the element to untrack')
     .action(wrapAction(program, runUntrack));
+
+  helpers
+    .command('remove-permission-duplicates')
+    .description(
+      'remove conflicts in permissions when there are duplicated groups "role + collection + action".',
+    )
+    .option(
+      '-k, --keep <keep>',
+      `the permission to keep in case of conflict: "first" or "last" (default "${DefaultConfig.keep}")`,
+      'last',
+    )
+    .action(wrapAction(program, runRemovePermissionDuplicates));
 
   return program;
 }

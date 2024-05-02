@@ -1,0 +1,16 @@
+[
+  {
+    "name": "tendo",
+    "key": "quod-vita",
+    "type": "exec",
+    "position_x": 84,
+    "position_y": 18,
+    "options": {
+      "code": "module.exports = async function(data) {\n\treturn { test: true, ...data };\n}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "937b6da6-0bcf-4151-bcfa-949ab380d47c",
+    "_syncId": "04b328da-2c12-476e-a10d-17a86e4639f2"
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "collection": "test_model",
+  "field": "user_updated",
+  "related_collection": "directus_users",
+  "meta": {
+    "junction_field": null,
+    "many_collection": "test_model",
+    "many_field": "user_updated",
+    "one_allowed_collections": null,
+    "one_collection": "directus_users",
+    "one_collection_field": null,
+    "one_deselect_action": "nullify",
+    "one_field": null,
+    "sort_field": null
+  },
+  "schema": {
+    "table": "test_model",
+    "column": "user_updated",
+    "foreign_key_table": "directus_users",
+    "foreign_key_column": "id",
+    "constraint_name": null,
+    "on_update": "NO ACTION",
+    "on_delete": "NO ACTION"
+  }
+}

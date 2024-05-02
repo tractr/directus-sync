@@ -3,8 +3,9 @@ import {
   ConfigFileOptions,
   DirectusConfigWithCredentials,
   DirectusConfigWithToken,
-  HookCollectionName,
-  Hooks,
+  CollectionName,
+  CollectionHooks,
+  SnapshotHooks,
   OptionName,
   Options,
 } from './interfaces';
@@ -14,7 +15,7 @@ import { ConfigFileLoader } from './config-file-loader';
 import { zodParse } from '../../helpers';
 import deepmerge from 'deepmerge';
 import { DefaultConfig, DefaultConfigPaths } from './default-config';
-import { OptionsSchema } from './schema';
+import { CollectionsList, OptionsSchema } from './schema';
 
 @Service()
 export class ConfigService {
@@ -56,6 +57,7 @@ export class ConfigService {
       dumpPath: snapshotPath,
       splitFiles: this.requireOptions('split'),
       force: this.requireOptions('force'),
+      enabled: this.requireOptions('snapshot'),
     };
   }
 
@@ -95,17 +97,43 @@ export class ConfigService {
   }
 
   @Cacheable()
+  getRemovePermissionDuplicatesConfig() {
+    return {
+      keep: this.requireOptions('keep'),
+    };
+  }
+
+  @Cacheable()
   getConfigFileLoaderConfig() {
     return this.requireOptions('configPath');
   }
 
   @Cacheable()
-  getHooksConfig(collection: HookCollectionName): Hooks {
+  getCollectionHooksConfig(collection: CollectionName): CollectionHooks {
     const hooks = this.getOptions('hooks');
     if (!hooks) {
       return {};
     }
-    return (hooks[collection] ?? {}) as Hooks;
+    // Type assertion is needed because the schema does not define the function arguments
+    return (hooks[collection] ?? {}) as CollectionHooks;
+  }
+
+  @Cacheable()
+  getSnapshotHooksConfig(): SnapshotHooks {
+    const hooks = this.getOptions('hooks');
+    if (!hooks) {
+      return {};
+    }
+    // Type assertion is needed because the schema does not define the function arguments
+    return (hooks.snapshot ?? {}) as SnapshotHooks;
+  }
+
+  @Cacheable()
+  getCollectionsToProcess() {
+    const exclude = this.requireOptions('excludeCollections');
+    const only = this.requireOptions('onlyCollections');
+    const list = only.length > 0 ? only : CollectionsList;
+    return list.filter((collection) => !exclude.includes(collection));
   }
 
   protected getOptions<T extends OptionName>(name: T): Options[T] | undefined {

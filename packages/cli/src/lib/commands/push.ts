@@ -1,18 +1,24 @@
 import { Container } from 'typedi';
 import pino from 'pino';
-import { MigrationClient, SnapshotClient } from '../services';
+import { ConfigService, MigrationClient, SnapshotClient } from '../services';
 import { loadCollections } from '../loader';
 import { LOGGER } from '../constants';
 
 export async function runPush() {
   const logger: pino.Logger = Container.get(LOGGER);
+  const config = Container.get(ConfigService);
+  const snapshotConfig = config.getSnapshotConfig();
 
   // Clear the cache
   await Container.get(MigrationClient).clearCache();
 
   // Snapshot
-  logger.info(`---- Push schema ----`);
-  await Container.get(SnapshotClient).push();
+  if (snapshotConfig.enabled) {
+    logger.info(`---- Push schema ----`);
+    await Container.get(SnapshotClient).push();
+  } else {
+    logger.debug('Snapshot is disabled');
+  }
 
   // Collections
   const collections = loadCollections();

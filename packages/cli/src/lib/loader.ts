@@ -1,4 +1,7 @@
+import { DictionaryValues } from 'ts-essentials';
 import {
+  CollectionRecord,
+  CollectionsList,
   ConfigService,
   DashboardsCollection,
   FlowsCollection,
@@ -13,9 +16,10 @@ import {
   WebhooksCollection,
 } from './services';
 import { createDumpFolders, getPinoTransport } from './helpers';
-import { Container } from 'typedi';
+import { Container, Token } from 'typedi';
 import Logger from 'pino';
 import { LOGGER } from './constants';
+import pino from 'pino';
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function initContext(
@@ -53,17 +57,47 @@ export function disposeContext() {
 export function loadCollections() {
   // The order of the collections is important
   // The collections are populated in the same order
-  return [
-    Container.get(SettingsCollection),
-    Container.get(FoldersCollection),
-    Container.get(TranslationsCollection),
-    Container.get(WebhooksCollection),
-    Container.get(FlowsCollection),
-    Container.get(OperationsCollection),
-    Container.get(RolesCollection),
-    Container.get(PermissionsCollection),
-    Container.get(DashboardsCollection),
-    Container.get(PanelsCollection),
-    Container.get(PresetsCollection),
-  ];
+  const collectionsConstructors = {
+    settings: SettingsCollection,
+    folders: FoldersCollection,
+    translations: TranslationsCollection,
+    webhooks: WebhooksCollection,
+    flows: FlowsCollection,
+    operations: OperationsCollection,
+    roles: RolesCollection,
+    permissions: PermissionsCollection,
+    dashboards: DashboardsCollection,
+    panels: PanelsCollection,
+    presets: PresetsCollection,
+  } as const satisfies CollectionRecord<unknown>;
+  type CollectionInstance = InstanceType<
+    DictionaryValues<typeof collectionsConstructors>
+  >;
+
+  // Get the collections to process
+  const config = Container.get(ConfigService);
+  const logger: pino.Logger = Container.get(LOGGER);
+  const collectionsToProcess = config.getCollectionsToProcess();
+  const excludedCollections = CollectionsList.filter(
+    (collection) => !collectionsToProcess.includes(collection),
+  );
+
+  // Initialize the collections
+  const output: CollectionInstance[] = [];
+  for (const collection of collectionsToProcess) {
+    const collectionConstructor = collectionsConstructors[collection];
+    output.push(
+      Container.get(
+        collectionConstructor as Token<
+          InstanceType<typeof collectionConstructor>
+        >,
+      ),
+    );
+  }
+
+  if (excludedCollections.length > 0) {
+    logger.debug(`Excluded collections: ${excludedCollections.join(', ')}`);
+  }
+
+  return output;
 }

@@ -37,7 +37,7 @@ export class SettingsCollection extends DirectusCollection<DirectusSettings> {
       dataMapper,
       idMapper,
       migrationClient,
-      config.getHooksConfig(SETTINGS_COLLECTION),
+      config.getCollectionHooksConfig(SETTINGS_COLLECTION),
     );
   }
 }

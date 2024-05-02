@@ -18,40 +18,45 @@ for targeted updates and clearer oversight of your Directus configurations.
 **Table of Contents**
 
 <!-- TOC -->
+
 * [Directus Sync](#directus-sync)
-  * [Requirements](#requirements)
-  * [Usage](#usage)
-    * [Commands](#commands)
-      * [Pull](#pull)
-      * [Diff](#diff)
-      * [Push](#push)
-      * [Untrack](#untrack)
-    * [Available options](#available-options)
-      * [CLI and environment variables](#cli-and-environment-variables)
-      * [Configuration file](#configuration-file)
-      * [Hooks](#hooks)
-        * [Simple example](#simple-example)
-        * [Filtering out elements](#filtering-out-elements)
-        * [Using the Directus client](#using-the-directus-client)
-    * [Lifecycle & hooks](#lifecycle--hooks)
-      * [`Pull` command](#pull-command)
-      * [`Diff` command](#diff-command)
-      * [`Push` command](#push-command)
-    * [Tracked Elements](#tracked-elements)
-      * [Roles](#roles)
-      * [Presets](#presets)
-    * [Dependency: `directus-extension-sync`](#dependency-directus-extension-sync)
-      * [Installation](#installation)
-  * [How It Works](#how-it-works)
-    * [Tagging and Tracking](#tagging-and-tracking)
-    * [Mapping Table](#mapping-table)
-    * [Synchronization Process](#synchronization-process)
-    * [Schema Management](#schema-management)
-    * [Non-Tracked Elements and Ignored Fields](#non-tracked-elements-and-ignored-fields)
-    * [Strengths of `directus-sync`](#strengths-of-directus-sync)
-  * [Directus upgrades](#directus-upgrades)
-  * [Use Cases](#use-cases)
-  * [Troubleshooting](#troubleshooting)
+    * [Requirements](#requirements)
+    * [Usage](#usage)
+        * [Commands](#commands)
+            * [Pull](#pull)
+            * [Diff](#diff)
+            * [Push](#push)
+        * [Available options](#available-options)
+            * [CLI and environment variables](#cli-and-environment-variables)
+            * [Configuration file](#configuration-file)
+            * [Collections hooks](#collections-hooks)
+                * [Simple example](#simple-example)
+                * [Filtering out elements](#filtering-out-elements)
+                * [Using the Directus client](#using-the-directus-client)
+            * [Snapshot hooks](#snapshot-hooks)
+        * [Helpers](#helpers)
+            * [Untrack](#untrack)
+            * [Remove permission duplicates](#remove-permission-duplicates)
+        * [Lifecycle & hooks](#lifecycle--hooks)
+            * [`Pull` command](#pull-command)
+            * [`Diff` command](#diff-command)
+            * [`Push` command](#push-command)
+        * [Tracked Elements](#tracked-elements)
+            * [Roles](#roles)
+            * [Presets](#presets)
+        * [Dependency: `directus-extension-sync`](#dependency-directus-extension-sync)
+            * [Installation](#installation)
+    * [How It Works](#how-it-works)
+        * [Tagging and Tracking](#tagging-and-tracking)
+        * [Mapping Table](#mapping-table)
+        * [Synchronization Process](#synchronization-process)
+        * [Schema Management](#schema-management)
+        * [Non-Tracked Elements and Ignored Fields](#non-tracked-elements-and-ignored-fields)
+        * [Strengths of `directus-sync`](#strengths-of-directus-sync)
+    * [Directus upgrades](#directus-upgrades)
+    * [Use Cases](#use-cases)
+    * [Troubleshooting](#troubleshooting)
+
 <!-- TOC -->
 
 ## Requirements
@@ -105,15 +110,6 @@ npx directus-sync push
 Applies the changes from your local environment to the Directus instance. This command pushes your local schema and
 collection configurations to Directus, updating the instance to reflect your local state.
 
-#### Untrack
-
-```shell
-npx directus-sync untrack --collection <collection> --id <id>
-```
-
-Removes tracking from an element within Directus. You must specify the collection and the ID of the element you wish to
-stop tracking.
-
 ### Available options
 
 Options are merged from the following sources, in order of precedence:
@@ -155,20 +151,30 @@ These options can be used with any command to configure the operation of `direct
 - `--collections-path <collectionPath>`  
   Specify the path for the collections dump, relative to the dump path. The default is `"collections"`.
 
+- `-o, --only-collections <onlyCollections>`
+  Comma-separated list of directus collections to include during `pull` `push` or `diff` process.
+
+- `-x, --exclude-collections <excludeCollections>`  
+  Comma-separated list of directus collections to exclude during `pull` `push` or `diff`. Can be used along
+  with `only-collections`.
+
 - `--snapshot-path <snapshotPath>`  
   Specify the path for the schema snapshot dump, relative to the dump path. The default is `"snapshot"`.
 
+- `--no-snapshot`
+  Do not pull and push the Directus schema. By default, the schema is pulled and pushed.
+
 - `--no-split`  
   Indicates whether the schema snapshot should be split into multiple files. By default, snapshots are split.
-
-- `-f, --force`  
-  Force the diff of schema, even if the Directus version is different. The default is `false`.
 
 - `--specs-path <specsPath>`  
   Specify the path for the specifications dump (GraphQL & OpenAPI), relative to the dump path. The default is `"specs"`.
 
 - `--no-specs`  
   Do not dump the specifications (GraphQL & OpenAPI). By default, specifications are dumped.
+
+- `-f, --force`  
+  Force the diff of schema, even if the Directus version is different. The default is `false`.
 
 - `-h, --help`  
   Display help information for the `directus-sync` commands.
@@ -195,26 +201,28 @@ module.exports = {
   directusToken: 'my-directus-token',
   directusEmail: 'admin@example.com', // ignored if directusToken is provided
   directusPassword: 'my-directus-password', // ignored if directusToken is provided
-  split: true,
   dumpPath: './directus-config',
   collectionsPath: 'collections',
+  onlyCollections: ['roles', 'permissions', 'settings'],
+  excludeCollections: ['settings'],
   snapshotPath: 'snapshot',
+  snapshot: true,
+  split: true,
   specsPath: 'specs',
   specs: true,
 };
 ```
 
-#### Hooks
+#### Collections hooks
 
 In addition to the CLI commands, `directus-sync` also supports hooks. Hooks are JavaScript functions that are executed
 at specific points during the synchronization process. They can be used to transform the data coming from Directus or
 going to Directus.
 
 Hooks are defined in the configuration file using the `hooks` property. Under this property, you can define the
-collection
-name and the hook function to be executed.
+collection name and the hook function to be executed.
 Available collection names
-are: `dashboards`, `flows`, `folders`, `operations`, `panels`, `permissions`, `presets`, `roles`, `settings`, `translations`,
+are: `dashboards`, `flows`, `folders`, `operations`, `panels`, `permissions`, `presets`, `roles`, `settings`, `translations`
 and `webhooks`.
 
 For each collection, available hook functions are: `onQuery`, `onLoad`, `onSave`, and `onDump`.
@@ -349,30 +357,111 @@ module.exports = {
 };
 ```
 
+#### Snapshot hooks
+
+Like the collections hooks, the snapshot hooks are defined in the configuration file using the `hooks.snapshot`
+property. Under
+this property, you can define the hook functions to be executed.
+
+Available hook functions are: `onLoad`, `onSave`:
+
+- `onLoad` is executed during the `push` and `diff` processes, just after the data is loaded from the files, and before
+  it is sent to Directus.
+- `onSave` is executed during the `pull` process, just before the data is saved to the files.
+
+> [!NOTE]
+> This function can be **asynchronous**. It receives the snapshot object and the Directus client as parameters and must
+> return the snapshot object.
+
+Here is an example of a configuration file that exclude some fields when loading the snapshot. This will be similar for
+the `onSave` hook.
+
+```javascript
+// ./directus-sync.config.js
+module.exports = {
+  hooks: {
+    snapshot: {
+      /**
+       * @param {Snapshot} snapshot
+       * @param {DirectusClient} client
+       */
+      onLoad: async (snapshot, client) => {
+        // Remove some fields from the snapshot
+        const fieldsToExclude = {
+          my_model: ['date_created', 'user_created'],
+        };
+        const collections = Object.keys(fieldsToExclude);
+        const nodeFilter = (node) => {
+          const { collection } = node;
+          return !(collections.includes(collection) && fieldsToExclude[collection].includes(node.field));
+        }
+        snapshot.fields = snapshot.fields.filter(nodeFilter);
+        snapshot.relations = snapshot.relations.filter(nodeFilter);
+
+        return snapshot;
+      },
+    },
+  },
+};
+```
+
+> [!NOTE]
+> For more information about the snapshot object, see
+> the [Snapshot](./packages/cli/src/lib/services/snapshot/interfaces.ts) interface.
+
+### Helpers
+
+#### Untrack
+
+```shell
+npx directus-sync untrack --collection <collection> --id <id>
+```
+
+Removes tracking from an element within Directus. You must specify the collection and the ID of the element you wish to
+stop tracking.
+
+#### Remove permission duplicates
+
+Permissions should be unique regarding the `role`, `collection`, and `action`.
+Unfortunately, Directus does not enforce this uniqueness.
+This can lead to unexpected behavior, such as missing ids or other permissions fields.
+More details can be found in the [Directus issue #21965](https://github.com/directus/directus/issues/21965).
+
+If you have permission duplicates, you can use the following command to remove them.
+
+```shell
+npx directus-sync remove-permission-duplicates --keep <keep>
+```
+
+- `--keep <keep>`: The permission's position to keep, `first` or `last`. The default is `last`.
+
+This command will keep the `last` (or `first`) permission found and remove the others for each duplicated
+group `role`, `collection`, and `action`.
+
 ### Lifecycle & hooks
 
 #### `Pull` command
 
 ```mermaid
 flowchart
-  subgraph Pull[Get elements - for each collection]
-    direction TB
-		B[Create query for all elements]
-    -->|onQuery hook|C[Add collection-specific filters]
-    -->D[Get elements from Directus]
-    -->E[Get or create SyncId for each element. Start tracking]
-    -->F[Remove original Id of each element]
-    -->|onDump hook|G[Keep elements in memory]
-  end
-	subgraph Post[Link elements - for each collection]
-    direction TB
-		H[Get all elements from memory]
-    --> I[Replace relations ids by SyncIds]
-    --> J[Remove ignore fields]
-    --> K[Sort elements]
-    -->|onSave hook|L[Save to JSON file]
-  end
- A[Pull command] --> Pull --> Post --> Z[End]
+subgraph Pull[Get elements - for each collection]
+direction TB
+B[Create query for all elements]
+-->|onQuery hook|C[Add collection-specific filters]
+--> D[Get elements from Directus]
+--> E[Get or create SyncId for each element. Start tracking]
+--> F[Remove original Id of each element]
+-->|onDump hook|G[Keep elements in memory]
+end
+subgraph Post[Link elements - for each collection]
+direction TB
+H[Get all elements from memory]
+--> I[Replace relations ids by SyncIds]
+--> J[Remove ignore fields]
+--> K[Sort elements]
+-->|onSave hook|L[Save to JSON file]
+end
+A[Pull command] --> Pull --> Post --> Z[End]
 ```
 
 #### `Diff` command

@@ -1,5 +1,5 @@
 import { IdMapperClient } from './id-mapper-client';
-import { Query as DirectusQuery } from '@directus/sdk';
+import { Query as DirectusQuery, RestCommand } from '@directus/sdk';
 
 export type DirectusId = number | string;
 
@@ -31,3 +31,11 @@ export type IdMappers<T> = {
 
 export type BaseSchema = object;
 export type Query<T extends DirectusBaseType> = DirectusQuery<BaseSchema, T>;
+
+export type Command<T> = RestCommand<T, object>; // Shortcode for RestCommand
+export type SingleRestCommand<T> = Command<T> | Promise<Command<T>>;
+
+export type MultipleRestCommand<T> =
+  | Command<T>
+  | [...Command<object>[], Command<T>]
+  | Promise<Command<T> | [...Command<object>[], Command<T>]>;

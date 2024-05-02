@@ -1,25 +1,45 @@
 import { z } from 'zod';
 
-export const HooksSchema = z.object({
+export const CollectionsList = [
+  'dashboards',
+  'flows',
+  'folders',
+  'operations',
+  'panels',
+  'permissions',
+  'presets',
+  'roles',
+  'settings',
+  'translations',
+  'webhooks',
+] as const;
+
+export const CollectionEnum = z.enum(CollectionsList);
+
+export const CollectionHooksSchema = z.object({
   onLoad: z.function().optional(),
   onDump: z.function().optional(),
   onSave: z.function().optional(),
   onQuery: z.function().optional(),
 });
-
-export const OptionsHooksSchema = z.object({
-  dashboards: HooksSchema.optional(),
-  flows: HooksSchema.optional(),
-  folders: HooksSchema.optional(),
-  operations: HooksSchema.optional(),
-  panels: HooksSchema.optional(),
-  permissions: HooksSchema.optional(),
-  presets: HooksSchema.optional(),
-  roles: HooksSchema.optional(),
-  settings: HooksSchema.optional(),
-  translations: HooksSchema.optional(),
-  webhooks: HooksSchema.optional(),
+export const SnapshotHooksSchema = z.object({
+  onLoad: z.function().optional(),
+  onSave: z.function().optional(),
 });
+export const OptionsHooksSchema = z.object({
+  dashboards: CollectionHooksSchema.optional(),
+  flows: CollectionHooksSchema.optional(),
+  folders: CollectionHooksSchema.optional(),
+  operations: CollectionHooksSchema.optional(),
+  panels: CollectionHooksSchema.optional(),
+  permissions: CollectionHooksSchema.optional(),
+  presets: CollectionHooksSchema.optional(),
+  roles: CollectionHooksSchema.optional(),
+  settings: CollectionHooksSchema.optional(),
+  translations: CollectionHooksSchema.optional(),
+  webhooks: CollectionHooksSchema.optional(),
+  snapshot: SnapshotHooksSchema.optional(),
+} satisfies { [key in z.infer<typeof CollectionEnum> | 'snapshot']: z.Schema });
 
 export const OptionsFields = {
   // Global
@@ -30,18 +50,25 @@ export const OptionsFields = {
   directusEmail: z.string().optional(),
   directusPassword: z.string().optional(),
   // Pull, diff, push
-  split: z.boolean(),
   dumpPath: z.string(),
+  // Collections
   collectionsPath: z.string(),
+  excludeCollections: z.array(CollectionEnum).optional(),
+  onlyCollections: z.array(CollectionEnum).optional(),
+  // Snapshot
   snapshotPath: z.string(),
+  snapshot: z.boolean(),
+  split: z.boolean(),
   // Specifications
-  specs: z.boolean(),
   specsPath: z.string(),
+  specs: z.boolean(),
   // Diff, push
   force: z.boolean(),
   // Untrack
   collection: z.string().optional(),
   id: z.string().optional(),
+  // Remove Permission Duplicates
+  keep: z.enum(['first', 'last']).optional(),
   // Hooks
   hooks: OptionsHooksSchema.optional(),
 };
@@ -57,13 +84,18 @@ export const ConfigFileOptionsSchema = z.object({
   directusEmail: OptionsFields.directusEmail.optional(),
   directusPassword: OptionsFields.directusPassword.optional(),
   // Dump config
-  split: OptionsFields.split.optional(),
   dumpPath: OptionsFields.dumpPath.optional(),
+  // Collections config
   collectionsPath: OptionsFields.collectionsPath.optional(),
+  excludeCollections: OptionsFields.excludeCollections.optional(),
+  onlyCollections: OptionsFields.onlyCollections.optional(),
+  // Snapshot config
   snapshotPath: OptionsFields.snapshotPath.optional(),
+  snapshot: OptionsFields.snapshot.optional(),
+  split: OptionsFields.split.optional(),
   // Specifications config
-  specs: OptionsFields.specs.optional(),
   specsPath: OptionsFields.specsPath.optional(),
+  specs: OptionsFields.specs.optional(),
   // Hooks config
   hooks: OptionsHooksSchema.optional(),
 });
