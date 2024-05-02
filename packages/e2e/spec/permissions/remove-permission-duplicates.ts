@@ -6,7 +6,7 @@ type PermissionWithSystem = DirectusPermission<object> & { system: boolean };
 export const removePermissionDuplicates = (context: Context) => {
   it('should remove permission duplicates and and keep the last one', async () => {
     // Init sync client
-    const sync = await context.getSync('temp/insert-duplicates-permissions');
+    const sync = await context.getSync('temp/remove-permission-duplicates');
     const directus = context.getDirectus();
     const client = directus.get();
 
@@ -57,7 +57,7 @@ export const removePermissionDuplicates = (context: Context) => {
 
   it('should remove permission duplicates and and keep the first one', async () => {
     // Init sync client
-    const sync = await context.getSync('temp/insert-duplicates-permissions');
+    const sync = await context.getSync('temp/remove-permission-duplicates');
     const directus = context.getDirectus();
     const client = directus.get();
 

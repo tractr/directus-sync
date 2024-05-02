@@ -7,10 +7,10 @@ import {
 
 type PermissionWithSystem = DirectusPermission<object> & { system: boolean };
 
-export const insertDuplicatePermissions = (context: Context) => {
+export const insertDuplicatedPermissions = (context: Context) => {
   it('should remove duplicates when inserting permissions', async () => {
     // Init sync client
-    const sync = await context.getSync('temp/insert-duplicates-permissions');
+    const sync = await context.getSync('temp/insert-duplicated-permissions');
     const directus = context.getDirectus();
     const client = directus.get();
 

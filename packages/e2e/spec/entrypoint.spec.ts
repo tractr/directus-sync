@@ -32,7 +32,7 @@ import {
   noSnapshot,
 } from './exclude-include/index.js';
 import {
-  insertDuplicatePermissions,
+  insertDuplicatedPermissions,
   removePermissionDuplicates,
 } from './permissions/index.js';
 
@@ -84,6 +84,6 @@ describe('Tests entrypoint ->', () => {
   includeSomeCollections(context);
   noSnapshot(context);
 
-  insertDuplicatePermissions(context);
+  insertDuplicatedPermissions(context);
   removePermissionDuplicates(context);
 });

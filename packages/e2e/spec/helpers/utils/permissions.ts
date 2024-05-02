@@ -1,4 +1,8 @@
-import { DirectusClient, PermissionAction, SystemCollection } from '../sdk/index.js';
+import {
+  DirectusClient,
+  PermissionAction,
+  SystemCollection,
+} from '../sdk/index.js';
 import { createPermission, createRole } from '@directus/sdk';
 import { getPermission, getRole } from '../seed/index.js';
 
