@@ -18,43 +18,45 @@ for targeted updates and clearer oversight of your Directus configurations.
 **Table of Contents**
 
 <!-- TOC -->
+
 * [Directus Sync](#directus-sync)
-  * [Requirements](#requirements)
-  * [Usage](#usage)
-    * [Commands](#commands)
-      * [Pull](#pull)
-      * [Diff](#diff)
-      * [Push](#push)
-    * [Available options](#available-options)
-      * [CLI and environment variables](#cli-and-environment-variables)
-      * [Configuration file](#configuration-file)
-      * [Collections hooks](#collections-hooks)
-        * [Simple example](#simple-example)
-        * [Filtering out elements](#filtering-out-elements)
-        * [Using the Directus client](#using-the-directus-client)
-      * [Snapshot hooks](#snapshot-hooks)
-    * [Helpers](#helpers)
-      * [Untrack](#untrack)
-      * [Remove permission duplicates](#remove-permission-duplicates)
-    * [Lifecycle & hooks](#lifecycle--hooks)
-      * [`Pull` command](#pull-command)
-      * [`Diff` command](#diff-command)
-      * [`Push` command](#push-command)
-    * [Tracked Elements](#tracked-elements)
-      * [Roles](#roles)
-      * [Presets](#presets)
-    * [Dependency: `directus-extension-sync`](#dependency-directus-extension-sync)
-      * [Installation](#installation)
-  * [How It Works](#how-it-works)
-    * [Tagging and Tracking](#tagging-and-tracking)
-    * [Mapping Table](#mapping-table)
-    * [Synchronization Process](#synchronization-process)
-    * [Schema Management](#schema-management)
-    * [Non-Tracked Elements and Ignored Fields](#non-tracked-elements-and-ignored-fields)
-    * [Strengths of `directus-sync`](#strengths-of-directus-sync)
-  * [Directus upgrades](#directus-upgrades)
-  * [Use Cases](#use-cases)
-  * [Troubleshooting](#troubleshooting)
+    * [Requirements](#requirements)
+    * [Usage](#usage)
+        * [Commands](#commands)
+            * [Pull](#pull)
+            * [Diff](#diff)
+            * [Push](#push)
+        * [Available options](#available-options)
+            * [CLI and environment variables](#cli-and-environment-variables)
+            * [Configuration file](#configuration-file)
+            * [Collections hooks](#collections-hooks)
+                * [Simple example](#simple-example)
+                * [Filtering out elements](#filtering-out-elements)
+                * [Using the Directus client](#using-the-directus-client)
+            * [Snapshot hooks](#snapshot-hooks)
+        * [Helpers](#helpers)
+            * [Untrack](#untrack)
+            * [Remove permission duplicates](#remove-permission-duplicates)
+        * [Lifecycle & hooks](#lifecycle--hooks)
+            * [`Pull` command](#pull-command)
+            * [`Diff` command](#diff-command)
+            * [`Push` command](#push-command)
+        * [Tracked Elements](#tracked-elements)
+            * [Roles](#roles)
+            * [Presets](#presets)
+        * [Dependency: `directus-extension-sync`](#dependency-directus-extension-sync)
+            * [Installation](#installation)
+    * [How It Works](#how-it-works)
+        * [Tagging and Tracking](#tagging-and-tracking)
+        * [Mapping Table](#mapping-table)
+        * [Synchronization Process](#synchronization-process)
+        * [Schema Management](#schema-management)
+        * [Non-Tracked Elements and Ignored Fields](#non-tracked-elements-and-ignored-fields)
+        * [Strengths of `directus-sync`](#strengths-of-directus-sync)
+    * [Directus upgrades](#directus-upgrades)
+    * [Use Cases](#use-cases)
+    * [Troubleshooting](#troubleshooting)
+
 <!-- TOC -->
 
 ## Requirements
@@ -218,10 +220,9 @@ at specific points during the synchronization process. They can be used to trans
 going to Directus.
 
 Hooks are defined in the configuration file using the `hooks` property. Under this property, you can define the
-collection
-name and the hook function to be executed.
+collection name and the hook function to be executed.
 Available collection names
-are: `dashboards`, `flows`, `folders`, `operations`, `panels`, `permissions`, `presets`, `roles`, `settings`, `translations`,
+are: `dashboards`, `flows`, `folders`, `operations`, `panels`, `permissions`, `presets`, `roles`, `settings`, `translations`
 and `webhooks`.
 
 For each collection, available hook functions are: `onQuery`, `onLoad`, `onSave`, and `onDump`.
@@ -434,7 +435,8 @@ npx directus-sync remove-permission-duplicates --keep <keep>
 
 - `--keep <keep>`: The permission's position to keep, `first` or `last`. The default is `last`.
 
-This command will keep the `last` (or `first`) permission found and remove the others for each duplicated group `role`, `collection`, and `action`.
+This command will keep the `last` (or `first`) permission found and remove the others for each duplicated
+group `role`, `collection`, and `action`.
 
 ### Lifecycle & hooks
 
@@ -442,24 +444,24 @@ This command will keep the `last` (or `first`) permission found and remove the o
 
 ```mermaid
 flowchart
-  subgraph Pull[Get elements - for each collection]
-    direction TB
-		B[Create query for all elements]
-    -->|onQuery hook|C[Add collection-specific filters]
-    -->D[Get elements from Directus]
-    -->E[Get or create SyncId for each element. Start tracking]
-    -->F[Remove original Id of each element]
-    -->|onDump hook|G[Keep elements in memory]
-  end
-	subgraph Post[Link elements - for each collection]
-    direction TB
-		H[Get all elements from memory]
-    --> I[Replace relations ids by SyncIds]
-    --> J[Remove ignore fields]
-    --> K[Sort elements]
-    -->|onSave hook|L[Save to JSON file]
-  end
- A[Pull command] --> Pull --> Post --> Z[End]
+subgraph Pull[Get elements - for each collection]
+direction TB
+B[Create query for all elements]
+-->|onQuery hook|C[Add collection-specific filters]
+--> D[Get elements from Directus]
+--> E[Get or create SyncId for each element. Start tracking]
+--> F[Remove original Id of each element]
+-->|onDump hook|G[Keep elements in memory]
+end
+subgraph Post[Link elements - for each collection]
+direction TB
+H[Get all elements from memory]
+--> I[Replace relations ids by SyncIds]
+--> J[Remove ignore fields]
+--> K[Sort elements]
+-->|onSave hook|L[Save to JSON file]
+end
+A[Pull command] --> Pull --> Post --> Z[End]
 ```
 
 #### `Diff` command
