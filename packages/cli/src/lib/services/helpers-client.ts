@@ -38,4 +38,10 @@ export class HelpersClient extends ExtensionClient {
       );
     }
   }
+
+  async untrack() {
+    const { collection, id } = this.config.getUntrackConfig();
+    await this.fetch(`/table/${collection}/local_id/${id}`, 'DELETE');
+    this.logger.info(`Untracked ${collection} ${id}`);
+  }
 }

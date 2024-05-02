@@ -1,4 +1,4 @@
-import { HelpersClient } from '../services';
+import { HelpersClient } from '../../services';
 import { Container } from 'typedi';
 
 export async function runRemovePermissionDuplicates() {
