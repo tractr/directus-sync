@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.1](https://github.com/tractr/directus-sync/compare/directus-sync@1.5.0...directus-sync@1.5.1) (2024-05-02)
+
+
+### Bug Fixes
+
+* add safe logger in entrypoint ([3f73594](https://github.com/tractr/directus-sync/commit/3f735949a8997916bef95fc4938f3356371ad42c))
+
+
+
+
+
 # [1.5.0](https://github.com/tractr/directus-sync/compare/directus-sync@1.4.0...directus-sync@1.5.0) (2024-05-02)
 
 
