@@ -414,7 +414,7 @@ module.exports = {
 #### Untrack
 
 ```shell
-npx directus-sync untrack --collection <collection> --id <id>
+npx directus-sync helpers untrack --collection <collection> --id <id>
 ```
 
 Removes tracking from an element within Directus. You must specify the collection and the ID of the element you wish to
@@ -430,7 +430,7 @@ More details can be found in the [Directus issue #21965](https://github.com/dire
 If you have permission duplicates, you can use the following command to remove them.
 
 ```shell
-npx directus-sync remove-permission-duplicates --keep <keep>
+npx directus-sync helpers remove-permission-duplicates --keep <keep>
 ```
 
 - `--keep <keep>`: The permission's position to keep, `first` or `last`. The default is `last`.
