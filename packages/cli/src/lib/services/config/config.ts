@@ -97,6 +97,13 @@ export class ConfigService {
   }
 
   @Cacheable()
+  getRemovePermissionDuplicatesConfig() {
+    return {
+      keep: this.requireOptions('keep'),
+    };
+  }
+
+  @Cacheable()
   getConfigFileLoaderConfig() {
     return this.requireOptions('configPath');
   }

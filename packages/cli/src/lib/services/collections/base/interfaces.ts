@@ -38,5 +38,4 @@ export type SingleRestCommand<T> = Command<T> | Promise<Command<T>>;
 export type MultipleRestCommand<T> =
   | Command<T>
   | [...Command<object>[], Command<T>]
-  | Promise<Command<T>>
-  | Promise<[...Command<object>[], Command<T>]>;
+  | Promise<Command<T> | [...Command<object>[], Command<T>]>;

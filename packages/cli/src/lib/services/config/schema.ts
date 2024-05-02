@@ -67,6 +67,8 @@ export const OptionsFields = {
   // Untrack
   collection: z.string().optional(),
   id: z.string().optional(),
+  // Remove Permission Duplicates
+  keep: z.enum(['first', 'last']).optional(),
   // Hooks
   hooks: OptionsHooksSchema.optional(),
 };

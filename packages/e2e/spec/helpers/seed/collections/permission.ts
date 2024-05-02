@@ -1,11 +1,11 @@
 import { DirectusPermission } from '@directus/sdk';
-import { SystemCollection } from '../../sdk/index.js';
+import { PermissionAction, SystemCollection } from '../../sdk/index.js';
 import { faker } from '@faker-js/faker';
 
 export function getPermission(
-  role: string,
+  role: string | null,
   collection: SystemCollection,
-  action: 'create' | 'read' | 'update' | 'delete' | 'share',
+  action: PermissionAction,
 ): Omit<DirectusPermission<object>, 'id'> {
   const dummyPermission = {
     id: {

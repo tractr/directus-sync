@@ -87,7 +87,7 @@ export const includeSomeCollections = (context: Context) => {
     const systemCollections = getSystemCollectionsNames();
 
     // --------------------------------------------------------------------
-    // Push the data to Directus and trigger a ping in order to detect the end of the push
+    // Push the data to Directus
     const beforePushDate = new Date();
     const collectionsToInclude = ['roles', 'permissions', 'translations'];
     const excludedCollections = systemCollections.filter(

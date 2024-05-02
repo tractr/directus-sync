@@ -1,5 +1,5 @@
 import { defineEndpoint } from '@directus/extensions-sdk';
-import { IdMapper } from './database/id-mapper';
+import { IdMapper, Permissions } from './database';
 import { z } from 'zod';
 import {
   ensureIsAdminHandler,
@@ -12,10 +12,11 @@ import createError from 'http-errors';
 export default defineEndpoint(async (router, { database, logger }) => {
   const idMapper = new IdMapper(database);
   const created = await idMapper.init();
-
   if (created) {
     logger.info(`Created table ${idMapper.getTableName()}`);
   }
+
+  const permissions = new Permissions(database, logger);
 
   router.use(ensureIsAdminHandler);
 
@@ -112,6 +113,21 @@ export default defineEndpoint(async (router, { database, logger }) => {
       );
       await idMapper.removeByLocalId(table, local_id);
       res.status(204).send();
+    } catch (e) {
+      next(e);
+    }
+  });
+
+  // --------------------------------------------
+  // Helpers
+  router.delete('/helpers/permissions/duplicates', async (req, res, next) => {
+    try {
+      const { keep } = validateInput(
+        req.body,
+        z.object({ keep: z.enum(['first', 'last']).default('last') }),
+      );
+      const deletedPermissions = await permissions.removeDuplicates(keep);
+      res.status(200).send({ deletedPermissions });
     } catch (e) {
       next(e);
     }

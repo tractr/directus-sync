@@ -5,15 +5,22 @@ import {
   readPresets,
   updatePreset,
 } from '@directus/sdk';
-import { Service } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { MigrationClient } from '../../migration-client';
 import { DirectusPreset } from './interfaces';
 import deepmerge from 'deepmerge';
+import { LOGGER } from '../../../constants';
+import pino from 'pino';
+import { getChildLogger } from '../../../helpers';
+import { PRESETS_COLLECTION } from './constants';
 
 @Service()
 export class PresetsDataClient extends DataClient<DirectusPreset> {
-  constructor(migrationClient: MigrationClient) {
-    super(migrationClient);
+  constructor(
+    @Inject(LOGGER) baseLogger: pino.Logger,
+    migrationClient: MigrationClient,
+  ) {
+    super(getChildLogger(baseLogger, PRESETS_COLLECTION), migrationClient);
   }
 
   protected getDeleteCommand(itemId: number) {

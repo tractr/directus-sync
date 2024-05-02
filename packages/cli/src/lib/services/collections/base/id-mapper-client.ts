@@ -1,6 +1,5 @@
-import createHttpError from 'http-errors';
 import { MigrationClient } from '../../migration-client';
-import { Cacheable } from 'typescript-cacheable';
+import { ExtensionClient } from '../../extension-client';
 
 export interface IdMap {
   id: number;
@@ -10,9 +9,7 @@ export interface IdMap {
   created_at: Date;
 }
 
-export abstract class IdMapperClient {
-  protected readonly extensionUri = '/directus-extension-sync';
-
+export abstract class IdMapperClient extends ExtensionClient {
   /**
    * Cache for id maps
    */
@@ -25,9 +22,11 @@ export abstract class IdMapperClient {
   };
 
   constructor(
-    protected readonly migrationClient: MigrationClient,
+    migrationClient: MigrationClient,
     protected readonly table: string,
-  ) {}
+  ) {
+    super(migrationClient);
+  }
 
   async getBySyncId(syncId: string): Promise<IdMap | undefined> {
     // Try to get from cache
@@ -109,62 +108,6 @@ export abstract class IdMapperClient {
   clearCache() {
     this.cache.byLocalId.clear();
     this.cache.bySyncId.clear();
-  }
-
-  //-----------------------------------------------
-
-  protected async fetch<T = unknown>(
-    uri: string,
-    method: RequestInit['method'] = 'GET',
-    payload: unknown = undefined,
-    options: RequestInit = {},
-  ): Promise<T> {
-    const { url, token } = await this.getUrlAndToken();
-    const response = await fetch(`${url}${this.extensionUri}${uri}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      method,
-      body: payload ? JSON.stringify(payload) : null,
-      ...options,
-    });
-    if (!response.ok) {
-      let error;
-      try {
-        const payload: Error = await response.json();
-        error = createHttpError(response.status, payload.message);
-      } catch (e) {
-        if (response.status === 404 && response.statusText === 'Not Found') {
-          error = createHttpError(
-            response.status,
-            `${response.statusText}: Did you add directus-extension-sync to Directus?`,
-          );
-        } else {
-          error = createHttpError(response.status, response.statusText);
-        }
-      }
-      throw error;
-    } else {
-      try {
-        return (await response.json()) as T;
-      } catch {
-        return (await response.text()) as T;
-      }
-    }
-  }
-
-  @Cacheable()
-  protected async getUrlAndToken() {
-    const directus = await this.migrationClient.get();
-    //Remove trailing slash
-    const url = directus.url.toString().replace(/\/$/, '');
-    const token = await directus.getToken();
-    if (!token) {
-      throw new Error('Cannot get token from Directus');
-    }
-    return { url, token };
   }
 
   protected addToCache(idMap: IdMap) {

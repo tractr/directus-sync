@@ -26,7 +26,6 @@ for targeted updates and clearer oversight of your Directus configurations.
             * [Pull](#pull)
             * [Diff](#diff)
             * [Push](#push)
-            * [Untrack](#untrack)
         * [Available options](#available-options)
             * [CLI and environment variables](#cli-and-environment-variables)
             * [Configuration file](#configuration-file)
@@ -35,6 +34,9 @@ for targeted updates and clearer oversight of your Directus configurations.
                 * [Filtering out elements](#filtering-out-elements)
                 * [Using the Directus client](#using-the-directus-client)
             * [Snapshot hooks](#snapshot-hooks)
+        * [Helpers](#helpers)
+            * [Untrack](#untrack)
+            * [Remove permission duplicates](#remove-permission-duplicates)
         * [Lifecycle & hooks](#lifecycle--hooks)
             * [`Pull` command](#pull-command)
             * [`Diff` command](#diff-command)
@@ -107,15 +109,6 @@ npx directus-sync push
 
 Applies the changes from your local environment to the Directus instance. This command pushes your local schema and
 collection configurations to Directus, updating the instance to reflect your local state.
-
-#### Untrack
-
-```shell
-npx directus-sync untrack --collection <collection> --id <id>
-```
-
-Removes tracking from an element within Directus. You must specify the collection and the ID of the element you wish to
-stop tracking.
 
 ### Available options
 
@@ -227,10 +220,9 @@ at specific points during the synchronization process. They can be used to trans
 going to Directus.
 
 Hooks are defined in the configuration file using the `hooks` property. Under this property, you can define the
-collection
-name and the hook function to be executed.
+collection name and the hook function to be executed.
 Available collection names
-are: `dashboards`, `flows`, `folders`, `operations`, `panels`, `permissions`, `presets`, `roles`, `settings`, `translations`,
+are: `dashboards`, `flows`, `folders`, `operations`, `panels`, `permissions`, `presets`, `roles`, `settings`, `translations`
 and `webhooks`.
 
 For each collection, available hook functions are: `onQuery`, `onLoad`, `onSave`, and `onDump`.
@@ -417,30 +409,59 @@ module.exports = {
 > For more information about the snapshot object, see
 > the [Snapshot](./packages/cli/src/lib/services/snapshot/interfaces.ts) interface.
 
+### Helpers
+
+#### Untrack
+
+```shell
+npx directus-sync untrack --collection <collection> --id <id>
+```
+
+Removes tracking from an element within Directus. You must specify the collection and the ID of the element you wish to
+stop tracking.
+
+#### Remove permission duplicates
+
+Permissions should be unique regarding the `role`, `collection`, and `action`.
+Unfortunately, Directus does not enforce this uniqueness.
+This can lead to unexpected behavior, such as missing ids or other permissions fields.
+More details can be found in the [Directus issue #21965](https://github.com/directus/directus/issues/21965).
+
+If you have permission duplicates, you can use the following command to remove them.
+
+```shell
+npx directus-sync remove-permission-duplicates --keep <keep>
+```
+
+- `--keep <keep>`: The permission's position to keep, `first` or `last`. The default is `last`.
+
+This command will keep the `last` (or `first`) permission found and remove the others for each duplicated
+group `role`, `collection`, and `action`.
+
 ### Lifecycle & hooks
 
 #### `Pull` command
 
 ```mermaid
 flowchart
-  subgraph Pull[Get elements - for each collection]
-    direction TB
-		B[Create query for all elements]
-    -->|onQuery hook|C[Add collection-specific filters]
-    -->D[Get elements from Directus]
-    -->E[Get or create SyncId for each element. Start tracking]
-    -->F[Remove original Id of each element]
-    -->|onDump hook|G[Keep elements in memory]
-  end
-	subgraph Post[Link elements - for each collection]
-    direction TB
-		H[Get all elements from memory]
-    --> I[Replace relations ids by SyncIds]
-    --> J[Remove ignore fields]
-    --> K[Sort elements]
-    -->|onSave hook|L[Save to JSON file]
-  end
- A[Pull command] --> Pull --> Post --> Z[End]
+subgraph Pull[Get elements - for each collection]
+direction TB
+B[Create query for all elements]
+-->|onQuery hook|C[Add collection-specific filters]
+--> D[Get elements from Directus]
+--> E[Get or create SyncId for each element. Start tracking]
+--> F[Remove original Id of each element]
+-->|onDump hook|G[Keep elements in memory]
+end
+subgraph Post[Link elements - for each collection]
+direction TB
+H[Get all elements from memory]
+--> I[Replace relations ids by SyncIds]
+--> J[Remove ignore fields]
+--> K[Sort elements]
+-->|onSave hook|L[Save to JSON file]
+end
+A[Pull command] --> Pull --> Post --> Z[End]
 ```
 
 #### `Diff` command
