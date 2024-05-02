@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.2](https://github.com/tractr/directus-sync/compare/directus-sync@1.5.1...directus-sync@1.5.2) (2024-05-02)
+
+
+### Bug Fixes
+
+* **cli:** add missing dep pino-pretty ([d136367](https://github.com/tractr/directus-sync/commit/d13636758c3653afbb66c6a1ac6ce280729e67ea))
+
+
+
+
+
 ## [1.5.1](https://github.com/tractr/directus-sync/compare/directus-sync@1.5.0...directus-sync@1.5.1) (2024-05-02)
 
 
