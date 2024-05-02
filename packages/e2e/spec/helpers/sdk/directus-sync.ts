@@ -1,5 +1,5 @@
-import { DirectusSyncArgs, PinoLog } from './interfaces/index.js';
-import { createProgram, LOGGER_TRANSPORT } from 'directus-sync';
+import { DirectusId, DirectusSyncArgs, PinoLog } from './interfaces/index.js';
+import { CollectionName, createProgram, LOGGER_TRANSPORT } from 'directus-sync';
 import { LoggerOptions } from 'pino';
 import { Container } from 'typedi';
 import { v4 as uuidV4 } from 'uuid';
@@ -46,6 +46,17 @@ export class DirectusSync {
       '--dump-path',
       this.options.dumpPath,
       ...(args ?? []),
+    );
+  }
+
+  untrack(collection: CollectionName, id: DirectusId) {
+    return this.runCliCommand(
+      'helpers',
+      'untrack',
+      '--collection',
+      collection,
+      '--id',
+      id.toString(),
     );
   }
 

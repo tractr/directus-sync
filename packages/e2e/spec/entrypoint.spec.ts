@@ -35,6 +35,7 @@ import {
   insertDuplicatedPermissions,
   removePermissionDuplicates,
 } from './permissions/index.js';
+import { removeTrackedItem } from './untrack/index.js';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
@@ -86,4 +87,6 @@ describe('Tests entrypoint ->', () => {
 
   insertDuplicatedPermissions(context);
   removePermissionDuplicates(context);
+
+  removeTrackedItem(context);
 });
