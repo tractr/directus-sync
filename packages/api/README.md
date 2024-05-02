@@ -1,11 +1,18 @@
 # `directus-extension-sync`
 
+The `directus-sync` CLI provides a set of tools for managing and synchronizing the schema and
+collections within Directus across different environments.
+It allows to synchronize the following
+elements: `dashboards`, `flows`, `folders`, `operations`, `panels`, `permissions`, `presets`, `roles`, `settings`, `translations`
+and `webhooks`.
+
+More information about the `directus-sync` CLI tool can be found [here](https://github.com/tractr/directus-sync).
+
 ## Overview
 
-The `directus-extension-sync` is an extension that manages the mapping between
-synchronization identifiers (SyncIDs) and Directus's internal entity IDs. This extension is a critical dependency for
-the `directus-sync` CLI tool, enabling it to perform version control and synchronization tasks across different Directus
-instances.
+The `directus-extension-sync` is an essential extension required for using the `directus-sync` CLI. It manages the
+mapping between synchronization identifiers (SyncIDs) and Directus's internal entity IDs. This extension
+allows `directus-sync` to perform version control and synchronization tasks across various Directus instances.
 
 ## Features
 
@@ -34,7 +41,6 @@ SyncIDs. These endpoints include:
 - `POST /directus-extension-sync/table/:table`: Create a new mapping entry.
 - `DELETE /directus-extension-sync/table/:table/sync_id/:sync_id`: Remove a mapping by SyncID.
 - `DELETE /directus-extension-sync/table/:table/local_id/:local_id`: Remove a mapping by local ID.
-
 
 ### Helpers
 
