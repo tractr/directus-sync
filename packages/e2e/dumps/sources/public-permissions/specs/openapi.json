@@ -14,9 +14,7 @@
   "paths": {
     "/assets/{id}": {
       "get": {
-        "tags": [
-          "Assets"
-        ],
+        "tags": ["Assets"],
         "operationId": "getAsset",
         "summary": "Get an Asset",
         "description": "Image typed files can be dynamically resized and transformed to fit any need.",
@@ -76,19 +74,14 @@
       "post": {
         "summary": "Retrieve a Temporary Access Token",
         "description": "Retrieve a Temporary Access Token",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "operationId": "login",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "email",
-                  "password"
-                ],
+                "required": ["email", "password"],
                 "properties": {
                   "email": {
                     "type": "string",
@@ -103,11 +96,7 @@
                   },
                   "mode": {
                     "type": "string",
-                    "enum": [
-                      "json",
-                      "cookie",
-                      "session"
-                    ],
+                    "enum": ["json", "cookie", "session"],
                     "default": "json",
                     "description": "Whether to retrieve the refresh token in the JSON response, or in a httpOnly cookie."
                   },
@@ -157,9 +146,7 @@
       "post": {
         "summary": "Refresh Token",
         "description": "Refresh a Temporary Access Token.",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "operationId": "refresh",
         "requestBody": {
           "content": {
@@ -174,11 +161,7 @@
                   },
                   "mode": {
                     "type": "string",
-                    "enum": [
-                      "json",
-                      "cookie",
-                      "session"
-                    ],
+                    "enum": ["json", "cookie", "session"],
                     "default": "json",
                     "description": "Whether to submit and retrieve the refresh token in the JSON response, or in a httpOnly cookie."
                   }
@@ -227,9 +210,7 @@
       "post": {
         "summary": "Log Out",
         "description": "Log Out",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "operationId": "logout",
         "requestBody": {
           "content": {
@@ -244,11 +225,7 @@
                   },
                   "mode": {
                     "type": "string",
-                    "enum": [
-                      "json",
-                      "cookie",
-                      "session"
-                    ],
+                    "enum": ["json", "cookie", "session"],
                     "description": "Whether the refresh token is submitted in the JSON response, or in a httpOnly cookie."
                   }
                 }
@@ -265,9 +242,7 @@
     },
     "/auth/password/request": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "operationId": "passwordRequest",
         "summary": "Request a Password Reset",
         "description": "Request a reset password email to be send.",
@@ -276,9 +251,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "email"
-                ],
+                "required": ["email"],
                 "properties": {
                   "email": {
                     "type": "string",
@@ -299,9 +272,7 @@
     },
     "/auth/password/reset": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "operationId": "passwordReset",
         "summary": "Reset a Password",
         "description": "The request a password reset endpoint sends an email with a link to the admin app which in turn uses this endpoint to allow the user to reset their password.",
@@ -310,10 +281,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "token",
-                  "password"
-                ],
+                "required": ["token", "password"],
                 "properties": {
                   "token": {
                     "type": "string",
@@ -340,9 +308,7 @@
     },
     "/auth/oauth": {
       "get": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "operationId": "oauth",
         "summary": "List OAuth Providers",
         "description": "List configured OAuth providers.",
@@ -359,10 +325,7 @@
                     },
                     "data": {
                       "type": "array",
-                      "example": [
-                        "github",
-                        "facebook"
-                      ],
+                      "example": ["github", "facebook"],
                       "items": {
                         "type": "string"
                       }
@@ -382,9 +345,7 @@
       "get": {
         "summary": "Authenticated using an OAuth provider",
         "description": "Start OAuth flow using the specified provider",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "operationId": "oauthProvider",
         "parameters": [
           {
@@ -472,9 +433,7 @@
             "$ref": "#/components/responses/UnauthorizedError"
           }
         },
-        "tags": [
-          "Schema"
-        ]
+        "tags": ["Schema"]
       }
     },
     "/schema/apply": {
@@ -516,9 +475,7 @@
             "$ref": "#/components/responses/UnauthorizedError"
           }
         },
-        "tags": [
-          "Schema"
-        ]
+        "tags": ["Schema"]
       }
     },
     "/schema/diff": {
@@ -586,9 +543,7 @@
             "$ref": "#/components/responses/UnauthorizedError"
           }
         },
-        "tags": [
-          "Schema"
-        ]
+        "tags": ["Schema"]
       }
     },
     "/server/info": {
@@ -630,9 +585,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Server"
-        ]
+        "tags": ["Server"]
       }
     },
     "/server/ping": {
@@ -654,9 +607,7 @@
             "description": "Successful request"
           }
         },
-        "tags": [
-          "Server"
-        ]
+        "tags": ["Server"]
       }
     },
     "/utils/hash/generate": {
@@ -674,9 +625,7 @@
                     "type": "string"
                   }
                 },
-                "required": [
-                  "string"
-                ]
+                "required": ["string"]
               }
             }
           }
@@ -699,9 +648,7 @@
             "description": "Successful request"
           }
         },
-        "tags": [
-          "Utilities"
-        ]
+        "tags": ["Utilities"]
       }
     },
     "/utils/hash/verify": {
@@ -723,10 +670,7 @@
                     "type": "string"
                   }
                 },
-                "required": [
-                  "string",
-                  "hash"
-                ]
+                "required": ["string", "hash"]
               }
             }
           }
@@ -749,9 +693,7 @@
             "description": "Successful request"
           }
         },
-        "tags": [
-          "Utilities"
-        ]
+        "tags": ["Utilities"]
       }
     },
     "/utils/sort/{collection}": {
@@ -793,9 +735,7 @@
             "description": "Successful request"
           }
         },
-        "tags": [
-          "Utilities"
-        ]
+        "tags": ["Utilities"]
       }
     },
     "/utils/import/{collection}": {
@@ -834,9 +774,7 @@
             "description": "Successful request"
           }
         },
-        "tags": [
-          "Utilities"
-        ]
+        "tags": ["Utilities"]
       }
     },
     "/utils/export/{collection}": {
@@ -863,11 +801,7 @@
                   "format": {
                     "description": "What file format to save the export to. One of csv, xml, json",
                     "type": "string",
-                    "enum": [
-                      "csv",
-                      "xml",
-                      "json"
-                    ]
+                    "enum": ["csv", "xml", "json"]
                   },
                   "query": {
                     "$ref": "#/components/schemas/Query"
@@ -876,11 +810,7 @@
                     "$ref": "#/components/schemas/Files"
                   }
                 },
-                "required": [
-                  "format",
-                  "query",
-                  "file"
-                ]
+                "required": ["format", "query", "file"]
               }
             }
           }
@@ -890,9 +820,7 @@
             "description": "Successful request"
           }
         },
-        "tags": [
-          "Utilities"
-        ]
+        "tags": ["Utilities"]
       }
     },
     "/utils/cache/clear": {
@@ -905,9 +833,7 @@
             "description": "Successful request"
           }
         },
-        "tags": [
-          "Utilities"
-        ]
+        "tags": ["Utilities"]
       }
     },
     "/utils/random/string": {
@@ -944,9 +870,7 @@
             "description": "Successful request"
           }
         },
-        "tags": [
-          "Utilities"
-        ]
+        "tags": ["Utilities"]
       }
     },
     "/folders": {
@@ -1006,9 +930,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Folders"
-        ]
+        "tags": ["Folders"]
       },
       "post": {
         "summary": "Create a Folder",
@@ -1038,9 +960,7 @@
                     "type": "integer"
                   }
                 },
-                "required": [
-                  "name"
-                ]
+                "required": ["name"]
               }
             }
           }
@@ -1068,16 +988,12 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Folders"
-        ]
+        "tags": ["Folders"]
       },
       "patch": {
         "summary": "Update Multiple Folders",
         "description": "Update multiple folders at the same time.",
-        "tags": [
-          "Folders"
-        ],
+        "tags": ["Folders"],
         "operationId": "updateFolders",
         "parameters": [
           {
@@ -1121,9 +1037,7 @@
                         "type": "integer"
                       }
                     },
-                    "required": [
-                      "name"
-                    ]
+                    "required": ["name"]
                   },
                   "keys": {
                     "type": "array",
@@ -1166,9 +1080,7 @@
       "delete": {
         "summary": "Delete Multiple Folders",
         "description": "Delete multiple existing folders.",
-        "tags": [
-          "Folders"
-        ],
+        "tags": ["Folders"],
         "operationId": "deleteFolders",
         "responses": {
           "200": {
@@ -1219,9 +1131,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Folders"
-        ]
+        "tags": ["Folders"]
       },
       "patch": {
         "summary": "Update a Folder",
@@ -1281,9 +1191,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Folders"
-        ]
+        "tags": ["Folders"]
       },
       "delete": {
         "summary": "Delete a Folder",
@@ -1300,9 +1208,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Folders"
-        ],
+        "tags": ["Folders"],
         "parameters": [
           {
             "$ref": "#/components/parameters/UUId"
@@ -1367,9 +1273,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Relations"
-        ]
+        "tags": ["Relations"]
       },
       "post": {
         "summary": "Create a Relation",
@@ -1441,9 +1345,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Relations"
-        ]
+        "tags": ["Relations"]
       }
     },
     "/relations/{id}": {
@@ -1485,9 +1387,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Relations"
-        ]
+        "tags": ["Relations"]
       },
       "patch": {
         "summary": "Update a Relation",
@@ -1559,9 +1459,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Relations"
-        ]
+        "tags": ["Relations"]
       },
       "delete": {
         "summary": "Delete a Relation",
@@ -1578,9 +1476,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Relations"
-        ],
+        "tags": ["Relations"],
         "parameters": [
           {
             "$ref": "#/components/parameters/Id"
@@ -1592,9 +1488,7 @@
       "get": {
         "summary": "List Files",
         "description": "List the files.",
-        "tags": [
-          "Files"
-        ],
+        "tags": ["Files"],
         "operationId": "getFiles",
         "parameters": [
           {
@@ -1649,9 +1543,7 @@
       "post": {
         "summary": "Create a File",
         "description": "Create a new file",
-        "tags": [
-          "Files"
-        ],
+        "tags": ["Files"],
         "operationId": "createFile",
         "requestBody": {
           "content": {
@@ -1691,9 +1583,7 @@
       "patch": {
         "summary": "Update Multiple Files",
         "description": "Update multiple files at the same time.",
-        "tags": [
-          "Files"
-        ],
+        "tags": ["Files"],
         "operationId": "updateFiles",
         "parameters": [
           {
@@ -1773,9 +1663,7 @@
       "delete": {
         "summary": "Delete Multiple Files",
         "description": "Delete multiple existing files.",
-        "tags": [
-          "Files"
-        ],
+        "tags": ["Files"],
         "operationId": "deleteFiles",
         "responses": {
           "200": {
@@ -1791,9 +1679,7 @@
       "get": {
         "summary": "Retrieve a Files",
         "description": "Retrieve a single file by unique identifier.",
-        "tags": [
-          "Files"
-        ],
+        "tags": ["Files"],
         "operationId": "getFile",
         "parameters": [
           {
@@ -1830,9 +1716,7 @@
       "patch": {
         "summary": "Update a File",
         "description": "Update an existing file, and/or replace it's file contents.",
-        "tags": [
-          "Files"
-        ],
+        "tags": ["Files"],
         "operationId": "updateFile",
         "parameters": [
           {
@@ -1850,9 +1734,7 @@
             "multipart/data": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "file"
-                ],
+                "required": ["file"],
                 "properties": {
                   "title": {
                     "description": "Title for the file. Is extracted from the filename on upload, but can be edited by the user.",
@@ -1964,9 +1846,7 @@
       "delete": {
         "summary": "Delete a File",
         "description": "Delete an existing file.",
-        "tags": [
-          "Files"
-        ],
+        "tags": ["Files"],
         "operationId": "deleteFile",
         "responses": {
           "200": {
@@ -2043,9 +1923,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Permissions"
-        ]
+        "tags": ["Permissions"]
       },
       "post": {
         "summary": "Create a Permission",
@@ -2069,50 +1947,27 @@
                   "comment": {
                     "description": "If the user can post comments.",
                     "type": "string",
-                    "enum": [
-                      "none",
-                      "create",
-                      "update",
-                      "full"
-                    ]
+                    "enum": ["none", "create", "update", "full"]
                   },
                   "create": {
                     "description": "If the user can create items.",
                     "type": "string",
-                    "enum": [
-                      "none",
-                      "full"
-                    ]
+                    "enum": ["none", "full"]
                   },
                   "delete": {
                     "description": "If the user can update items.",
                     "type": "string",
-                    "enum": [
-                      "none",
-                      "mine",
-                      "role",
-                      "full"
-                    ]
+                    "enum": ["none", "mine", "role", "full"]
                   },
                   "explain": {
                     "description": "If the user is required to leave a comment explaining what was changed.",
                     "type": "string",
-                    "enum": [
-                      "none",
-                      "create",
-                      "update",
-                      "always"
-                    ]
+                    "enum": ["none", "create", "update", "always"]
                   },
                   "read": {
                     "description": "If the user can read items.",
                     "type": "string",
-                    "enum": [
-                      "none",
-                      "mine",
-                      "role",
-                      "full"
-                    ]
+                    "enum": ["none", "mine", "role", "full"]
                   },
                   "role": {
                     "description": "Unique identifier of the role this permission applies to.",
@@ -2125,9 +1980,7 @@
                     "items": {
                       "type": "string"
                     },
-                    "example": [
-                      "featured_image"
-                    ]
+                    "example": ["featured_image"]
                   },
                   "status": {
                     "description": "What status this permission applies to.",
@@ -2143,12 +1996,7 @@
                   "update": {
                     "description": "If the user can update items.",
                     "type": "string",
-                    "enum": [
-                      "none",
-                      "mine",
-                      "role",
-                      "full"
-                    ]
+                    "enum": ["none", "mine", "role", "full"]
                   },
                   "write_field_blacklist": {
                     "description": "Explicitly denies write access for specific fields.",
@@ -2186,16 +2034,12 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Permissions"
-        ]
+        "tags": ["Permissions"]
       },
       "patch": {
         "summary": "Update Multiple Permissions",
         "description": "Update multiple permissions at the same time.",
-        "tags": [
-          "Permissions"
-        ],
+        "tags": ["Permissions"],
         "operationId": "updatePermissions",
         "parameters": [
           {
@@ -2242,50 +2086,27 @@
                       "comment": {
                         "description": "If the user can post comments.",
                         "type": "string",
-                        "enum": [
-                          "none",
-                          "create",
-                          "update",
-                          "full"
-                        ]
+                        "enum": ["none", "create", "update", "full"]
                       },
                       "create": {
                         "description": "If the user can create items.",
                         "type": "string",
-                        "enum": [
-                          "none",
-                          "full"
-                        ]
+                        "enum": ["none", "full"]
                       },
                       "delete": {
                         "description": "If the user can update items.",
                         "type": "string",
-                        "enum": [
-                          "none",
-                          "mine",
-                          "role",
-                          "full"
-                        ]
+                        "enum": ["none", "mine", "role", "full"]
                       },
                       "explain": {
                         "description": "If the user is required to leave a comment explaining what was changed.",
                         "type": "string",
-                        "enum": [
-                          "none",
-                          "create",
-                          "update",
-                          "always"
-                        ]
+                        "enum": ["none", "create", "update", "always"]
                       },
                       "read": {
                         "description": "If the user can read items.",
                         "type": "string",
-                        "enum": [
-                          "none",
-                          "mine",
-                          "role",
-                          "full"
-                        ]
+                        "enum": ["none", "mine", "role", "full"]
                       },
                       "role": {
                         "description": "Unique identifier of the role this permission applies to.",
@@ -2298,9 +2119,7 @@
                         "items": {
                           "type": "string"
                         },
-                        "example": [
-                          "featured_image"
-                        ]
+                        "example": ["featured_image"]
                       },
                       "status": {
                         "description": "What status this permission applies to.",
@@ -2316,12 +2135,7 @@
                       "update": {
                         "description": "If the user can update items.",
                         "type": "string",
-                        "enum": [
-                          "none",
-                          "mine",
-                          "role",
-                          "full"
-                        ]
+                        "enum": ["none", "mine", "role", "full"]
                       },
                       "write_field_blacklist": {
                         "description": "Explicitly denies write access for specific fields.",
@@ -2368,9 +2182,7 @@
       "delete": {
         "summary": "Delete Multiple Permissions",
         "description": "Delete multiple existing permissions.",
-        "tags": [
-          "Permissions"
-        ],
+        "tags": ["Permissions"],
         "operationId": "deletePermissions",
         "responses": {
           "200": {
@@ -2413,9 +2225,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Permissions"
-        ]
+        "tags": ["Permissions"]
       }
     },
     "/permissions/{id}": {
@@ -2457,9 +2267,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Permissions"
-        ]
+        "tags": ["Permissions"]
       },
       "patch": {
         "summary": "Update a Permission",
@@ -2485,49 +2293,27 @@
                   "comment": {
                     "description": "If the user can post comments. `full`.",
                     "type": "string",
-                    "enum": [
-                      "none",
-                      "create",
-                      "update"
-                    ]
+                    "enum": ["none", "create", "update"]
                   },
                   "create": {
                     "description": "If the user can create items.",
                     "type": "string",
-                    "enum": [
-                      "none",
-                      "full"
-                    ]
+                    "enum": ["none", "full"]
                   },
                   "delete": {
                     "description": "If the user can update items.",
                     "type": "string",
-                    "enum": [
-                      "none",
-                      "mine",
-                      "role",
-                      "full"
-                    ]
+                    "enum": ["none", "mine", "role", "full"]
                   },
                   "explain": {
                     "description": "If the user is required to leave a comment explaining what was changed.",
                     "type": "string",
-                    "enum": [
-                      "none",
-                      "create",
-                      "update",
-                      "always"
-                    ]
+                    "enum": ["none", "create", "update", "always"]
                   },
                   "read": {
                     "description": "If the user can read items.",
                     "type": "string",
-                    "enum": [
-                      "none",
-                      "mine",
-                      "role",
-                      "full"
-                    ]
+                    "enum": ["none", "mine", "role", "full"]
                   },
                   "read_field_blacklist": {
                     "description": "Explicitly denies read access for specific fields.",
@@ -2548,12 +2334,7 @@
                   "update": {
                     "description": "If the user can update items.",
                     "type": "string",
-                    "enum": [
-                      "none",
-                      "mine",
-                      "role",
-                      "full"
-                    ]
+                    "enum": ["none", "mine", "role", "full"]
                   },
                   "write_field_blacklist": {
                     "description": "Explicitly denies write access for specific fields.",
@@ -2588,9 +2369,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Permissions"
-        ]
+        "tags": ["Permissions"]
       },
       "delete": {
         "summary": "Delete a Permission",
@@ -2607,9 +2386,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Permissions"
-        ],
+        "tags": ["Permissions"],
         "parameters": [
           {
             "$ref": "#/components/parameters/Id"
@@ -2645,9 +2422,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Webhooks"
-        ]
+        "tags": ["Webhooks"]
       },
       "post": {
         "summary": "Create a Webhook",
@@ -2728,16 +2503,12 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Webhooks"
-        ]
+        "tags": ["Webhooks"]
       },
       "patch": {
         "summary": "Update Multiple Webhooks",
         "description": "Update multiple webhooks at the same time.",
-        "tags": [
-          "Webhooks"
-        ],
+        "tags": ["Webhooks"],
         "operationId": "updateWebhooks",
         "parameters": [
           {
@@ -2847,9 +2618,7 @@
       "delete": {
         "summary": "Delete Multiple Webhooks",
         "description": "Delete multiple existing webhooks.",
-        "tags": [
-          "Webhooks"
-        ],
+        "tags": ["Webhooks"],
         "operationId": "deleteWebhooks",
         "responses": {
           "200": {
@@ -2889,9 +2658,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Webhooks"
-        ],
+        "tags": ["Webhooks"],
         "parameters": [
           {
             "$ref": "#/components/parameters/UUId"
@@ -2980,9 +2747,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Webhooks"
-        ]
+        "tags": ["Webhooks"]
       },
       "delete": {
         "summary": "Delete a Webhook",
@@ -2999,9 +2764,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Webhooks"
-        ],
+        "tags": ["Webhooks"],
         "parameters": [
           {
             "$ref": "#/components/parameters/UUId"
@@ -3048,9 +2811,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Collections"
-        ]
+        "tags": ["Collections"]
       },
       "post": {
         "summary": "Create a Collection",
@@ -3066,10 +2827,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "collection",
-                  "fields"
-                ],
+                "required": ["collection", "fields"],
                 "properties": {
                   "collection": {
                     "type": "string",
@@ -3180,9 +2938,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Collections"
-        ]
+        "tags": ["Collections"]
       }
     },
     "/collections/{id}": {
@@ -3227,9 +2983,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Collections"
-        ]
+        "tags": ["Collections"]
       },
       "patch": {
         "summary": "Update a Collection",
@@ -3364,9 +3118,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Collections"
-        ]
+        "tags": ["Collections"]
       },
       "delete": {
         "summary": "Delete a Collection",
@@ -3383,9 +3135,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Collections"
-        ],
+        "tags": ["Collections"],
         "parameters": [
           {
             "name": "id",
@@ -3438,9 +3188,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Fields"
-        ]
+        "tags": ["Fields"]
       }
     },
     "/fields/{collection}": {
@@ -3488,9 +3236,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Fields"
-        ]
+        "tags": ["Fields"]
       },
       "post": {
         "summary": "Create Field in Collection",
@@ -3500,12 +3246,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "required": [
-                  "field",
-                  "datatype",
-                  "type",
-                  "length"
-                ],
+                "required": ["field", "datatype", "type", "length"],
                 "type": "object",
                 "properties": {
                   "field": {
@@ -3731,9 +3472,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Fields"
-        ],
+        "tags": ["Fields"],
         "parameters": [
           {
             "description": "Unique identifier of the collection the item resides in.",
@@ -3775,9 +3514,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Fields"
-        ],
+        "tags": ["Fields"],
         "parameters": [
           {
             "name": "collection",
@@ -4032,9 +3769,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Fields"
-        ],
+        "tags": ["Fields"],
         "parameters": [
           {
             "name": "collection",
@@ -4071,9 +3806,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Fields"
-        ],
+        "tags": ["Fields"],
         "parameters": [
           {
             "name": "collection",
@@ -4156,9 +3889,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Roles"
-        ]
+        "tags": ["Roles"]
       },
       "post": {
         "summary": "Create a Role",
@@ -4234,16 +3965,12 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Roles"
-        ]
+        "tags": ["Roles"]
       },
       "patch": {
         "summary": "Update Multiple Roles",
         "description": "Update multiple roles at the same time.",
-        "tags": [
-          "Roles"
-        ],
+        "tags": ["Roles"],
         "operationId": "updateRoles",
         "parameters": [
           {
@@ -4348,9 +4075,7 @@
       "delete": {
         "summary": "Delete Multiple Roles",
         "description": "Delete multiple existing roles.",
-        "tags": [
-          "Roles"
-        ],
+        "tags": ["Roles"],
         "operationId": "deleteRoles",
         "responses": {
           "200": {
@@ -4401,9 +4126,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Roles"
-        ]
+        "tags": ["Roles"]
       },
       "patch": {
         "summary": "Update a Role",
@@ -4481,9 +4204,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Roles"
-        ]
+        "tags": ["Roles"]
       },
       "delete": {
         "summary": "Delete a Role",
@@ -4500,9 +4221,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Roles"
-        ],
+        "tags": ["Roles"],
         "parameters": [
           {
             "$ref": "#/components/parameters/UUId"
@@ -4544,9 +4263,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Flows"
-        ]
+        "tags": ["Flows"]
       },
       "post": {
         "summary": "Create a Flow",
@@ -4596,16 +4313,12 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Flows"
-        ]
+        "tags": ["Flows"]
       },
       "patch": {
         "summary": "Update Multiple Flows",
         "description": "Update multiple flows at the same time.",
-        "tags": [
-          "Flows"
-        ],
+        "tags": ["Flows"],
         "operationId": "updateFlows",
         "parameters": [
           {
@@ -4684,9 +4397,7 @@
       "delete": {
         "summary": "Delete Multiple Flows",
         "description": "Delete multiple existing flows.",
-        "tags": [
-          "Flows"
-        ],
+        "tags": ["Flows"],
         "operationId": "deleteFlows",
         "responses": {
           "200": {
@@ -4726,9 +4437,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Flows"
-        ],
+        "tags": ["Flows"],
         "parameters": [
           {
             "$ref": "#/components/parameters/UUId"
@@ -4786,9 +4495,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Flows"
-        ]
+        "tags": ["Flows"]
       },
       "delete": {
         "summary": "Delete a Flow",
@@ -4805,9 +4512,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Flows"
-        ],
+        "tags": ["Flows"],
         "parameters": [
           {
             "$ref": "#/components/parameters/UUId"
@@ -4849,9 +4554,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Operations"
-        ]
+        "tags": ["Operations"]
       },
       "post": {
         "summary": "Create an Operation",
@@ -4901,16 +4604,12 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Operations"
-        ]
+        "tags": ["Operations"]
       },
       "patch": {
         "summary": "Update Multiple Operations",
         "description": "Update multiple operations at the same time.",
-        "tags": [
-          "Operations"
-        ],
+        "tags": ["Operations"],
         "operationId": "updateOperations",
         "parameters": [
           {
@@ -4989,9 +4688,7 @@
       "delete": {
         "summary": "Delete Multiple Operations",
         "description": "Delete multiple existing operations.",
-        "tags": [
-          "Operations"
-        ],
+        "tags": ["Operations"],
         "operationId": "deleteOperations",
         "responses": {
           "200": {
@@ -5031,9 +4728,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Operations"
-        ],
+        "tags": ["Operations"],
         "parameters": [
           {
             "$ref": "#/components/parameters/UUId"
@@ -5091,9 +4786,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Operations"
-        ]
+        "tags": ["Operations"]
       },
       "delete": {
         "summary": "Delete an Operation",
@@ -5110,9 +4803,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Operations"
-        ],
+        "tags": ["Operations"],
         "parameters": [
           {
             "$ref": "#/components/parameters/UUId"
@@ -5177,9 +4868,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Activity"
-        ]
+        "tags": ["Activity"]
       }
     },
     "/activity/comment": {
@@ -5197,11 +4886,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "collection",
-                  "item",
-                  "comment"
-                ],
+                "required": ["collection", "item", "comment"],
                 "properties": {
                   "collection": {
                     "type": "string",
@@ -5243,9 +4928,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Activity"
-        ]
+        "tags": ["Activity"]
       }
     },
     "/activity/{id}": {
@@ -5287,9 +4970,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Activity"
-        ]
+        "tags": ["Activity"]
       }
     },
     "/activity/comment/{id}": {
@@ -5343,9 +5024,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Activity"
-        ]
+        "tags": ["Activity"]
       },
       "delete": {
         "summary": "Delete a Comment",
@@ -5367,16 +5046,12 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Activity"
-        ]
+        "tags": ["Activity"]
       }
     },
     "/presets": {
       "get": {
-        "tags": [
-          "Presets"
-        ],
+        "tags": ["Presets"],
         "operationId": "getPresets",
         "summary": "List Presets",
         "description": "List the presets.",
@@ -5439,9 +5114,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Presets"
-        ],
+        "tags": ["Presets"],
         "operationId": "createPreset",
         "summary": "Create a Preset",
         "description": "Create a new preset.",
@@ -5458,9 +5131,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "collection"
-                ],
+                "required": ["collection"],
                 "properties": {
                   "collection": {
                     "type": "string",
@@ -5546,9 +5217,7 @@
       "patch": {
         "summary": "Update Multiple Presets",
         "description": "Update multiple presets at the same time.",
-        "tags": [
-          "Presets"
-        ],
+        "tags": ["Presets"],
         "operationId": "updatePresets",
         "parameters": [
           {
@@ -5587,9 +5256,7 @@
                   },
                   "data": {
                     "type": "object",
-                    "required": [
-                      "collection"
-                    ],
+                    "required": ["collection"],
                     "properties": {
                       "collection": {
                         "type": "string",
@@ -5683,9 +5350,7 @@
       "delete": {
         "summary": "Delete Multiple Presets",
         "description": "Delete multiple existing presets.",
-        "tags": [
-          "Presets"
-        ],
+        "tags": ["Presets"],
         "operationId": "deletePresets",
         "responses": {
           "200": {
@@ -5699,9 +5364,7 @@
     },
     "/presets/{id}": {
       "get": {
-        "tags": [
-          "Presets"
-        ],
+        "tags": ["Presets"],
         "operationId": "getPreset",
         "summary": "Retrieve a Preset",
         "description": "Retrieve a single preset by unique identifier.",
@@ -5743,9 +5406,7 @@
         }
       },
       "patch": {
-        "tags": [
-          "Presets"
-        ],
+        "tags": ["Presets"],
         "operationId": "updatePreset",
         "summary": "Update a Preset",
         "description": "Update an existing preset.",
@@ -5765,9 +5426,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "collection"
-                ],
+                "required": ["collection"],
                 "properties": {
                   "collection": {
                     "type": "string",
@@ -5850,9 +5509,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Presets"
-        ],
+        "tags": ["Presets"],
         "operationId": "deletePreset",
         "summary": "Delete a Preset",
         "description": "Delete an existing preset.",
@@ -5933,9 +5590,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Versions"
-        ]
+        "tags": ["Versions"]
       },
       "post": {
         "summary": "Create Multiple Content Versions",
@@ -5985,9 +5640,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Versions"
-        ]
+        "tags": ["Versions"]
       },
       "patch": {
         "summary": "Update Multiple Content Versions",
@@ -6066,9 +5719,7 @@
             "$ref": "#/components/responses/UnauthorizedError"
           }
         },
-        "tags": [
-          "Versions"
-        ]
+        "tags": ["Versions"]
       },
       "delete": {
         "summary": "Delete Multiple Content Versions",
@@ -6082,9 +5733,7 @@
             "$ref": "#/components/responses/UnauthorizedError"
           }
         },
-        "tags": [
-          "Versions"
-        ]
+        "tags": ["Versions"]
       }
     },
     "/versions/{id}": {
@@ -6126,9 +5775,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Versions"
-        ]
+        "tags": ["Versions"]
       },
       "patch": {
         "summary": "Update a Content Version",
@@ -6181,9 +5828,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Versions"
-        ]
+        "tags": ["Versions"]
       },
       "delete": {
         "summary": "Delete a Content Version",
@@ -6200,9 +5845,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Versions"
-        ],
+        "tags": ["Versions"],
         "parameters": [
           {
             "$ref": "#/components/parameters/UUId"
@@ -6248,9 +5891,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Versions"
-        ]
+        "tags": ["Versions"]
       }
     },
     "/versions/{id}/compare": {
@@ -6286,9 +5927,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Versions"
-        ]
+        "tags": ["Versions"]
       }
     },
     "/versions/{id}/promote": {
@@ -6339,9 +5978,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Versions"
-        ]
+        "tags": ["Versions"]
       }
     },
     "/revisions": {
@@ -6404,9 +6041,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Revisions"
-        ]
+        "tags": ["Revisions"]
       }
     },
     "/revisions/{id}": {
@@ -6448,9 +6083,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Revisions"
-        ]
+        "tags": ["Revisions"]
       }
     },
     "/users": {
@@ -6510,9 +6143,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       },
       "post": {
         "summary": "Create a User",
@@ -6555,16 +6186,12 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       },
       "patch": {
         "summary": "Update Multiple Users",
         "description": "Update multiple users at the same time.",
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "operationId": "updateUsers",
         "parameters": [
           {
@@ -6639,9 +6266,7 @@
       "delete": {
         "summary": "Delete Multiple Users",
         "description": "Delete multiple existing users.",
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "operationId": "deleteUsers",
         "responses": {
           "200": {
@@ -6692,9 +6317,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       },
       "patch": {
         "summary": "Update a User",
@@ -6743,9 +6366,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       },
       "delete": {
         "summary": "Delete a User",
@@ -6762,9 +6383,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "parameters": [
           {
             "$ref": "#/components/parameters/UUId"
@@ -6815,9 +6434,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/users/invite/accept": {
@@ -6871,9 +6488,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/users/me": {
@@ -6912,9 +6527,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       },
       "patch": {
         "summary": "Update Current User",
@@ -6943,9 +6556,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/users/me/track/page": {
@@ -6979,9 +6590,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/users/me/tfa/enable": {
@@ -7000,9 +6609,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/users/me/tfa/disable": {
@@ -7021,9 +6628,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/settings": {
@@ -7068,9 +6673,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Settings"
-        ]
+        "tags": ["Settings"]
       },
       "patch": {
         "summary": "Update Settings",
@@ -7108,9 +6711,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Settings"
-        ]
+        "tags": ["Settings"]
       }
     },
     "/extensions": {
@@ -7141,9 +6742,7 @@
             "$ref": "#/components/responses/UnauthorizedError"
           }
         },
-        "tags": [
-          "Extensions"
-        ]
+        "tags": ["Extensions"]
       }
     },
     "/extensions/{name}": {
@@ -7206,9 +6805,7 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Extensions"
-        ]
+        "tags": ["Extensions"]
       }
     },
     "/extensions/{bundle}/{name}": {
@@ -7279,19 +6876,14 @@
             "$ref": "#/components/responses/NotFoundError"
           }
         },
-        "tags": [
-          "Extensions"
-        ]
+        "tags": ["Extensions"]
       }
     },
     "/items/directus_sync_id_map": {
       "post": {
         "summary": "Create an Item",
         "description": "Create a new directus_sync_id_map item.",
-        "tags": [
-          "Items",
-          "ItemsDirectusSyncIDMap"
-        ],
+        "tags": ["Items", "ItemsDirectusSyncIDMap"],
         "operationId": "createItemsDirectusSyncIDMap",
         "parameters": [
           {
@@ -7343,10 +6935,7 @@
       "get": {
         "summary": "List Items",
         "description": "List the directus_sync_id_map items.",
-        "tags": [
-          "Items",
-          "ItemsDirectusSyncIDMap"
-        ],
+        "tags": ["Items", "ItemsDirectusSyncIDMap"],
         "operationId": "readItemsDirectusSyncIDMap",
         "security": [
           {
@@ -7407,10 +6996,7 @@
       "patch": {
         "summary": "Update Multiple Items",
         "description": "Update multiple directus_sync_id_map items at the same time.",
-        "tags": [
-          "Items",
-          "ItemsDirectusSyncIDMap"
-        ],
+        "tags": ["Items", "ItemsDirectusSyncIDMap"],
         "operationId": "updateItemsDirectusSyncIDMap",
         "parameters": [
           {
@@ -7476,10 +7062,7 @@
       "delete": {
         "summary": "Delete Multiple Items",
         "description": "Delete multiple existing directus_sync_id_map items.",
-        "tags": [
-          "Items",
-          "ItemsDirectusSyncIDMap"
-        ],
+        "tags": ["Items", "ItemsDirectusSyncIDMap"],
         "operationId": "deleteItemsDirectusSyncIDMap",
         "responses": {
           "200": {
@@ -7496,10 +7079,7 @@
       "get": {
         "summary": "Retrieve an Item",
         "description": "Retrieve a single directus_sync_id_map item by unique identifier.",
-        "tags": [
-          "Items",
-          "ItemsDirectusSyncIDMap"
-        ],
+        "tags": ["Items", "ItemsDirectusSyncIDMap"],
         "operationId": "readSingleItemsDirectusSyncIDMap",
         "parameters": [
           {
@@ -7560,10 +7140,7 @@
       "patch": {
         "summary": "Update an Item",
         "description": "Update an existing directus_sync_id_map item.",
-        "tags": [
-          "Items",
-          "ItemsDirectusSyncIDMap"
-        ],
+        "tags": ["Items", "ItemsDirectusSyncIDMap"],
         "operationId": "updateSingleItemsDirectusSyncIDMap",
         "parameters": [
           {
@@ -7631,10 +7208,7 @@
       "delete": {
         "summary": "Delete an Item",
         "description": "Delete an existing directus_sync_id_map item.",
-        "tags": [
-          "Items",
-          "ItemsDirectusSyncIDMap"
-        ],
+        "tags": ["Items", "ItemsDirectusSyncIDMap"],
         "operationId": "deleteSingleItemsDirectusSyncIDMap",
         "responses": {
           "200": {
@@ -7685,10 +7259,7 @@
       "name": "Schema",
       "description": "Retrieve and update the schema of an instance.",
       "x-authentication": "admin",
-      "x-schemas": [
-        "Schema",
-        "Diff"
-      ]
+      "x-schemas": ["Schema", "Diff"]
     },
     {
       "name": "Server",
@@ -7698,12 +7269,7 @@
       "name": "Utilities",
       "description": "Directus comes with various utility endpoints you can use to simplify your development flow.",
       "x-authentication": "user",
-      "x-schemas": [
-        "Files",
-        "Folders",
-        "Users",
-        "Roles"
-      ]
+      "x-schemas": ["Files", "Folders", "Users", "Roles"]
     },
     {
       "name": "Folders",
@@ -8230,13 +7796,7 @@
             "description": "Status of the user.",
             "example": "active",
             "type": "string",
-            "enum": [
-              "active",
-              "invited",
-              "draft",
-              "suspended",
-              "deleted"
-            ]
+            "enum": ["active", "invited", "draft", "suspended", "deleted"]
           },
           "role": {
             "description": "Unique identifier of the role of this user.",
@@ -8313,10 +7873,7 @@
               "type": "string"
             },
             "description": "Control what fields are being returned in the object.",
-            "example": [
-              "*",
-              "*.*"
-            ]
+            "example": ["*", "*.*"]
           },
           "filter": {
             "type": "object",
@@ -8336,9 +7893,7 @@
               "type": "string"
             },
             "description": "How to sort the returned items.",
-            "example": [
-              "-date_created"
-            ]
+            "example": ["-date_created"]
           },
           "limit": {
             "type": "number",
@@ -8456,12 +8011,7 @@
             "description": "What action this permission applies to.",
             "example": "create",
             "type": "string",
-            "enum": [
-              "create",
-              "read",
-              "update",
-              "delete"
-            ]
+            "enum": ["create", "read", "update", "delete"]
           },
           "permissions": {
             "description": "JSON structure containing the permissions checks for this permission.",
@@ -8759,10 +8309,7 @@
             "type": "string",
             "example": "active",
             "default": "active",
-            "enum": [
-              "active",
-              "inactive"
-            ]
+            "enum": ["active", "inactive"]
           },
           "trigger": {
             "description": "Type of trigger for the flow. One of `hook`, `webhook`, `operation`, `schedule`, `manual`.",
@@ -8938,12 +8485,7 @@
             "description": "Action that was performed.",
             "example": "update",
             "type": "string",
-            "enum": [
-              "create",
-              "update",
-              "delete",
-              "login"
-            ]
+            "enum": ["create", "update", "delete", "login"]
           },
           "user": {
             "description": "The user who performed this action.",
@@ -9349,11 +8891,7 @@
           "storage_asset_transform": {
             "description": "What transformations are allowed in the assets endpoint.",
             "type": "string",
-            "enum": [
-              "all",
-              "none",
-              "presets"
-            ],
+            "enum": ["all", "none", "presets"],
             "example": "all",
             "nullable": true
           },
@@ -9370,12 +8908,7 @@
                 "fit": {
                   "description": "Whether to crop the thumbnail to match the size, or maintain the aspect ratio.",
                   "type": "string",
-                  "enum": [
-                    "cover",
-                    "contain",
-                    "inside",
-                    "outside"
-                  ]
+                  "enum": ["cover", "contain", "inside", "outside"]
                 },
                 "width": {
                   "description": "Width of the thumbnail.",
@@ -9396,14 +8929,7 @@
                 "format": {
                   "description": "Reformat output image",
                   "type": "string",
-                  "enum": [
-                    "",
-                    "jpeg",
-                    "png",
-                    "webp",
-                    "tiff",
-                    "avif"
-                  ]
+                  "enum": ["", "jpeg", "png", "webp", "tiff", "avif"]
                 },
                 "transforms": {
                   "description": "Additional transformations to apply",
@@ -9684,12 +9210,7 @@
         "required": false,
         "schema": {
           "type": "string",
-          "enum": [
-            "csv",
-            "json",
-            "xml",
-            "yaml"
-          ]
+          "enum": ["csv", "json", "xml", "yaml"]
         }
       },
       "Version": {
