@@ -2,16 +2,16 @@ import 'dotenv/config';
 import './helpers/env.js';
 import { Context } from './helpers/index.js';
 import {
-  pullAndPushWithoutData,
-  pullAndPushWithoutChanges,
   preserveIds,
-  pullBasic,
-  pushFlushAndPush,
-  pullWithNewData,
-  pushOnEmptyInstance,
-  pushTwiceOnEmptyInstance,
   pullAndPushWithChanges,
   pullAndPushWithDeletions,
+  pullAndPushWithoutChanges,
+  pullAndPushWithoutData,
+  pullBasic,
+  pullWithNewData,
+  pushFlushAndPush,
+  pushOnEmptyInstance,
+  pushTwiceOnEmptyInstance,
 } from './pull-diff-push/index.js';
 import {
   pushWithDependencies,
@@ -33,6 +33,7 @@ import {
 } from './exclude-include/index.js';
 import {
   insertDuplicatedPermissions,
+  pullAndPushPublicPermissions,
   removePermissionDuplicates,
 } from './permissions/index.js';
 import { removeTrackedItem } from './untrack/index.js';
@@ -87,6 +88,7 @@ describe('Tests entrypoint ->', () => {
 
   insertDuplicatedPermissions(context);
   removePermissionDuplicates(context);
+  pullAndPushPublicPermissions(context);
 
   removeTrackedItem(context);
 });
