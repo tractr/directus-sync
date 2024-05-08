@@ -1,0 +1,38 @@
+[
+  {
+    "role": null,
+    "collection": "directus_panels",
+    "action": "delete",
+    "permissions": {
+      "id": {
+        "_eq": "$CURRENT_USER"
+      }
+    },
+    "validation": null,
+    "presets": {
+      "user_agent": "unknown"
+    },
+    "fields": ["*"],
+    "_syncId": "17b7ab82-93ed-46e6-9711-165bff9fdcbf"
+  },
+  {
+    "role": null,
+    "collection": "directus_panels",
+    "action": "read",
+    "permissions": {},
+    "validation": {
+      "_and": [
+        {
+          "timestamp": {
+            "_lt": "2024-04-02T12:00:00-04:00"
+          }
+        }
+      ]
+    },
+    "presets": {
+      "user_agent": "unknown"
+    },
+    "fields": ["*"],
+    "_syncId": "8c7e94e4-a20c-4641-9939-67d87dc9a968"
+  }
+]

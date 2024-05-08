@@ -2,6 +2,7 @@ import { Command, DataClient, Query, WithoutIdAndSyncId } from '../base';
 import {
   createOperation,
   deleteOperation,
+  QueryFilter,
   readOperations,
   updateOperation,
   updateOperations,
@@ -27,8 +28,14 @@ export class OperationsDataClient extends DataClient<DirectusOperation> {
     return deleteOperation(itemId);
   }
 
-  protected getInsertCommand(item: WithoutIdAndSyncId<DirectusOperation>) {
-    return createOperation(item);
+  protected async getInsertCommand(
+    item: WithoutIdAndSyncId<DirectusOperation>,
+  ) {
+    const preCommands = await this.getCommandsToPreventConflicts(item);
+    return [...preCommands, createOperation(item)] as [
+      ...Command<object>[],
+      Command<DirectusOperation>,
+    ];
   }
 
   protected getQueryCommand(query: Query<DirectusOperation>) {
@@ -39,15 +46,27 @@ export class OperationsDataClient extends DataClient<DirectusOperation> {
     itemId: string,
     diffItem: Partial<WithoutIdAndSyncId<DirectusOperation>>,
   ) {
+    const preCommands = await this.getCommandsToPreventConflicts(
+      diffItem,
+      itemId,
+    );
+    return [...preCommands, updateOperation(itemId, diffItem)] as [
+      ...Command<object>[],
+      Command<DirectusOperation>,
+    ];
+  }
+
+  protected async getCommandsToPreventConflicts(
+    diffItem: Partial<Pick<DirectusOperation, 'resolve' | 'reject'>>,
+    itemId?: string,
+  ): Promise<Command<object>[]> {
     const preCommands: Command<object>[] = [];
 
-    // Avoid conflict with unique constraint in resolve and reject columns
-    // https://github.com/tractr/directus-sync/issues/46
     if (diffItem.reject) {
       const command = await this.getCommandToNullifyTarget(
         'reject',
-        itemId,
         diffItem,
+        itemId,
       );
       if (command) {
         preCommands.push(command);
@@ -56,26 +75,23 @@ export class OperationsDataClient extends DataClient<DirectusOperation> {
     if (diffItem.resolve) {
       const command = await this.getCommandToNullifyTarget(
         'resolve',
-        itemId,
         diffItem,
+        itemId,
       );
       if (command) {
         preCommands.push(command);
       }
     }
 
-    return [...preCommands, updateOperation(itemId, diffItem)] as [
-      ...Command<object>[],
-      Command<DirectusOperation>,
-    ];
+    return preCommands;
   }
 
   protected async getCommandToNullifyTarget(
     type: 'resolve' | 'reject',
-    itemId: string,
     diffItem: Partial<WithoutIdAndSyncId<DirectusOperation>>,
+    itemId?: string,
   ): Promise<Command<DirectusOperation> | undefined> {
-    const ids = await this.getIdsForTarget(type, itemId, diffItem);
+    const ids = await this.getIdsForTarget(type, diffItem, itemId);
     if (ids.length === 0) {
       return;
     }
@@ -84,14 +100,22 @@ export class OperationsDataClient extends DataClient<DirectusOperation> {
 
   protected async getIdsForTarget(
     type: 'resolve' | 'reject',
-    itemId: string,
     diffItem: Partial<WithoutIdAndSyncId<DirectusOperation>>,
+    itemId?: string,
   ): Promise<string[]> {
+    // Build the filter
+    const andFilters: QueryFilter<object, DirectusOperation>['_and'] = [
+      { [type]: { _eq: diffItem[type] } },
+    ];
+    if (itemId) {
+      andFilters.push({ id: { _neq: itemId } });
+    }
+
     const client = await this.migrationClient.get();
     const response = await client.request<{ id: string }[]>(
       readOperations({
         filter: {
-          _and: [{ [type]: { _eq: diffItem[type] } }, { id: { _neq: itemId } }],
+          _and: andFilters,
         },
         fields: ['id'],
       }),

@@ -1,11 +1,11 @@
-import { Context, newPermission, newRole, warn } from '../helpers/index.js';
 import {
-  deletePermissions,
-  DirectusPermission,
-  readPermissions,
-} from '@directus/sdk';
-
-type PermissionWithSystem = DirectusPermission<object> & { system: boolean };
+  Context,
+  newPermission,
+  newRole,
+  readNonSystemPermissions,
+  warn,
+} from '../helpers/index.js';
+import { deletePermissions } from '@directus/sdk';
 
 export const insertDuplicatedPermissions = (context: Context) => {
   it('should remove duplicates when inserting permissions', async () => {
@@ -52,13 +52,7 @@ export const insertDuplicatedPermissions = (context: Context) => {
     );
 
     // Able to read the permissions
-    const permissions = (
-      await client.request<PermissionWithSystem[]>(
-        readPermissions({
-          fields: ['id', 'role', 'collection', 'action'],
-        }),
-      )
-    ).filter((p) => !p.system);
+    const permissions = await readNonSystemPermissions(client);
 
     expect(permissions.length).toEqual(4);
     for (const permission of permissions) {

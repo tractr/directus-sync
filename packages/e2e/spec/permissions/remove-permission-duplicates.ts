@@ -1,7 +1,10 @@
-import { Context, info, newPermission, newRole } from '../helpers/index.js';
-import { DirectusPermission, readPermissions } from '@directus/sdk';
-
-type PermissionWithSystem = DirectusPermission<object> & { system: boolean };
+import {
+  Context,
+  info,
+  newPermission,
+  newRole,
+  readNonSystemPermissions,
+} from '../helpers/index.js';
 
 export const removePermissionDuplicates = (context: Context) => {
   it('should remove permission duplicates and and keep the last one', async () => {
@@ -33,13 +36,7 @@ export const removePermissionDuplicates = (context: Context) => {
     );
 
     // Able to read the permissions
-    const permissions = (
-      await client.request<PermissionWithSystem[]>(
-        readPermissions({
-          fields: ['id', 'role', 'collection', 'action'],
-        }),
-      )
-    ).filter((p) => !p.system);
+    const permissions = await readNonSystemPermissions(client);
 
     expect(permissions.length).toEqual(4);
     for (const permission of permissions) {
@@ -74,13 +71,7 @@ export const removePermissionDuplicates = (context: Context) => {
     await sync.removePermissionDuplicates('first');
 
     // Able to read the permissions
-    const permissions = (
-      await client.request<PermissionWithSystem[]>(
-        readPermissions({
-          fields: ['id', 'role', 'collection', 'action'],
-        }),
-      )
-    ).filter((p) => !p.system);
+    const permissions = await readNonSystemPermissions(client);
 
     expect(permissions.some((p) => p.id === update1.id)).toBeTrue();
     expect(permissions.some((p) => p.id === update2.id)).toBeFalse();
@@ -105,13 +96,7 @@ export const removePermissionDuplicates = (context: Context) => {
     await sync.removePermissionDuplicates('first');
 
     // Able to read the permissions
-    const permissions = (
-      await client.request<PermissionWithSystem[]>(
-        readPermissions({
-          fields: ['id', 'role', 'collection', 'action'],
-        }),
-      )
-    ).filter((p) => !p.system);
+    const permissions = await readNonSystemPermissions(client);
 
     expect(permissions.some((p) => p.id === update1.id)).toBeTrue();
     expect(permissions.some((p) => p.id === create1.id)).toBeTrue();
