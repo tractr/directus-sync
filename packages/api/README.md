@@ -22,6 +22,8 @@ allows `directus-sync` to perform version control and synchronization tasks acro
 
 ## Installation
 
+### Installation with NPM
+
 In your Directus installation root, run:
 
 ```bash
@@ -29,6 +31,27 @@ npm install directus-extension-sync
 ```
 
 Then, restart Directus.
+
+### Installation with Docker
+
+If you are using Directus with Docker, you can install the extension by creating a custom Dockerfile.
+
+See example is this issue: https://github.com/tractr/directus-sync/issues/63#issuecomment-2096657924
+
+### Installation with Directus Marketplace
+
+Unfortunately, the extension is not available in the Directus Marketplace out of the box.
+Directus Marketplace does not support extensions that require a database connection ([more details here](https://docs.directus.io/extensions/sandbox/sandbox-sdk.html#reference)).
+
+**However**, you can force Directus Marketplace to show all extensions by setting the `MARKETPLACE_TRUST` environment variable to `all`.
+
+```bash
+MARKETPLACE_TRUST=all
+```
+
+Then, go to the Directus Marketplace and search for the `directus-extension-sync` extension.
+
+![Marketplace installation](docs/marketplace.png)
 
 ## Usage
 
