@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.3](https://github.com/tractr/directus-sync/compare/directus-sync@1.5.2...directus-sync@1.5.3) (2024-05-08)
+
+
+### Bug Fixes
+
+* **cli:** avoid conflicts during operations creations ([#66](https://github.com/tractr/directus-sync/issues/66)) ([b678d3a](https://github.com/tractr/directus-sync/commit/b678d3a151c2ef80d521df22a8e7e55d6ac2595a))
+
+
+
+
+
 ## [1.5.2](https://github.com/tractr/directus-sync/compare/directus-sync@1.5.1...directus-sync@1.5.2) (2024-05-02)
 
 
