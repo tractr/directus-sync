@@ -36,7 +36,7 @@ Then, restart Directus.
 
 If you are using Directus with Docker, you can install the extension by creating a custom Dockerfile.
 
-See example is this issue: https://github.com/tractr/directus-sync/issues/63#issuecomment-2096657924
+See example in this issue: https://github.com/tractr/directus-sync/issues/63#issuecomment-2096657924
 
 ### Installation with Directus Marketplace
 
