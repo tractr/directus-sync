@@ -2,21 +2,18 @@ import 'dotenv/config';
 import './helpers/env.js';
 import { Context } from './helpers/index.js';
 import {
-  pullAndPushWithoutData,
-  pullAndPushWithoutChanges,
   preserveIds,
-  pullBasic,
-  pushFlushAndPush,
-  pullWithNewData,
-  pushOnEmptyInstance,
-  pushTwiceOnEmptyInstance,
   pullAndPushWithChanges,
   pullAndPushWithDeletions,
+  pullAndPushWithoutChanges,
+  pullAndPushWithoutData,
+  pullBasic,
+  pullWithNewData,
+  pushFlushAndPush,
+  pushOnEmptyInstance,
+  pushTwiceOnEmptyInstance,
 } from './pull-diff-push/index.js';
-import {
-  pushWithDependencies,
-  updateWithDependencies,
-} from './dependencies/index.js';
+import { pushWithDependencies } from './dependencies/index.js';
 import {
   collectionsOnDump,
   collectionsOnLoad,
@@ -36,6 +33,10 @@ import {
   removePermissionDuplicates,
 } from './permissions/index.js';
 import { removeTrackedItem } from './untrack/index.js';
+import {
+  createOperationsWithConflicts,
+  updateOperationsWithConflicts,
+} from './operations/index.js';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
@@ -70,7 +71,9 @@ describe('Tests entrypoint ->', () => {
   pushTwiceOnEmptyInstance(context);
 
   pushWithDependencies(context);
-  updateWithDependencies(context);
+
+  updateOperationsWithConflicts(context);
+  createOperationsWithConflicts(context);
 
   collectionsOnDump(context);
   collectionsOnSave(context);
