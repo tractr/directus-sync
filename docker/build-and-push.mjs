@@ -25,18 +25,23 @@ const directusVersions = [
   '10.11.0',
 ];
 
-const platforms = [
-  'linux/amd64',
-  // 'linux/arm64',
-];
+const platforms = ['linux/amd64', 'linux/arm64'];
 
 for (const version of directusVersions) {
+  console.log(
+    chalk.magenta(
+      `============== tractr/directus-sync:${version} ==============`,
+    ),
+  );
   await $`docker buildx build \
-    -t tractr/directus-sync:${version} \
+    --tag tractr/directus-sync:${version} \
     --build-arg DIRECTUS_VERSION=${version} \
-    --platform ${platforms.join(',')} .`;
-}
-
-for (const version of directusVersions) {
-  await $`docker push tractr/directus-sync:${version}`;
+    --push \
+    --platform ${platforms.join(',')} \
+    .`;
+  console.log(
+    chalk.green(
+      `==> tractr/directus-sync:${version} has been built and pushed`,
+    ),
+  );
 }
