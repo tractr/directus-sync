@@ -2,7 +2,7 @@
   "name": "directus-extension-sync",
   "description": "This extension exposes routes to manage id mapping for Directus sync.",
   "icon": "extension",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "author": "Edouard Demotes-Mainard <edouard@tractr.net>",
   "repository": {
     "type": "git",
