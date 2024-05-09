@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.5](https://github.com/tractr/directus-sync/compare/directus-extension-sync@1.1.4...directus-extension-sync@1.1.5) (2024-05-09)
+
+**Note:** Version bump only for package directus-extension-sync
+
+
+
+
+
 ## [1.1.4](https://github.com/tractr/directus-sync/compare/directus-extension-sync@1.1.3...directus-extension-sync@1.1.4) (2024-05-08)
 
 **Note:** Version bump only for package directus-extension-sync
