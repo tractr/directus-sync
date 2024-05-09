@@ -1,6 +1,8 @@
 node_modules
 src
+docs
 .DS_Store
 .gitignore
 jest.config.cjs
 tsconfig.json
+tsconfig.*.json
