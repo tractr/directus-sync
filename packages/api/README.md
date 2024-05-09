@@ -32,18 +32,25 @@ npm install directus-extension-sync
 
 Then, restart Directus.
 
-### Installation with Docker
+### Use pre-built Docker image
 
-If you are using Directus with Docker, you can install the extension by creating a custom Dockerfile.
+You can use the pre-built Docker image with this extension pre-installed.
 
-See example in this issue: https://github.com/tractr/directus-sync/issues/63#issuecomment-2096657924
+This image is available on Docker Hub: [tractr/directus-sync](https://hub.docker.com/r/tractr/directus-sync).
+
+### Installation within custom Docker image
+
+If you prefer to build your own Docker image, you can follow the instructions from this
+issue: https://github.com/tractr/directus-sync/issues/63#issuecomment-2096657924
 
 ### Installation with Directus Marketplace
 
 Unfortunately, the extension is not available in the Directus Marketplace out of the box.
-Directus Marketplace does not support extensions that require a database connection ([more details here](https://docs.directus.io/extensions/sandbox/sandbox-sdk.html#reference)).
+Directus Marketplace does not support extensions that require a database
+connection ([more details here](https://docs.directus.io/extensions/sandbox/sandbox-sdk.html#reference)).
 
-**However**, you can force Directus Marketplace to show all extensions by setting the `MARKETPLACE_TRUST` environment variable to `all`.
+**However**, you can force Directus Marketplace to show all extensions by setting the `MARKETPLACE_TRUST` environment
+variable to `all`.
 
 ```bash
 MARKETPLACE_TRUST=all
@@ -51,7 +58,7 @@ MARKETPLACE_TRUST=all
 
 Then, go to the Directus Marketplace and search for the `directus-extension-sync` extension.
 
-![Marketplace installation](docs/marketplace.png)
+![Marketplace installation](https://raw.githubusercontent.com/tractr/directus-sync/main/packages/api/docs/marketplace.png)
 
 ## Usage
 
