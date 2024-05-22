@@ -25,7 +25,6 @@ export const pushFlushAndPush = (context: Context) => {
       permissions: [originalData.permission.id],
       presets: [originalData.preset.id],
       translations: [originalData.translation.id],
-      webhooks: [originalData.webhook.id],
     });
     return originalData;
   };
@@ -108,7 +107,6 @@ export const pushFlushAndPush = (context: Context) => {
       preset,
       settings,
       translation,
-      webhook,
     } = originalData;
     const getFirstId = (
       items: { id: string | number }[],
@@ -258,19 +256,6 @@ export const pushFlushAndPush = (context: Context) => {
         key: translation.key,
         value: translation.value,
         language: translation.language,
-      }),
-    );
-    expect(all.webhooks[0]).toEqual(
-      jasmine.objectContaining({
-        id: getFirstId(all.webhooks),
-        name: webhook.name,
-        method: webhook.method,
-        url: webhook.url,
-        status: webhook.status,
-        data: webhook.data,
-        actions: webhook.actions,
-        collections: webhook.collections,
-        headers: webhook.headers,
       }),
     );
   });

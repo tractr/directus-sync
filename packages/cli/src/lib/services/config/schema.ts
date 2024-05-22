@@ -11,7 +11,6 @@ export const CollectionsList = [
   'roles',
   'settings',
   'translations',
-  'webhooks',
 ] as const;
 
 export const CollectionEnum = z.enum(CollectionsList);
@@ -37,7 +36,6 @@ export const OptionsHooksSchema = z.object({
   roles: CollectionHooksSchema.optional(),
   settings: CollectionHooksSchema.optional(),
   translations: CollectionHooksSchema.optional(),
-  webhooks: CollectionHooksSchema.optional(),
   snapshot: SnapshotHooksSchema.optional(),
 } satisfies { [key in z.infer<typeof CollectionEnum> | 'snapshot']: z.Schema });
 

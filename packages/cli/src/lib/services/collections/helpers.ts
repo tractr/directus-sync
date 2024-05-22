@@ -4,7 +4,6 @@ import { DASHBOARDS_COLLECTION, DashboardsIdMapperClient } from './dashboards';
 import { FLOWS_COLLECTION, FlowsIdMapperClient } from './flows';
 import { OPERATIONS_COLLECTION, OperationsIdMapperClient } from './operations';
 import { SETTINGS_COLLECTION, SettingsIdMapperClient } from './settings';
-import { WEBHOOKS_COLLECTION, WebhooksIdMapperClient } from './webhooks';
 import { ROLES_COLLECTION, RolesIdMapperClient } from './roles';
 import {
   PERMISSIONS_COLLECTION,
@@ -50,9 +49,6 @@ export function getIdMapperClientByName(collection: string) {
       break;
     case TRANSLATIONS_COLLECTION:
       idMapper = Container.get(TranslationsIdMapperClient);
-      break;
-    case WEBHOOKS_COLLECTION:
-      idMapper = Container.get(WebhooksIdMapperClient);
       break;
     default:
       throw new Error(`Unknown collection: ${collection}`);

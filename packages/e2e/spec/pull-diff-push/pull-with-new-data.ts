@@ -39,7 +39,6 @@ export const pullWithNewData = (context: Context) => {
       permissions: [firstBatch.permission.id],
       presets: [firstBatch.preset.id],
       translations: [firstBatch.translation.id],
-      webhooks: [firstBatch.webhook.id],
     });
 
     // --------------------------------------------------------------------
@@ -92,6 +91,5 @@ export const pullWithNewData = (context: Context) => {
     expect(firstCollections.translations).not.toEqual(
       secondCollections.translations,
     );
-    expect(firstCollections.webhooks).not.toEqual(secondCollections.webhooks);
   });
 };

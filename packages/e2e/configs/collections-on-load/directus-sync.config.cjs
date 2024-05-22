@@ -80,13 +80,5 @@ module.exports = {
         });
       },
     },
-    webhooks: {
-      onLoad: (webhooks) => {
-        return webhooks.map((webhook) => {
-          webhook.name = `[onLoad webhook] ${webhook.name}`;
-          return webhook;
-        });
-      },
-    },
   },
 };

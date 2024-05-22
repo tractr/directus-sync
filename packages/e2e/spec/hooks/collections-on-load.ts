@@ -27,7 +27,6 @@ export const collectionsOnLoad = (context: Context) => {
       presets: sourcePresets,
       settings: sourceSettings,
       translations: sourceTranslations,
-      webhooks: sourceWebhooks,
     } = getDumpedSystemCollectionsContents(sync.getDumpPath());
 
     await sync.push();
@@ -66,9 +65,6 @@ export const collectionsOnLoad = (context: Context) => {
     );
     expect(collections.translations[0]!.value).toEqual(
       `[onLoad translation] ${sourceTranslations[0]!.value}`,
-    );
-    expect(collections.webhooks[0]!.name).toEqual(
-      `[onLoad webhook] ${sourceWebhooks[0]!.name}`,
     );
   });
 };

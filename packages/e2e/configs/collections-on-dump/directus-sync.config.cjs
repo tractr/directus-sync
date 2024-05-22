@@ -80,13 +80,5 @@ module.exports = {
         });
       },
     },
-    webhooks: {
-      onDump: (webhooks) => {
-        return webhooks.map((webhook) => {
-          webhook.name = `[onDump webhook] ${webhook.name}`;
-          return webhook;
-        });
-      },
-    },
   },
 };

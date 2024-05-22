@@ -8,7 +8,6 @@ import {
   createPreset,
   createRole,
   createTranslation,
-  createWebhook,
   deleteDashboards,
   deleteFlows,
   deleteFolders,
@@ -18,7 +17,6 @@ import {
   deletePresets,
   deleteRoles,
   deleteTranslations,
-  deleteWebhooks,
   DirectusClient,
   DirectusSettings,
   readDashboards,
@@ -31,7 +29,6 @@ import {
   readRoles,
   readSettings,
   readTranslations,
-  readWebhooks,
   RestClient,
   updateFlow,
   updateSettings,
@@ -50,7 +47,6 @@ import {
   getRole,
   getSettings,
   getTranslation,
-  getWebhook,
 } from '../seed/index.js';
 import {
   DirectusId,
@@ -100,9 +96,6 @@ export async function createOneItemInEachSystemCollection(
   const translation = await client.request(
     createTranslation({ ...getTranslation(), ...override?.translations }),
   );
-  const webhook = await client.request(
-    createWebhook({ ...getWebhook(), ...override?.webhooks }),
-  );
 
   // --------------------------------------------------------------------
   // Update flow with operation
@@ -119,7 +112,6 @@ export async function createOneItemInEachSystemCollection(
     preset,
     settings,
     translation,
-    webhook,
   };
 }
 
@@ -151,9 +143,6 @@ export async function deleteItemsFromSystemCollections(
   if (ids.presets?.length) {
     await client.request(deletePresets(ids.presets as number[]));
   }
-  if (ids.webhooks?.length) {
-    await client.request(deleteWebhooks(ids.webhooks as number[]));
-  }
   if (ids.translations?.length) {
     await client.request(deleteTranslations(ids.translations as string[]));
   }
@@ -175,7 +164,6 @@ export async function readAllSystemCollections(
     roles: (await client.request(readRoles())).filter(notAdministratorRoles),
     settings: [await client.request(readSettings())].filter(notNullId),
     translations: await client.request(readTranslations()),
-    webhooks: await client.request(readWebhooks()),
   };
 }
 

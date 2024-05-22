@@ -28,7 +28,6 @@ export const pullBasic = (context: Context) => {
       preset,
       settings,
       translation,
-      webhook,
     } = await createOneItemInEachSystemCollection(client);
 
     // --------------------------------------------------------------------
@@ -195,19 +194,6 @@ export const pullBasic = (context: Context) => {
         key: translation.key,
         value: translation.value,
         language: translation.language,
-      },
-    ]);
-    expect(collections.webhooks).toEqual([
-      {
-        _syncId: (await directus.getByLocalId('webhooks', webhook.id)).sync_id,
-        name: webhook.name,
-        method: webhook.method,
-        url: webhook.url,
-        status: webhook.status,
-        data: webhook.data,
-        actions: webhook.actions,
-        collections: webhook.collections,
-        headers: webhook.headers,
       },
     ]);
   });

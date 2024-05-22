@@ -28,7 +28,6 @@ export const collectionsOnDump = (context: Context) => {
       preset,
       settings,
       translation,
-      webhook,
     } = await createOneItemInEachSystemCollection(client);
 
     await sync.pull();
@@ -81,9 +80,5 @@ export const collectionsOnDump = (context: Context) => {
       `[onDump translation] ${translation.value}`,
     );
 
-    expect(collections.webhooks.length).toEqual(1);
-    expect(collections.webhooks[0]!.name).toEqual(
-      `[onDump webhook] ${webhook.name}`,
-    );
   });
 };

@@ -20,7 +20,6 @@ export function getSystemCollectionsPaths(
     roles: path.join(dumpPath, 'collections', 'roles.json'),
     settings: path.join(dumpPath, 'collections', 'settings.json'),
     translations: path.join(dumpPath, 'collections', 'translations.json'),
-    webhooks: path.join(dumpPath, 'collections', 'webhooks.json'),
   };
 }
 export function getDumpedSystemCollectionsContents(dumpPath: string) {
@@ -45,6 +44,5 @@ export function getSystemCollectionsNames(): SystemCollectionsNames {
     'roles',
     'settings',
     'translations',
-    'webhooks',
   ];
 }

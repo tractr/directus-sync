@@ -48,8 +48,5 @@ export const preserveIds = (context: Context) => {
     expect(original.translation.id.toString()).not.toBe(
       getSyncId(collections.translations),
     );
-    expect(original.webhook.id.toString()).not.toBe(
-      getSyncId(collections.webhooks),
-    );
   });
 };
