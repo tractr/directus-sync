@@ -9,6 +9,7 @@
     "start": "npm run build && node dist/start-server.js",
     "build": "rm -rf dist && tsc",
     "directus": "directus",
+    "directus-sync": "directus-sync",
     "bootstrap": "./bootstrap.sh",
     "test": "rm -f ./logs/*.log && jasmine",
     "build-test": "npm run build && npm run test"
