@@ -44,7 +44,7 @@ for (const source of sources) {
 
   // Start the Directus server
   console.log(chalk.yellow('---> Starting the server'));
-  let serverProcess = $`npm run start`;
+  let serverProcess = $`npx directus start`;
   await spinner('Wait for server', () =>
     retry(20, '1s', () => fetch(`${PUBLIC_URL}/server/health`)),
   );
@@ -66,7 +66,7 @@ for (const source of sources) {
 
   // Start the Directus server and run the migrations
   console.log(chalk.yellow('---> Starting the new server'));
-  serverProcess = $`npm run start`;
+  serverProcess = $`npx directus start`;
   await spinner('Wait for server', () =>
     retry(20, '1s', () => fetch(`${PUBLIC_URL}/server/health`)),
   );
