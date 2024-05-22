@@ -79,6 +79,5 @@ export const collectionsOnDump = (context: Context) => {
     expect(collections.translations[0]!.value).toEqual(
       `[onDump translation] ${translation.value}`,
     );
-
   });
 };

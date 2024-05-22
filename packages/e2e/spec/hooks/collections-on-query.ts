@@ -109,6 +109,5 @@ export const collectionsOnQuery = (context: Context) => {
     expect(collections.translations[0]!._syncId).toEqual(
       (await directus.getByLocalId('translations', translation.id)).sync_id,
     );
-
   });
 };

@@ -79,6 +79,5 @@ export const collectionsOnSave = (context: Context) => {
     expect(collections.translations[0]!.value).toEqual(
       `[onSave translation] ${translation.value}`,
     );
-
   });
 };
