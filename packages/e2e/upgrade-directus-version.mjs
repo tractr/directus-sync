@@ -3,22 +3,31 @@ import 'dotenv/config';
 import path from 'path';
 import { readdir } from 'fs/promises';
 
-const { PUBLIC_URL, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
-
 const actual = '10.10.4';
-const next = '10.11.1';
+const next = '10.10.7';
 
 if (actual === next) {
   console.log('Nothing to upgrade');
   process.exit(0);
 }
 
+const { PUBLIC_URL, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
+
 // List all folders of ./dumps/sources using path
 const sources = await readdir(path.resolve('dumps', 'sources'));
+const cliProgramArgs = [
+  '--directus-url',
+  PUBLIC_URL,
+  '--directus-email',
+  ADMIN_EMAIL,
+  '--directus-password',
+  ADMIN_PASSWORD,
+];
 
 for (const source of sources) {
   // Compute source path
   const sourcePath = path.resolve('dumps', 'sources', source);
+  const cliCommandArgs = ['--dump-path', sourcePath];
 
   // log step
   console.log(
@@ -27,7 +36,7 @@ for (const source of sources) {
 
   // Install the current version
   console.log(chalk.yellow('---> Installing the current version'));
-  await $`npm install directus@${actual}`;
+  await $`npm install --save --save-exact directus@${actual}`;
 
   // Bootstrap the Directus database
   console.log(chalk.yellow('---> Bootstrapping the database'));
@@ -42,8 +51,9 @@ for (const source of sources) {
 
   // Push the dump to the server
   console.log(chalk.yellow('---> Pushing the dump to the instance'));
-  await spinner('Pushing the configuration', () =>
-    $(directusSync(sourcePath, 'push')),
+  await spinner(
+    'Pushing the configuration',
+    () => $`npx directus-sync ${cliProgramArgs} push ${cliCommandArgs}`,
   );
   serverProcess.kill('SIGINT');
   await serverProcess.catch(() =>
@@ -52,7 +62,7 @@ for (const source of sources) {
 
   // Install the next version
   console.log(chalk.yellow('---> Installing the next version'));
-  await $`npm install directus@${next}`;
+  await $`npm install --save --save-exact directus@${next}`;
 
   // Start the Directus server and run the migrations
   console.log(chalk.yellow('---> Starting the new server'));
@@ -63,8 +73,9 @@ for (const source of sources) {
 
   // Pull the dump from the server
   console.log(chalk.yellow('---> Pulling the dump from the instance'));
-  await spinner('Pulling the configuration', () =>
-    $(directusSync(sourcePath, 'pull')),
+  await spinner(
+    'Pulling the configuration',
+    () => $`npx directus-sync ${cliProgramArgs} pull ${cliCommandArgs}`,
   );
   serverProcess.kill('SIGINT');
   await serverProcess.catch(() =>
@@ -72,20 +83,4 @@ for (const source of sources) {
   );
 
   console.log(chalk.green(`===> ${source} upgraded successfully`));
-}
-
-function directusSync(dumpPath, command) {
-  const programArgs = [
-    '--directus-url',
-    PUBLIC_URL,
-    '--directus-email',
-    ADMIN_EMAIL,
-    '--directus-password',
-    ADMIN_PASSWORD,
-  ];
-  const commandArgs = ['--dump-path', dumpPath];
-
-  return `npx directus-sync ${programArgs.join(
-    ' ',
-  )} ${command} ${commandArgs.join(' ')}`;
 }
