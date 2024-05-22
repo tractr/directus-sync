@@ -1,7 +1,7 @@
 [
   {
     "name": "1 - blanditiis crustulum",
-    "key": "adfectus-tres",
+    "key": "1-adfectus-tres",
     "type": "log",
     "position_x": 98,
     "position_y": 6,
@@ -13,7 +13,7 @@
   },
   {
     "name": "2 - blanditiis crustulum",
-    "key": "adfectus-tres",
+    "key": "2-adfectus-tres",
     "type": "log",
     "position_x": 98,
     "position_y": 6,
@@ -25,7 +25,7 @@
   },
   {
     "name": "3 - blanditiis crustulum",
-    "key": "adfectus-tres",
+    "key": "3-adfectus-tres",
     "type": "log",
     "position_x": 98,
     "position_y": 6,
