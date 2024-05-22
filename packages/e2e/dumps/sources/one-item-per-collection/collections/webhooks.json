@@ -5,8 +5,12 @@
     "url": "https://informal-yahoo.info",
     "status": "inactive",
     "data": false,
-    "actions": ["update"],
-    "collections": ["directus_sync_id_map"],
+    "actions": [
+      "update"
+    ],
+    "collections": [
+      "directus_sync_id_map"
+    ],
     "headers": [
       {
         "header": "X-aegre-utrimque-error",

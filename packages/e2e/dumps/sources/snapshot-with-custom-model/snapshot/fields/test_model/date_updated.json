@@ -18,7 +18,10 @@
     "readonly": true,
     "required": false,
     "sort": 7,
-    "special": ["cast-timestamp", "date-updated"],
+    "special": [
+      "cast-timestamp",
+      "date-updated"
+    ],
     "translations": null,
     "validation": null,
     "validation_message": null,
