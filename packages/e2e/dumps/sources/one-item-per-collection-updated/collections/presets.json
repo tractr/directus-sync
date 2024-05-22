@@ -7,17 +7,10 @@
     "layout": "tabular",
     "layout_query": {
       "cards": {
-        "sort": [
-          "email"
-        ]
+        "sort": ["email"]
       },
       "tabular": {
-        "fields": [
-          "email",
-          "first_name",
-          "last_name",
-          "password"
-        ]
+        "fields": ["email", "first_name", "last_name", "password"]
       }
     },
     "layout_options": {

@@ -5,12 +5,8 @@
     "url": "https://muddy-gelding.net/",
     "status": "inactive",
     "data": true,
-    "actions": [
-      "create"
-    ],
-    "collections": [
-      "directus_sync_id_map"
-    ],
+    "actions": ["create"],
+    "collections": ["directus_sync_id_map"],
     "headers": [
       {
         "header": "X-soleo-dapifer-tergo",

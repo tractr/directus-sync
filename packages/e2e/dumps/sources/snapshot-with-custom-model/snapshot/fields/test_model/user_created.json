@@ -18,9 +18,7 @@
     "readonly": true,
     "required": false,
     "sort": 4,
-    "special": [
-      "user-created"
-    ],
+    "special": ["user-created"],
     "translations": null,
     "validation": null,
     "validation_message": null,

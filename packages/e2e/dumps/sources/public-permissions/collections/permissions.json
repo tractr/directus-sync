@@ -12,9 +12,7 @@
     "presets": {
       "user_agent": "unknown"
     },
-    "fields": [
-      "*"
-    ],
+    "fields": ["*"],
     "_syncId": "17b7ab82-93ed-46e6-9711-165bff9fdcbf"
   },
   {
@@ -34,9 +32,7 @@
     "presets": {
       "user_agent": "unknown"
     },
-    "fields": [
-      "*"
-    ],
+    "fields": ["*"],
     "_syncId": "8c7e94e4-a20c-4641-9939-67d87dc9a968"
   }
 ]

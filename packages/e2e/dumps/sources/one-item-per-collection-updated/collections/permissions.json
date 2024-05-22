@@ -14,9 +14,7 @@
       ]
     },
     "presets": null,
-    "fields": [
-      "id"
-    ],
+    "fields": ["id"],
     "_syncId": "da4b7413-d028-4504-9231-b4c5acae9e45"
   }
 ]
