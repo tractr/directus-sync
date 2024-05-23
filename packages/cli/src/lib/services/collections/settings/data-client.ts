@@ -31,7 +31,7 @@ export class SettingsDataClient extends DataClient<DirectusSettings> {
   protected getQueryCommand(query: Query<DirectusSettings>) {
     // Remove the filter of the query, settings are not filterable
     const { filter, ...rest } = query;
-    return readSettings(rest);
+    return readSettings(rest as Query<DirectusSettings>);
   }
 
   protected getUpdateCommand(

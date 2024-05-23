@@ -34,12 +34,12 @@
     "fs-extra": "^11.2.0",
     "getenv": "^1.0.0",
     "jasmine": "^5.1.0",
-    "pino": "^8.20.0",
+    "pino": "^9.1.0",
     "rxjs": "^7.8.1",
     "sqlite3": "^5.1.7",
-    "ts-essentials": "^9.4.2",
+    "ts-essentials": "^10.0.0",
     "typedi": "^0.10.0",
-    "typescript": "5.4.2",
+    "typescript": "5.4.5",
     "uuid": "^9.0.1",
     "zx": "^8.1.1"
   }

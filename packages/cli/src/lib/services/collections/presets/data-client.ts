@@ -33,7 +33,7 @@ export class PresetsDataClient extends DataClient<DirectusPreset> {
 
   protected getQueryCommand(query: Query<DirectusPreset>) {
     // Exclude user's personal presets from the dump
-    const newQuery = deepmerge(query, {
+    const newQuery: Query<DirectusPreset> = deepmerge(query, {
       filter: {
         user: {
           _null: true,
