@@ -188,7 +188,9 @@ export const pullBasic = (context: Context) => {
         public_registration: settings.public_registration,
         public_registration_verify_email:
           settings.public_registration_verify_email,
-        public_registration_role: (await directus.getByLocalId('roles', role.id)).sync_id,
+        public_registration_role: (
+          await directus.getByLocalId('roles', role.id)
+        ).sync_id,
         public_registration_email_filter:
           settings.public_registration_email_filter,
       },

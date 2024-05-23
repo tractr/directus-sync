@@ -47,13 +47,13 @@ export function getSettings(
     public_registration_verify_email: faker.datatype.boolean(),
     public_registration_role: publicRole,
     public_registration_email_filter: {
-      "_and": [
+      _and: [
         {
-          "email": {
-            "_ends_with": `@${faker.internet.domainName()}`
-          }
-        }
-      ]
-    }
+          email: {
+            _ends_with: `@${faker.internet.domainName()}`,
+          },
+        },
+      ],
+    },
   };
 }

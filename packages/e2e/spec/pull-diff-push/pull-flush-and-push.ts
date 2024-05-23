@@ -249,9 +249,11 @@ export const pushFlushAndPush = (context: Context) => {
         report_bug_url: settings.report_bug_url,
         report_feature_url: settings.report_feature_url,
         public_registration: settings.public_registration,
-        public_registration_verify_email: settings.public_registration_verify_email,
+        public_registration_verify_email:
+          settings.public_registration_verify_email,
         public_registration_role: getFirstId(all.roles),
-        public_registration_email_filter: settings.public_registration_email_filter,
+        public_registration_email_filter:
+          settings.public_registration_email_filter,
       }),
     );
     expect(all.translations[0]).toEqual(

@@ -19,9 +19,10 @@ export class SettingsDataMapper extends DataMapper<DirectusSettings> {
     // Not relevant for migrations. URL are different for each environment. Can be set with env variables.
     'project_url',
   ];
-  protected idMappers: IdMappers<DirectusSettings, 'public_registration_role'> = {
-    public_registration_role: Container.get(RolesIdMapperClient),
-  };
+  protected idMappers: IdMappers<DirectusSettings, 'public_registration_role'> =
+    {
+      public_registration_role: Container.get(RolesIdMapperClient),
+    };
 
   constructor(@Inject(LOGGER) baseLogger: pino.Logger) {
     super(getChildLogger(baseLogger, SETTINGS_COLLECTION));
