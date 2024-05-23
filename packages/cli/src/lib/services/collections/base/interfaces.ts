@@ -31,6 +31,7 @@ export type IdMappers<T, Virtual extends string = never> = {
   [key in Virtual]?: IdMapperClient;
 };
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type BaseSchema = any;
 export type Query<T extends DirectusBaseType> = DirectusQuery<BaseSchema, T>;
 
