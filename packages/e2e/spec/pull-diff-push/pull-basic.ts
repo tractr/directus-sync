@@ -182,9 +182,9 @@ export const pullBasic = (context: Context) => {
         theme_light_overrides: settings.theme_light_overrides,
         default_theme_dark: settings.default_theme_dark,
         theme_dark_overrides: settings.theme_dark_overrides,
-        // report_error_url: settings.report_error_url,
-        // report_bug_url: settings.report_bug_url,
-        // report_feature_url: settings.report_feature_url,
+        report_error_url: settings.report_error_url,
+        report_bug_url: settings.report_bug_url,
+        report_feature_url: settings.report_feature_url,
       },
     ]);
     expect(collections.translations).toEqual([

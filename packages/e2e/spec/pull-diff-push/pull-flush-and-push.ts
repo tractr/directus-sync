@@ -244,10 +244,9 @@ export const pushFlushAndPush = (context: Context) => {
         public_background: null,
         public_favicon: null,
         public_foreground: null,
-        // TODO: Added in 10.10.5
-        // report_error_url: settings.report_error_url,
-        // report_bug_url: settings.report_bug_url,
-        // report_feature_url: settings.report_feature_url,
+        report_error_url: settings.report_error_url,
+        report_bug_url: settings.report_bug_url,
+        report_feature_url: settings.report_feature_url,
       }),
     );
     expect(all.translations[0]).toEqual(
