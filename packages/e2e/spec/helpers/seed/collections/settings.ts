@@ -2,7 +2,9 @@ import { DirectusSettings } from '@directus/sdk';
 import { faker } from '@faker-js/faker';
 import { DirectusSettingsExtra } from '../../sdk/index.js';
 
-export function getSettings(): Omit<
+export function getSettings(
+  publicRole: string | null = null,
+): Omit<
   DirectusSettings<object>,
   | 'id'
   | 'project_logo'
@@ -41,5 +43,17 @@ export function getSettings(): Omit<
     report_error_url: faker.internet.url(),
     report_bug_url: faker.internet.url(),
     report_feature_url: faker.internet.url(),
+    public_registration: faker.datatype.boolean(),
+    public_registration_verify_email: faker.datatype.boolean(),
+    public_registration_role: publicRole,
+    public_registration_email_filter: {
+      "_and": [
+        {
+          "email": {
+            "_ends_with": `@${faker.internet.domainName()}`
+          }
+        }
+      ]
+    }
   };
 }

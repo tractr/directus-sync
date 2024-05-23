@@ -91,7 +91,7 @@ export async function createOneItemInEachSystemCollection(
     createPreset({ ...getPreset(), ...override?.presets }),
   );
   const settings = (await client.request(
-    updateSettings({ ...getSettings(), ...override?.settings }),
+    updateSettings({ ...getSettings(role.id), ...override?.settings }),
   )) as never as DirectusSettings<object> & DirectusSettingsExtra;
   const translation = await client.request(
     createTranslation({ ...getTranslation(), ...override?.translations }),

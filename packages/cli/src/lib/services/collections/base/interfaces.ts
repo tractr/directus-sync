@@ -25,8 +25,10 @@ export type StrictField<T> = keyof WithSyncIdAndWithoutId<T>;
 export type Field<T, Virtual extends string = never> =
   | keyof WithSyncIdAndWithoutId<T>
   | Virtual; // Allows other fields
-export type IdMappers<T> = {
+export type IdMappers<T, Virtual extends string = never> = {
   [key in keyof T]?: IdMapperClient | IdMappers<T[key]>;
+} & {
+  [key in Virtual]?: IdMapperClient;
 };
 
 export type BaseSchema = object;

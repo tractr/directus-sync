@@ -41,13 +41,14 @@ export const pushFlushAndPush = (context: Context) => {
 
     for (const collection of collections) {
       if (collection === 'settings') {
+        // public_registration_role is null after role deletion
         expect(output).toContain(
           info(`[${collection}] Dangling id maps: 0 item(s)`),
         );
         expect(output).toContain(info(`[${collection}] To create: 0 item(s)`));
-        expect(output).toContain(info(`[${collection}] To update: 0 item(s)`));
+        expect(output).toContain(info(`[${collection}] To update: 1 item(s)`));
         expect(output).toContain(info(`[${collection}] To delete: 0 item(s)`));
-        expect(output).toContain(info(`[${collection}] Unchanged: 1 item(s)`));
+        expect(output).toContain(info(`[${collection}] Unchanged: 0 item(s)`));
       } else {
         expect(output).toContain(
           info(`[${collection}] Dangling id maps: 1 item(s)`),
@@ -247,6 +248,10 @@ export const pushFlushAndPush = (context: Context) => {
         report_error_url: settings.report_error_url,
         report_bug_url: settings.report_bug_url,
         report_feature_url: settings.report_feature_url,
+        public_registration: settings.public_registration,
+        public_registration_verify_email: settings.public_registration_verify_email,
+        public_registration_role: getFirstId(all.roles),
+        public_registration_email_filter: settings.public_registration_email_filter,
       }),
     );
     expect(all.translations[0]).toEqual(
