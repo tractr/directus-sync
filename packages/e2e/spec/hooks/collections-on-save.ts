@@ -28,7 +28,6 @@ export const collectionsOnSave = (context: Context) => {
       preset,
       settings,
       translation,
-      webhook,
     } = await createOneItemInEachSystemCollection(client);
 
     await sync.pull();
@@ -79,11 +78,6 @@ export const collectionsOnSave = (context: Context) => {
     expect(collections.translations.length).toEqual(1);
     expect(collections.translations[0]!.value).toEqual(
       `[onSave translation] ${translation.value}`,
-    );
-
-    expect(collections.webhooks.length).toEqual(1);
-    expect(collections.webhooks[0]!.name).toEqual(
-      `[onSave webhook] ${webhook.name}`,
     );
   });
 };

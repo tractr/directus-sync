@@ -27,7 +27,6 @@ export const pullAndPushWithoutData = (context: Context) => {
       'roles',
       'settings',
       'translations',
-      'webhooks',
     ]);
 
     keys.forEach((key) => {

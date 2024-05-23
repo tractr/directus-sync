@@ -1,0 +1,15 @@
+{
+  "collection": "directus_webhooks",
+  "field": "migrated_flow",
+  "related_collection": "directus_flows",
+  "meta": null,
+  "schema": {
+    "table": "directus_webhooks",
+    "column": "migrated_flow",
+    "foreign_key_table": "directus_flows",
+    "foreign_key_column": "id",
+    "constraint_name": null,
+    "on_update": "NO ACTION",
+    "on_delete": "SET NULL"
+  }
+}

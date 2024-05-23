@@ -25,7 +25,6 @@ export const pushFlushAndPush = (context: Context) => {
       permissions: [originalData.permission.id],
       presets: [originalData.preset.id],
       translations: [originalData.translation.id],
-      webhooks: [originalData.webhook.id],
     });
     return originalData;
   };
@@ -42,13 +41,14 @@ export const pushFlushAndPush = (context: Context) => {
 
     for (const collection of collections) {
       if (collection === 'settings') {
+        // public_registration_role is null after role deletion
         expect(output).toContain(
           info(`[${collection}] Dangling id maps: 0 item(s)`),
         );
         expect(output).toContain(info(`[${collection}] To create: 0 item(s)`));
-        expect(output).toContain(info(`[${collection}] To update: 0 item(s)`));
+        expect(output).toContain(info(`[${collection}] To update: 1 item(s)`));
         expect(output).toContain(info(`[${collection}] To delete: 0 item(s)`));
-        expect(output).toContain(info(`[${collection}] Unchanged: 1 item(s)`));
+        expect(output).toContain(info(`[${collection}] Unchanged: 0 item(s)`));
       } else {
         expect(output).toContain(
           info(`[${collection}] Dangling id maps: 1 item(s)`),
@@ -108,7 +108,6 @@ export const pushFlushAndPush = (context: Context) => {
       preset,
       settings,
       translation,
-      webhook,
     } = originalData;
     const getFirstId = (
       items: { id: string | number }[],
@@ -246,10 +245,15 @@ export const pushFlushAndPush = (context: Context) => {
         public_background: null,
         public_favicon: null,
         public_foreground: null,
-        // TODO: Added in 10.10.5
-        // report_error_url: settings.report_error_url,
-        // report_bug_url: settings.report_bug_url,
-        // report_feature_url: settings.report_feature_url,
+        report_error_url: settings.report_error_url,
+        report_bug_url: settings.report_bug_url,
+        report_feature_url: settings.report_feature_url,
+        public_registration: settings.public_registration,
+        public_registration_verify_email:
+          settings.public_registration_verify_email,
+        public_registration_role: getFirstId(all.roles),
+        public_registration_email_filter:
+          settings.public_registration_email_filter,
       }),
     );
     expect(all.translations[0]).toEqual(
@@ -258,19 +262,6 @@ export const pushFlushAndPush = (context: Context) => {
         key: translation.key,
         value: translation.value,
         language: translation.language,
-      }),
-    );
-    expect(all.webhooks[0]).toEqual(
-      jasmine.objectContaining({
-        id: getFirstId(all.webhooks),
-        name: webhook.name,
-        method: webhook.method,
-        url: webhook.url,
-        status: webhook.status,
-        data: webhook.data,
-        actions: webhook.actions,
-        collections: webhook.collections,
-        headers: webhook.headers,
       }),
     );
   });

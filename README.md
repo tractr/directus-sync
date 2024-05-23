@@ -1,6 +1,6 @@
 # Directus Sync
 
-![Directus 10.10.4](https://img.shields.io/badge/Directus-10.10.4-64f?style=for-the-badge&logo=directus)
+![Directus 10.11.1](https://img.shields.io/badge/Directus-10.11.1-64f?style=for-the-badge&logo=directus)
 
 The `directus-sync` command-line interface (CLI) provides a set of tools for managing and synchronizing the schema and
 collections within Directus across different environments.
@@ -222,8 +222,7 @@ going to Directus.
 Hooks are defined in the configuration file using the `hooks` property. Under this property, you can define the
 collection name and the hook function to be executed.
 Available collection names
-are: `dashboards`, `flows`, `folders`, `operations`, `panels`, `permissions`, `presets`, `roles`, `settings`, `translations`
-and `webhooks`.
+are: `dashboards`, `flows`, `folders`, `operations`, `panels`, `permissions`, `presets`, `roles`, `settings` and `translations`.
 
 For each collection, available hook functions are: `onQuery`, `onLoad`, `onSave`, and `onDump`.
 These can be asynchronous functions.
@@ -486,7 +485,6 @@ A[Pull command] --> Pull --> Post --> Z[End]
 - roles
 - settings
 - translations
-- webhooks
 
 For these collections, data changes are committed to the code, allowing for replication on other Directus instances. A
 mapping table links Directus instance IDs with SyncIDs, managed by the `directus-extension-sync`.
@@ -529,7 +527,7 @@ configurations and schema within Directus. Here is a step-by-step explanation of
 Upon execution of the `pull` command, `directus-sync` will:
 
 1. Scan the specified Directus collections, which include dashboards, flows, folders, operations, panels, permissions,
-   presets, roles, settings, translations and webhooks.
+   presets, roles, settings and translations.
 2. Assign a SyncID to each element within these collections if it doesn't already have one.
 3. Commit the data of these collections into code, allowing for versioning and tracking of configuration changes.
 

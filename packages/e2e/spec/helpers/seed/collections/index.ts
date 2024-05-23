@@ -8,4 +8,3 @@ export * from './permission.js';
 export * from './preset.js';
 export * from './settings.js';
 export * from './translation.js';
-export * from './webhook.js';

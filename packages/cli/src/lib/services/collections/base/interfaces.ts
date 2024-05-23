@@ -25,14 +25,17 @@ export type StrictField<T> = keyof WithSyncIdAndWithoutId<T>;
 export type Field<T, Virtual extends string = never> =
   | keyof WithSyncIdAndWithoutId<T>
   | Virtual; // Allows other fields
-export type IdMappers<T> = {
+export type IdMappers<T, Virtual extends string = never> = {
   [key in keyof T]?: IdMapperClient | IdMappers<T[key]>;
+} & {
+  [key in Virtual]?: IdMapperClient;
 };
 
-export type BaseSchema = object;
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export type BaseSchema = any;
 export type Query<T extends DirectusBaseType> = DirectusQuery<BaseSchema, T>;
 
-export type Command<T> = RestCommand<T, object>; // Shortcode for RestCommand
+export type Command<T> = RestCommand<T, BaseSchema>; // Shortcode for RestCommand
 export type SingleRestCommand<T> = Command<T> | Promise<Command<T>>;
 
 export type MultipleRestCommand<T> =

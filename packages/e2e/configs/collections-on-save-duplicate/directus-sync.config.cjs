@@ -12,6 +12,5 @@ module.exports = {
     presets: { onDump: duplicate, onSave: duplicate },
     settings: { onDump: duplicate, onSave: duplicate },
     translations: { onDump: duplicate, onSave: duplicate },
-    webhooks: { onDump: duplicate, onSave: duplicate },
   },
 };

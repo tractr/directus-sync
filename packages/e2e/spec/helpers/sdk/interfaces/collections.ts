@@ -10,7 +10,6 @@ import {
   DirectusRole,
   DirectusSettings,
   DirectusTranslation,
-  DirectusWebhook,
 } from '@directus/sdk';
 
 export type DirectusId = number | string;
@@ -27,7 +26,6 @@ export type SystemCollectionsNames = [
   'roles',
   'settings',
   'translations',
-  'webhooks',
 ];
 export interface SystemCollectionsTypes {
   dashboards: DirectusDashboard<Schema>;
@@ -40,7 +38,6 @@ export interface SystemCollectionsTypes {
   roles: DirectusRole<Schema>;
   settings: DirectusSettings<Schema>;
   translations: DirectusTranslation<Schema>;
-  webhooks: DirectusWebhook<Schema>;
 }
 
 export type SystemCollection = ValueOf<SystemCollectionsNames>;

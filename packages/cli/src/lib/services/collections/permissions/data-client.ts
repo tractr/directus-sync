@@ -70,7 +70,7 @@ export class PermissionsDataClient extends DataClient<DirectusPermission> {
   }
 
   protected getQueryCommand(query: Query<DirectusPermission>) {
-    return readPermissions({ ...query });
+    return readPermissions({ ...query } as Query<DirectusPermission>);
   }
 
   protected getUpdateCommand(

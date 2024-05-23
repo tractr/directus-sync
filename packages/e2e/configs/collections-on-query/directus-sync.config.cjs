@@ -90,14 +90,5 @@ module.exports = {
         return query;
       },
     },
-    webhooks: {
-      onQuery: (query, client) => {
-        query.filter = {
-          ...query.filter,
-          name: { _eq: '@webhook' },
-        };
-        return query;
-      },
-    },
   },
 };

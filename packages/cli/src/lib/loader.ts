@@ -13,7 +13,6 @@ import {
   RolesCollection,
   SettingsCollection,
   TranslationsCollection,
-  WebhooksCollection,
 } from './services';
 import { createDumpFolders, getPinoTransport } from './helpers';
 import { Container, Token } from 'typedi';
@@ -61,7 +60,6 @@ export function loadCollections() {
     settings: SettingsCollection,
     folders: FoldersCollection,
     translations: TranslationsCollection,
-    webhooks: WebhooksCollection,
     flows: FlowsCollection,
     operations: OperationsCollection,
     roles: RolesCollection,

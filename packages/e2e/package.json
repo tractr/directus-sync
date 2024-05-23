@@ -9,9 +9,11 @@
     "start": "npm run build && node dist/start-server.js",
     "build": "rm -rf dist && tsc",
     "directus": "directus",
+    "directus-sync": "directus-sync",
     "bootstrap": "./bootstrap.sh",
     "test": "rm -f ./logs/*.log && jasmine",
-    "build-test": "npm run build && npm run test"
+    "build-test": "npm run build && npm run test",
+    "upgrade": "zx upgrade-directus-version.mjs && zx update-dumps-from-current-version.mjs"
   },
   "keywords": [],
   "author": "Edouard Demotes-Mainard <edouard@tractr.net>",
@@ -26,18 +28,19 @@
     "@types/getenv": "^1.0.3",
     "@types/jasmine": "^5.1.4",
     "@types/uuid": "^9.0.8",
-    "directus": "10.10.4",
+    "directus": "10.11.1",
     "directus-sync": "file:../cli",
     "dotenv": "^16.4.5",
     "fs-extra": "^11.2.0",
     "getenv": "^1.0.0",
     "jasmine": "^5.1.0",
-    "pino": "^8.20.0",
+    "pino": "^9.1.0",
     "rxjs": "^7.8.1",
     "sqlite3": "^5.1.7",
-    "ts-essentials": "^9.4.2",
+    "ts-essentials": "^10.0.0",
     "typedi": "^0.10.0",
-    "typescript": "5.4.2",
-    "uuid": "^9.0.1"
+    "typescript": "5.4.5",
+    "uuid": "^9.0.1",
+    "zx": "^8.1.1"
   }
 }

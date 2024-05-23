@@ -29,7 +29,6 @@ export const collectionsOnQuery = (context: Context) => {
       preset,
       settings,
       translation,
-      webhook,
     } = await createOneItemInEachSystemCollection(client, {
       dashboards: { name: '@dashboard' },
       flows: { name: '@flow' },
@@ -41,7 +40,6 @@ export const collectionsOnQuery = (context: Context) => {
       presets: { bookmark: '@preset' },
       settings: { project_name: '@settings' },
       translations: { value: '@translation' },
-      webhooks: { name: '@webhook' },
     });
     // Create 2nd item in each collection
     await createOneItemInEachSystemCollection(client);
@@ -110,11 +108,6 @@ export const collectionsOnQuery = (context: Context) => {
     expect(collections.translations.length).toEqual(1);
     expect(collections.translations[0]!._syncId).toEqual(
       (await directus.getByLocalId('translations', translation.id)).sync_id,
-    );
-
-    expect(collections.webhooks.length).toEqual(1);
-    expect(collections.webhooks[0]!._syncId).toEqual(
-      (await directus.getByLocalId('webhooks', webhook.id)).sync_id,
     );
   });
 };

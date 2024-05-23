@@ -5,4 +5,4 @@ logs/*.log
 !.env
 
 dumps/temp
-
+dumps/sources/**/specs/*

@@ -24,6 +24,13 @@
     "theme_dark_overrides": {
       "borderRadius": "1px"
     },
+    "report_error_url": null,
+    "report_bug_url": null,
+    "report_feature_url": null,
+    "public_registration": false,
+    "public_registration_verify_email": true,
+    "public_registration_role": null,
+    "public_registration_email_filter": null,
     "_syncId": "26aa9eb5-11af-44cb-9f5b-073c55b57974"
   }
 ]

@@ -28,7 +28,6 @@ export const pullBasic = (context: Context) => {
       preset,
       settings,
       translation,
-      webhook,
     } = await createOneItemInEachSystemCollection(client);
 
     // --------------------------------------------------------------------
@@ -183,9 +182,17 @@ export const pullBasic = (context: Context) => {
         theme_light_overrides: settings.theme_light_overrides,
         default_theme_dark: settings.default_theme_dark,
         theme_dark_overrides: settings.theme_dark_overrides,
-        // report_error_url: settings.report_error_url,
-        // report_bug_url: settings.report_bug_url,
-        // report_feature_url: settings.report_feature_url,
+        report_error_url: settings.report_error_url,
+        report_bug_url: settings.report_bug_url,
+        report_feature_url: settings.report_feature_url,
+        public_registration: settings.public_registration,
+        public_registration_verify_email:
+          settings.public_registration_verify_email,
+        public_registration_role: (
+          await directus.getByLocalId('roles', role.id)
+        ).sync_id,
+        public_registration_email_filter:
+          settings.public_registration_email_filter,
       },
     ]);
     expect(collections.translations).toEqual([
@@ -195,19 +202,6 @@ export const pullBasic = (context: Context) => {
         key: translation.key,
         value: translation.value,
         language: translation.language,
-      },
-    ]);
-    expect(collections.webhooks).toEqual([
-      {
-        _syncId: (await directus.getByLocalId('webhooks', webhook.id)).sync_id,
-        name: webhook.name,
-        method: webhook.method,
-        url: webhook.url,
-        status: webhook.status,
-        data: webhook.data,
-        actions: webhook.actions,
-        collections: webhook.collections,
-        headers: webhook.headers,
       },
     ]);
   });
