@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0](https://github.com/tractr/directus-sync/compare/directus-extension-sync@1.1.6...directus-extension-sync@2.0.0) (2024-05-23)
+
+
+* feat!: compatibility with directus 10.11.x (#72) ([59e78a8](https://github.com/tractr/directus-sync/commit/59e78a8cb1023a8974960ae1953ee4a0f78f13ce)), closes [#72](https://github.com/tractr/directus-sync/issues/72)
+
+
+### BREAKING CHANGES
+
+* Webhooks are no longer supported by Directus and Directus-Sync
+
+* chore(e2e): run format
+
+* test(e2e): fix tests
+
+* test(e2e): fix tests
+
+* test(e2e): update dumps for 10.10.7
+
+* test(e2e): adapt tests for 10.10.7
+
+add report_error_url, report_bug_url and report_feature_url
+
+* feat(e2e): upgrade to 10.11.1
+
+* feat(e2e): upgrade to 10.11.1
+
+* feat(e2e): add upgrade script
+
+* feat(cli): handle new settings fields
+
+* chore: run format
+
+* chore: update dependencies
+
+* docs: update compatibility flag
+
+* fix(cli): force allow any for schema
+
+
+
+
+
 ## [1.1.6](https://github.com/tractr/directus-sync/compare/directus-extension-sync@1.1.5...directus-extension-sync@1.1.6) (2024-05-09)
 
 **Note:** Version bump only for package directus-extension-sync
