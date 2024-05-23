@@ -12,7 +12,8 @@
     "directus-sync": "directus-sync",
     "bootstrap": "./bootstrap.sh",
     "test": "rm -f ./logs/*.log && jasmine",
-    "build-test": "npm run build && npm run test"
+    "build-test": "npm run build && npm run test",
+    "upgrade": "zx upgrade-directus-version.mjs && zx update-dumps-from-current-version.mjs"
   },
   "keywords": [],
   "author": "Edouard Demotes-Mainard <edouard@tractr.net>",
@@ -39,6 +40,7 @@
     "ts-essentials": "^9.4.2",
     "typedi": "^0.10.0",
     "typescript": "5.4.2",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "zx": "^8.1.1"
   }
 }
