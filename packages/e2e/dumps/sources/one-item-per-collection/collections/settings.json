@@ -24,6 +24,9 @@
     "theme_dark_overrides": {
       "borderRadius": "1px"
     },
+    "report_error_url": null,
+    "report_bug_url": null,
+    "report_feature_url": null,
     "_syncId": "26aa9eb5-11af-44cb-9f5b-073c55b57974"
   }
 ]
