@@ -200,10 +200,10 @@ export function createProgram() {
     .command('untrack')
     .description('stop tracking of an element')
     .requiredOption(
-      '-c, --collection <collection>',
+      '--collection <collection>',
       'the collection of the element',
     )
-    .requiredOption('-i, --id <id>', 'the id of the element to untrack')
+    .requiredOption('--id <id>', 'the id of the element to untrack')
     .action(wrapAction(program, runUntrack));
 
   helpers
@@ -212,7 +212,7 @@ export function createProgram() {
       'remove conflicts in permissions when there are duplicated groups "role + collection + action".',
     )
     .option(
-      '-k, --keep <keep>',
+      '--keep <keep>',
       `the permission to keep in case of conflict: "first" or "last" (default "${DefaultConfig.keep}")`,
       'last',
     )
