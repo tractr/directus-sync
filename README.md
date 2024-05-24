@@ -121,7 +121,7 @@ Options are merged from the following sources, in order of precedence:
 
 These options can be used with any command to configure the operation of `directus-sync`:
 
-- `-c, --config-path <configPath>`
+- `-c, --config-path <configPath>`  
   Change the path to the config file. Default paths are: `./directus-sync.config.js`, `./directus-sync.config.cjs` or
   `./directus-sync.config.json`.
 
@@ -139,7 +139,7 @@ These options can be used with any command to configure the operation of `direct
 - `-e, --directus-email <directusEmail> `  
   Provide the Directus email. Alternatively, set the `DIRECTUS_ADMIN_EMAIL` environment variable.
 
-- `-p, --directus-password <directusPassword>`
+- `-p, --directus-password <directusPassword>`  
   Provide the Directus password. Alternatively, set the `DIRECTUS_ADMIN_PASSWORD` environment variable.
 
 - `--dump-path <dumpPath>`  
@@ -149,23 +149,23 @@ These options can be used with any command to configure the operation of `direct
 - `--collections-path <collectionPath>`  
   Specify the path for the collections dump, relative to the dump path. The default is `"collections"`.
 
-- `-o, --only-collections <onlyCollections>`
+- `-o, --only-collections <onlyCollections>`  
   Comma-separated list of directus collections to include during `pull` `push` or `diff` process.
 
 - `-x, --exclude-collections <excludeCollections>`  
   Comma-separated list of directus collections to exclude during `pull` `push` or `diff`. Can be used along
   with `only-collections`.
 
-- `--preserve-ids <preserveIds>` 
-  Comma-separated list of directus collections to preserve the original ids during the `pull` or `push` process.
-  Possible collections are: `dashboards`, `operations`, `panels`, `roles` and `translations`.
-  `flows` and `folders` ids are always preserved.
+- `--preserve-ids <preserveIds>`  
+  Comma-separated list of directus collections to preserve the original ids during the `pull` or `push` process.  
+  Possible collections are: `dashboards`, `operations`, `panels`, `roles` and `translations`.  
+  `flows` and `folders` ids are always preserved.  
   The value can be `*` or `all` to preserve ids of all collections, when applicable.
 
 - `--snapshot-path <snapshotPath>`  
   Specify the path for the schema snapshot dump, relative to the dump path. The default is `"snapshot"`.
 
-- `--no-snapshot`
+- `--no-snapshot`  
   Do not pull and push the Directus schema. By default, the schema is pulled and pushed.
 
 - `--no-split`  
