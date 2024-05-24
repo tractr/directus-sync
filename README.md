@@ -18,45 +18,43 @@ for targeted updates and clearer oversight of your Directus configurations.
 **Table of Contents**
 
 <!-- TOC -->
-
 * [Directus Sync](#directus-sync)
-    * [Requirements](#requirements)
-    * [Usage](#usage)
-        * [Commands](#commands)
-            * [Pull](#pull)
-            * [Diff](#diff)
-            * [Push](#push)
-        * [Available options](#available-options)
-            * [CLI and environment variables](#cli-and-environment-variables)
-            * [Configuration file](#configuration-file)
-            * [Collections hooks](#collections-hooks)
-                * [Simple example](#simple-example)
-                * [Filtering out elements](#filtering-out-elements)
-                * [Using the Directus client](#using-the-directus-client)
-            * [Snapshot hooks](#snapshot-hooks)
-        * [Helpers](#helpers)
-            * [Untrack](#untrack)
-            * [Remove permission duplicates](#remove-permission-duplicates)
-        * [Lifecycle & hooks](#lifecycle--hooks)
-            * [`Pull` command](#pull-command)
-            * [`Diff` command](#diff-command)
-            * [`Push` command](#push-command)
-        * [Tracked Elements](#tracked-elements)
-            * [Roles](#roles)
-            * [Presets](#presets)
-        * [Dependency: `directus-extension-sync`](#dependency-directus-extension-sync)
-            * [Installation](#installation)
-    * [How It Works](#how-it-works)
-        * [Tagging and Tracking](#tagging-and-tracking)
-        * [Mapping Table](#mapping-table)
-        * [Synchronization Process](#synchronization-process)
-        * [Schema Management](#schema-management)
-        * [Non-Tracked Elements and Ignored Fields](#non-tracked-elements-and-ignored-fields)
-        * [Strengths of `directus-sync`](#strengths-of-directus-sync)
-    * [Directus upgrades](#directus-upgrades)
-    * [Use Cases](#use-cases)
-    * [Troubleshooting](#troubleshooting)
-
+  * [Requirements](#requirements)
+  * [Usage](#usage)
+    * [Commands](#commands)
+      * [Pull](#pull)
+      * [Diff](#diff)
+      * [Push](#push)
+    * [Available options](#available-options)
+      * [CLI and environment variables](#cli-and-environment-variables)
+      * [Configuration file](#configuration-file)
+      * [Collections hooks](#collections-hooks)
+        * [Simple example](#simple-example)
+        * [Filtering out elements](#filtering-out-elements)
+        * [Using the Directus client](#using-the-directus-client)
+      * [Snapshot hooks](#snapshot-hooks)
+    * [Helpers](#helpers)
+      * [Untrack](#untrack)
+      * [Remove permission duplicates](#remove-permission-duplicates)
+    * [Lifecycle & hooks](#lifecycle--hooks)
+      * [`Pull` command](#pull-command)
+      * [`Diff` command](#diff-command)
+      * [`Push` command](#push-command)
+    * [Tracked Elements](#tracked-elements)
+      * [Roles](#roles)
+      * [Presets](#presets)
+    * [Dependency: `directus-extension-sync`](#dependency-directus-extension-sync)
+      * [Installation](#installation)
+  * [How It Works](#how-it-works)
+    * [Tagging and Tracking](#tagging-and-tracking)
+    * [Mapping Table](#mapping-table)
+    * [Synchronization Process](#synchronization-process)
+    * [Schema Management](#schema-management)
+    * [Non-Tracked Elements and Ignored Fields](#non-tracked-elements-and-ignored-fields)
+    * [Strengths of `directus-sync`](#strengths-of-directus-sync)
+  * [Directus upgrades](#directus-upgrades)
+  * [Use Cases](#use-cases)
+  * [Troubleshooting](#troubleshooting)
 <!-- TOC -->
 
 ## Requirements
@@ -158,6 +156,12 @@ These options can be used with any command to configure the operation of `direct
   Comma-separated list of directus collections to exclude during `pull` `push` or `diff`. Can be used along
   with `only-collections`.
 
+- `--preserve-ids <preserveIds>` 
+  Comma-separated list of directus collections to preserve the original ids during the `pull` or `push` process.
+  Possible collections are: `dashboards`, `operations`, `panels`, `roles` and `translations`.
+  `flows` and `folders` ids are always preserved.
+  The value can be `*` or `all` to preserve ids of all collections, when applicable.
+
 - `--snapshot-path <snapshotPath>`  
   Specify the path for the schema snapshot dump, relative to the dump path. The default is `"snapshot"`.
 
@@ -205,6 +209,7 @@ module.exports = {
   collectionsPath: 'collections',
   onlyCollections: ['roles', 'permissions', 'settings'],
   excludeCollections: ['settings'],
+  preserveIds: ['roles', 'panels'], // can be '*' or 'all' to preserve all ids, or an array of collections
   snapshotPath: 'snapshot',
   snapshot: true,
   split: true,
@@ -538,6 +543,10 @@ maintaining the integrity and links between different entities.
 > The original IDs of the flows are preserved to maintain the URLs of the `webhook` type flows.
 > The original IDs of the folders are preserved to maintain the associations with fields of the `file` and `image`
 > types.
+
+> [!NOTE]
+> You can use the `--preserve-ids` option to preserve the original ids of some collections.
+> Eligible collections are collections using UUID: `dashboards`, `operations`, `panels`, `roles` and `translations`.
 
 ### Mapping Table
 
