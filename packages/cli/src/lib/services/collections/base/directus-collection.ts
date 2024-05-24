@@ -54,7 +54,7 @@ export abstract class DirectusCollection<
   ) {
     this.hooks = extraConfig.hooks;
     // Override preserveIds if it is set to true in the extra config
-    this.preserveIds = extraConfig.preserveIds || this.preserveIds;
+    this.preserveIds = extraConfig.preserveIds ? true : this.preserveIds;
   }
 
   /**
