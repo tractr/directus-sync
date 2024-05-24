@@ -1,5 +1,6 @@
 import { IdMapperClient } from './id-mapper-client';
 import { Query as DirectusQuery, RestCommand } from '@directus/sdk';
+import { CollectionHooks } from '../../config';
 
 export type DirectusId = number | string;
 
@@ -42,3 +43,8 @@ export type MultipleRestCommand<T> =
   | Command<T>
   | [...Command<object>[], Command<T>]
   | Promise<Command<T> | [...Command<object>[], Command<T>]>;
+
+export interface DirectusCollectionExtraConfig {
+  hooks: CollectionHooks;
+  preserveIds?: boolean;
+}

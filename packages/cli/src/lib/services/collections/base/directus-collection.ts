@@ -1,6 +1,7 @@
 import { IdMap, IdMapperClient } from './id-mapper-client';
 import {
   DirectusBaseType,
+  DirectusCollectionExtraConfig,
   DirectusId,
   Query,
   UpdateItem,
@@ -28,6 +29,8 @@ export abstract class DirectusCollection<
   protected abstract readonly enableUpdate: boolean;
   protected abstract readonly enableDelete: boolean;
 
+  protected readonly hooks: CollectionHooks;
+
   /**
    * If true, the ids of the items will be used as sync ids.
    * This allows to restore the same ids as the original table.
@@ -47,8 +50,12 @@ export abstract class DirectusCollection<
     protected readonly dataMapper: DataMapper<DirectusType>,
     protected readonly idMapper: IdMapperClient,
     protected readonly migrationClient: MigrationClient,
-    protected readonly hooks: CollectionHooks,
-  ) {}
+    extraConfig: DirectusCollectionExtraConfig,
+  ) {
+    this.hooks = extraConfig.hooks;
+    // Override preserveIds if it is set to true in the extra config
+    this.preserveIds = extraConfig.preserveIds || this.preserveIds;
+  }
 
   /**
    * Pull data from a table to a JSON file
