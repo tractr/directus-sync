@@ -2,7 +2,8 @@ import {
   Context,
   getDumpedSystemCollectionsContents,
   createOneItemInEachSystemCollection,
-  SingularCollectionName
+  SingularCollectionName,
+  readAllSystemCollections,
 } from '../helpers/index.js';
 import { CollectionName } from 'directus-sync';
 
@@ -28,16 +29,20 @@ const collectionsWithOption = collectionsInfo
   .filter((info) => info.preserve === 'optional')
   .map((info) => info.collection);
 
-const options = [
-  null,
-  ...collectionsWithOption,
-  'all',
-]
+const options = [null, ...collectionsWithOption, 'all'];
+
+const getSyncId = (items: { _syncId: string }[]): string => {
+  return items[0] ? items[0]._syncId : 'no items';
+};
+const getFirstId = (
+  items: { id: string | number }[],
+): string | number | undefined => {
+  return items[0] ? items[0].id : undefined;
+};
 
 export const preserveIds = (context: Context) => {
-
   for (const option of options) {
-    it(`should preserve uuid from Directus if required with "${option}"`, async () => {
+    it(`should preserve uuid on pull if required with "${option}"`, async () => {
       // Init sync client
       const sync = await context.getSync('temp/preserve-ids');
       const dumpPath = sync.getDumpPath();
@@ -54,33 +59,67 @@ export const preserveIds = (context: Context) => {
       // --------------------------------------------------------------------
       // Should preserve the ids for folders and flows but not for the rest
       const collections = getDumpedSystemCollectionsContents(dumpPath);
-      const getSyncId = (items: { _syncId: string }[]): string => {
-        return items[0] ? items[0]._syncId : 'no items';
-      };
-
-      expect(original.flow.id).toBe(getSyncId(collections.flows));
-      expect(original.folder.id).toBe(getSyncId(collections.folders));
 
       for (const info of collectionsInfo) {
         const { singular, collection, preserve } = info;
-        const originalId = original[singular].id.toString();
+        const remoteId = original[singular].id.toString();
         const syncId = getSyncId(collections[collection]);
 
         if (preserve === 'always') {
-          expect(originalId).toBe(syncId);
-        }
-        else if (preserve === 'never') {
-          expect(originalId).not.toBe(syncId);
-        }
-        else if (preserve === 'optional') {
+          expect(remoteId).toBe(syncId);
+        } else if (preserve === 'never') {
+          expect(remoteId).not.toBe(syncId);
+        } else if (preserve === 'optional') {
           if (option === collection || option === 'all') {
-            expect(originalId).toBe(syncId);
+            expect(remoteId).toBe(syncId);
           } else {
-            expect(originalId).not.toBe(syncId);
+            expect(remoteId).not.toBe(syncId);
+          }
+        }
+      }
+    });
+
+    it(`should preserve uuid on push if required with "${option}"`, async () => {
+      // Init sync client
+      const sync = await context.getSync(
+        'sources/one-item-per-collection',
+        false,
+      );
+
+      // --------------------------------------------------------------------
+      // Get collections info from the dump
+      const dumpPath = sync.getDumpPath();
+      const original = getDumpedSystemCollectionsContents(dumpPath);
+
+      // --------------------------------------------------------------------
+      // Push the content to Directus
+      await sync.push(option ? ['--preserve-ids', option] : []);
+
+      // --------------------------------------------------------------------
+      // Get content using Directus SDK
+      const client = context.getDirectus().get();
+      const collections = await readAllSystemCollections(client);
+
+      for (const info of collectionsInfo) {
+        const { collection, preserve } = info;
+        const syncId = getSyncId(original[collection]);
+        const remoteId = getFirstId(collections[collection])?.toString();
+        if (!remoteId) {
+          throw new Error(`No items in collection: ${collection}`);
+        }
+
+        if (preserve === 'always') {
+          expect(syncId).toBe(remoteId);
+        } else if (preserve === 'never') {
+          expect(syncId).not.toBe(remoteId);
+        } else if (preserve === 'optional') {
+          if (option === collection || option === 'all') {
+            expect(syncId).toBe(remoteId);
+          } else {
+            expect(syncId).not.toBe(remoteId);
           }
         }
       }
     });
   }
-
 };
