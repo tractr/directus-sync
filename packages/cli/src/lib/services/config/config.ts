@@ -8,6 +8,7 @@ import {
   SnapshotHooks,
   OptionName,
   Options,
+  CollectionPreservableIdName,
 } from './interfaces';
 import Path from 'path';
 import { Cacheable } from 'typescript-cacheable';
@@ -134,6 +135,16 @@ export class ConfigService {
     const only = this.requireOptions('onlyCollections');
     const list = only.length > 0 ? only : CollectionsList;
     return list.filter((collection) => !exclude.includes(collection));
+  }
+
+  @Cacheable()
+  shouldPreserveIds(collection: CollectionPreservableIdName) {
+    const preserveIds = this.requireOptions('preserveIds');
+    return (
+      preserveIds === '*' ||
+      preserveIds === 'all' ||
+      preserveIds.includes(collection)
+    );
   }
 
   protected getOptions<T extends OptionName>(name: T): Options[T] | undefined {

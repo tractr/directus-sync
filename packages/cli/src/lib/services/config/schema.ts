@@ -13,7 +13,23 @@ export const CollectionsList = [
   'translations',
 ] as const;
 
+export const CollectionsWithUuidList = [
+  'dashboards',
+  'flows',
+  'folders',
+  'operations',
+  'panels',
+  'roles',
+  'translations',
+] as const;
+
+export const CollectionsWithPreservedIdList = ['flows', 'folders'] as const;
+
 export const CollectionEnum = z.enum(CollectionsList);
+export const CollectionWithUuidEnum = z.enum(CollectionsWithUuidList);
+export const CollectionPreservableIdEnum = CollectionWithUuidEnum.exclude(
+  CollectionsWithPreservedIdList,
+);
 
 export const CollectionHooksSchema = z.object({
   onLoad: z.function().optional(),
@@ -53,6 +69,10 @@ export const OptionsFields = {
   collectionsPath: z.string(),
   excludeCollections: z.array(CollectionEnum).optional(),
   onlyCollections: z.array(CollectionEnum).optional(),
+  preserveIds: z.union([
+    z.array(CollectionPreservableIdEnum).optional(),
+    z.enum(['all', '*']),
+  ]),
   // Snapshot
   snapshotPath: z.string(),
   snapshot: z.boolean(),
@@ -87,6 +107,7 @@ export const ConfigFileOptionsSchema = z.object({
   collectionsPath: OptionsFields.collectionsPath.optional(),
   excludeCollections: OptionsFields.excludeCollections.optional(),
   onlyCollections: OptionsFields.onlyCollections.optional(),
+  preserveIds: OptionsFields.preserveIds.optional(),
   // Snapshot config
   snapshotPath: OptionsFields.snapshotPath.optional(),
   snapshot: OptionsFields.snapshot.optional(),

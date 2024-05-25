@@ -39,7 +39,9 @@ export class FlowsCollection extends DirectusCollection<DirectusFlow> {
       dataMapper,
       idMapper,
       migrationClient,
-      config.getCollectionHooksConfig(FLOWS_COLLECTION),
+      {
+        hooks: config.getCollectionHooksConfig(FLOWS_COLLECTION),
+      },
     );
   }
 
