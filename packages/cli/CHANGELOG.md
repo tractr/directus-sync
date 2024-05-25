@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/tractr/directus-sync/compare/directus-sync@2.0.0...directus-sync@2.1.0) (2024-05-25)
+
+
+### Bug Fixes
+
+* **cli:** remove short options for helpers that may conflict ([9d85eeb](https://github.com/tractr/directus-sync/commit/9d85eeb5208db96fd6ece0072380ef25b11e569b))
+
+
+### Features
+
+* **cli:** add option to preserve ids on specific collections ([#74](https://github.com/tractr/directus-sync/issues/74)) ([4f7541e](https://github.com/tractr/directus-sync/commit/4f7541e7c976b18dc57a1daa7e028f75606cf586))
+
+
+
+
+
 # [2.0.0](https://github.com/tractr/directus-sync/compare/directus-sync@1.5.3...directus-sync@2.0.0) (2024-05-23)
 
 
