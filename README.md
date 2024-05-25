@@ -544,9 +544,11 @@ maintaining the integrity and links between different entities.
 > The original IDs of the folders are preserved to maintain the associations with fields of the `file` and `image`
 > types.
 
-> [!NOTE]
+> [!TIP]
 > You can use the `--preserve-ids` option to preserve the original ids of some collections.
 > Eligible collections are collections using UUID: `dashboards`, `operations`, `panels`, `roles` and `translations`.
+> If you have already used the `pull` command, you may use the `untrack` helper to remove the id tracking of an element
+> before using this option.
 
 ### Mapping Table
 
