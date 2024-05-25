@@ -58,6 +58,9 @@ import {
   SystemCollectionsRecordPartial,
 } from '../sdk/index.js';
 
+export type SingularCollectionName = keyof Awaited<
+  ReturnType<typeof createOneItemInEachSystemCollection>
+>;
 export async function createOneItemInEachSystemCollection(
   client: DirectusClient<object> & RestClient<object>,
   override?: SystemCollectionsPartial,

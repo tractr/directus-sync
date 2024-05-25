@@ -37,7 +37,9 @@ export class PresetsCollection extends DirectusCollection<DirectusPreset> {
       dataMapper,
       idMapper,
       migrationClient,
-      config.getCollectionHooksConfig(PRESETS_COLLECTION),
+      {
+        hooks: config.getCollectionHooksConfig(PRESETS_COLLECTION),
+      },
     );
   }
 }

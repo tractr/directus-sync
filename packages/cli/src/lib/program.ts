@@ -65,6 +65,17 @@ function commaSeparatedList(value: string) {
   return value.split(',').map((v) => v.trim());
 }
 
+/**
+ * Split a comma separated list unless the value is "all" or "*"
+ */
+function commaSeparatedListOrAll(value: string) {
+  const v = value.trim();
+  if (v === '*' || v === 'all') {
+    return v;
+  }
+  return commaSeparatedList(value);
+}
+
 export function createProgram() {
   const program = createCommand();
   // Global options
@@ -113,6 +124,10 @@ export function createProgram() {
     '-o, --only-collections <onlyCollections>',
     `comma separated list of collections to include in the process (default to all)`,
   ).argParser(commaSeparatedList);
+  const preserveIdsOption = new Option(
+    '--preserve-ids <preserveIds>',
+    `comma separated list of collections that preserve their original ids (default to none). Use "*" or "all" to preserve all ids, if applicable.`,
+  ).argParser(commaSeparatedListOrAll);
 
   const snapshotPathOption = new Option(
     '--snapshot-path <snapshotPath>',
@@ -157,6 +172,7 @@ export function createProgram() {
     .addOption(collectionsPathOption)
     .addOption(excludeCollectionsOption)
     .addOption(onlyCollectionsOption)
+    .addOption(preserveIdsOption)
     .addOption(snapshotPathOption)
     .addOption(noSnapshotOption)
     .addOption(noSplitOption)
@@ -186,6 +202,7 @@ export function createProgram() {
     .addOption(collectionsPathOption)
     .addOption(excludeCollectionsOption)
     .addOption(onlyCollectionsOption)
+    .addOption(preserveIdsOption)
     .addOption(snapshotPathOption)
     .addOption(noSnapshotOption)
     .addOption(noSplitOption)
@@ -200,10 +217,10 @@ export function createProgram() {
     .command('untrack')
     .description('stop tracking of an element')
     .requiredOption(
-      '-c, --collection <collection>',
+      '--collection <collection>',
       'the collection of the element',
     )
-    .requiredOption('-i, --id <id>', 'the id of the element to untrack')
+    .requiredOption('--id <id>', 'the id of the element to untrack')
     .action(wrapAction(program, runUntrack));
 
   helpers
@@ -212,7 +229,7 @@ export function createProgram() {
       'remove conflicts in permissions when there are duplicated groups "role + collection + action".',
     )
     .option(
-      '-k, --keep <keep>',
+      '--keep <keep>',
       `the permission to keep in case of conflict: "first" or "last" (default "${DefaultConfig.keep}")`,
       'last',
     )

@@ -4,6 +4,7 @@ import type {
   OptionsFields,
   OptionsSchema,
   CollectionEnum,
+  CollectionPreservableIdEnum,
 } from './schema';
 import type { MigrationClient } from '../migration-client';
 import type { DirectusBaseType, Query } from '../collections';
@@ -16,6 +17,10 @@ export type Options = z.infer<typeof OptionsSchema>;
 export type ConfigFileOptions = z.infer<typeof ConfigFileOptionsSchema>;
 
 export type CollectionName = z.infer<typeof CollectionEnum>;
+
+export type CollectionPreservableIdName = z.infer<
+  typeof CollectionPreservableIdEnum
+>;
 
 export type CollectionRecord<T> = {
   [key in CollectionName]: T;

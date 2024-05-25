@@ -37,7 +37,10 @@ export class DashboardsCollection extends DirectusCollection<DirectusDashboard> 
       dataMapper,
       idMapper,
       migrationClient,
-      config.getCollectionHooksConfig(DASHBOARDS_COLLECTION),
+      {
+        hooks: config.getCollectionHooksConfig(DASHBOARDS_COLLECTION),
+        preserveIds: config.shouldPreserveIds(DASHBOARDS_COLLECTION),
+      },
     );
   }
 }
