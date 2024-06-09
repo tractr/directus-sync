@@ -28,7 +28,7 @@
     "@types/getenv": "^1.0.3",
     "@types/jasmine": "^5.1.4",
     "@types/uuid": "^9.0.8",
-    "directus": "10.11.2",
+    "directus": "10.12.0",
     "directus-sync": "file:../cli",
     "dotenv": "^16.4.5",
     "fs-extra": "^11.2.0",
@@ -40,7 +40,7 @@
     "ts-essentials": "^10.0.0",
     "typedi": "^0.10.0",
     "typescript": "5.4.5",
-    "uuid": "^9.0.1",
-    "zx": "^8.1.1"
+    "uuid": "^10.0.0",
+    "zx": "^8.1.2"
   }
 }

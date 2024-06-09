@@ -25,6 +25,9 @@ const directusVersions = [
   '10.11.0',
   '10.11.1',
   '10.11.2',
+
+  '10.12',
+  '10.12.0',
 ];
 
 const platforms = ['linux/amd64', 'linux/arm64'];
