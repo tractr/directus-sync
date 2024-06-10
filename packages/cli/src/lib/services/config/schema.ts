@@ -25,7 +25,11 @@ export const CollectionsWithUuidList = [
   'translations',
 ] as const;
 
-export const CollectionsWithPreservedIdList = ['extensions', 'flows', 'folders'] as const;
+export const CollectionsWithPreservedIdList = [
+  'extensions',
+  'flows',
+  'folders',
+] as const;
 
 export const CollectionEnum = z.enum(CollectionsList);
 export const CollectionWithUuidEnum = z.enum(CollectionsWithUuidList);
@@ -39,7 +43,9 @@ export const CollectionHooksSchema = z.object({
   onSave: z.function().optional(),
   onQuery: z.function().optional(),
 });
-export const CollectionHooksSchemaWithoutQuery = CollectionHooksSchema.extend({ onQuery: z.undefined() });
+export const CollectionHooksSchemaWithoutQuery = CollectionHooksSchema.extend({
+  onQuery: z.undefined(),
+});
 export const SnapshotHooksSchema = z.object({
   onLoad: z.function().optional(),
   onSave: z.function().optional(),
