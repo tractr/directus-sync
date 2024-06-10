@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const CollectionsList = [
   'dashboards',
+  'extensions',
   'flows',
   'folders',
   'operations',
@@ -15,6 +16,7 @@ export const CollectionsList = [
 
 export const CollectionsWithUuidList = [
   'dashboards',
+  'extensions',
   'flows',
   'folders',
   'operations',
@@ -23,7 +25,7 @@ export const CollectionsWithUuidList = [
   'translations',
 ] as const;
 
-export const CollectionsWithPreservedIdList = ['flows', 'folders'] as const;
+export const CollectionsWithPreservedIdList = ['extensions', 'flows', 'folders'] as const;
 
 export const CollectionEnum = z.enum(CollectionsList);
 export const CollectionWithUuidEnum = z.enum(CollectionsWithUuidList);
@@ -37,12 +39,14 @@ export const CollectionHooksSchema = z.object({
   onSave: z.function().optional(),
   onQuery: z.function().optional(),
 });
+export const CollectionHooksSchemaWithoutQuery = CollectionHooksSchema.extend({ onQuery: z.undefined() });
 export const SnapshotHooksSchema = z.object({
   onLoad: z.function().optional(),
   onSave: z.function().optional(),
 });
 export const OptionsHooksSchema = z.object({
   dashboards: CollectionHooksSchema.optional(),
+  extensions: CollectionHooksSchemaWithoutQuery.optional(),
   flows: CollectionHooksSchema.optional(),
   folders: CollectionHooksSchema.optional(),
   operations: CollectionHooksSchema.optional(),

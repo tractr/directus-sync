@@ -9,4 +9,5 @@ export * from './permissions';
 export * from './panels';
 export * from './presets';
 export * from './dashboards';
+export * from './extensions';
 export * from './helpers';

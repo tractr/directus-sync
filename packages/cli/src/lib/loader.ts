@@ -13,6 +13,7 @@ import {
   RolesCollection,
   SettingsCollection,
   TranslationsCollection,
+  ExtensionsCollection
 } from './services';
 import { createDumpFolders, getPinoTransport } from './helpers';
 import { Container, Token } from 'typedi';
@@ -67,6 +68,7 @@ export function loadCollections() {
     dashboards: DashboardsCollection,
     panels: PanelsCollection,
     presets: PresetsCollection,
+    extensions: ExtensionsCollection
   } as const satisfies CollectionRecord<unknown>;
   type CollectionInstance = InstanceType<
     DictionaryValues<typeof collectionsConstructors>
