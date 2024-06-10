@@ -28,6 +28,7 @@ const directusVersions = [
 
   '10.12',
   '10.12.0',
+  '10.12.1',
 ];
 
 const platforms = ['linux/amd64', 'linux/arm64'];
