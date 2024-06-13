@@ -2,6 +2,9 @@
 
 ![Directus 10.12.1](https://img.shields.io/badge/Directus-10.12.1-64f?style=for-the-badge&logo=directus)
 
+> [!IMPORTANT]
+> Help us improve Directus Sync by sharing your feedback! Take a quick survey about your usage here: https://forms.gle/LnaB89uVkZCDqRfGA
+
 The `directus-sync` command-line interface (CLI) provides a set of tools for managing and synchronizing the schema and
 collections within Directus across different environments.
 
