@@ -1,10 +1,11 @@
 import type { z } from 'zod';
-import type {
+import {
+  CollectionEnum,
+  CollectionPreservableIdEnum,
+  CollectionSeedSchema,
   ConfigFileOptionsSchema,
   OptionsFields,
   OptionsSchema,
-  CollectionEnum,
-  CollectionPreservableIdEnum,
 } from './schema';
 import type { MigrationClient } from '../migration-client';
 import type { DirectusBaseType, Query } from '../collections';
@@ -52,6 +53,8 @@ export interface SnapshotHooks {
   onLoad?: TransformSnapshotFunction;
   onSave?: TransformSnapshotFunction;
 }
+
+export type CollectionItemSeed = z.infer<typeof CollectionSeedSchema>;
 
 interface DirectusConfigBase {
   url: string;
