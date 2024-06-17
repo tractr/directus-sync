@@ -93,7 +93,7 @@ export const CollectionSeedSchema = z.intersection(
 export const SeedSchema = z.record(z.string(), z.array(CollectionSeedSchema));
 export const OptionsSeedSchema = z.union([
   SeedSchema,
-  z.function().returns(SeedSchema),
+  z.function().returns(z.union([SeedSchema, SeedSchema.promise()])),
 ]);
 
 export const OptionsFields = {
