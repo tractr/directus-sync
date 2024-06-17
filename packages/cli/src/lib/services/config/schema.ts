@@ -82,6 +82,20 @@ export const RestConfigSchema = z.object({
   onResponse: z.function().optional(),
 });
 
+export const CollectionLinkSeedSchema = z.object({
+  _syncId: z.string(),
+  _link: z.string(),
+});
+export const CollectionSeedSchema = z.intersection(
+  z.object({ _sync_id: z.string() }),
+  z.record(z.string(), z.union([CollectionLinkSeedSchema, z.any()])),
+);
+export const SeedSchema = z.record(z.string(), z.array(CollectionSeedSchema));
+export const OptionsSeedSchema = z.union([
+  SeedSchema,
+  z.function().returns(SeedSchema),
+]);
+
 export const OptionsFields = {
   // Global
   configPath: z.string().optional(),
@@ -123,7 +137,7 @@ export const OptionsFields = {
   // Hooks
   hooks: OptionsHooksSchema.optional(),
   // Seed
-  seedPath: z.string().or(z.array(z.string())).optional(),
+  seed: OptionsSeedSchema.optional(),
 };
 export const OptionsSchema = z.object(OptionsFields);
 
@@ -159,5 +173,5 @@ export const ConfigFileOptionsSchema = z.object({
   // Hooks config
   hooks: OptionsHooksSchema.optional(),
   // Seed config
-  seedPath: OptionsFields.seedPath.optional(),
+  seed: OptionsSeedSchema.optional(),
 });
