@@ -1,14 +1,14 @@
 import { Service } from 'typedi';
 import {
+  CollectionHooks,
+  CollectionName,
+  CollectionPreservableIdName,
   ConfigFileOptions,
   DirectusConfigWithCredentials,
   DirectusConfigWithToken,
-  CollectionName,
-  CollectionHooks,
-  SnapshotHooks,
   OptionName,
   Options,
-  CollectionPreservableIdName,
+  SnapshotHooks,
 } from './interfaces';
 import Path from 'path';
 import { Cacheable } from 'typescript-cacheable';
@@ -75,12 +75,8 @@ export class ConfigService {
 
   @Cacheable()
   getSeedConfig() {
-    const paths = this.getOptions('seedPath') ?? [];
-    const seedPaths = Array.isArray(paths) ? paths : [paths];
-    const seedFullPaths = seedPaths.map((p) => Path.resolve(p));
-    return {
-      paths: seedFullPaths,
-    };
+    const seed = this.getOptions('seed');
+    return { seed };
   }
 
   /**
