@@ -55,6 +55,30 @@ export const OptionsHooksSchema = z.object({
   snapshot: SnapshotHooksSchema.optional(),
 } satisfies { [key in z.infer<typeof CollectionEnum> | 'snapshot']: z.Schema });
 
+const ClientConfigSchema = z.object({
+  globals: z
+    .object({
+      URL: z.instanceof(URL).optional(),
+      WebSocket: z.function().optional(),
+      fetch: z.function().returns(z.instanceof(Promise)).optional(),
+      logger: z
+        .object({
+          log: z.function(),
+          info: z.function(),
+          warn: z.function(),
+          error: z.function(),
+        })
+        .optional(),
+    })
+    .optional(),
+});
+
+const RestConfigSchema = z.object({
+  credentials: z.string().optional(),
+  onRequest: z.function().optional(),
+  onResponse: z.function().optional(),
+});
+
 export const OptionsFields = {
   // Global
   configPath: z.string().optional(),
@@ -63,6 +87,8 @@ export const OptionsFields = {
   directusToken: z.string().optional(),
   directusEmail: z.string().optional(),
   directusPassword: z.string().optional(),
+  directusClientConfig: ClientConfigSchema.optional(),
+  directusRestConfig: RestConfigSchema.optional(),
   // Pull, diff, push
   dumpPath: z.string(),
   // Collections
@@ -101,6 +127,8 @@ export const ConfigFileOptionsSchema = z.object({
   directusToken: OptionsFields.directusToken.optional(),
   directusEmail: OptionsFields.directusEmail.optional(),
   directusPassword: OptionsFields.directusPassword.optional(),
+  directusClientConfig: ClientConfigSchema.optional(),
+  directusRestConfig: RestConfigSchema.optional(),
   // Dump config
   dumpPath: OptionsFields.dumpPath.optional(),
   // Collections config
