@@ -208,6 +208,9 @@ module.exports = {
   directusToken: 'my-directus-token',
   directusEmail: 'admin@example.com', // ignored if directusToken is provided
   directusPassword: 'my-directus-password', // ignored if directusToken is provided
+  directusConfig: {
+    clientOptions: {},  // see https://docs.directus.io/guides/sdk/getting-started.html#polyfilling
+  }
   dumpPath: './directus-config',
   collectionsPath: 'collections',
   onlyCollections: ['roles', 'permissions', 'settings'],

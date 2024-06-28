@@ -5,6 +5,7 @@ import type {
   OptionsSchema,
   CollectionEnum,
   CollectionPreservableIdEnum,
+  ClientConfigSchema,
 } from './schema';
 import type { MigrationClient } from '../migration-client';
 import type { DirectusBaseType, Query } from '../collections';
@@ -55,6 +56,7 @@ export interface SnapshotHooks {
 
 interface DirectusConfigBase {
   url: string;
+  clientConfig: z.infer<typeof ClientConfigSchema> | undefined;
 }
 export interface DirectusConfigWithToken extends DirectusConfigBase {
   token: string;

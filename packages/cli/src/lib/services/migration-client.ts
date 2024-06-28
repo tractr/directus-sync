@@ -2,6 +2,7 @@ import {
   authentication,
   AuthenticationClient,
   clearCache,
+  ClientOptions,
   createDirectus,
   DirectusClient,
   readMe,
@@ -67,7 +68,10 @@ export class MigrationClient {
 
   protected async createClient() {
     const config = this.config.getDirectusConfig();
-    const client = createDirectus(config.url)
+    const client = createDirectus(
+      config.url,
+      config.clientConfig as ClientOptions | undefined,
+    )
       .with(rest())
       .with(authentication());
 
