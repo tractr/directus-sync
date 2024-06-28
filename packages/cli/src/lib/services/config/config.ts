@@ -80,14 +80,15 @@ export class ConfigService {
   getDirectusConfig(): DirectusConfigWithToken | DirectusConfigWithCredentials {
     const url = this.requireOptions('directusUrl');
     const clientConfig = this.getOptions('directusClientConfig');
+    const restConfig = this.getOptions('directusRestConfig');
     const token = this.getOptions('directusToken');
     if (token) {
-      return { url, token, clientConfig };
+      return { url, token, clientConfig, restConfig };
     }
 
     const email = this.requireOptions('directusEmail');
     const password = this.requireOptions('directusPassword');
-    return { url, email, password, clientConfig };
+    return { url, email, password, clientConfig, restConfig };
   }
 
   @Cacheable()

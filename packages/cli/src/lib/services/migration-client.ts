@@ -8,6 +8,7 @@ import {
   readMe,
   rest,
   RestClient,
+  RestConfig,
 } from '@directus/sdk';
 import { Inject, Service } from 'typedi';
 import pino from 'pino';
@@ -72,7 +73,7 @@ export class MigrationClient {
       config.url,
       config.clientConfig as ClientOptions | undefined,
     )
-      .with(rest())
+      .with(rest(config.restConfig as RestConfig | undefined))
       .with(authentication());
 
     // If the token is already set, return it

@@ -73,6 +73,12 @@ const ClientConfigSchema = z.object({
     .optional(),
 });
 
+const RestConfigSchema = z.object({
+  credentials: z.string().optional(),
+  onRequest: z.function().optional(),
+  onResponse: z.function().optional(),
+});
+
 export const OptionsFields = {
   // Global
   configPath: z.string().optional(),
@@ -82,6 +88,7 @@ export const OptionsFields = {
   directusEmail: z.string().optional(),
   directusPassword: z.string().optional(),
   directusClientConfig: ClientConfigSchema.optional(),
+  directusRestConfig: RestConfigSchema.optional(),
   // Pull, diff, push
   dumpPath: z.string(),
   // Collections
@@ -121,6 +128,7 @@ export const ConfigFileOptionsSchema = z.object({
   directusEmail: OptionsFields.directusEmail.optional(),
   directusPassword: OptionsFields.directusPassword.optional(),
   directusClientConfig: ClientConfigSchema.optional(),
+  directusRestConfig: RestConfigSchema.optional(),
   // Dump config
   dumpPath: OptionsFields.dumpPath.optional(),
   // Collections config
