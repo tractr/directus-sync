@@ -55,6 +55,7 @@ export interface SnapshotHooks {
 
 interface DirectusConfigBase {
   url: string;
+  clientConfig: Options['directusClientConfig'];
 }
 export interface DirectusConfigWithToken extends DirectusConfigBase {
   token: string;

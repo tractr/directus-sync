@@ -17,7 +17,9 @@ export abstract class ExtensionClient {
     options: RequestInit = {},
   ): Promise<T> {
     const { url, token } = await this.getUrlAndToken();
-    const response = await fetch(`${url}${this.extensionUri}${uri}`, {
+    const response = await (
+      await this.getFetch()
+    )(`${url}${this.extensionUri}${uri}`, {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
@@ -62,5 +64,11 @@ export abstract class ExtensionClient {
       throw new Error('Cannot get token from Directus');
     }
     return { url, token };
+  }
+
+  @Cacheable()
+  protected async getFetch() {
+    const directus = await this.migrationClient.get();
+    return directus.globals.fetch as typeof fetch;
   }
 }
