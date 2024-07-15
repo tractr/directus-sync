@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0](https://github.com/tractr/directus-sync/compare/directus-sync@2.1.0...directus-sync@2.2.0) (2024-07-15)
+
+
+### Features
+
+* allow Directus client config ([#86](https://github.com/tractr/directus-sync/issues/86)) ([02f053f](https://github.com/tractr/directus-sync/commit/02f053febab9d0b7f42cbe1bd9b8301af2809e1c))
+
+
+
+
+
 # [2.1.0](https://github.com/tractr/directus-sync/compare/directus-sync@2.0.0...directus-sync@2.1.0) (2024-05-25)
 
 
