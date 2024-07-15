@@ -2,11 +2,13 @@ import {
   authentication,
   AuthenticationClient,
   clearCache,
+  ClientOptions,
   createDirectus,
   DirectusClient,
   readMe,
   rest,
   RestClient,
+  RestConfig,
 } from '@directus/sdk';
 import { Inject, Service } from 'typedi';
 import pino from 'pino';
@@ -67,8 +69,11 @@ export class MigrationClient {
 
   protected async createClient() {
     const config = this.config.getDirectusConfig();
-    const client = createDirectus(config.url)
-      .with(rest())
+    const client = createDirectus(
+      config.url,
+      config.clientConfig as ClientOptions | undefined,
+    )
+      .with(rest(config.restConfig as RestConfig | undefined))
       .with(authentication());
 
     // If the token is already set, return it
