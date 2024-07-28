@@ -38,7 +38,7 @@ export abstract class IdMapperClient extends ExtensionClient {
     }
     // Try to get from server
     const idMap = await this.fetch<IdMap>(
-      `/table/${this.table}/sync_id/${syncId}`,
+      `/table/${this.getStoredTableName()}/sync_id/${syncId}`,
     ).catch((error) => {
       if (error.message === NO_ID_MAP_MESSAGE) {
         return undefined;
@@ -60,7 +60,7 @@ export abstract class IdMapperClient extends ExtensionClient {
     }
     // Try to get from server
     const idMap = await this.fetch<IdMap>(
-      `/table/${this.table}/local_id/${localId}`,
+      `/table/${this.getStoredTableName()}/local_id/${localId}`,
     ).catch((error) => {
       if (error.message === NO_ID_MAP_MESSAGE) {
         return undefined;
@@ -75,7 +75,9 @@ export abstract class IdMapperClient extends ExtensionClient {
   }
 
   async getAll(): Promise<IdMap[]> {
-    const all = await this.fetch<IdMap[]>(`/table/${this.table}`);
+    const all = await this.fetch<IdMap[]>(
+      `/table/${this.getStoredTableName()}`,
+    );
     // Add to cache
     all.forEach((idMap) => {
       this.addToCache(idMap);
@@ -85,10 +87,10 @@ export abstract class IdMapperClient extends ExtensionClient {
 
   async create(localId: string | number, syncId?: string): Promise<string> {
     const data = await this.fetch<{ sync_id: string }>(
-      `/table/${this.table}`,
+      `/table/${this.getStoredTableName()}`,
       'POST',
       {
-        table: this.table,
+        table: this.getStoredTableName(),
         local_id: localId,
         sync_id: syncId,
       },
@@ -97,12 +99,18 @@ export abstract class IdMapperClient extends ExtensionClient {
   }
 
   async removeBySyncId(syncId: string): Promise<void> {
-    await this.fetch(`/table/${this.table}/sync_id/${syncId}`, 'DELETE');
+    await this.fetch(
+      `/table/${this.getStoredTableName()}/sync_id/${syncId}`,
+      'DELETE',
+    );
     this.removeCacheBySyncId(syncId);
   }
 
   async removeByLocalId(localId: string): Promise<void> {
-    await this.fetch(`/table/${this.table}/local_id/${localId}`, 'DELETE');
+    await this.fetch(
+      `/table/${this.getStoredTableName()}/local_id/${localId}`,
+      'DELETE',
+    );
     this.removeCacheByLocalId(localId);
   }
 
@@ -134,5 +142,12 @@ export abstract class IdMapperClient extends ExtensionClient {
     if (idMap) {
       this.removeFromCache(idMap);
     }
+  }
+
+  /**
+   * Return the table name to store sync id mappings
+   */
+  protected getStoredTableName() {
+    return this.table;
   }
 }
