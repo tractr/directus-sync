@@ -8,13 +8,14 @@ import {
   RawSchemaDiffOutput,
   Relation,
   SchemaDiffOutput,
-  Snapshot,
+  Snapshot, Type,
 } from './interfaces';
 import { mkdirpSync, readJsonSync, removeSync, writeJsonSync } from 'fs-extra';
 import { LOGGER } from '../../constants';
 import pino from 'pino';
 import { getChildLogger, loadJsonFilesRecursively } from '../../helpers';
 import { ConfigService, SnapshotHooks } from '../config';
+import { Cacheable } from 'typescript-cacheable';
 
 const SNAPSHOT_JSON = 'snapshot.json';
 const INFO_JSON = 'info.json';
@@ -125,6 +126,7 @@ export class SnapshotClient {
   /**
    * Get the snapshot from the Directus instance.
    */
+  @Cacheable()
   protected async getSnapshot(): Promise<Snapshot> {
     const directus = await this.migrationClient.get();
     return await directus.request<Snapshot>(schemaSnapshot()); // Get better types
@@ -275,5 +277,40 @@ export class SnapshotClient {
       const filePath = path.join(this.dumpPath, SNAPSHOT_JSON);
       return readJsonSync(filePath, 'utf-8') as Snapshot;
     }
+  }
+
+  /**
+   * Returns the target model of a many-to-one relation.
+   * Throw an error if the relation is not many-to-one
+   * or the model does not exist or the field does not exist.
+   */
+  @Cacheable()
+  protected async getTargetModel(model: string, field: string): Promise<string> {
+    const snapshot = await this.getSnapshot();
+    const relation = snapshot.relations.find(
+      (r) => r.collection === model && r.field === field,
+    );
+    if (!relation) {
+      throw new Error(
+        `Relation ${model}.${field} does not exist in the snapshot`,
+      );
+    }
+    return relation.related_collection;
+  }
+
+  /**
+   * Returns the primary field of a model.
+   */
+  @Cacheable()
+  protected async getPrimaryField(model: string): Promise<{ name: string, type: Type }> {
+    const snapshot = await this.getSnapshot();
+    const fields = snapshot.fields.filter(
+      (c) => c.collection === model,
+    );
+    const primaryField = fields.find((f) => f.schema?.is_primary_key);
+    if (!primaryField) {
+      throw new Error(`Primary field not found in ${model}`);
+    }
+    return { name: primaryField.field, type: primaryField.type };
   }
 }
