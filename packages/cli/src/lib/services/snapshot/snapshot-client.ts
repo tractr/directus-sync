@@ -8,7 +8,8 @@ import {
   RawSchemaDiffOutput,
   Relation,
   SchemaDiffOutput,
-  Snapshot, Type,
+  Snapshot,
+  Type,
 } from './interfaces';
 import { mkdirpSync, readJsonSync, removeSync, writeJsonSync } from 'fs-extra';
 import { LOGGER } from '../../constants';
@@ -285,7 +286,10 @@ export class SnapshotClient {
    * or the model does not exist or the field does not exist.
    */
   @Cacheable()
-  protected async getTargetModel(model: string, field: string): Promise<string> {
+  protected async getTargetModel(
+    model: string,
+    field: string,
+  ): Promise<string> {
     const snapshot = await this.getSnapshot();
     const relation = snapshot.relations.find(
       (r) => r.collection === model && r.field === field,
@@ -302,11 +306,11 @@ export class SnapshotClient {
    * Returns the primary field of a model.
    */
   @Cacheable()
-  protected async getPrimaryField(model: string): Promise<{ name: string, type: Type }> {
+  protected async getPrimaryField(
+    model: string,
+  ): Promise<{ name: string; type: Type }> {
     const snapshot = await this.getSnapshot();
-    const fields = snapshot.fields.filter(
-      (c) => c.collection === model,
-    );
+    const fields = snapshot.fields.filter((c) => c.collection === model);
     const primaryField = fields.find((f) => f.schema?.is_primary_key);
     if (!primaryField) {
       throw new Error(`Primary field not found in ${model}`);
