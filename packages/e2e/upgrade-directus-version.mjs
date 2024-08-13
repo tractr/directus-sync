@@ -3,8 +3,8 @@ import 'dotenv/config';
 import path from 'path';
 import { readdir } from 'fs/promises';
 
-const actual = '10.13.1';
-const next = '10.13.1';
+const actual = '10.13.2';
+const next = '10.13.2';
 
 if (actual === next) {
   console.log('Nothing to upgrade');
