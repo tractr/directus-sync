@@ -8,7 +8,9 @@ export function notSystemPermissions(
 }
 
 export function notAdministratorRoles(role: DirectusRole<object>): boolean {
-  return role.name !== 'Administrator' && !role.admin_access;
+  return (
+    role.name !== 'Administrator' && role.description !== '$t:admin_description'
+  );
 }
 
 export function notNullId<T extends { id: string | number | null }>(

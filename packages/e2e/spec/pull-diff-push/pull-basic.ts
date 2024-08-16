@@ -1,9 +1,9 @@
 import {
   Context,
+  createOneItemInEachSystemCollection,
   debug,
   getDumpedSystemCollectionsContents,
   getSystemCollectionsNames,
-  createOneItemInEachSystemCollection,
 } from '../helpers/index.js';
 
 export const pullBasic = (context: Context) => {
@@ -123,10 +123,11 @@ export const pullBasic = (context: Context) => {
         name: role.name,
         icon: role.icon,
         description: role.description,
-        ip_access: role.ip_access,
-        enforce_tfa: role.enforce_tfa,
-        admin_access: role.admin_access,
-        app_access: role.app_access,
+        // TODO: Move this to policy
+        // ip_access: role.ip_access,
+        // enforce_tfa: role.enforce_tfa,
+        // admin_access: role.admin_access,
+        // app_access: role.app_access,
       },
     ]);
     expect(collections.permissions).toEqual([

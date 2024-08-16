@@ -6,6 +6,7 @@ import {
   DirectusOperation,
   DirectusPanel,
   DirectusPermission,
+  DirectusPolicy,
   DirectusPreset,
   DirectusRole,
   DirectusSettings,
@@ -22,6 +23,7 @@ export type SystemCollectionsNames = [
   'operations',
   'panels',
   'permissions',
+  'policies',
   'presets',
   'roles',
   'settings',
@@ -34,6 +36,7 @@ export interface SystemCollectionsTypes {
   operations: DirectusOperation<Schema>;
   panels: DirectusPanel<Schema>;
   permissions: DirectusPermission<Schema>;
+  policies: DirectusPolicy<Schema>;
   presets: DirectusPreset<Schema>;
   roles: DirectusRole<Schema>;
   settings: DirectusSettings<Schema>;
