@@ -7,6 +7,7 @@ export const CollectionsList = [
   'operations',
   'panels',
   'permissions',
+  'policies',
   'presets',
   'roles',
   'settings',
@@ -19,6 +20,7 @@ export const CollectionsWithUuidList = [
   'folders',
   'operations',
   'panels',
+  'policies',
   'roles',
   'translations',
 ] as const;
@@ -48,6 +50,7 @@ export const OptionsHooksSchema = z.object({
   operations: CollectionHooksSchema.optional(),
   panels: CollectionHooksSchema.optional(),
   permissions: CollectionHooksSchema.optional(),
+  policies: CollectionHooksSchema.optional(),
   presets: CollectionHooksSchema.optional(),
   roles: CollectionHooksSchema.optional(),
   settings: CollectionHooksSchema.optional(),

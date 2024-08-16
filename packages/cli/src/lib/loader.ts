@@ -9,6 +9,7 @@ import {
   OperationsCollection,
   PanelsCollection,
   PermissionsCollection,
+  PoliciesCollection,
   PresetsCollection,
   RolesCollection,
   SettingsCollection,
@@ -17,8 +18,8 @@ import {
 import { createDumpFolders, getPinoTransport } from './helpers';
 import { Container, Token } from 'typedi';
 import Logger from 'pino';
-import { LOGGER } from './constants';
 import pino from 'pino';
+import { LOGGER } from './constants';
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function initContext(
@@ -63,6 +64,7 @@ export function loadCollections() {
     flows: FlowsCollection,
     operations: OperationsCollection,
     roles: RolesCollection,
+    policies: PoliciesCollection,
     permissions: PermissionsCollection,
     dashboards: DashboardsCollection,
     panels: PanelsCollection,

@@ -6,6 +6,7 @@ export * from './translations';
 export * from './operations';
 export * from './roles';
 export * from './permissions';
+export * from './policies';
 export * from './panels';
 export * from './presets';
 export * from './dashboards';
