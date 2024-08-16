@@ -14,7 +14,7 @@ export function retry<T>(
           retries++;
           setTimeout(runWithRetries, sleepTime);
         } else {
-          reject(error);
+          reject(error instanceof Error ? error : new Error(error as string));
         }
       }
     };

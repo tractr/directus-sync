@@ -28,7 +28,7 @@ export class ConfigFileLoader {
     if (!existsSync(configPath)) {
       return undefined;
     }
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const rawConfig = require(configPath);
     // Validate and return the config
     const config = zodParse(rawConfig, ConfigFileOptionsSchema, 'Config file');

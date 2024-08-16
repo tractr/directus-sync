@@ -93,7 +93,7 @@ export class MigrationClient {
       token = response.access_token;
     }
 
-    client.setToken(token);
+    await client.setToken(token);
     return client;
   }
 }
