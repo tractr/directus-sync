@@ -5,7 +5,6 @@ import {
   ClientOptions,
   createDirectus,
   DirectusClient,
-  readMe,
   rest,
   RestClient,
   RestConfig,
@@ -40,22 +39,6 @@ export class MigrationClient {
       this.client = await this.createClient();
     }
     return this.client;
-  }
-
-  /**
-   * This method return the role of the current user as the Admin role
-   */
-  async getAdminRoleId() {
-    if (!this.adminRoleId) {
-      const directus = await this.get();
-      const { role } = await directus.request(
-        readMe({
-          fields: ['role'],
-        }),
-      );
-      this.adminRoleId = role as string;
-    }
-    return this.adminRoleId;
   }
 
   /**
