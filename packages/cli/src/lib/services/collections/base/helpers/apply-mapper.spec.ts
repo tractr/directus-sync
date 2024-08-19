@@ -1,4 +1,4 @@
-import { applyMappers } from './apply-mapper';
+import { applyMappers, bindMappers, Id } from './apply-mapper';
 
 describe('applyMappers', () => {
   it('should apply mappers to input data recursively', async () => {
@@ -25,7 +25,7 @@ describe('applyMappers', () => {
       ],
     };
 
-    const mapperFactory = (index: number) => async (value: string) =>
+    const mapperFactory = (index: number) => async (value: Id) =>
       `${value} mapped [${index}]`;
     const mappers = {
       key1: mapperFactory(1),
@@ -75,7 +75,7 @@ describe('applyMappers', () => {
       },
     };
 
-    const mapperFactory = (index: number) => async (value: string) =>
+    const mapperFactory = (index: number) => async (value: Id) =>
       `${value} mapped [${index}]`;
     const mappers = {
       key1: mapperFactory(1),
@@ -92,7 +92,7 @@ describe('applyMappers', () => {
       key1: 'value2',
     };
 
-    const mapperFactory = (index: number) => async (value: string) =>
+    const mapperFactory = (index: number) => async (value: Id) =>
       `${value} mapped [${index}]`;
     const mappers = {
       key1: {
@@ -103,5 +103,86 @@ describe('applyMappers', () => {
     expect(() => applyMappers(input, mappers)).rejects.toThrowError(
       'Could not apply sub-mapper to non-object',
     );
+  });
+
+  it('should return undefined if mapper returns undefined', async () => {
+    const input = {
+      key1: 'value1',
+      key2: 'value2',
+      key3: 'value3',
+    };
+
+    const mapperFactory = (index: number) => async (value: Id) =>
+      index === 3 ? undefined : `${value} mapped [${index}]`;
+    const mappers = {
+      key1: mapperFactory(1),
+      key2: mapperFactory(2),
+      key3: mapperFactory(3),
+    };
+
+    const output = await applyMappers(input, mappers);
+
+    expect(output).toBeUndefined();
+  });
+
+  it('should return undefined if sub-mapper returns undefined', async () => {
+    const input = {
+      key1: 'value1',
+      key2: {
+        key3: 'value3',
+      },
+    };
+
+    const mapperFactory = (index: number) => async (value: Id) =>
+      index === 3 ? undefined : `${value} mapped [${index}]`;
+    const mappers = {
+      key1: mapperFactory(1),
+      key2: {
+        key3: mapperFactory(3),
+      },
+    };
+
+    const output = await applyMappers(input, mappers);
+
+    expect(output).toBeUndefined();
+  });
+});
+
+describe('bindMappers', () => {
+  it('should return a tree of function mapped to the same structure', () => {
+    const tree = {
+      key1: 'value1',
+      key2: 'value2',
+      key3: {
+        key4: 'value4',
+      },
+    } as const;
+    const callback = (value: string) => (id: Id) =>
+      `${value}_${id}`.toUpperCase();
+    const predicate = (value: unknown) => typeof value === 'object';
+    const mappers = bindMappers(tree, callback, predicate) as any;
+
+    expect(mappers.key1('id1')).toBe('VALUE1_ID1');
+    expect(mappers.key2('id2')).toBe('VALUE2_ID2');
+    expect(mappers.key3.key4('id3')).toBe('VALUE4_ID3');
+  });
+
+  it('should return a tree of function mapped to the same structure from a tree of instances', () => {
+    const tree = {
+      key1: new Map<string, string>([['key', 'value1']]),
+      key2: new Map<string, string>([['key', 'value2']]),
+      key3: {
+        key4: new Map<string, string>([['key', 'value4']]),
+      },
+    } as const;
+    const callback = (map: Map<string, string>) => (id: Id) =>
+      `${map.get('key')}_${id}`.toUpperCase();
+    const predicate = (value: unknown) =>
+      typeof value === 'object' && !(value instanceof Map);
+    const mappers = bindMappers(tree as any, callback, predicate) as any;
+
+    expect(mappers.key1('id1')).toBe('VALUE1_ID1');
+    expect(mappers.key2('id2')).toBe('VALUE2_ID2');
+    expect(mappers.key3.key4('id3')).toBe('VALUE4_ID3');
   });
 });
