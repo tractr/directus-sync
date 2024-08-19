@@ -173,9 +173,9 @@ export abstract class DirectusCollection<
   ): Promise<WithSyncId<T>[]> {
     const output: WithSyncId<T>[] = [];
     for (const item of items) {
-      const syncId = await this.idMapper.getByLocalId(item.id.toString());
-      if (syncId) {
-        output.push({ ...item, _syncId: syncId.sync_id });
+      const idMap = await this.idMapper.getByLocalId(item.id.toString());
+      if (idMap) {
+        output.push({ ...item, _syncId: idMap.sync_id });
       } else {
         const newSyncId = await this.idMapper.create(
           item.id,
