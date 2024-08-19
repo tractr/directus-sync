@@ -12,6 +12,7 @@ import { LOGGER } from '../../../constants';
 import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
 import { POLICIES_COLLECTION } from './constants';
+import deepmerge from 'deepmerge';
 
 @Service()
 export class PoliciesDataClient extends DataClient<DirectusPolicy> {
@@ -31,7 +32,11 @@ export class PoliciesDataClient extends DataClient<DirectusPolicy> {
   }
 
   protected getQueryCommand(query: Query<DirectusPolicy>) {
-    return readPolicies(query);
+    return readPolicies(
+      deepmerge<Query<DirectusPolicy>>(query, {
+        fields: ['*', 'roles.role', 'roles.sort'],
+      }),
+    );
   }
 
   protected getUpdateCommand(

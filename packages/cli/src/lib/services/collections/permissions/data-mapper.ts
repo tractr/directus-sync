@@ -2,7 +2,7 @@ import { DataMapper, Field, IdMappers } from '../base';
 import { Container, Inject, Service } from 'typedi';
 import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
-import { RolesIdMapperClient } from '../roles';
+import { PoliciesIdMapperClient } from '../policies';
 import { LOGGER } from '../../../constants';
 import { PERMISSIONS_COLLECTION } from './constants';
 import { DirectusPermission } from './interfaces';
@@ -11,7 +11,8 @@ import { DirectusPermission } from './interfaces';
 export class PermissionsDataMapper extends DataMapper<DirectusPermission> {
   protected fieldsToIgnore: Field<DirectusPermission>[] = [];
   protected idMappers: IdMappers<DirectusPermission> = {
-    role: Container.get(RolesIdMapperClient),
+    // @ts-ignore TODO: remove this "ts-ignore" once this PR has been merged: https://github.com/directus/directus/pull/23380
+    policy: Container.get(PoliciesIdMapperClient),
   };
 
   constructor(@Inject(LOGGER) baseLogger: pino.Logger) {
