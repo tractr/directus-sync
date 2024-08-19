@@ -67,6 +67,39 @@ describe('applyMappers', () => {
     });
   });
 
+  it('should exclude null from array values and keep in values', async () => {
+    const input = {
+      key1: 'value1',
+      key2: null,
+      key3: {
+        key4: null,
+        key5: ['value5-0', null, undefined, 'value5-1'],
+      },
+    };
+
+    const mapperFactory = (index: number) => async (value: Id) =>
+      `${value} mapped [${index}]`;
+    const mappers = {
+      key1: mapperFactory(1),
+      key2: mapperFactory(2),
+      key3: {
+        key4: mapperFactory(4),
+        key5: mapperFactory(5),
+      },
+    };
+
+    const output = await applyMappers(input, mappers);
+
+    expect(output).toEqual({
+      key1: 'value1 mapped [1]',
+      key2: null,
+      key3: {
+        key4: null,
+        key5: ['value5-0 mapped [5]', 'value5-1 mapped [5]'],
+      },
+    });
+  });
+
   it('should throw an error if mapper does not match the value types', () => {
     const input = {
       key1: 'value1',

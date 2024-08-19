@@ -37,8 +37,13 @@ export async function applyMappers<T extends Item>(
       if (Array.isArray(value)) {
         const mappedValues: Id[] = [];
         for (const v of value) {
+          if (v === null || v === undefined) {
+            continue;
+          }
           if (typeof v === 'object') {
-            throw new Error('Could not apply mapper to nested object');
+            throw new Error(
+              `Could not apply mapper to nested object. Key is "${key}", value is ${JSON.stringify(v)}.`,
+            );
           }
           const mappedValue = await mapper(v);
           if (mappedValue === undefined) {
@@ -50,8 +55,14 @@ export async function applyMappers<T extends Item>(
       }
       // -----------------------------
       else {
+        if (value === null || value === undefined) {
+          output[key] = null;
+          continue;
+        }
         if (typeof value === 'object') {
-          throw new Error('Could not apply mapper to nested object');
+          throw new Error(
+            `Could not apply mapper to nested object. Key is "${key}", value is ${JSON.stringify(value)}.`,
+          );
         }
         const mappedValue = await mapper(value as Id);
         if (mappedValue === undefined) {
@@ -64,7 +75,9 @@ export async function applyMappers<T extends Item>(
         const mappedValues = [] as T[];
         for (const v of value) {
           if (typeof v !== 'object') {
-            throw new Error('Could not apply sub-mapper to non-object');
+            throw new Error(
+              `Could not apply sub-mapper to non-object. Key is "${key}", value is ${JSON.stringify(v)}.`,
+            );
           }
           const subOutput = await applyMappers(v as T, mapper);
           if (subOutput === undefined) {
@@ -75,7 +88,9 @@ export async function applyMappers<T extends Item>(
         output[key] = mappedValues;
       } else {
         if (typeof value !== 'object') {
-          throw new Error('Could not apply sub-mapper to non-object');
+          throw new Error(
+            `Could not apply sub-mapper to non-object. Key is "${key}", value is ${JSON.stringify(value)}.`,
+          );
         }
         const subOutput = await applyMappers(value as T, mapper);
         if (subOutput === undefined) {
