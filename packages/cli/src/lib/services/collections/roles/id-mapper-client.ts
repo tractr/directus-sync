@@ -30,7 +30,7 @@ export class RolesIdMapperClient extends IdMapperClient {
   /**
    * This method return the role of the current user as the Admin role
    */
-  protected async getAdminRoleId() {
+  async getAdminRoleId() {
     if (!this.adminRoleId) {
       const directus = await this.migrationClient.get();
       const { role } = await directus.request(
