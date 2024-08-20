@@ -36,30 +36,30 @@ export class PoliciesIdMapperClient extends IdMapperClient {
   async create(localId: string | number, syncId?: string): Promise<string> {
     const adminPolicyId = await this.getAdminPolicyId();
     if (localId === adminPolicyId) {
-      return super.create(localId, this.adminPolicyPlaceholder);
+      return await super.create(localId, this.adminPolicyPlaceholder);
     }
     const publicPolicyId = await this.getPublicPolicyId();
     if (localId === publicPolicyId) {
-      return super.create(localId, this.publicPolicyPlaceholder);
+      return await super.create(localId, this.publicPolicyPlaceholder);
     }
-    return super.create(localId, syncId);
+    return await super.create(localId, syncId);
   }
 
   /**
    * Create the sync id of the admin and public policies on the fly, as it already has been synced.
    */
   async getBySyncId(syncId: string): Promise<IdMap | undefined> {
-    const idMap = super.getBySyncId(syncId);
+    const idMap = await super.getBySyncId(syncId);
     if (!idMap) {
       // Automatically create the default admin policy id map if it doesn't exist
       if (syncId === this.adminPolicyPlaceholder) {
         const adminPolicyId = await this.getAdminPolicyId();
         if (adminPolicyId) {
-          await this.create(adminPolicyId);
+          await super.create(adminPolicyId, this.adminPolicyPlaceholder);
           this.logger.debug(
             `Created admin policy id map with local id ${adminPolicyId}`,
           );
-          return this.getBySyncId(syncId);
+          return await super.getBySyncId(syncId);
         }
       }
 
@@ -67,11 +67,11 @@ export class PoliciesIdMapperClient extends IdMapperClient {
       else if (syncId === this.publicPolicyPlaceholder) {
         const publicPolicyId = await this.getPublicPolicyId();
         if (publicPolicyId) {
-          await this.create(publicPolicyId);
+          await super.create(publicPolicyId, this.publicPolicyPlaceholder);
           this.logger.debug(
             `Created public policy id map with local id ${publicPolicyId}`,
           );
-          return this.getBySyncId(syncId);
+          return await super.getBySyncId(syncId);
         }
       }
     }

@@ -49,25 +49,27 @@ export class RolesIdMapperClient extends IdMapperClient {
   async create(localId: string | number, syncId?: string): Promise<string> {
     const adminRoleId = await this.getAdminRoleId();
     if (localId === adminRoleId) {
-      return super.create(localId, this.adminRolePlaceholder);
+      return await super.create(localId, this.adminRolePlaceholder);
     }
-    return super.create(localId, syncId);
+    return await super.create(localId, syncId);
   }
 
   /**
    * Create the sync id of the admin role on the fly, as it already has been synced.
    */
   async getBySyncId(syncId: string): Promise<IdMap | undefined> {
-    const idMap = super.getBySyncId(syncId);
     // Automatically create the default admin role id map if it doesn't exist
-    if (!idMap && syncId === this.adminRolePlaceholder) {
+    if (syncId === this.adminRolePlaceholder) {
+      const idMap = await super.getBySyncId(syncId);
+      if (idMap) {
+        return idMap;
+      }
       const adminRoleId = await this.getAdminRoleId();
-      await this.create(adminRoleId);
+      await super.create(adminRoleId, this.adminRolePlaceholder);
       this.logger.debug(
         `Created admin role id map with local id ${adminRoleId}`,
       );
-      return this.getBySyncId(syncId);
     }
-    return idMap;
+    return await super.getBySyncId(syncId);
   }
 }
