@@ -12,11 +12,11 @@ import { readPolicies } from '@directus/sdk';
 export class PoliciesIdMapperClient extends IdMapperClient {
   protected adminPolicyFetched = false;
   protected adminPolicyId: string | undefined;
-  protected readonly adminPolicyPlaceholder = '$sync:default_admin_policy';
+  protected readonly adminPolicyPlaceholder = '_sync_default_admin_policy';
 
   protected publicPolicyFetched = false;
   protected publicPolicyId: string | undefined;
-  protected readonly publicPolicyPlaceholder = '$sync:default_public_policy';
+  protected readonly publicPolicyPlaceholder = '_sync_default_public_policy';
 
   constructor(
     migrationClient: MigrationClient,

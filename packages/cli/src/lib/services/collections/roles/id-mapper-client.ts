@@ -12,7 +12,7 @@ export class RolesIdMapperClient extends IdMapperClient {
   /**
    * This placeholder is used to represent the admin role in the id map.
    */
-  protected readonly adminRolePlaceholder = '$sync:default_admin_role';
+  protected readonly adminRolePlaceholder = '_sync_default_admin_role';
 
   protected adminRoleId: string | undefined;
 
