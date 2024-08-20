@@ -11,7 +11,6 @@ import { DirectusPermission } from './interfaces';
 export class PermissionsDataMapper extends DataMapper<DirectusPermission> {
   protected fieldsToIgnore: Field<DirectusPermission>[] = [];
   protected idMappers: IdMappers<DirectusPermission> = {
-    // @ts-ignore TODO: remove this "ts-ignore" once this PR has been merged: https://github.com/directus/directus/pull/23380
     policy: Container.get(PoliciesIdMapperClient),
   };
 
