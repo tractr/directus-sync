@@ -4,7 +4,7 @@ import {
 } from '@directus/sdk';
 import { BaseSchema } from '../base';
 
-// TODO: remove this "ts-ignore" once this PR has been merged: https://github.com/directus/directus/pull/23380
+// TODO: remove this once this PR has been merged: https://github.com/directus/directus/pull/23380
 export type DirectusPermission = Omit<
   BaseDirectusPermission<BaseSchema>,
   'role'
