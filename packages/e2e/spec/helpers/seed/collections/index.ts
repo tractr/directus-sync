@@ -5,6 +5,7 @@ export * from './operation.js';
 export * from './panel.js';
 export * from './role.js';
 export * from './permission.js';
+export * from './policy.js';
 export * from './preset.js';
 export * from './settings.js';
 export * from './translation.js';

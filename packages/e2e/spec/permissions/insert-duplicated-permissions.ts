@@ -1,6 +1,7 @@
 import {
   Context,
   newPermission,
+  newPolicy,
   newRole,
   readNonSystemPermissions,
   warn,
@@ -16,9 +17,11 @@ export const insertDuplicatedPermissions = (context: Context) => {
 
     // Create existing resources
     const role = await newRole(client);
+    const policy = await newPolicy(client, role.id);
+    const publicPolicy = await newPolicy(client, null);
     const initialPermissions = [
-      await newPermission(client, role.id, 'panels', 'update'),
-      await newPermission(client, null, 'panels', 'delete'),
+      await newPermission(client, policy.id, 'panels', 'update'),
+      await newPermission(client, publicPolicy.id, 'panels', 'delete'),
     ];
 
     // Dump the data
@@ -30,10 +33,10 @@ export const insertDuplicatedPermissions = (context: Context) => {
     );
 
     // Create new permissions
-    await newPermission(client, role.id, 'panels', 'update');
-    await newPermission(client, role.id, 'panels', 'create');
-    await newPermission(client, null, 'panels', 'delete');
-    await newPermission(client, null, 'panels', 'read');
+    await newPermission(client, policy.id, 'panels', 'update');
+    await newPermission(client, policy.id, 'panels', 'create');
+    await newPermission(client, publicPolicy.id, 'panels', 'delete');
+    await newPermission(client, publicPolicy.id, 'panels', 'read');
 
     // Push back the data
     const beforePushDate = new Date();
@@ -42,12 +45,12 @@ export const insertDuplicatedPermissions = (context: Context) => {
     // Check the output
     expect(output).toContain(
       warn(
-        `[permissions] Found duplicate permissions for directus_panels.update with role ${role.id}. Deleting them.`,
+        `[permissions] Found duplicate permissions for directus_panels.update with policy ${policy.id}. Deleting them.`,
       ),
     );
     expect(output).toContain(
       warn(
-        `[permissions] Found duplicate permissions for directus_panels.delete with role null. Deleting them.`,
+        `[permissions] Found duplicate permissions for directus_panels.update with policy ${publicPolicy.id}. Deleting them.`,
       ),
     );
 
@@ -57,7 +60,7 @@ export const insertDuplicatedPermissions = (context: Context) => {
     expect(permissions.length).toEqual(4);
     for (const permission of permissions) {
       expect(permission.id).toBeDefined();
-      expect(permission.role).toBeDefined();
+      expect(permission.policy).toBeDefined();
       expect(permission.collection).toBeDefined();
       expect(permission.action).toBeDefined();
     }

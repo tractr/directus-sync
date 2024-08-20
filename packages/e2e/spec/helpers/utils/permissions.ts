@@ -4,18 +4,30 @@ import {
   PermissionWithSystem,
   SystemCollection,
 } from '../sdk/index.js';
-import { createPermission, createRole, readPermissions } from '@directus/sdk';
-import { getPermission, getRole } from '../seed/index.js';
+import {
+  createPermission,
+  createPolicy,
+  createRole,
+  readPermissions,
+} from '@directus/sdk';
+import { getPermission, getPolicy, getRole } from '../seed/index.js';
 
 export async function newPermission(
   client: DirectusClient['client'],
-  role: string | null,
+  policy: string,
   collection: SystemCollection,
   action: PermissionAction,
 ) {
   return await client.request(
-    createPermission(getPermission(role, collection, action)),
+    createPermission(getPermission(policy, collection, action)),
   );
+}
+
+export async function newPolicy(
+  client: DirectusClient['client'],
+  role: string | null,
+) {
+  return await client.request(createPolicy(getPolicy(role)));
 }
 
 export async function newRole(client: DirectusClient['client']) {

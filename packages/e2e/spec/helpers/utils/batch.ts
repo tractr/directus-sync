@@ -5,6 +5,7 @@ import {
   createOperation,
   createPanel,
   createPermission,
+  createPolicy,
   createPreset,
   createRole,
   createTranslation,
@@ -14,6 +15,7 @@ import {
   deleteOperations,
   deletePanels,
   deletePermissions,
+  deletePolicies,
   deletePresets,
   deleteRoles,
   deleteTranslations,
@@ -44,6 +46,7 @@ import {
   getOperation,
   getPanel,
   getPermission,
+  getPolicy,
   getPreset,
   getRole,
   getSettings,
@@ -52,7 +55,6 @@ import {
 import {
   DirectusId,
   DirectusSettingsExtra,
-  notAdministratorRoles,
   notNullId,
   notSystemPermissions,
   SystemCollectionsPartial,
@@ -85,9 +87,12 @@ export async function createOneItemInEachSystemCollection(
   const role = await client.request(
     createRole({ ...getRole(), ...override?.roles }),
   );
+  const policy = await client.request(
+    createPolicy({ ...getPolicy(role.id), ...override?.policies }),
+  );
   const permission = await client.request(
     createPermission({
-      ...getPermission(role.id, 'dashboards', 'update'),
+      ...getPermission(policy.id, 'dashboards', 'update'),
       ...override?.permissions,
     }),
   );
@@ -112,6 +117,7 @@ export async function createOneItemInEachSystemCollection(
     operation,
     panel,
     role,
+    policy,
     permission,
     preset,
     settings,
@@ -141,6 +147,9 @@ export async function deleteItemsFromSystemCollections(
   if (ids.permissions?.length) {
     await client.request(deletePermissions(ids.permissions as number[]));
   }
+  if (ids.policies?.length) {
+    await client.request(deletePolicies(ids.policies as string[]));
+  }
   if (ids.roles?.length) {
     await client.request(deleteRoles(ids.roles as string[]));
   }
@@ -166,7 +175,7 @@ export async function readAllSystemCollections(
     ),
     policies: await client.request(readPolicies()),
     presets: await client.request(readPresets()),
-    roles: (await client.request(readRoles())).filter(notAdministratorRoles),
+    roles: await client.request(readRoles()),
     settings: [await client.request(readSettings())].filter(notNullId),
     translations: await client.request(readTranslations()),
   };
