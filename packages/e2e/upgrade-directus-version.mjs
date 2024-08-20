@@ -1,10 +1,10 @@
 #!/usr/bin/env zx
 import 'dotenv/config';
 import path from 'path';
-import { readdir } from 'fs/promises';
+import {readdir} from 'fs/promises';
 
 const actual = '10.13.2';
-const next = '10.13.3';
+const next = '11.0.2';
 
 if (actual === next) {
   console.log('Nothing to upgrade');
@@ -15,6 +15,7 @@ const { PUBLIC_URL, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
 
 // List all folders of ./dumps/sources using path
 const sources = await readdir(path.resolve('dumps', 'sources'));
+const cliEntrypoint = path.resolve('..', 'cli', 'bin', 'index.js');
 const cliProgramArgs = [
   '--directus-url',
   PUBLIC_URL,
@@ -53,7 +54,7 @@ for (const source of sources) {
   console.log(chalk.yellow('---> Pushing the dump to the instance'));
   await spinner(
     'Pushing the configuration',
-    () => $`npx directus-sync ${cliProgramArgs} push ${cliCommandArgs}`,
+    () => $`npx directus-sync ${cliProgramArgs} push ${cliCommandArgs}`, // Use current version of directus-sync
   );
   serverProcess.kill('SIGINT');
   await serverProcess.catch(() =>
@@ -63,6 +64,10 @@ for (const source of sources) {
   // Install the next version
   console.log(chalk.yellow('---> Installing the next version'));
   await $`npm install --save --save-exact directus@${next}`;
+
+  // Apply the latest migrations
+  console.log(chalk.yellow('---> Apply latest migrations'));
+  await $`npx directus database migrate:latest`;
 
   // Start the Directus server and run the migrations
   console.log(chalk.yellow('---> Starting the new server'));
@@ -75,7 +80,7 @@ for (const source of sources) {
   console.log(chalk.yellow('---> Pulling the dump from the instance'));
   await spinner(
     'Pulling the configuration',
-    () => $`npx directus-sync ${cliProgramArgs} pull ${cliCommandArgs}`,
+    () => $`node ${cliEntrypoint} ${cliProgramArgs} pull ${cliCommandArgs}`, // Use next version of directus-sync
   );
   serverProcess.kill('SIGINT');
   await serverProcess.catch(() =>
