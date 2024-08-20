@@ -7,7 +7,7 @@ import {
 } from '@directus/sdk';
 import { Inject, Service } from 'typedi';
 import { MigrationClient } from '../../migration-client';
-import { DirectusPolicy } from './interfaces';
+import { BaseDirectusPolicy, DirectusPolicy } from './interfaces';
 import { LOGGER } from '../../../constants';
 import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
@@ -33,7 +33,7 @@ export class PoliciesDataClient extends DataClient<DirectusPolicy> {
 
   protected getQueryCommand(query: Query<DirectusPolicy>) {
     return readPolicies(
-      deepmerge<Query<DirectusPolicy>>(query, {
+      deepmerge<Query<BaseDirectusPolicy>>(query, {
         fields: ['*', 'roles.role', 'roles.sort'],
       }),
     );
