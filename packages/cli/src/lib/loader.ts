@@ -81,10 +81,16 @@ export function loadCollections() {
   const excludedCollections = CollectionsList.filter(
     (collection) => !collectionsToProcess.includes(collection),
   );
+  const sortedCollections = Object.keys(
+    collectionsConstructors,
+  ) as (keyof typeof collectionsConstructors)[];
+  const sortedCollectionsToProcess = sortedCollections.filter((collection) =>
+    collectionsToProcess.includes(collection),
+  );
 
   // Initialize the collections
   const output: CollectionInstance[] = [];
-  for (const collection of collectionsToProcess) {
+  for (const collection of sortedCollectionsToProcess) {
     const collectionConstructor = collectionsConstructors[collection];
     output.push(
       Container.get(
