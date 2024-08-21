@@ -1,10 +1,10 @@
 import { faker } from '@faker-js/faker';
 import { getIcon } from '../helpers/index.js';
-import { DirectusPolicy } from '../../sdk/index.js';
+import { BaseDirectusPolicy } from '../../sdk/index.js';
 
 export function getPolicy(
   role: string | null,
-): Partial<Omit<DirectusPolicy<object>, 'id'>> {
+): Partial<Omit<BaseDirectusPolicy<object>, 'id'>> {
   return {
     name: faker.lorem.words({ min: 1, max: 2 }),
     icon: getIcon(),
@@ -13,6 +13,14 @@ export function getPolicy(
     enforce_tfa: faker.datatype.boolean(),
     admin_access: false,
     app_access: faker.datatype.boolean(),
-    roles: role ? [role] : [],
-  };
+    roles: role
+      ? [
+          {
+            role,
+            sort: 1,
+          },
+        ]
+      : [],
+    // TODO: remove this once it is fixed in the SDK
+  } as unknown as Partial<Omit<BaseDirectusPolicy<object>, 'id'>>;
 }

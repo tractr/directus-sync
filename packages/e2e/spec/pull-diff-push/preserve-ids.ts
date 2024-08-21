@@ -1,9 +1,9 @@
 import {
   Context,
-  getDumpedSystemCollectionsContents,
   createOneItemInEachSystemCollection,
-  SingularCollectionName,
+  getDumpedSystemCollectionsContents,
   readAllSystemCollections,
+  SingularCollectionName,
 } from '../helpers/index.js';
 import { CollectionName } from 'directus-sync';
 
@@ -19,6 +19,7 @@ const collectionsInfo: CollectionInfo[] = [
   { singular: 'operation', collection: 'operations', preserve: 'optional' },
   { singular: 'panel', collection: 'panels', preserve: 'optional' },
   { singular: 'permission', collection: 'permissions', preserve: 'never' },
+  { singular: 'policy', collection: 'policies', preserve: 'never' },
   { singular: 'preset', collection: 'presets', preserve: 'never' },
   { singular: 'role', collection: 'roles', preserve: 'optional' },
   { singular: 'settings', collection: 'settings', preserve: 'never' },
