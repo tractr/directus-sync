@@ -2,6 +2,14 @@
 import 'dotenv/config';
 import path from 'path';
 import {readdir} from 'fs/promises';
+import {readFileSync, writeFileSync} from "fs";
+
+async function readJSON(path) {
+  return JSON.parse(await readFileSync(path, 'utf8'));
+}
+async function writeJSON(path, data) {
+  await writeFileSync(path, JSON.stringify(data, null, 2));
+}
 
 const actual = '10.13.2';
 const next = '11.0.2';
@@ -16,6 +24,9 @@ const { PUBLIC_URL, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
 // List all folders of ./dumps/sources using path
 const sources = await readdir(path.resolve('dumps', 'sources'));
 const cliEntrypoint = path.resolve('..', 'cli', 'bin', 'index.js');
+const cliPackagePath = path.resolve('..', 'cli', 'package.json');
+const cliPackage = await readJSON(cliPackagePath);
+const { version } = cliPackage;
 const cliProgramArgs = [
   '--directus-url',
   PUBLIC_URL,
@@ -24,6 +35,10 @@ const cliProgramArgs = [
   '--directus-password',
   ADMIN_PASSWORD,
 ];
+
+// Change the version of directus-sync in package.json to avoid conflicts
+cliPackage.version = 'next';
+await writeJSON(cliPackagePath, cliPackage);
 
 for (const source of sources) {
   // Compute source path
@@ -54,7 +69,7 @@ for (const source of sources) {
   console.log(chalk.yellow('---> Pushing the dump to the instance'));
   await spinner(
     'Pushing the configuration',
-    () => $`npx directus-sync ${cliProgramArgs} push ${cliCommandArgs}`, // Use current version of directus-sync
+    () => $`npx directus-sync@${version} ${cliProgramArgs} push ${cliCommandArgs}`, // Use current version of directus-sync
   );
   serverProcess.kill('SIGINT');
   await serverProcess.catch(() =>
@@ -89,3 +104,6 @@ for (const source of sources) {
 
   console.log(chalk.green(`===> ${source} upgraded successfully`));
 }
+
+// Restore the version of directus-sync in package.json using git
+await $`git checkout -- ${cliPackagePath}`;
