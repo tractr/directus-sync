@@ -1,8 +1,8 @@
 #!/usr/bin/env zx
 import 'dotenv/config';
 import path from 'path';
-import {readdir} from 'fs/promises';
-import {readFileSync, writeFileSync} from 'fs';
+import { readdir } from 'fs/promises';
+import { readFileSync, writeFileSync } from 'fs';
 
 async function readJSON(path) {
   return JSON.parse(await readFileSync(path, 'utf8'));

@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Administrator",
+    "icon": "verified",
+    "description": "$t:admin_policy_description",
+    "ip_access": null,
+    "enforce_tfa": false,
+    "admin_access": true,
+    "app_access": true,
+    "roles": [
+      {
+        "role": "_sync_default_admin_role",
+        "sort": 1
+      }
+    ],
+    "_syncId": "_sync_default_admin_policy"
+  },
+  {
+    "name": "$t:public_label",
+    "icon": "public",
+    "description": "$t:public_description",
+    "ip_access": null,
+    "enforce_tfa": false,
+    "admin_access": false,
+    "app_access": false,
+    "roles": [
+      {
+        "role": null,
+        "sort": 1
+      }
+    ],
+    "_syncId": "_sync_default_public_policy"
+  },
+  {
+    "name": "peior",
+    "icon": "add_card",
+    "description": "Vulariter volva stipes autem paens tergum decimus denuo aufero animus tandem corroboro substantia volva autem basium.",
+    "ip_access": ["145.255.6.77", "112.133.63.254"],
+    "enforce_tfa": false,
+    "admin_access": false,
+    "app_access": false,
+    "roles": [
+      {
+        "role": "52183adc-3e8e-4746-abd2-ee8dfc58efd5",
+        "sort": 1
+      }
+    ],
+    "_syncId": "91e97caa-6e96-4ad6-b04b-26dfa1971e50"
+  }
+]
