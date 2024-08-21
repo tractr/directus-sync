@@ -1,6 +1,5 @@
 [
   {
-    "role": "52183adc-3e8e-4746-abd2-ee8dfc58efd5",
     "collection": "directus_dashboards",
     "action": "update",
     "permissions": {},
@@ -15,6 +14,7 @@
     },
     "presets": null,
     "fields": ["id"],
+    "policy": "91e97caa-6e96-4ad6-b04b-26dfa1971e50",
     "_syncId": "da4b7413-d028-4504-9231-b4c5acae9e45"
   }
 ]

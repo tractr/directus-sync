@@ -1,12 +1,16 @@
 [
   {
+    "name": "Administrator",
+    "icon": "verified",
+    "description": "$t:admin_description",
+    "parent": null,
+    "_syncId": "_sync_default_admin_role"
+  },
+  {
     "name": "peior",
     "icon": "add_card",
     "description": "Vulariter volva stipes autem paens tergum decimus denuo aufero animus tandem corroboro substantia volva autem basium.",
-    "ip_access": ["145.255.6.77", "112.133.63.254"],
-    "enforce_tfa": false,
-    "admin_access": false,
-    "app_access": false,
+    "parent": null,
     "_syncId": "52183adc-3e8e-4746-abd2-ee8dfc58efd5"
   }
 ]
