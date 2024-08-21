@@ -2,7 +2,7 @@
 import 'dotenv/config';
 import path from 'path';
 import {readdir} from 'fs/promises';
-import {readFileSync, writeFileSync} from "fs";
+import {readFileSync, writeFileSync} from 'fs';
 
 async function readJSON(path) {
   return JSON.parse(await readFileSync(path, 'utf8'));
@@ -23,7 +23,6 @@ const { PUBLIC_URL, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
 
 // List all folders of ./dumps/sources using path
 const sources = await readdir(path.resolve('dumps', 'sources'));
-const cliEntrypoint = path.resolve('..', 'cli', 'bin', 'index.js');
 const cliPackagePath = path.resolve('..', 'cli', 'package.json');
 const cliPackage = await readJSON(cliPackagePath);
 const { version } = cliPackage;
@@ -69,7 +68,8 @@ for (const source of sources) {
   console.log(chalk.yellow('---> Pushing the dump to the instance'));
   await spinner(
     'Pushing the configuration',
-    () => $`npx directus-sync@${version} ${cliProgramArgs} push ${cliCommandArgs}`, // Use current version of directus-sync
+    () =>
+      $`npx directus-sync@${version} ${cliProgramArgs} push ${cliCommandArgs}`, // Use current version of directus-sync
   );
   serverProcess.kill('SIGINT');
   await serverProcess.catch(() =>
@@ -95,7 +95,7 @@ for (const source of sources) {
   console.log(chalk.yellow('---> Pulling the dump from the instance'));
   await spinner(
     'Pulling the configuration',
-    () => $`node ${cliEntrypoint} ${cliProgramArgs} pull ${cliCommandArgs}`, // Use next version of directus-sync
+    () => $`npx directus-sync ${cliProgramArgs} pull ${cliCommandArgs}`, // Use next version of directus-sync
   );
   serverProcess.kill('SIGINT');
   await serverProcess.catch(() =>
