@@ -23,14 +23,34 @@ export function getSystemCollectionsPaths(
     translations: path.join(dumpPath, 'collections', 'translations.json'),
   };
 }
-export function getDumpedSystemCollectionsContents(dumpPath: string) {
+export function getDumpedSystemCollectionsContents(
+  dumpPath: string,
+  keepDefault = false,
+) {
   const paths = getSystemCollectionsPaths(dumpPath);
-  return Object.entries(paths).reduce((acc, [key, path]) => {
+  const collections = Object.entries(paths).reduce((acc, [key, path]) => {
     return {
       ...acc,
       [key]: fs.existsSync(path) ? fs.readJSONSync(path) : undefined,
     };
   }, {} as SystemCollectionsContentWithSyncId);
+  return keepDefault
+    ? collections
+    : excludeDefaultSystemCollectionsEntries(collections);
+}
+
+export function excludeDefaultSystemCollectionsEntries(
+  collections: SystemCollectionsContentWithSyncId,
+) {
+  const keys = Object.keys(
+    collections,
+  ) as (keyof SystemCollectionsContentWithSyncId)[];
+  for (const key of keys) {
+    collections[key] = collections[key]?.filter(
+      (item) => !item._syncId.startsWith('_sync_default_'),
+    ) as any;
+  }
+  return collections;
 }
 
 export function getSystemCollectionsNames(): SystemCollectionsNames {

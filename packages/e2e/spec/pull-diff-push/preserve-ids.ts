@@ -19,7 +19,7 @@ const collectionsInfo: CollectionInfo[] = [
   { singular: 'operation', collection: 'operations', preserve: 'optional' },
   { singular: 'panel', collection: 'panels', preserve: 'optional' },
   { singular: 'permission', collection: 'permissions', preserve: 'never' },
-  { singular: 'policy', collection: 'policies', preserve: 'never' },
+  { singular: 'policy', collection: 'policies', preserve: 'optional' },
   { singular: 'preset', collection: 'presets', preserve: 'never' },
   { singular: 'role', collection: 'roles', preserve: 'optional' },
   { singular: 'settings', collection: 'settings', preserve: 'never' },
@@ -67,14 +67,14 @@ export const preserveIds = (context: Context) => {
         const syncId = getSyncId(collections[collection]);
 
         if (preserve === 'always') {
-          expect(remoteId).toBe(syncId);
+          expect(remoteId).withContext(collection).toBe(syncId);
         } else if (preserve === 'never') {
-          expect(remoteId).not.toBe(syncId);
+          expect(remoteId).withContext(collection).not.toBe(syncId);
         } else if (preserve === 'optional') {
           if (option === collection || option === 'all') {
-            expect(remoteId).toBe(syncId);
+            expect(remoteId).withContext(collection).toBe(syncId);
           } else {
-            expect(remoteId).not.toBe(syncId);
+            expect(remoteId).withContext(collection).not.toBe(syncId);
           }
         }
       }
@@ -110,14 +110,14 @@ export const preserveIds = (context: Context) => {
         }
 
         if (preserve === 'always') {
-          expect(syncId).toBe(remoteId);
+          expect(syncId).withContext(collection).toBe(remoteId);
         } else if (preserve === 'never') {
-          expect(syncId).not.toBe(remoteId);
+          expect(syncId).withContext(collection).not.toBe(remoteId);
         } else if (preserve === 'optional') {
           if (option === collection || option === 'all') {
-            expect(syncId).toBe(remoteId);
+            expect(syncId).withContext(collection).toBe(remoteId);
           } else {
-            expect(syncId).not.toBe(remoteId);
+            expect(syncId).withContext(collection).not.toBe(remoteId);
           }
         }
       }

@@ -1,4 +1,8 @@
-import { DirectusPermission, DirectusRole } from '@directus/sdk';
+import {
+  DirectusPermission,
+  DirectusPolicy,
+  DirectusRole,
+} from '@directus/sdk';
 import { Log, PinoHTTPLog, PinoLog } from './interfaces/index.js';
 
 export function notSystemPermissions(
@@ -7,9 +11,15 @@ export function notSystemPermissions(
   return !permission.system;
 }
 
-export function notAdministratorRoles(role: DirectusRole<object>): boolean {
+export function notDefaultRoles(role: DirectusRole<object>): boolean {
   return (
     role.name !== 'Administrator' && role.description !== '$t:admin_description'
+  );
+}
+
+export function notDefaultPolicies(policy: DirectusPolicy<object>): boolean {
+  return !['$t:admin_policy_description', '$t:public_description'].includes(
+    policy.description || '',
   );
 }
 

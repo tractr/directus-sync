@@ -55,6 +55,8 @@ import {
 import {
   DirectusId,
   DirectusSettingsExtra,
+  notDefaultPolicies,
+  notDefaultRoles,
   notNullId,
   notSystemPermissions,
   SystemCollectionsPartial,
@@ -163,19 +165,22 @@ export async function deleteItemsFromSystemCollections(
 
 export async function readAllSystemCollections(
   client: DirectusClient<object> & RestClient<object>,
+  keepDefault = false,
 ) {
+  const roles = await client.request(readRoles());
+  const policies = await client.request(readPolicies());
+  const permissions = await client.request(readPermissions());
+
   return {
     dashboards: await client.request(readDashboards()),
     flows: await client.request(readFlows()),
     folders: await client.request(readFolders()),
     operations: await client.request(readOperations()),
     panels: await client.request(readPanels()),
-    permissions: (await client.request(readPermissions())).filter(
-      notSystemPermissions,
-    ),
-    policies: await client.request(readPolicies()),
+    permissions: permissions.filter(notSystemPermissions),
+    policies: keepDefault ? policies : policies.filter(notDefaultPolicies),
     presets: await client.request(readPresets()),
-    roles: await client.request(readRoles()),
+    roles: keepDefault ? roles : roles.filter(notDefaultRoles),
     settings: [await client.request(readSettings())].filter(notNullId),
     translations: await client.request(readTranslations()),
   };
