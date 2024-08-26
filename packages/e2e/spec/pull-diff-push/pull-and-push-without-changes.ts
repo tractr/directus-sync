@@ -1,8 +1,9 @@
 import {
   Context,
+  createOneItemInEachSystemCollection,
+  getDefaultItemsCount,
   getSystemCollectionsNames,
   info,
-  createOneItemInEachSystemCollection,
 } from '../helpers/index.js';
 
 export const pullAndPushWithoutChanges = (context: Context) => {
@@ -33,7 +34,9 @@ export const pullAndPushWithoutChanges = (context: Context) => {
         info(`[${collection}] To delete: 0 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(`[${collection}] Unchanged: 1 item(s)`),
+        info(
+          `[${collection}] Unchanged: ${getDefaultItemsCount(collection) + 1} item(s)`,
+        ),
       );
     }
 

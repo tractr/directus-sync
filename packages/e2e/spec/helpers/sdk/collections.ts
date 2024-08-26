@@ -1,5 +1,6 @@
 import path from 'path';
 import {
+  SystemCollection,
   SystemCollectionsContentWithSyncId,
   SystemCollectionsNames,
   SystemCollectionsRecord,
@@ -67,4 +68,15 @@ export function getSystemCollectionsNames(): SystemCollectionsNames {
     'settings',
     'translations',
   ];
+}
+
+export function getDefaultItemsCount(collection: SystemCollection) {
+  switch (collection) {
+    case 'policies':
+      return 2;
+    case 'roles':
+      return 1;
+    default:
+      return 0;
+  }
 }

@@ -1,5 +1,6 @@
 import {
   Context,
+  getDefaultItemsCount,
   getSystemCollectionsNames,
   info,
   readAllSystemCollections,
@@ -39,7 +40,9 @@ export const pullAndPushWithDeletions = (context: Context) => {
         info(`[${collection}] To delete: 1 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(`[${collection}] Unchanged: 0 item(s)`),
+        info(
+          `[${collection}] Unchanged: ${getDefaultItemsCount(collection)} item(s)`,
+        ),
       );
     }
 

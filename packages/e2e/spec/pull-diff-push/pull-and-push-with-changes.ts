@@ -1,7 +1,12 @@
-import { Context, getSystemCollectionsNames, info } from '../helpers/index.js';
+import {
+  Context,
+  getDefaultItemsCount,
+  getSystemCollectionsNames,
+  info,
+} from '../helpers/index.js';
 
 export const pullAndPushWithChanges = (context: Context) => {
-  it('no diff if no changes and no mutations on push', async () => {
+  it('diff if mutations on push', async () => {
     // --------------------------------------------------------------------
     // Init sync client and push
     const syncInit = await context.getSync(
@@ -36,7 +41,9 @@ export const pullAndPushWithChanges = (context: Context) => {
         info(`[${collection}] To delete: 0 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(`[${collection}] Unchanged: 0 item(s)`),
+        info(
+          `[${collection}] Unchanged: ${getDefaultItemsCount(collection)} item(s)`,
+        ),
       );
     }
 
@@ -104,7 +111,9 @@ export const pullAndPushWithChanges = (context: Context) => {
         info(`[${collection}] To delete: 0 item(s)`),
       );
       expect(finalDiffOutput).toContain(
-        info(`[${collection}] Unchanged: 1 item(s)`),
+        info(
+          `[${collection}] Unchanged: ${getDefaultItemsCount(collection) + 1} item(s)`,
+        ),
       );
     }
   });

@@ -4,6 +4,7 @@ import {
   deleteItemsFromSystemCollections,
   DirectusClient,
   DirectusSync,
+  getDefaultItemsCount,
   getSystemCollectionsNames,
   info,
   readAllSystemCollections,
@@ -48,7 +49,11 @@ export const pushFlushAndPush = (context: Context) => {
         expect(output).toContain(info(`[${collection}] To create: 0 item(s)`));
         expect(output).toContain(info(`[${collection}] To update: 1 item(s)`));
         expect(output).toContain(info(`[${collection}] To delete: 0 item(s)`));
-        expect(output).toContain(info(`[${collection}] Unchanged: 0 item(s)`));
+        expect(output).toContain(
+          info(
+            `[${collection}] Unchanged: ${getDefaultItemsCount(collection)} item(s)`,
+          ),
+        );
       } else {
         expect(output).toContain(
           info(`[${collection}] Dangling id maps: 1 item(s)`),
@@ -56,7 +61,11 @@ export const pushFlushAndPush = (context: Context) => {
         expect(output).toContain(info(`[${collection}] To create: 1 item(s)`));
         expect(output).toContain(info(`[${collection}] To update: 0 item(s)`));
         expect(output).toContain(info(`[${collection}] To delete: 0 item(s)`));
-        expect(output).toContain(info(`[${collection}] Unchanged: 0 item(s)`));
+        expect(output).toContain(
+          info(
+            `[${collection}] Unchanged: ${getDefaultItemsCount(collection)} item(s)`,
+          ),
+        );
       }
     }
   });
