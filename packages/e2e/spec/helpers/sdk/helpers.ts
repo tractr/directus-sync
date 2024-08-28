@@ -18,7 +18,7 @@ export function notDefaultRoles(role: DirectusRole<object>): boolean {
 }
 
 export function notDefaultPolicies(policy: DirectusPolicy<object>): boolean {
-  return !['$t:admin_policy_description', '$t:public_description'].includes(
+  return !['$t:admin_description', '$t:public_description'].includes(
     policy.description || '',
   );
 }

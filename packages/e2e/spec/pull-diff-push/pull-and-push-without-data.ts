@@ -24,6 +24,7 @@ export const pullAndPushWithoutData = (context: Context) => {
       'operations',
       'panels',
       'permissions',
+      'policies',
       'presets',
       'roles',
       'settings',
