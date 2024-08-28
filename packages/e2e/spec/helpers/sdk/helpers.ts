@@ -18,9 +18,11 @@ export function notDefaultRoles(role: DirectusRole<object>): boolean {
 }
 
 export function notDefaultPolicies(policy: DirectusPolicy<object>): boolean {
-  return !['$t:admin_description', '$t:public_description'].includes(
-    policy.description || '',
-  );
+  return ![
+    '$t:admin_description',
+    '$t:admin_policy_description',
+    '$t:public_description',
+  ].includes(policy.description || '');
 }
 
 export function notNullId<T extends { id: string | number | null }>(

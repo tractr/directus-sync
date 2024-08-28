@@ -59,7 +59,7 @@ export const pullAndPushWithDeletions = (context: Context) => {
     // Analyze the output
     // Operations are deleted with the flows (cascade)
     // Panels are deleted with the dashboards (cascade)
-    // Permissions are deleted with the presets (cascade)
+    // Permissions are deleted with the policies (cascade)
     // Settings is not deleted
     const expectCount = (collection: string) =>
       ['operations', 'panels', 'permissions', 'settings'].includes(collection)
