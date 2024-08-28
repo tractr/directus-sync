@@ -1,6 +1,5 @@
 import path from 'path';
 import {
-  SystemCollection,
   SystemCollectionsContentWithSyncId,
   SystemCollectionsNames,
   SystemCollectionsRecord,
@@ -70,7 +69,7 @@ export function getSystemCollectionsNames(): SystemCollectionsNames {
   ];
 }
 
-export function getDefaultItemsCount(collection: SystemCollection) {
+export function getDefaultItemsCount(collection: string) {
   switch (collection) {
     case 'policies':
       return 2;
