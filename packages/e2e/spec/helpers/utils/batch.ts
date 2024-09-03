@@ -93,13 +93,28 @@ export async function createOneItemInEachSystemCollection(
   const role = await client.request(
     createRole({ ...getRole(), ...override?.roles }),
   );
-  const policy = (await client.request(
+
+  // --------------------------------------------------------
+  // Create and fetch policy in order to include deep fields
+  const policyRaw = await client.request(
     createPolicy({
       ...getPolicy(role.id),
       ...override?.policies,
       // Todo: remove this once it is fixed in the SDK
     } as unknown as DirectusPolicy<Schema>),
-  )) as unknown as FixPolicy<DirectusPolicy<Schema>>;
+  );
+  const [policy] = (await client.request(
+    readPolicies({
+      query: { id: policyRaw.id },
+      fields: ['*', 'roles.role', 'roles.sort'],
+      // Todo: remove this once it is fixed in the SDK
+    } as DirectusQuery<Schema, DirectusPolicy<Schema>>),
+  )) as unknown as FixPolicy<DirectusPolicy<Schema>>[];
+  if (!policy) {
+    throw new Error('Policy not found');
+  }
+  // --------------------------------------------------------
+
   const permission = await client.request(
     createPermission({
       ...getPermission(policy.id, 'dashboards', 'update'),
