@@ -2,12 +2,14 @@ import {
   DirectusClient,
   PermissionAction,
   PermissionWithSystem,
+  Schema,
   SystemCollection,
 } from '../sdk/index.js';
 import {
   createPermission,
   createPolicy,
   createRole,
+  DirectusPolicy,
   readPermissions,
 } from '@directus/sdk';
 import { getPermission, getPolicy, getRole } from '../seed/index.js';
@@ -27,7 +29,10 @@ export async function newPolicy(
   client: DirectusClient['client'],
   role: string | null,
 ) {
-  return await client.request(createPolicy(getPolicy(role)));
+  return await client.request(
+    // Todo: remove this once it is fixed in the SDK
+    createPolicy(getPolicy(role) as unknown as DirectusPolicy<Schema>),
+  );
 }
 
 export async function newRole(client: DirectusClient['client']) {

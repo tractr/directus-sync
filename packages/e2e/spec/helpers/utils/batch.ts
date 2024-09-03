@@ -20,7 +20,9 @@ import {
   deleteRoles,
   deleteTranslations,
   DirectusClient,
+  DirectusPolicy,
   DirectusSettings,
+  Query as DirectusQuery,
   readCollections,
   readDashboards,
   readFields,
@@ -53,13 +55,14 @@ import {
   getTranslation,
 } from '../seed/index.js';
 import {
-  BaseDirectusPolicyQuery,
   DirectusId,
   DirectusSettingsExtra,
+  FixPolicy,
   notDefaultPolicies,
   notDefaultRoles,
   notNullId,
   notSystemPermissions,
+  Schema,
   SystemCollectionsPartial,
   SystemCollectionsRecordPartial,
 } from '../sdk/index.js';
@@ -90,9 +93,13 @@ export async function createOneItemInEachSystemCollection(
   const role = await client.request(
     createRole({ ...getRole(), ...override?.roles }),
   );
-  const policy = await client.request(
-    createPolicy({ ...getPolicy(role.id), ...override?.policies }),
-  );
+  const policy = (await client.request(
+    createPolicy({
+      ...getPolicy(role.id),
+      ...override?.policies,
+      // Todo: remove this once it is fixed in the SDK
+    } as unknown as DirectusPolicy<Schema>),
+  )) as unknown as FixPolicy<DirectusPolicy<Schema>>;
   const permission = await client.request(
     createPermission({
       ...getPermission(policy.id, 'dashboards', 'update'),
@@ -169,11 +176,12 @@ export async function readAllSystemCollections(
   keepDefault = false,
 ) {
   const roles = await client.request(readRoles());
-  const policies = await client.request(
+  const policies = (await client.request(
     readPolicies({
       fields: ['*', 'roles.role', 'roles.sort'],
-    } as BaseDirectusPolicyQuery<object>),
-  );
+      // Todo: remove this once it is fixed in the SDK
+    } as DirectusQuery<Schema, DirectusPolicy<Schema>>),
+  )) as unknown as FixPolicy<DirectusPolicy<Schema>>[];
   const permissions = await client.request(readPermissions());
 
   return {

@@ -9,7 +9,6 @@ import {
   info,
   readAllSystemCollections,
 } from '../helpers/index.js';
-import { DirectusPolicy } from 'directus-sync';
 
 export const pushFlushAndPush = (context: Context) => {
   const initialize = async (sync: DirectusSync, directus: DirectusClient) => {
@@ -200,7 +199,7 @@ export const pushFlushAndPush = (context: Context) => {
     expect(all.policies[0]).toEqual(
       jasmine.objectContaining({
         id: getFirstId(all.policies),
-        name: (policy as DirectusPolicy).name,
+        name: policy.name,
         icon: policy.icon,
         description: policy.description,
         ip_access: policy.ip_access,

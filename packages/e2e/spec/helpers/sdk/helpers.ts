@@ -3,7 +3,7 @@ import {
   DirectusPolicy,
   DirectusRole,
 } from '@directus/sdk';
-import { Log, PinoHTTPLog, PinoLog } from './interfaces/index.js';
+import { FixPolicy, Log, PinoHTTPLog, PinoLog } from './interfaces/index.js';
 
 export function notSystemPermissions(
   permission: DirectusPermission<object> & { system?: boolean },
@@ -17,7 +17,9 @@ export function notDefaultRoles(role: DirectusRole<object>): boolean {
   );
 }
 
-export function notDefaultPolicies(policy: DirectusPolicy<object>): boolean {
+export function notDefaultPolicies(
+  policy: FixPolicy<DirectusPolicy<object>>,
+): boolean {
   return ![
     '$t:admin_description',
     '$t:admin_policy_description',

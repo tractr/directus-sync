@@ -1,10 +1,11 @@
 import { faker } from '@faker-js/faker';
 import { getIcon } from '../helpers/index.js';
-import { BaseDirectusPolicy } from '../../sdk/index.js';
+import { FixPolicy } from '../../sdk/index.js';
+import { DirectusPolicy } from '@directus/sdk';
 
 export function getPolicy(
   role: string | null,
-): Partial<Omit<BaseDirectusPolicy<object>, 'id'>> {
+): Partial<Omit<FixPolicy<DirectusPolicy<object>>, 'id'>> {
   return {
     name: faker.lorem.words({ min: 1, max: 2 }),
     icon: getIcon(),
@@ -22,5 +23,5 @@ export function getPolicy(
         ]
       : [],
     // TODO: remove this once it is fixed in the SDK
-  } as unknown as Partial<Omit<BaseDirectusPolicy<object>, 'id'>>;
+  } as unknown as Partial<Omit<FixPolicy<DirectusPolicy<object>>, 'id'>>;
 }
