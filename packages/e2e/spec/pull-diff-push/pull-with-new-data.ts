@@ -1,10 +1,11 @@
 import {
+  Context,
+  createOneItemInEachSystemCollection,
   debug,
+  deleteItemsFromSystemCollections,
+  getDefaultItemsCount,
   getDumpedSystemCollectionsContents,
   getSystemCollectionsNames,
-  createOneItemInEachSystemCollection,
-  deleteItemsFromSystemCollections,
-  Context,
 } from '../helpers/index.js';
 
 export const pullWithNewData = (context: Context) => {
@@ -36,6 +37,7 @@ export const pullWithNewData = (context: Context) => {
       operations: [firstBatch.operation.id],
       panels: [firstBatch.panel.id],
       roles: [firstBatch.role.id],
+      policies: [firstBatch.policy.id],
       permissions: [firstBatch.permission.id],
       presets: [firstBatch.preset.id],
       translations: [firstBatch.translation.id],
@@ -52,9 +54,10 @@ export const pullWithNewData = (context: Context) => {
     // --------------------------------------------------------------------
     // Check if the logs reports new content
     for (const collection of systemCollections) {
-      expect(output).toContain(debug(`[${collection}] Pulled 1 items.`));
+      const count = 1 + getDefaultItemsCount(collection);
+      expect(output).toContain(debug(`[${collection}] Pulled ${count} items.`));
       expect(output).toContain(
-        debug(`[${collection}] Post-processed 1 items.`),
+        debug(`[${collection}] Post-processed ${count} items.`),
       );
     }
 
@@ -62,9 +65,9 @@ export const pullWithNewData = (context: Context) => {
     // Check created sync id
     // TODO: Should be 1, but for instance the `pull` command doest not clean the dangling sync id maps
     for (const collection of systemCollections) {
-      expect((await directus.getSyncIdMaps(collection)).length).toBe(
-        collection === 'settings' ? 1 : 2,
-      );
+      const count =
+        (collection === 'settings' ? 1 : 2) + getDefaultItemsCount(collection);
+      expect((await directus.getSyncIdMaps(collection)).length).toBe(count);
     }
 
     // --------------------------------------------------------------------
@@ -83,6 +86,7 @@ export const pullWithNewData = (context: Context) => {
     );
     expect(firstCollections.panels).not.toEqual(secondCollections.panels);
     expect(firstCollections.roles).not.toEqual(secondCollections.roles);
+    expect(firstCollections.policies).not.toEqual(secondCollections.policies);
     expect(firstCollections.permissions).not.toEqual(
       secondCollections.permissions,
     );
