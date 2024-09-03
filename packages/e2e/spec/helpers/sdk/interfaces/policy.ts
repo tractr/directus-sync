@@ -1,4 +1,7 @@
-import { DirectusPolicy as GenericBaseDirectusPolicy } from '@directus/sdk';
+import {
+  DirectusPolicy as GenericBaseDirectusPolicy,
+  Query as DirectusQuery,
+} from '@directus/sdk';
 
 // TODO: remove this once it is fixed in the SDK
 export type DirectusPolicy<T> = Omit<GenericBaseDirectusPolicy<T>, 'roles'> & {
@@ -9,3 +12,7 @@ export type DirectusPolicy<T> = Omit<GenericBaseDirectusPolicy<T>, 'roles'> & {
   }[];
 };
 export type BaseDirectusPolicy<T> = GenericBaseDirectusPolicy<T>;
+export type BaseDirectusPolicyQuery<T> = DirectusQuery<
+  T,
+  BaseDirectusPolicy<T>
+>;

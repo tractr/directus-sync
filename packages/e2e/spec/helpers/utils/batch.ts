@@ -53,6 +53,7 @@ import {
   getTranslation,
 } from '../seed/index.js';
 import {
+  BaseDirectusPolicyQuery,
   DirectusId,
   DirectusSettingsExtra,
   notDefaultPolicies,
@@ -168,7 +169,11 @@ export async function readAllSystemCollections(
   keepDefault = false,
 ) {
   const roles = await client.request(readRoles());
-  const policies = await client.request(readPolicies());
+  const policies = await client.request(
+    readPolicies({
+      fields: ['*', 'roles.role', 'roles.sort'],
+    } as BaseDirectusPolicyQuery<object>),
+  );
   const permissions = await client.request(readPermissions());
 
   return {
