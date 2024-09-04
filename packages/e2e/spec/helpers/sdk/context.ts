@@ -45,8 +45,9 @@ export class Context {
     return this.instance;
   }
 
-  async getSync(dumpFolder: string, clearDumpPath = true, configPath?: string) {
+  async getSync(dumpFolder: string, configPath?: string) {
     const dumpPath = Path.resolve(dumpBaseDirectory, dumpFolder);
+    const clearDumpPath = dumpFolder.startsWith('temp');
     if (clearDumpPath) {
       fs.rmSync(dumpPath, { recursive: true, force: true });
     }

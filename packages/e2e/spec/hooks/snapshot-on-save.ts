@@ -7,7 +7,6 @@ export const snapshotOnSave = (context: Context) => {
     // Init sync client and load the snapshot
     const syncInit = await context.getSync(
       'sources/snapshot-with-custom-model',
-      false,
     );
     await syncInit.push();
 
@@ -15,7 +14,6 @@ export const snapshotOnSave = (context: Context) => {
     // Pull the snapshot to a new dump
     const sync = await context.getSync(
       'temp/snapshot-on-save',
-      true,
       'snapshot-on-save/directus-sync.config.cjs',
     );
     await sync.pull();

@@ -68,10 +68,7 @@ export const excludeSomeCollections = (context: Context) => {
 
   it('should be able to ignore some collection during push', async () => {
     // Init sync client
-    const sync = await context.getSync(
-      'sources/one-item-per-collection',
-      false,
-    );
+    const sync = await context.getSync('sources/one-item-per-collection');
     const directus = context.getDirectus();
     const systemCollections = getSystemCollectionsNames();
 

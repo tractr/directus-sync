@@ -58,7 +58,7 @@ export const pullAndPushPublicPermissions = (context: Context) => {
 
   it('should push permissions with public policy', async () => {
     // Init sync client
-    const sync = await context.getSync('sources/public-permissions', false);
+    const sync = await context.getSync('sources/public-permissions');
     const directus = context.getDirectus();
     const client = directus.get();
 

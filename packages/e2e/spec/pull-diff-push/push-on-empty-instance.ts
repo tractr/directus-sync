@@ -8,10 +8,7 @@ import {
 export const pushOnEmptyInstance = (context: Context) => {
   it('diff and push on an empty instance', async () => {
     // Init sync client
-    const sync = await context.getSync(
-      'sources/one-item-per-collection',
-      false,
-    );
+    const sync = await context.getSync('sources/one-item-per-collection');
     const directus = context.getDirectus();
     const collections = getSystemCollectionsNames();
 

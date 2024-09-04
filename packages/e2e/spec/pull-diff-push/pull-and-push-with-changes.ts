@@ -9,17 +9,13 @@ export const pullAndPushWithChanges = (context: Context) => {
   it('diff if mutations on push', async () => {
     // --------------------------------------------------------------------
     // Init sync client and push
-    const syncInit = await context.getSync(
-      'sources/one-item-per-collection',
-      false,
-    );
+    const syncInit = await context.getSync('sources/one-item-per-collection');
     const directus = context.getDirectus();
     await syncInit.push();
 
     // Create another sync client from the updated dump
     const sync = await context.getSync(
       'sources/one-item-per-collection-updated',
-      false,
     );
     const collections = getSystemCollectionsNames();
 

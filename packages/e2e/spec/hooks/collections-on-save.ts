@@ -9,7 +9,6 @@ export const collectionsOnSave = (context: Context) => {
     // Init sync client
     const sync = await context.getSync(
       'temp/collections-on-save',
-      true,
       'collections-on-save/directus-sync.config.cjs',
     );
     const directus = context.getDirectus();

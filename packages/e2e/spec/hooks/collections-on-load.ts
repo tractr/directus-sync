@@ -9,7 +9,6 @@ export const collectionsOnLoad = (context: Context) => {
     // Init sync client
     const sync = await context.getSync(
       'sources/one-item-per-collection',
-      false,
       'collections-on-load/directus-sync.config.cjs',
     );
     const directus = context.getDirectus();

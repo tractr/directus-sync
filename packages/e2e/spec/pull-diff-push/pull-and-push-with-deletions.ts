@@ -9,10 +9,7 @@ import {
 export const pullAndPushWithDeletions = (context: Context) => {
   it('should detect and apply deletions', async () => {
     // Init sync client
-    const syncInit = await context.getSync(
-      'sources/one-item-per-collection',
-      false,
-    );
+    const syncInit = await context.getSync('sources/one-item-per-collection');
     const directus = context.getDirectus();
     const client = directus.get();
 
@@ -20,7 +17,7 @@ export const pullAndPushWithDeletions = (context: Context) => {
     await syncInit.push();
 
     // Push empty to Directus
-    const sync = await context.getSync('sources/empty-collections', false);
+    const sync = await context.getSync('sources/empty-collections');
     const collections = getSystemCollectionsNames();
 
     const diffOutput = await sync.diff();

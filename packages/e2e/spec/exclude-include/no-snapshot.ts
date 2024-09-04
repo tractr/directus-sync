@@ -26,10 +26,7 @@ export const noSnapshot = (context: Context) => {
 
   it('should not diff schema from Directus', async () => {
     // Init sync client
-    const sync = await context.getSync(
-      'sources/one-item-per-collection',
-      false,
-    );
+    const sync = await context.getSync('sources/one-item-per-collection');
 
     // --------------------------------------------------------------------
     // Pull the content from Directus
@@ -43,10 +40,7 @@ export const noSnapshot = (context: Context) => {
 
   it('should not diff schema from Directus', async () => {
     // Init sync client
-    const sync = await context.getSync(
-      'sources/one-item-per-collection',
-      false,
-    );
+    const sync = await context.getSync('sources/one-item-per-collection');
 
     // --------------------------------------------------------------------
     // Pull the content from Directus

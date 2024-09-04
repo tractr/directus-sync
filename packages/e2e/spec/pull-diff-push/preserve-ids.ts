@@ -82,10 +82,7 @@ export const preserveIds = (context: Context) => {
 
     it(`should preserve uuid on push if required with "${option}"`, async () => {
       // Init sync client
-      const sync = await context.getSync(
-        'sources/one-item-per-collection',
-        false,
-      );
+      const sync = await context.getSync('sources/one-item-per-collection');
 
       // --------------------------------------------------------------------
       // Get collections info from the dump

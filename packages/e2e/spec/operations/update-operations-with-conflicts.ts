@@ -3,10 +3,7 @@ import { Context, info } from '../helpers/index.js';
 export const updateOperationsWithConflicts = (context: Context) => {
   it('reverse 2 operations conflicts', async () => {
     // Init sync client
-    const syncInit = await context.getSync(
-      'sources/multiple-dependencies',
-      false,
-    );
+    const syncInit = await context.getSync('sources/multiple-dependencies');
     const directus = context.getDirectus();
 
     await syncInit.push();
@@ -14,7 +11,6 @@ export const updateOperationsWithConflicts = (context: Context) => {
     const beforePushDate = new Date();
     const sync = await context.getSync(
       'sources/multiple-dependencies-reversed',
-      false,
     );
     const output = await sync.push();
 

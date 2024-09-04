@@ -14,7 +14,7 @@ const expectedAmount = (collection: string) => {
 export const pushWithDependencies = (context: Context) => {
   it('push with dependencies on an empty instance', async () => {
     // Init sync client
-    const sync = await context.getSync('sources/multiple-dependencies', false);
+    const sync = await context.getSync('sources/multiple-dependencies');
     const directus = context.getDirectus();
     const collections = getSystemCollectionsNames();
 
