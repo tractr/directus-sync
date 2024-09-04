@@ -2,7 +2,7 @@
   {
     "name": "Administrator",
     "icon": "verified",
-    "description": "$t:admin_policy_description",
+    "description": "$t:admin_description",
     "ip_access": null,
     "enforce_tfa": false,
     "admin_access": true,
@@ -10,7 +10,7 @@
     "roles": [
       {
         "role": "_sync_default_admin_role",
-        "sort": 1
+        "sort": null
       }
     ],
     "_syncId": "_sync_default_admin_policy"
