@@ -36,6 +36,7 @@ export const collectionsOnQuery = (context: Context) => {
       operations: { name: '@operation' },
       panels: { name: '@panel' },
       roles: { name: '@role' },
+      policies: { name: '@policy' },
       permissions: { collection: '@permission' },
       presets: { bookmark: '@preset' },
       settings: { project_name: '@settings' },

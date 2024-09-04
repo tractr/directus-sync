@@ -8,6 +8,7 @@ module.exports = {
     operations: { onDump: duplicate, onSave: duplicate },
     panels: { onDump: duplicate, onSave: duplicate },
     roles: { onDump: duplicate, onSave: duplicate },
+    policies: { onDump: duplicate, onSave: duplicate },
     permissions: { onDump: duplicate, onSave: duplicate },
     presets: { onDump: duplicate, onSave: duplicate },
     settings: { onDump: duplicate, onSave: duplicate },
