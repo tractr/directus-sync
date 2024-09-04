@@ -50,7 +50,7 @@ export const insertDuplicatedPermissions = (context: Context) => {
     );
     expect(output).toContain(
       warn(
-        `[permissions] Found duplicate permissions for directus_panels.update with policy ${publicPolicy.id}. Deleting them.`,
+        `[permissions] Found duplicate permissions for directus_panels.delete with policy ${publicPolicy.id}. Deleting them.`,
       ),
     );
 

@@ -9,7 +9,9 @@ import {
   createPermission,
   createPolicy,
   createRole,
+  DirectusPermission,
   DirectusPolicy,
+  Query,
   readPermissions,
 } from '@directus/sdk';
 import { getPermission, getPolicy, getRole } from '../seed/index.js';
@@ -45,8 +47,9 @@ export async function readNonSystemPermissions(
   return (
     await client.request<PermissionWithSystem[]>(
       readPermissions({
-        fields: ['id', 'role', 'collection', 'action'],
-      }),
+        fields: ['id', 'policy', 'collection', 'action'],
+        // Todo: remove this once it is fixed in the SDK
+      } as Query<Schema, DirectusPermission<Schema>>),
     )
   ).filter((p) => !p.system);
 }
