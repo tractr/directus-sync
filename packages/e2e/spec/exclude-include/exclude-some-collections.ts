@@ -1,9 +1,9 @@
 import {
   Context,
+  createOneItemInEachSystemCollection,
   debug,
   getDumpedSystemCollectionsContents,
   getSystemCollectionsNames,
-  createOneItemInEachSystemCollection,
   info,
 } from '../helpers/index.js';
 
@@ -22,7 +22,12 @@ export const excludeSomeCollections = (context: Context) => {
 
     // --------------------------------------------------------------------
     // Pull the content from Directus
-    const collectionsToExclude = ['roles', 'permissions', 'translations'];
+    const collectionsToExclude = [
+      'roles',
+      'policies',
+      'permissions',
+      'translations',
+    ];
     const output = await sync.pull([
       `--exclude-collections=${collectionsToExclude.join(', ')}`,
     ]);
@@ -73,7 +78,12 @@ export const excludeSomeCollections = (context: Context) => {
     // --------------------------------------------------------------------
     // Push the data to Directus
     const beforePushDate = new Date();
-    const collectionsToExclude = ['roles', 'permissions', 'translations'];
+    const collectionsToExclude = [
+      'roles',
+      'policies',
+      'permissions',
+      'translations',
+    ];
     const output = await sync.push([
       `--exclude-collections=${collectionsToExclude.join(', ')}`,
     ]);
