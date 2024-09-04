@@ -3,11 +3,17 @@ import {
   DirectusPolicy,
   DirectusRole,
 } from '@directus/sdk';
-import { FixPolicy, Log, PinoHTTPLog, PinoLog } from './interfaces/index.js';
+import {
+  FixPermission,
+  FixPolicy,
+  Log,
+  PinoHTTPLog,
+  PinoLog,
+} from './interfaces/index.js';
 
 export function notSystemPermissions(
-  permission: DirectusPermission<object> & { system?: boolean },
-): permission is DirectusPermission<object> {
+  permission: FixPermission<DirectusPermission<object>> & { system?: boolean },
+): permission is FixPermission<DirectusPermission<object>> {
   return !permission.system;
 }
 

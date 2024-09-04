@@ -20,9 +20,10 @@ import {
   deleteRoles,
   deleteTranslations,
   DirectusClient,
+  DirectusPermission,
   DirectusPolicy,
   DirectusSettings,
-  Query as DirectusQuery,
+  Query,
   readCollections,
   readDashboards,
   readFields,
@@ -57,6 +58,7 @@ import {
 import {
   DirectusId,
   DirectusSettingsExtra,
+  FixPermission,
   FixPolicy,
   notDefaultPolicies,
   notDefaultRoles,
@@ -108,7 +110,7 @@ export async function createOneItemInEachSystemCollection(
       query: { id: policyRaw.id },
       fields: ['*', 'roles.role', 'roles.sort'],
       // Todo: remove this once it is fixed in the SDK
-    } as DirectusQuery<Schema, DirectusPolicy<Schema>>),
+    } as Query<Schema, DirectusPolicy<Schema>>),
   )) as unknown as FixPolicy<DirectusPolicy<Schema>>[];
   if (!policy) {
     throw new Error('Policy not found');
@@ -191,13 +193,17 @@ export async function readAllSystemCollections(
   keepDefault = false,
 ) {
   const roles = await client.request(readRoles());
+
   const policies = (await client.request(
     readPolicies({
       fields: ['*', 'roles.role', 'roles.sort'],
       // Todo: remove this once it is fixed in the SDK
-    } as DirectusQuery<Schema, DirectusPolicy<Schema>>),
+    } as Query<Schema, DirectusPolicy<Schema>>),
   )) as unknown as FixPolicy<DirectusPolicy<Schema>>[];
-  const permissions = await client.request(readPermissions());
+
+  const permissions = (await client.request(
+    readPermissions(),
+  )) as unknown as FixPermission<DirectusPermission<Schema>>[];
 
   return {
     dashboards: await client.request(readDashboards()),
