@@ -107,7 +107,7 @@ export async function createOneItemInEachSystemCollection(
   );
   const [policy] = (await client.request(
     readPolicies({
-      query: { id: policyRaw.id },
+      filter: { id: policyRaw.id },
       fields: ['*', 'roles.role', 'roles.sort'],
       // Todo: remove this once it is fixed in the SDK
     } as Query<Schema, DirectusPolicy<Schema>>),
