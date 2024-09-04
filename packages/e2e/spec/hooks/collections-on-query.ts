@@ -24,6 +24,7 @@ export const collectionsOnQuery = (context: Context) => {
       operation,
       panel,
       role,
+      policy,
       permission,
       preset,
       settings,
@@ -88,6 +89,11 @@ export const collectionsOnQuery = (context: Context) => {
     expect(collections.roles.length).toEqual(1);
     expect(collections.roles[0]!._syncId).toEqual(
       (await directus.getByLocalId('roles', role.id)).sync_id,
+    );
+
+    expect(collections.policies.length).toEqual(1);
+    expect(collections.policies[0]!._syncId).toEqual(
+      (await directus.getByLocalId('policies', policy.id)).sync_id,
     );
 
     expect(collections.permissions.length).toEqual(1);
