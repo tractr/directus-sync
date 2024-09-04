@@ -7,7 +7,7 @@ import { ConfigService } from './config';
 import { getChildLogger } from '../helpers';
 
 interface DeletedPermission {
-  role: string;
+  policy: string;
   collection: string;
   action: string;
   ids: string[];
@@ -34,7 +34,7 @@ export class HelpersClient extends ExtensionClient {
 
     for (const result of results.deletedPermissions ?? []) {
       this.logger.info(
-        `Deleted ${result.ids.length} duplicated permissions for role ${result.role ?? null}, collection ${result.collection}, action ${result.action}`,
+        `Deleted ${result.ids.length} duplicated permissions for policy ${result.policy ?? null}, collection ${result.collection}, action ${result.action}`,
       );
     }
   }

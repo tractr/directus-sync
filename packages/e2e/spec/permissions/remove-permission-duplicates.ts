@@ -44,7 +44,7 @@ export const removePermissionDuplicates = (context: Context) => {
     );
     expect(output).toContain(
       info(
-        `[helpers-client] Deleted 1 duplicated permissions for policy null, collection directus_panels, action delete`,
+        `[helpers-client] Deleted 1 duplicated permissions for policy ${publicPolicy.id}, collection directus_panels, action delete`,
       ),
     );
 

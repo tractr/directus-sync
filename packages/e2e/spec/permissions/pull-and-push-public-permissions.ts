@@ -21,7 +21,7 @@ export const pullAndPushPublicPermissions = (context: Context) => {
       'panels',
       'delete',
     );
-    const create1 = await newPermission(
+    const read1 = await newPermission(
       client,
       publicPolicy.id,
       'panels',
@@ -36,7 +36,8 @@ export const pullAndPushPublicPermissions = (context: Context) => {
 
     expect(permissions).toContain({
       _syncId: (await directus.getByLocalId('permissions', delete1.id)).sync_id,
-      policy: publicPolicy.id,
+      policy: (await directus.getByLocalId('policies', publicPolicy.id))
+        .sync_id,
       collection: delete1.collection,
       action: delete1.action,
       permissions: delete1.permissions,
@@ -45,14 +46,15 @@ export const pullAndPushPublicPermissions = (context: Context) => {
       fields: delete1.fields,
     });
     expect(permissions).toContain({
-      _syncId: (await directus.getByLocalId('permissions', create1.id)).sync_id,
-      policy: publicPolicy.id,
-      collection: create1.collection,
-      action: create1.action,
-      permissions: create1.permissions,
-      validation: create1.validation,
-      presets: create1.presets,
-      fields: create1.fields,
+      _syncId: (await directus.getByLocalId('permissions', read1.id)).sync_id,
+      policy: (await directus.getByLocalId('policies', publicPolicy.id))
+        .sync_id,
+      collection: read1.collection,
+      action: read1.action,
+      permissions: read1.permissions,
+      validation: read1.validation,
+      presets: read1.presets,
+      fields: read1.fields,
     });
   });
 
