@@ -73,7 +73,7 @@ export type SingularCollectionName = keyof Awaited<
   ReturnType<typeof createOneItemInEachSystemCollection>
 >;
 export async function createOneItemInEachSystemCollection(
-  client: DirectusClient<object> & RestClient<object>,
+  client: DirectusClient<Schema> & RestClient<Schema>,
   override?: SystemCollectionsPartial,
 ) {
   const dashboard = await client.request(
@@ -128,7 +128,7 @@ export async function createOneItemInEachSystemCollection(
   );
   const settings = (await client.request(
     updateSettings({ ...getSettings(role.id), ...override?.settings }),
-  )) as never as DirectusSettings<object> & DirectusSettingsExtra;
+  )) as never as DirectusSettings<Schema> & DirectusSettingsExtra;
   const translation = await client.request(
     createTranslation({ ...getTranslation(), ...override?.translations }),
   );
@@ -153,7 +153,7 @@ export async function createOneItemInEachSystemCollection(
 }
 
 export async function deleteItemsFromSystemCollections(
-  client: DirectusClient<object> & RestClient<object>,
+  client: DirectusClient<Schema> & RestClient<Schema>,
   ids: SystemCollectionsRecordPartial<DirectusId[]>,
 ) {
   if (ids.panels?.length) {
@@ -189,7 +189,7 @@ export async function deleteItemsFromSystemCollections(
 }
 
 export async function readAllSystemCollections(
-  client: DirectusClient<object> & RestClient<object>,
+  client: DirectusClient<Schema> & RestClient<Schema>,
   keepDefault = false,
 ) {
   const roles = await client.request(readRoles());
@@ -221,7 +221,7 @@ export async function readAllSystemCollections(
 }
 
 export async function readAllCollectionsFieldsAndRelations(
-  client: DirectusClient<object> & RestClient<object>,
+  client: DirectusClient<Schema> & RestClient<Schema>,
 ) {
   return {
     collections: await client.request(readCollections()),

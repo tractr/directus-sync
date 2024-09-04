@@ -1,10 +1,11 @@
 import { faker } from '@faker-js/faker';
 import { getIcon } from '../helpers/index.js';
 import { DirectusPanel } from '@directus/sdk';
+import { Schema } from '../../sdk/index.js';
 
 export function getPanel(
   dashboard: string,
-): Omit<DirectusPanel<object>, 'id' | 'date_created' | 'user_created'> {
+): Omit<DirectusPanel<Schema>, 'id' | 'date_created' | 'user_created'> {
   const type = faker.helpers.arrayElement(['metric', 'label'] as const);
   const options =
     type === 'metric'

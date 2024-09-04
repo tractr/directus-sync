@@ -1,11 +1,11 @@
 import { DirectusSettings } from '@directus/sdk';
 import { faker } from '@faker-js/faker';
-import { DirectusSettingsExtra } from '../../sdk/index.js';
+import { DirectusSettingsExtra, Schema } from '../../sdk/index.js';
 
 export function getSettings(
   publicRole: string | null = null,
 ): Omit<
-  DirectusSettings<object>,
+  DirectusSettings<Schema>,
   | 'id'
   | 'project_logo'
   | 'public_foreground'

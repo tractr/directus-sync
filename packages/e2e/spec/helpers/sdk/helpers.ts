@@ -9,22 +9,23 @@ import {
   Log,
   PinoHTTPLog,
   PinoLog,
+  Schema,
 } from './interfaces/index.js';
 
 export function notSystemPermissions(
-  permission: FixPermission<DirectusPermission<object>> & { system?: boolean },
-): permission is FixPermission<DirectusPermission<object>> {
+  permission: FixPermission<DirectusPermission<Schema>> & { system?: boolean },
+): permission is FixPermission<DirectusPermission<Schema>> {
   return !permission.system;
 }
 
-export function notDefaultRoles(role: DirectusRole<object>): boolean {
+export function notDefaultRoles(role: DirectusRole<Schema>): boolean {
   return (
     role.name !== 'Administrator' && role.description !== '$t:admin_description'
   );
 }
 
 export function notDefaultPolicies(
-  policy: FixPolicy<DirectusPolicy<object>>,
+  policy: FixPolicy<DirectusPolicy<Schema>>,
 ): boolean {
   return ![
     '$t:admin_description',

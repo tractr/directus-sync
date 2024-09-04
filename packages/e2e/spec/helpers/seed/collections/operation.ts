@@ -1,12 +1,13 @@
 import { faker } from '@faker-js/faker';
 import { DirectusOperation } from '@directus/sdk';
+import { Schema } from '../../sdk/index.js';
 
 export function getOperation(
   flow: string,
   resolve?: string,
   reject?: string,
 ): Omit<
-  DirectusOperation<object>,
+  DirectusOperation<Schema>,
   'id' | 'date_created' | 'user_created' | 'timestamp'
 > {
   const type = faker.helpers.arrayElement(['exec', 'log'] as const);

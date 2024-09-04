@@ -1,9 +1,10 @@
 import { faker } from '@faker-js/faker';
 import { getIcon } from '../helpers/index.js';
 import { DirectusDashboard } from '@directus/sdk';
+import { Schema } from '../../sdk/index.js';
 
 export function getDashboard(): Omit<
-  DirectusDashboard<object>,
+  DirectusDashboard<Schema>,
   'id' | 'date_created' | 'user_created'
 > {
   return {

@@ -1,8 +1,9 @@
 import { faker } from '@faker-js/faker';
 import { DirectusTranslation } from '@directus/sdk';
 import { getLanguage } from '../helpers/index.js';
+import { Schema } from '../../sdk/index.js';
 
-export function getTranslation(): Omit<DirectusTranslation<object>, 'id'> {
+export function getTranslation(): Omit<DirectusTranslation<Schema>, 'id'> {
   return {
     language: getLanguage(),
     key: faker.lorem.slug({ min: 1, max: 3 }),

@@ -1,6 +1,7 @@
 import {
   FixPermission,
   PermissionAction,
+  Schema,
   SystemCollection,
 } from '../../sdk/index.js';
 import { faker } from '@faker-js/faker';
@@ -10,7 +11,7 @@ export function getPermission(
   policy: string,
   collection: SystemCollection,
   action: PermissionAction,
-): Omit<FixPermission<DirectusPermission<object>>, 'id'> {
+): Omit<FixPermission<DirectusPermission<Schema>>, 'id'> {
   const dummyPermission = {
     id: {
       _eq: '$CURRENT_USER',
