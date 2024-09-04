@@ -8,7 +8,7 @@ import {
 } from '../helpers/index.js';
 
 export const pullBasic = (context: Context) => {
-  fit('should pull items from Directus', async () => {
+  it('should pull items from Directus', async () => {
     // Init sync client
     const sync = await context.getSync('temp/pull-basic');
     const directus = context.getDirectus();
