@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0](https://github.com/tractr/directus-sync/compare/directus-sync@2.2.0...directus-sync@3.0.0) (2024-09-05)
+
+
+### Features
+
+* supports for Directus 11 ([#94](https://github.com/tractr/directus-sync/issues/94)) ([2aaea4f](https://github.com/tractr/directus-sync/commit/2aaea4ff54f7006ea4a0f3271786019370188c41))
+
+
+### BREAKING CHANGES
+
+* Does not support Directus 10.x versions. Permissions have changed
+
+
+
+
+
 # [2.2.0](https://github.com/tractr/directus-sync/compare/directus-sync@2.1.0...directus-sync@2.2.0) (2024-07-15)
 
 
