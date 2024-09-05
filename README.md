@@ -48,7 +48,7 @@ for targeted updates and clearer oversight of your Directus configurations.
       * [`Diff` command](#diff-command)
       * [`Push` command](#push-command)
     * [Tracked Elements](#tracked-elements)
-      * [Roles](#roles)
+      * [Roles & Policies](#roles--policies)
       * [Presets](#presets)
     * [Dependency: `directus-extension-sync`](#dependency-directus-extension-sync)
       * [Installation](#installation)
@@ -165,7 +165,7 @@ These options can be used with any command to configure the operation of `direct
 
 - `--preserve-ids <preserveIds>`  
   Comma-separated list of directus collections to preserve the original ids during the `pull` or `push` process.  
-  Possible collections are: `dashboards`, `operations`, `panels`, `roles` and `translations`.  
+  Possible collections are: `dashboards`, `operations`, `panels`, `policies`, `roles` and `translations`.  
   `flows` and `folders` ids are always preserved.  
   The value can be `*` or `all` to preserve ids of all collections, when applicable.
 
