@@ -1,9 +1,10 @@
 import {
   Context,
+  createOneItemInEachSystemCollection,
   debug,
+  getDefaultItemsCount,
   getDumpedSystemCollectionsContents,
   getSystemCollectionsNames,
-  createOneItemInEachSystemCollection,
   info,
   SystemCollection,
 } from '../helpers/index.js';
@@ -25,6 +26,7 @@ export const includeSomeCollections = (context: Context) => {
     // Pull the content from Directus
     const collectionsToInclude: SystemCollection[] = [
       'roles',
+      'policies',
       'permissions',
       'translations',
     ];
@@ -46,18 +48,21 @@ export const includeSomeCollections = (context: Context) => {
         .not.toContain(debug(`[${collection}] Pulled 1 items.`));
     }
     for (const collection of collectionsToInclude) {
+      const count = getDefaultItemsCount(collection) + 1;
       expect(output)
         .withContext(collection)
-        .toContain(debug(`[${collection}] Pulled 1 items.`));
+        .toContain(debug(`[${collection}] Pulled ${count} items.`));
       expect(output)
         .withContext(collection)
-        .toContain(debug(`[${collection}] Post-processed 1 items.`));
+        .toContain(debug(`[${collection}] Post-processed ${count} items.`));
     }
 
     // --------------------------------------------------------------------
     // Check created sync id
     const expectCount = (collection: SystemCollection) => {
-      return excludedCollections.includes(collection) ? 0 : 1;
+      return excludedCollections.includes(collection)
+        ? 0
+        : 1 + getDefaultItemsCount(collection);
     };
     for (const collection of systemCollections) {
       expect((await directus.getSyncIdMaps(collection)).length)
@@ -79,17 +84,19 @@ export const includeSomeCollections = (context: Context) => {
 
   it('should be able to select collection during push', async () => {
     // Init sync client
-    const sync = await context.getSync(
-      'sources/one-item-per-collection',
-      false,
-    );
+    const sync = await context.getSync('sources/one-item-per-collection');
     const directus = context.getDirectus();
     const systemCollections = getSystemCollectionsNames();
 
     // --------------------------------------------------------------------
     // Push the data to Directus
     const beforePushDate = new Date();
-    const collectionsToInclude = ['roles', 'permissions', 'translations'];
+    const collectionsToInclude = [
+      'roles',
+      'policies',
+      'permissions',
+      'translations',
+    ];
     const excludedCollections = systemCollections.filter(
       (collection) => !collectionsToInclude.includes(collection),
     );

@@ -2,19 +2,38 @@ import {
   DirectusClient,
   PermissionAction,
   PermissionWithSystem,
+  Schema,
   SystemCollection,
 } from '../sdk/index.js';
-import { createPermission, createRole, readPermissions } from '@directus/sdk';
-import { getPermission, getRole } from '../seed/index.js';
+import {
+  createPermission,
+  createPolicy,
+  createRole,
+  DirectusPermission,
+  DirectusPolicy,
+  Query,
+  readPermissions,
+} from '@directus/sdk';
+import { getPermission, getPolicy, getRole } from '../seed/index.js';
 
 export async function newPermission(
   client: DirectusClient['client'],
-  role: string | null,
+  policy: string,
   collection: SystemCollection,
   action: PermissionAction,
 ) {
   return await client.request(
-    createPermission(getPermission(role, collection, action)),
+    createPermission(getPermission(policy, collection, action)),
+  );
+}
+
+export async function newPolicy(
+  client: DirectusClient['client'],
+  role: string | null,
+) {
+  return await client.request(
+    // Todo: remove this once it is fixed in the SDK
+    createPolicy(getPolicy(role) as unknown as DirectusPolicy<Schema>),
   );
 }
 
@@ -28,8 +47,9 @@ export async function readNonSystemPermissions(
   return (
     await client.request<PermissionWithSystem[]>(
       readPermissions({
-        fields: ['id', 'role', 'collection', 'action'],
-      }),
+        fields: ['id', 'policy', 'collection', 'action'],
+        // Todo: remove this once it is fixed in the SDK
+      } as Query<Schema, DirectusPermission<Schema>>),
     )
   ).filter((p) => !p.system);
 }

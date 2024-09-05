@@ -1,50 +1,75 @@
 import { IdMap, IdMapperClient } from '../base';
-import { Service } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { ROLES_COLLECTION } from './constants';
 import { MigrationClient } from '../../migration-client';
+import { LOGGER } from '../../../constants';
+import pino from 'pino';
+import { getChildLogger } from '../../../helpers';
+import { readMe } from '@directus/sdk';
 
 @Service()
 export class RolesIdMapperClient extends IdMapperClient {
   /**
    * This placeholder is used to represent the admin role in the id map.
    */
-  protected readonly adminRolePlaceholder = '__admin__';
+  protected readonly adminRolePlaceholder = '_sync_default_admin_role';
 
-  constructor(migrationClient: MigrationClient) {
-    super(migrationClient, ROLES_COLLECTION);
+  protected adminRoleId: string | undefined;
+
+  constructor(
+    migrationClient: MigrationClient,
+    @Inject(LOGGER) baseLogger: pino.Logger,
+  ) {
+    super(
+      migrationClient,
+      getChildLogger(baseLogger, ROLES_COLLECTION),
+      ROLES_COLLECTION,
+    );
   }
 
   /**
-   * The admin role is a special case, it cannot be synced.
-   * This method returns a placeholder for the admin role.
+   * This method return the role of the current user as the Admin role
    */
-  async getByLocalId(localId: string): Promise<IdMap | undefined> {
-    const adminRoleId = await this.migrationClient.getAdminRoleId();
+  async getAdminRoleId() {
+    if (!this.adminRoleId) {
+      const directus = await this.migrationClient.get();
+      const { role } = await directus.request(
+        readMe({
+          fields: ['role'],
+        }),
+      );
+      this.adminRoleId = role as string;
+    }
+    return this.adminRoleId;
+  }
+
+  /**
+   * Force admin role placeholder for the admin role.
+   */
+  async create(localId: string | number, syncId?: string): Promise<string> {
+    const adminRoleId = await this.getAdminRoleId();
     if (localId === adminRoleId) {
-      return this.getAdminRoleIdMap();
+      return await super.create(localId, this.adminRolePlaceholder);
     }
-    return super.getByLocalId(localId);
+    return await super.create(localId, syncId);
   }
 
   /**
-   * The admin role is a special case, it cannot be synced.
-   * This method returns the real id of the admin role.
+   * Create the sync id of the admin role on the fly, as it already has been synced.
    */
-  getBySyncId(syncId: string): Promise<IdMap | undefined> {
+  async getBySyncId(syncId: string): Promise<IdMap | undefined> {
+    // Automatically create the default admin role id map if it doesn't exist
     if (syncId === this.adminRolePlaceholder) {
-      return this.getAdminRoleIdMap();
+      const idMap = await super.getBySyncId(syncId);
+      if (idMap) {
+        return idMap;
+      }
+      const adminRoleId = await this.getAdminRoleId();
+      await super.create(adminRoleId, this.adminRolePlaceholder);
+      this.logger.debug(
+        `Created admin role id map with local id ${adminRoleId}`,
+      );
     }
-    return super.getBySyncId(syncId);
-  }
-
-  protected async getAdminRoleIdMap(): Promise<IdMap> {
-    const adminRoleId = await this.migrationClient.getAdminRoleId();
-    return {
-      id: 0,
-      table: ROLES_COLLECTION,
-      sync_id: this.adminRolePlaceholder,
-      local_id: adminRoleId,
-      created_at: new Date(),
-    };
+    return await super.getBySyncId(syncId);
   }
 }

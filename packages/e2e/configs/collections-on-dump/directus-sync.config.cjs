@@ -48,6 +48,14 @@ module.exports = {
         });
       },
     },
+    policies: {
+      onDump: (policies) => {
+        return policies.map((policy) => {
+          policy.name = `[onDump policy] ${policy.name}`;
+          return policy;
+        });
+      },
+    },
     permissions: {
       onDump: (permissions) => {
         return permissions.map((permission) => {

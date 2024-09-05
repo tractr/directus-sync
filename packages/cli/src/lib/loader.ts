@@ -9,6 +9,7 @@ import {
   OperationsCollection,
   PanelsCollection,
   PermissionsCollection,
+  PoliciesCollection,
   PresetsCollection,
   RolesCollection,
   SettingsCollection,
@@ -17,8 +18,8 @@ import {
 import { createDumpFolders, getPinoTransport } from './helpers';
 import { Container, Token } from 'typedi';
 import Logger from 'pino';
-import { LOGGER } from './constants';
 import pino from 'pino';
+import { LOGGER } from './constants';
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function initContext(
@@ -63,6 +64,7 @@ export function loadCollections() {
     flows: FlowsCollection,
     operations: OperationsCollection,
     roles: RolesCollection,
+    policies: PoliciesCollection,
     permissions: PermissionsCollection,
     dashboards: DashboardsCollection,
     panels: PanelsCollection,
@@ -79,10 +81,16 @@ export function loadCollections() {
   const excludedCollections = CollectionsList.filter(
     (collection) => !collectionsToProcess.includes(collection),
   );
+  const sortedCollections = Object.keys(
+    collectionsConstructors,
+  ) as (keyof typeof collectionsConstructors)[];
+  const sortedCollectionsToProcess = sortedCollections.filter((collection) =>
+    collectionsToProcess.includes(collection),
+  );
 
   // Initialize the collections
   const output: CollectionInstance[] = [];
-  for (const collection of collectionsToProcess) {
+  for (const collection of sortedCollectionsToProcess) {
     const collectionConstructor = collectionsConstructors[collection];
     output.push(
       Container.get(

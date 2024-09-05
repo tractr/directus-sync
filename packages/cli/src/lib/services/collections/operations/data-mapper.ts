@@ -19,7 +19,7 @@ export class OperationsDataMapper extends DataMapper<DirectusOperation> {
     resolve: Container.get(OperationsIdMapperClient),
     reject: Container.get(OperationsIdMapperClient),
     options: {
-      flow: Container.get(OperationsIdMapperClient),
+      flow: Container.get(FlowsIdMapperClient),
     },
   };
 

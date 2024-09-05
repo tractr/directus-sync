@@ -1,6 +1,5 @@
 [
   {
-    "role": null,
     "collection": "directus_panels",
     "action": "delete",
     "permissions": {
@@ -13,10 +12,10 @@
       "user_agent": "unknown"
     },
     "fields": ["*"],
+    "policy": "_sync_default_public_policy",
     "_syncId": "17b7ab82-93ed-46e6-9711-165bff9fdcbf"
   },
   {
-    "role": null,
     "collection": "directus_panels",
     "action": "read",
     "permissions": {},
@@ -33,6 +32,7 @@
       "user_agent": "unknown"
     },
     "fields": ["*"],
+    "policy": "_sync_default_public_policy",
     "_syncId": "8c7e94e4-a20c-4641-9939-67d87dc9a968"
   }
 ]

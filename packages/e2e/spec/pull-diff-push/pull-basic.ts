@@ -1,9 +1,10 @@
 import {
   Context,
+  createOneItemInEachSystemCollection,
   debug,
+  getDefaultItemsCount,
   getDumpedSystemCollectionsContents,
   getSystemCollectionsNames,
-  createOneItemInEachSystemCollection,
 } from '../helpers/index.js';
 
 export const pullBasic = (context: Context) => {
@@ -24,6 +25,7 @@ export const pullBasic = (context: Context) => {
       operation,
       panel,
       role,
+      policy,
       permission,
       preset,
       settings,
@@ -37,16 +39,18 @@ export const pullBasic = (context: Context) => {
     // --------------------------------------------------------------------
     // Check if the logs reports new content
     for (const collection of systemCollections) {
-      expect(output).toContain(debug(`[${collection}] Pulled 1 items.`));
+      const count = 1 + getDefaultItemsCount(collection);
+      expect(output).toContain(debug(`[${collection}] Pulled ${count} items.`));
       expect(output).toContain(
-        debug(`[${collection}] Post-processed 1 items.`),
+        debug(`[${collection}] Post-processed ${count} items.`),
       );
     }
 
     // --------------------------------------------------------------------
     // Check created sync id
     for (const collection of systemCollections) {
-      expect((await directus.getSyncIdMaps(collection)).length).toBe(1);
+      const count = 1 + getDefaultItemsCount(collection);
+      expect((await directus.getSyncIdMaps(collection)).length).toBe(count);
     }
 
     // --------------------------------------------------------------------
@@ -123,17 +127,34 @@ export const pullBasic = (context: Context) => {
         name: role.name,
         icon: role.icon,
         description: role.description,
-        ip_access: role.ip_access,
-        enforce_tfa: role.enforce_tfa,
-        admin_access: role.admin_access,
-        app_access: role.app_access,
+        parent: role.parent,
+      },
+    ]);
+    expect(collections.policies).toEqual([
+      {
+        _syncId: (await directus.getByLocalId('policies', policy.id)).sync_id,
+        name: policy.name,
+        description: policy.description,
+        icon: policy.icon,
+        ip_access: policy.ip_access,
+        enforce_tfa: policy.enforce_tfa,
+        admin_access: policy.admin_access,
+        app_access: policy.app_access,
+        roles: await Promise.all(
+          policy.roles.map(async (role) => {
+            return {
+              role: (await directus.getByLocalId('roles', role.role)).sync_id,
+              sort: role.sort,
+            };
+          }),
+        ),
       },
     ]);
     expect(collections.permissions).toEqual([
       {
         _syncId: (await directus.getByLocalId('permissions', permission.id))
           .sync_id,
-        role: (await directus.getByLocalId('roles', role.id)).sync_id,
+        policy: (await directus.getByLocalId('policies', policy.id)).sync_id,
         collection: permission.collection,
         action: permission.action,
         permissions: permission.permissions,

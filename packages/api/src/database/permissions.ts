@@ -3,13 +3,13 @@ import type { Logger } from 'pino';
 
 interface Permission {
   id: string;
-  role: string;
+  policy: string;
   collection: string;
   action: string;
 }
 
 interface DeletedPermission {
-  role: string;
+  policy: string;
   collection: string;
   action: string;
   ids: string[];
@@ -27,20 +27,20 @@ export class Permissions {
    * Remove duplicated permissions
    */
   async removeDuplicates(keep: 'first' | 'last') {
-    const roles = await this.getRolesCollectionsAndActions();
+    const policies = await this.getPoliciesCollectionsAndActions();
     const output: DeletedPermission[] = [];
 
-    for (const [role, collections] of roles) {
+    for (const [policy, collections] of policies) {
       for (const [collection, actions] of collections) {
         for (const action of actions) {
           const permissions: Permission[] = await this.database(this.tableName)
-            .where({ role, collection, action })
+            .where({ policy, collection, action })
             .orderBy('id', 'asc');
 
           if (permissions.length > 1) {
             // Log the duplicated permissions
             this.logger.warn(
-              `Duplicated permissions for role ${role}, collection ${collection}, action ${action} (${permissions.length} permissions)`,
+              `Duplicated permissions for policy ${policy}, collection ${collection}, action ${action} (${permissions.length} permissions)`,
             );
 
             // Keep the last permission and delete the rest
@@ -51,7 +51,7 @@ export class Permissions {
             const ids = rest.map((permission) => permission.id);
             await this.database(this.tableName).whereIn('id', ids).delete();
 
-            output.push({ role, collection, action, ids });
+            output.push({ policy, collection, action, ids });
             this.logger.info(
               `Deleted ${ids.length} duplicated permissions, keeping permission ${toKeep.id}`,
             );
@@ -63,21 +63,22 @@ export class Permissions {
     return output;
   }
 
-  protected async getRolesCollectionsAndActions() {
+  protected async getPoliciesCollectionsAndActions() {
     const permissions: Permission[] = await this.database(this.tableName).where(
       {},
     );
-    const roles = new Map<string, Map<string, Set<string>>>();
+    const policies = new Map<string, Map<string, Set<string>>>();
 
     for (const permission of permissions) {
-      const { role, collection, action } = permission;
-      const collections = roles.get(role) ?? new Map<string, Set<string>>();
+      const { policy, collection, action } = permission;
+      const collections =
+        policies.get(policy) ?? new Map<string, Set<string>>();
       const actions = collections.get(collection) ?? new Set<string>();
       actions.add(action);
       collections.set(collection, actions);
-      roles.set(role, collections);
+      policies.set(policy, collections);
     }
 
-    return roles;
+    return policies;
   }
 }

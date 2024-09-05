@@ -6,11 +6,14 @@ import {
   DirectusOperation,
   DirectusPanel,
   DirectusPermission,
+  DirectusPolicy,
   DirectusPreset,
   DirectusRole,
   DirectusSettings,
   DirectusTranslation,
 } from '@directus/sdk';
+import { FixPolicy } from './policy';
+import { FixPermission } from './permissions';
 
 export type DirectusId = number | string;
 export type Schema = object;
@@ -22,6 +25,7 @@ export type SystemCollectionsNames = [
   'operations',
   'panels',
   'permissions',
+  'policies',
   'presets',
   'roles',
   'settings',
@@ -33,7 +37,8 @@ export interface SystemCollectionsTypes {
   folders: DirectusFolder<Schema>;
   operations: DirectusOperation<Schema>;
   panels: DirectusPanel<Schema>;
-  permissions: DirectusPermission<Schema>;
+  permissions: FixPermission<DirectusPermission<Schema>>;
+  policies: FixPolicy<DirectusPolicy<Schema>>;
   presets: DirectusPreset<Schema>;
   roles: DirectusRole<Schema>;
   settings: DirectusSettings<Schema>;

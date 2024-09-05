@@ -1,8 +1,12 @@
 # Directus Sync
 
-![Directus 10.13.3](https://img.shields.io/badge/Directus-10.13.3-64f?style=for-the-badge&logo=directus)
+![Directus 11.1.0](https://img.shields.io/badge/Directus-11.1.0-64f?style=for-the-badge&logo=directus)
 
 > [!IMPORTANT]
+> Latest version of `directus-sync` introduces breaking changes and is not compatible with Directus 10.x.x.
+> If you are using Directus 10.x.x, please run `npx directus-sync@2.2.0`
+
+> [!NOTE]
 > Help us improve Directus Sync by sharing your feedback! Take a quick survey about your usage here: https://forms.gle/LnaB89uVkZCDqRfGA
 
 The `directus-sync` command-line interface (CLI) provides a set of tools for managing and synchronizing the schema and
@@ -44,7 +48,7 @@ for targeted updates and clearer oversight of your Directus configurations.
       * [`Diff` command](#diff-command)
       * [`Push` command](#push-command)
     * [Tracked Elements](#tracked-elements)
-      * [Roles](#roles)
+      * [Roles & Policies](#roles--policies)
       * [Presets](#presets)
     * [Dependency: `directus-extension-sync`](#dependency-directus-extension-sync)
       * [Installation](#installation)
@@ -161,7 +165,7 @@ These options can be used with any command to configure the operation of `direct
 
 - `--preserve-ids <preserveIds>`  
   Comma-separated list of directus collections to preserve the original ids during the `pull` or `push` process.  
-  Possible collections are: `dashboards`, `operations`, `panels`, `roles` and `translations`.  
+  Possible collections are: `dashboards`, `operations`, `panels`, `policies`, `roles` and `translations`.  
   `flows` and `folders` ids are always preserved.  
   The value can be `*` or `all` to preserve ids of all collections, when applicable.
 
@@ -211,10 +215,10 @@ module.exports = {
   directusConfig: {
     clientOptions: {},  // see https://docs.directus.io/guides/sdk/getting-started.html#polyfilling
     restConfig: {}, // see https://docs.directus.io/packages/@directus/sdk/rest/interfaces/RestConfig.html
-  }
+  },
   dumpPath: './directus-config',
   collectionsPath: 'collections',
-  onlyCollections: ['roles', 'permissions', 'settings'],
+  onlyCollections: ['roles', 'policies', 'permissions', 'settings'],
   excludeCollections: ['settings'],
   preserveIds: ['roles', 'panels'], // can be '*' or 'all' to preserve all ids, or an array of collections
   snapshotPath: 'snapshot',
@@ -234,7 +238,7 @@ going to Directus.
 Hooks are defined in the configuration file using the `hooks` property. Under this property, you can define the
 collection name and the hook function to be executed.
 Available collection names
-are: `dashboards`, `flows`, `folders`, `operations`, `panels`, `permissions`, `presets`, `roles`, `settings` and `translations`.
+are: `dashboards`, `flows`, `folders`, `operations`, `panels`, `permissions`, `policies`, `presets`, `roles`, `settings` and `translations`.
 
 For each collection, available hook functions are: `onQuery`, `onLoad`, `onSave`, and `onDump`.
 These can be asynchronous functions.
@@ -493,6 +497,7 @@ A[Pull command] --> Pull --> Post --> Z[End]
 - operations
 - panels
 - permissions
+- policies
 - presets
 - roles
 - settings
@@ -501,13 +506,14 @@ A[Pull command] --> Pull --> Post --> Z[End]
 For these collections, data changes are committed to the code, allowing for replication on other Directus instances. A
 mapping table links Directus instance IDs with SyncIDs, managed by the `directus-extension-sync`.
 
-#### Roles
+#### Roles & Policies
 
-Roles are tracked, but the _main_ administrator role is not tracked.
-This is because the administrator role is a system role and is automatically created by Directus.
-It will cause conflicts if it is tracked.
+Roles and policies are tracked.  
+By default, Directus creates a default administrator role and two default policies: _admin_ and _public_.
 
-The _main_ administrator is the role of the curent user, used to authenticate the `directus-sync` commands.
+1. To avoid recreating the default _admin_ role, `directus-sync` uses the user's role as the default _admin_ role.
+2. To avoid recreating the default _public_ policy, `directus-sync` uses the first policy found with `role = null`.
+3. To avoid recreating the default _admin_ policy, `directus-sync` uses the first policy linked to the _admin_ role with `admin_access = true`.
 
 #### Presets
 
@@ -538,7 +544,7 @@ configurations and schema within Directus. Here is a step-by-step explanation of
 
 Upon execution of the `pull` command, `directus-sync` will:
 
-1. Scan the specified Directus collections, which include dashboards, flows, folders, operations, panels, permissions,
+1. Scan the specified Directus collections, which include dashboards, flows, folders, operations, panels, permissions, policies,
    presets, roles, settings and translations.
 2. Assign a SyncID to each element within these collections if it doesn't already have one.
 3. Commit the data of these collections into code, allowing for versioning and tracking of configuration changes.

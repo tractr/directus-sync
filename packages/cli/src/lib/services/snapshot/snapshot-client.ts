@@ -125,7 +125,7 @@ export class SnapshotClient {
   /**
    * Get the snapshot from the Directus instance.
    */
-  protected async getSnapshot() {
+  protected async getSnapshot(): Promise<Snapshot> {
     const directus = await this.migrationClient.get();
     return await directus.request<Snapshot>(schemaSnapshot()); // Get better types
   }

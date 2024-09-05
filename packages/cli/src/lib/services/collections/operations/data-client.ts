@@ -104,7 +104,7 @@ export class OperationsDataClient extends DataClient<DirectusOperation> {
     itemId?: string,
   ): Promise<string[]> {
     // Build the filter
-    const andFilters: QueryFilter<object, DirectusOperation>['_and'] = [
+    const andFilters: QueryFilter<object, DirectusOperation>[] = [
       { [type]: { _eq: diffItem[type] } },
     ];
     if (itemId) {

@@ -1,10 +1,11 @@
 import {
   Context,
+  getDefaultItemsCount,
   getDumpedSystemCollectionsContents,
   getSystemCollectionsNames,
   info,
-  SystemCollection,
   readAllSystemCollections,
+  SystemCollection,
 } from '../helpers/index.js';
 
 export const pullAndPushWithoutData = (context: Context) => {
@@ -23,6 +24,7 @@ export const pullAndPushWithoutData = (context: Context) => {
       'operations',
       'panels',
       'permissions',
+      'policies',
       'presets',
       'roles',
       'settings',
@@ -66,7 +68,11 @@ export const pullAndPushWithoutData = (context: Context) => {
       expect(output).toContain(info(`[${collection}] To create: 0 item(s)`));
       expect(output).toContain(info(`[${collection}] To update: 0 item(s)`));
       expect(output).toContain(info(`[${collection}] To delete: 0 item(s)`));
-      expect(output).toContain(info(`[${collection}] Unchanged: 0 item(s)`));
+      expect(output).toContain(
+        info(
+          `[${collection}] Unchanged: ${getDefaultItemsCount(collection)} item(s)`,
+        ),
+      );
     }
   });
 

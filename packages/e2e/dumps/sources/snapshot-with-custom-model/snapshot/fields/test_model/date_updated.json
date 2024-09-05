@@ -1,29 +1,8 @@
 {
   "collection": "test_model",
   "field": "date_updated",
-  "type": "timestamp",
-  "meta": {
-    "collection": "test_model",
-    "conditions": null,
-    "display": "datetime",
-    "display_options": {
-      "relative": true
-    },
-    "field": "date_updated",
-    "group": null,
-    "hidden": true,
-    "interface": "datetime",
-    "note": null,
-    "options": null,
-    "readonly": true,
-    "required": false,
-    "sort": 7,
-    "special": ["cast-timestamp", "date-updated"],
-    "translations": null,
-    "validation": null,
-    "validation_message": null,
-    "width": "half"
-  },
+  "type": "dateTime",
+  "meta": null,
   "schema": {
     "name": "date_updated",
     "table": "test_model",

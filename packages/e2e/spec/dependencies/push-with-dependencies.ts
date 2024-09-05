@@ -1,4 +1,9 @@
-import { Context, getSystemCollectionsNames, info } from '../helpers/index.js';
+import {
+  Context,
+  getDefaultItemsCount,
+  getSystemCollectionsNames,
+  info,
+} from '../helpers/index.js';
 
 const expectedAmount = (collection: string) => {
   if (collection === 'flows') return 1;
@@ -9,7 +14,7 @@ const expectedAmount = (collection: string) => {
 export const pushWithDependencies = (context: Context) => {
   it('push with dependencies on an empty instance', async () => {
     // Init sync client
-    const sync = await context.getSync('sources/multiple-dependencies', false);
+    const sync = await context.getSync('sources/multiple-dependencies');
     const directus = context.getDirectus();
     const collections = getSystemCollectionsNames();
 
@@ -32,7 +37,9 @@ export const pushWithDependencies = (context: Context) => {
         info(`[${collection}] To delete: 0 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(`[${collection}] Unchanged: 0 item(s)`),
+        info(
+          `[${collection}] Unchanged: ${getDefaultItemsCount(collection)} item(s)`,
+        ),
       );
     }
 

@@ -42,7 +42,7 @@ export class PermissionsDataDiffer extends DataDiffer<DirectusPermission> {
         },
       },
       limit: -1,
-      fields: ['id', 'role', 'collection', 'action'],
+      fields: ['id', 'policy', 'collection', 'action'],
     } as Query<DirectusPermission>);
 
     return permissions.map(({ id }) => ({ id }));

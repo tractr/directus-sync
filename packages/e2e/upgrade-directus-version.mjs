@@ -2,9 +2,17 @@
 import 'dotenv/config';
 import path from 'path';
 import { readdir } from 'fs/promises';
+import { readFileSync, writeFileSync } from 'fs';
 
-const actual = '10.13.2';
-const next = '10.13.3';
+async function readJSON(path) {
+  return JSON.parse(await readFileSync(path, 'utf8'));
+}
+async function writeJSON(path, data) {
+  await writeFileSync(path, JSON.stringify(data, null, 2));
+}
+
+const actual = '11.0.2';
+const next = '11.1.0';
 
 if (actual === next) {
   console.log('Nothing to upgrade');
@@ -15,6 +23,9 @@ const { PUBLIC_URL, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
 
 // List all folders of ./dumps/sources using path
 const sources = await readdir(path.resolve('dumps', 'sources'));
+const cliPackagePath = path.resolve('..', 'cli', 'package.json');
+const cliPackage = await readJSON(cliPackagePath);
+const { version } = cliPackage;
 const cliProgramArgs = [
   '--directus-url',
   PUBLIC_URL,
@@ -23,6 +34,10 @@ const cliProgramArgs = [
   '--directus-password',
   ADMIN_PASSWORD,
 ];
+
+// Change the version of directus-sync in package.json to avoid conflicts
+cliPackage.version = 'next';
+await writeJSON(cliPackagePath, cliPackage);
 
 for (const source of sources) {
   // Compute source path
@@ -53,7 +68,8 @@ for (const source of sources) {
   console.log(chalk.yellow('---> Pushing the dump to the instance'));
   await spinner(
     'Pushing the configuration',
-    () => $`npx directus-sync ${cliProgramArgs} push ${cliCommandArgs}`,
+    () =>
+      $`npx directus-sync@${version} ${cliProgramArgs} push ${cliCommandArgs}`, // Use current version of directus-sync
   );
   serverProcess.kill('SIGINT');
   await serverProcess.catch(() =>
@@ -63,6 +79,10 @@ for (const source of sources) {
   // Install the next version
   console.log(chalk.yellow('---> Installing the next version'));
   await $`npm install --save --save-exact directus@${next}`;
+
+  // Apply the latest migrations
+  console.log(chalk.yellow('---> Apply latest migrations'));
+  await $`npx directus database migrate:latest`;
 
   // Start the Directus server and run the migrations
   console.log(chalk.yellow('---> Starting the new server'));
@@ -75,7 +95,7 @@ for (const source of sources) {
   console.log(chalk.yellow('---> Pulling the dump from the instance'));
   await spinner(
     'Pulling the configuration',
-    () => $`npx directus-sync ${cliProgramArgs} pull ${cliCommandArgs}`,
+    () => $`npx directus-sync ${cliProgramArgs} pull ${cliCommandArgs}`, // Use next version of directus-sync
   );
   serverProcess.kill('SIGINT');
   await serverProcess.catch(() =>
@@ -84,3 +104,6 @@ for (const source of sources) {
 
   console.log(chalk.green(`===> ${source} upgraded successfully`));
 }
+
+// Restore the version of directus-sync in package.json using git
+await $`git checkout -- ${cliPackagePath}`;

@@ -2,6 +2,7 @@ import {
   Context,
   info,
   newPermission,
+  newPolicy,
   newRole,
   readNonSystemPermissions,
 } from '../helpers/index.js';
@@ -15,23 +16,35 @@ export const removePermissionDuplicates = (context: Context) => {
 
     // Create permissions
     const role = await newRole(client);
-    const update1 = await newPermission(client, role.id, 'panels', 'update');
-    const update2 = await newPermission(client, role.id, 'panels', 'update');
-    await newPermission(client, role.id, 'panels', 'create');
-    const delete1 = await newPermission(client, null, 'panels', 'delete');
-    const delete2 = await newPermission(client, null, 'panels', 'delete');
-    await newPermission(client, null, 'panels', 'read');
+    const policy = await newPolicy(client, role.id);
+    const publicPolicy = await newPolicy(client, null);
+    const update1 = await newPermission(client, policy.id, 'panels', 'update');
+    const update2 = await newPermission(client, policy.id, 'panels', 'update');
+    await newPermission(client, policy.id, 'panels', 'create');
+    const delete1 = await newPermission(
+      client,
+      publicPolicy.id,
+      'panels',
+      'delete',
+    );
+    const delete2 = await newPermission(
+      client,
+      publicPolicy.id,
+      'panels',
+      'delete',
+    );
+    await newPermission(client, publicPolicy.id, 'panels', 'read');
 
     // Dump the data
     const output = await sync.removePermissionDuplicates('last');
     expect(output).toContain(
       info(
-        `[helpers-client] Deleted 1 duplicated permissions for role ${role.id}, collection directus_panels, action update`,
+        `[helpers-client] Deleted 1 duplicated permissions for policy ${policy.id}, collection directus_panels, action update`,
       ),
     );
     expect(output).toContain(
       info(
-        `[helpers-client] Deleted 1 duplicated permissions for role null, collection directus_panels, action delete`,
+        `[helpers-client] Deleted 1 duplicated permissions for policy ${publicPolicy.id}, collection directus_panels, action delete`,
       ),
     );
 
@@ -41,7 +54,7 @@ export const removePermissionDuplicates = (context: Context) => {
     expect(permissions.length).toEqual(4);
     for (const permission of permissions) {
       expect(permission.id).toBeDefined();
-      expect(permission.role).toBeDefined();
+      expect(permission.policy).toBeDefined();
       expect(permission.collection).toBeDefined();
       expect(permission.action).toBeDefined();
     }
@@ -60,12 +73,24 @@ export const removePermissionDuplicates = (context: Context) => {
 
     // Create permissions
     const role = await newRole(client);
-    const update1 = await newPermission(client, role.id, 'panels', 'update');
-    const update2 = await newPermission(client, role.id, 'panels', 'update');
-    await newPermission(client, role.id, 'panels', 'create');
-    const delete1 = await newPermission(client, null, 'panels', 'delete');
-    const delete2 = await newPermission(client, null, 'panels', 'delete');
-    await newPermission(client, null, 'panels', 'read');
+    const policy = await newPolicy(client, role.id);
+    const publicPolicy = await newPolicy(client, null);
+    const update1 = await newPermission(client, policy.id, 'panels', 'update');
+    const update2 = await newPermission(client, policy.id, 'panels', 'update');
+    await newPermission(client, policy.id, 'panels', 'create');
+    const delete1 = await newPermission(
+      client,
+      publicPolicy.id,
+      'panels',
+      'delete',
+    );
+    const delete2 = await newPermission(
+      client,
+      publicPolicy.id,
+      'panels',
+      'delete',
+    );
+    await newPermission(client, publicPolicy.id, 'panels', 'read');
 
     // Dump the data
     await sync.removePermissionDuplicates('first');
@@ -87,10 +112,22 @@ export const removePermissionDuplicates = (context: Context) => {
 
     // Create permissions
     const role = await newRole(client);
-    const update1 = await newPermission(client, role.id, 'panels', 'update');
-    const create1 = await newPermission(client, role.id, 'panels', 'create');
-    const delete1 = await newPermission(client, null, 'panels', 'delete');
-    const read1 = await newPermission(client, null, 'panels', 'read');
+    const policy = await newPolicy(client, role.id);
+    const publicPolicy = await newPolicy(client, null);
+    const update1 = await newPermission(client, policy.id, 'panels', 'update');
+    const create1 = await newPermission(client, policy.id, 'panels', 'create');
+    const delete1 = await newPermission(
+      client,
+      publicPolicy.id,
+      'panels',
+      'delete',
+    );
+    const read1 = await newPermission(
+      client,
+      publicPolicy.id,
+      'panels',
+      'read',
+    );
 
     // Dump the data
     await sync.removePermissionDuplicates('first');

@@ -9,7 +9,6 @@ export const collectionsOnDump = (context: Context) => {
     // Init sync client
     const sync = await context.getSync(
       'temp/collections-on-dump',
-      true,
       'collections-on-dump/directus-sync.config.cjs',
     );
     const directus = context.getDirectus();
@@ -24,6 +23,7 @@ export const collectionsOnDump = (context: Context) => {
       operation,
       panel,
       role,
+      policy,
       permission,
       preset,
       settings,
@@ -59,6 +59,11 @@ export const collectionsOnDump = (context: Context) => {
 
     expect(collections.roles.length).toEqual(1);
     expect(collections.roles[0]!.name).toEqual(`[onDump role] ${role.name}`);
+
+    expect(collections.policies.length).toEqual(1);
+    expect(collections.policies[0]!.name).toEqual(
+      `[onDump policy] ${policy.name}`,
+    );
 
     expect(collections.permissions.length).toEqual(1);
     expect(collections.permissions[0]!.collection).toEqual(

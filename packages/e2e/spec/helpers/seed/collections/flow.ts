@@ -1,10 +1,11 @@
 import { faker } from '@faker-js/faker';
 import { getIcon, getStatus } from '../helpers/index.js';
 import { DirectusFlow } from '@directus/sdk';
+import { Schema } from '../../sdk/index.js';
 
 export function getFlow(
   operation?: string,
-): Omit<DirectusFlow<object>, 'id' | 'date_created' | 'user_created'> {
+): Omit<DirectusFlow<Schema>, 'id' | 'date_created' | 'user_created'> {
   const trigger = faker.helpers.arrayElement(['schedule', 'webhook'] as const);
   const options =
     trigger === 'schedule'

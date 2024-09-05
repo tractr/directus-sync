@@ -50,11 +50,11 @@ function wrapAction(program: Command, action: () => Promise<void>) {
 function getVersion(): string {
   try {
     const { version } = readJSONSync(
-      resolve(__dirname, '..', 'package.json'),
+      resolve(__dirname, '..', '..', 'package.json'),
     ) as { version?: string };
     return version ?? 'undefined';
   } catch (e) {
-    return 'error';
+    return (e as Error).message ?? 'error';
   }
 }
 
@@ -226,7 +226,7 @@ export function createProgram() {
   helpers
     .command('remove-permission-duplicates')
     .description(
-      'remove conflicts in permissions when there are duplicated groups "role + collection + action".',
+      'remove conflicts in permissions when there are duplicated groups "policy + collection + action".',
     )
     .option(
       '--keep <keep>',

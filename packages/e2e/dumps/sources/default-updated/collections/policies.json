@@ -1,0 +1,34 @@
+[
+  {
+    "name": "lorem",
+    "icon": "alarm_on",
+    "description": "ipsum",
+    "ip_access": null,
+    "enforce_tfa": true,
+    "admin_access": true,
+    "app_access": true,
+    "roles": [
+      {
+        "role": "_sync_default_admin_role",
+        "sort": null
+      }
+    ],
+    "_syncId": "_sync_default_admin_policy"
+  },
+  {
+    "name": "dolor",
+    "icon": "verified",
+    "description": "amet",
+    "ip_access": null,
+    "enforce_tfa": false,
+    "admin_access": false,
+    "app_access": false,
+    "roles": [
+      {
+        "role": null,
+        "sort": 1
+      }
+    ],
+    "_syncId": "_sync_default_public_policy"
+  }
+]

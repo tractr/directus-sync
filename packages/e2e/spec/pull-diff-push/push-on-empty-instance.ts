@@ -1,12 +1,14 @@
-import { Context, getSystemCollectionsNames, info } from '../helpers/index.js';
+import {
+  Context,
+  getDefaultItemsCount,
+  getSystemCollectionsNames,
+  info,
+} from '../helpers/index.js';
 
 export const pushOnEmptyInstance = (context: Context) => {
   it('diff and push on an empty instance', async () => {
     // Init sync client
-    const sync = await context.getSync(
-      'sources/one-item-per-collection',
-      false,
-    );
+    const sync = await context.getSync('sources/one-item-per-collection');
     const directus = context.getDirectus();
     const collections = getSystemCollectionsNames();
 
@@ -27,7 +29,9 @@ export const pushOnEmptyInstance = (context: Context) => {
         info(`[${collection}] To delete: 0 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(`[${collection}] Unchanged: 0 item(s)`),
+        info(
+          `[${collection}] Unchanged: ${getDefaultItemsCount(collection)} item(s)`,
+        ),
       );
     }
 

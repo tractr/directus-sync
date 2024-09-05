@@ -9,7 +9,6 @@ export const collectionsOnLoad = (context: Context) => {
     // Init sync client
     const sync = await context.getSync(
       'sources/one-item-per-collection',
-      false,
       'collections-on-load/directus-sync.config.cjs',
     );
     const directus = context.getDirectus();
@@ -23,6 +22,7 @@ export const collectionsOnLoad = (context: Context) => {
       operations: sourceOperations,
       panels: sourcePanels,
       roles: sourceRoles,
+      policies: sourcePolicies,
       permissions: sourcePermissions,
       presets: sourcePresets,
       settings: sourceSettings,
@@ -53,6 +53,9 @@ export const collectionsOnLoad = (context: Context) => {
     );
     expect(collections.roles[0]!.name).toEqual(
       `[onLoad role] ${sourceRoles[0]!.name}`,
+    );
+    expect(collections.policies[0]!.name).toEqual(
+      `[onLoad policy] ${sourcePolicies[0]!.name}`,
     );
     expect(collections.permissions[0]!.collection).toEqual(
       `[onLoad permission] ${sourcePermissions[0]!.collection}`,

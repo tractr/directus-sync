@@ -1,14 +1,38 @@
-import { DirectusPermission, DirectusRole } from '@directus/sdk';
-import { Log, PinoHTTPLog, PinoLog } from './interfaces/index.js';
+import {
+  DirectusPermission,
+  DirectusPolicy,
+  DirectusRole,
+} from '@directus/sdk';
+import {
+  FixPermission,
+  FixPolicy,
+  Log,
+  PinoHTTPLog,
+  PinoLog,
+  Schema,
+} from './interfaces/index.js';
 
 export function notSystemPermissions(
-  permission: DirectusPermission<object> & { system?: boolean },
-): permission is DirectusPermission<object> {
+  permission: FixPermission<DirectusPermission<Schema>> & { system?: boolean },
+): permission is FixPermission<DirectusPermission<Schema>> {
   return !permission.system;
 }
 
-export function notAdministratorRoles(role: DirectusRole<object>): boolean {
-  return role.name !== 'Administrator' && !role.admin_access;
+export function notDefaultRoles(role: DirectusRole<Schema>): boolean {
+  return (
+    role.name !== 'Administrator' &&
+    !(role.description ?? '').includes('$t:admin_description')
+  );
+}
+
+export function notDefaultPolicies(
+  policy: FixPolicy<DirectusPolicy<Schema>>,
+): boolean {
+  return [
+    '$t:admin_description',
+    '$t:admin_policy_description',
+    '$t:public_description',
+  ].every((text) => !(policy.description ?? '').includes(text));
 }
 
 export function notNullId<T extends { id: string | number | null }>(

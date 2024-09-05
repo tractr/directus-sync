@@ -1,11 +1,12 @@
 import {
   Context,
-  DirectusClient,
-  DirectusSync,
-  getSystemCollectionsNames,
-  info,
   createOneItemInEachSystemCollection,
   deleteItemsFromSystemCollections,
+  DirectusClient,
+  DirectusSync,
+  getDefaultItemsCount,
+  getSystemCollectionsNames,
+  info,
   readAllSystemCollections,
 } from '../helpers/index.js';
 
@@ -22,6 +23,7 @@ export const pushFlushAndPush = (context: Context) => {
       operations: [originalData.operation.id],
       panels: [originalData.panel.id],
       roles: [originalData.role.id],
+      policies: [originalData.policy.id],
       permissions: [originalData.permission.id],
       presets: [originalData.preset.id],
       translations: [originalData.translation.id],
@@ -48,7 +50,11 @@ export const pushFlushAndPush = (context: Context) => {
         expect(output).toContain(info(`[${collection}] To create: 0 item(s)`));
         expect(output).toContain(info(`[${collection}] To update: 1 item(s)`));
         expect(output).toContain(info(`[${collection}] To delete: 0 item(s)`));
-        expect(output).toContain(info(`[${collection}] Unchanged: 0 item(s)`));
+        expect(output).toContain(
+          info(
+            `[${collection}] Unchanged: ${getDefaultItemsCount(collection)} item(s)`,
+          ),
+        );
       } else {
         expect(output).toContain(
           info(`[${collection}] Dangling id maps: 1 item(s)`),
@@ -56,7 +62,11 @@ export const pushFlushAndPush = (context: Context) => {
         expect(output).toContain(info(`[${collection}] To create: 1 item(s)`));
         expect(output).toContain(info(`[${collection}] To update: 0 item(s)`));
         expect(output).toContain(info(`[${collection}] To delete: 0 item(s)`));
-        expect(output).toContain(info(`[${collection}] Unchanged: 0 item(s)`));
+        expect(output).toContain(
+          info(
+            `[${collection}] Unchanged: ${getDefaultItemsCount(collection)} item(s)`,
+          ),
+        );
       }
     }
   });
@@ -79,7 +89,7 @@ export const pushFlushAndPush = (context: Context) => {
           info(`[${collection}] Deleted 0 dangling items`),
         );
         expect(output).toContain(info(`[${collection}] Created 0 items`));
-        expect(output).toContain(info(`[${collection}] Updated 0 items`));
+        expect(output).toContain(info(`[${collection}] Updated 1 items`));
       } else {
         expect(output).toContain(
           info(`[${collection}] Deleted 1 dangling items`),
@@ -92,7 +102,8 @@ export const pushFlushAndPush = (context: Context) => {
 
     // Check if the dangling ids were removed
     for (const collection of collections) {
-      expect((await directus.getSyncIdMaps(collection)).length).toBe(1);
+      const count = 1 + getDefaultItemsCount(collection);
+      expect((await directus.getSyncIdMaps(collection)).length).toBe(count);
     }
 
     // Read all data from Directus and check if the data is the same as the original data
@@ -104,6 +115,7 @@ export const pushFlushAndPush = (context: Context) => {
       operation,
       panel,
       role,
+      policy,
       permission,
       preset,
       settings,
@@ -182,16 +194,30 @@ export const pushFlushAndPush = (context: Context) => {
         name: role.name,
         icon: role.icon,
         description: role.description,
-        ip_access: role.ip_access,
-        enforce_tfa: role.enforce_tfa,
-        admin_access: role.admin_access,
-        app_access: role.app_access,
+      }),
+    );
+    expect(all.policies[0]).toEqual(
+      jasmine.objectContaining({
+        id: getFirstId(all.policies),
+        name: policy.name,
+        icon: policy.icon,
+        description: policy.description,
+        ip_access: policy.ip_access,
+        enforce_tfa: policy.enforce_tfa,
+        admin_access: policy.admin_access,
+        app_access: policy.app_access,
+        roles: [
+          {
+            role: getFirstId(all.roles),
+            sort: 1,
+          },
+        ],
       }),
     );
     expect(all.permissions[0]).toEqual(
       jasmine.objectContaining({
         id: getFirstId(all.permissions),
-        role: getFirstId(all.roles),
+        policy: getFirstId(all.policies),
         collection: permission.collection,
         action: permission.action,
         permissions: permission.permissions,

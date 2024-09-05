@@ -3,7 +3,7 @@
 The `directus-sync` CLI provides a set of tools for managing and synchronizing the schema and
 collections within Directus across different environments.
 It allows to synchronize the following
-elements: `dashboards`, `flows`, `folders`, `operations`, `panels`, `permissions`, `presets`, `roles`, `settings` and `translations`.
+elements: `dashboards`, `flows`, `folders`, `operations`, `panels`, `permissions`, `policies`, `presets`, `roles`, `settings` and `translations`.
 
 More information about the `directus-sync` CLI tool can be found [here](https://github.com/tractr/directus-sync).
 
@@ -74,7 +74,7 @@ SyncIDs. These endpoints include:
 ### Helpers
 
 - `DELETE /directus-extension-sync/helpers/permissions/duplicates`: Remove conflicts in permissions when there are
-  duplicated groups "role + collection + action".
+  duplicated groups "policy + collection + action".
 
 ## Development
 

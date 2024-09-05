@@ -54,6 +54,15 @@ module.exports = {
         return query;
       },
     },
+    policies: {
+      onQuery: (query, client) => {
+        query.filter = {
+          ...query.filter,
+          name: { _eq: '@policy' },
+        };
+        return query;
+      },
+    },
     permissions: {
       onQuery: (query, client) => {
         query.filter = {

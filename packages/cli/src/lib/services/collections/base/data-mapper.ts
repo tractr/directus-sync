@@ -7,6 +7,7 @@ import {
 } from './interfaces';
 import pino from 'pino';
 import { IdMapperClient } from './id-mapper-client';
+import { applyMappers, bindMappers, Item, MapperRecord } from './helpers';
 
 export abstract class DataMapper<DT extends DirectusBaseType> {
   /**
@@ -18,6 +19,16 @@ export abstract class DataMapper<DT extends DirectusBaseType> {
    * Returns a map of fields and id mapper to use when mapping the ids of the items.
    */
   protected idMappers = {} as IdMappers<DT>;
+
+  /**
+   * Computed mapper functions from local to sync id from the id mappers.
+   */
+  protected localIdToSyncIdMappers: MapperRecord | undefined;
+
+  /**
+   * Computed mapper functions from sync to local id from the id mappers.
+   */
+  protected syncIdToLocalIdMappers: MapperRecord | undefined;
 
   constructor(protected readonly logger: pino.Logger) {}
 
@@ -38,45 +49,6 @@ export abstract class DataMapper<DT extends DirectusBaseType> {
   }
 
   /**
-   * Map the sync id of the item to the local id.
-   * Returns undefined if the item has no sync id.
-   * This allows to create items by order of dependencies.
-   */
-  async mapSyncIdToLocalId<T>(item: T): Promise<T | undefined> {
-    const newItem = { ...item };
-    for (const entry of Object.entries(this.idMappers)) {
-      const field = entry[0] as keyof T;
-      const idMapper: IdMapperClient | object = entry[1];
-      const value = newItem[field];
-
-      if (Array.isArray(value)) {
-        throw new Error('Mapping ids for array is not supported');
-      }
-      if (!value) {
-        continue;
-      }
-
-      if (idMapper instanceof IdMapperClient) {
-        const id = value as string;
-        const idMap = await idMapper.getBySyncId(id);
-        if (!idMap) {
-          this.logger.warn(
-            `No id map found for ${id}, will try on the next round`,
-          );
-          return undefined;
-        }
-        newItem[field] = idMap.local_id as T[keyof T];
-      } else {
-        const mappedItem = await this.mapSyncIdToLocalId(value);
-        if (mappedItem) {
-          newItem[field] = mappedItem;
-        }
-      }
-    }
-    return newItem;
-  }
-
-  /**
    * Discard the fields to ignore from the items.
    */
   protected removeFieldsToIgnore(
@@ -90,38 +62,81 @@ export abstract class DataMapper<DT extends DirectusBaseType> {
   }
 
   /**
+   * Map the sync id of the item to the local id.
+   * Returns undefined if the item has no sync id.
+   * This allows to create items by order of dependencies.
+   */
+  async mapSyncIdToLocalId<T extends Item>(item: T): Promise<T | undefined> {
+    return await applyMappers(item, this.getSyncIdToLocalIdMapper());
+  }
+
+  /**
+   * Build once the mapper functions from sync to local id.
+   */
+  protected getSyncIdToLocalIdMapper(): MapperRecord {
+    if (!this.syncIdToLocalIdMappers) {
+      const callback =
+        (idMapper: IdMapperClient, field: string) => async (id: DirectusId) => {
+          const idMap = await idMapper.getBySyncId(id.toString());
+          if (!idMap) {
+            this.logger.warn(
+              `No id map found for ${field}:${id}, will try on the next round`,
+            );
+            return undefined;
+          }
+          return idMap.local_id as DirectusId;
+        };
+      const predicate = (value: unknown) =>
+        typeof value === 'object' && !(value instanceof IdMapperClient);
+
+      this.syncIdToLocalIdMappers = bindMappers(
+        this.idMappers,
+        callback,
+        predicate,
+      );
+    }
+
+    return this.syncIdToLocalIdMappers;
+  }
+
+  /**
    * Map the ids of the item to the sync ids.
    * For new items, the original id is used.
    */
-  protected async mapLocalIdToSyncIdIfPossible<T>(item: T): Promise<T> {
-    const newItem = { ...item };
-    for (const entry of Object.entries(this.idMappers)) {
-      const field = entry[0] as keyof T;
-      const idMapper: IdMapperClient | object = entry[1];
-      const value = newItem[field];
-
-      if (Array.isArray(value)) {
-        throw new Error('Mapping ids for array is not supported');
-      }
-      if (!value) {
-        continue;
-      }
-
-      if (idMapper instanceof IdMapperClient) {
-        const id = value as DirectusId;
-        const idMap = await idMapper.getByLocalId(id.toString());
-        if (idMap) {
-          newItem[field] = idMap.sync_id as T[keyof T];
-        } else {
-          this.logger.debug(`No id map found for ${field as string}:${id}`);
-        }
-      } else {
-        const mappedItem = await this.mapLocalIdToSyncIdIfPossible(value);
-        if (mappedItem) {
-          newItem[field] = mappedItem;
-        }
-      }
+  protected async mapLocalIdToSyncIdIfPossible<T extends Item>(
+    item: T,
+  ): Promise<T> {
+    const output = await applyMappers(item, this.getLocalIdToSyncIdMapper());
+    if (!output) {
+      throw new Error('A mapper returned undefined. This should not happen.');
     }
-    return newItem;
+    return output;
+  }
+
+  /**
+   * Build once the mapper functions from local to sync id.
+   */
+  protected getLocalIdToSyncIdMapper(): MapperRecord {
+    if (!this.localIdToSyncIdMappers) {
+      const callback =
+        (idMapper: IdMapperClient, field: string) => async (id: DirectusId) => {
+          const idMap = await idMapper.getByLocalId(id.toString());
+          if (!idMap) {
+            this.logger.debug(`No id map found for ${field}:${id}`);
+            return id;
+          }
+          return idMap.sync_id as DirectusId;
+        };
+      const predicate = (value: unknown) =>
+        typeof value === 'object' && !(value instanceof IdMapperClient);
+
+      this.localIdToSyncIdMappers = bindMappers(
+        this.idMappers,
+        callback,
+        predicate,
+      );
+    }
+
+    return this.localIdToSyncIdMappers;
   }
 }

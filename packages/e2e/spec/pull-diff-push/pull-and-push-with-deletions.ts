@@ -1,5 +1,6 @@
 import {
   Context,
+  getDefaultItemsCount,
   getSystemCollectionsNames,
   info,
   readAllSystemCollections,
@@ -8,10 +9,7 @@ import {
 export const pullAndPushWithDeletions = (context: Context) => {
   it('should detect and apply deletions', async () => {
     // Init sync client
-    const syncInit = await context.getSync(
-      'sources/one-item-per-collection',
-      false,
-    );
+    const syncInit = await context.getSync('sources/one-item-per-collection');
     const directus = context.getDirectus();
     const client = directus.get();
 
@@ -19,7 +17,7 @@ export const pullAndPushWithDeletions = (context: Context) => {
     await syncInit.push();
 
     // Push empty to Directus
-    const sync = await context.getSync('sources/empty-collections', false);
+    const sync = await context.getSync('sources/empty-collections');
     const collections = getSystemCollectionsNames();
 
     const diffOutput = await sync.diff();
@@ -39,7 +37,9 @@ export const pullAndPushWithDeletions = (context: Context) => {
         info(`[${collection}] To delete: 1 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(`[${collection}] Unchanged: 0 item(s)`),
+        info(
+          `[${collection}] Unchanged: ${getDefaultItemsCount(collection)} item(s)`,
+        ),
       );
     }
 
@@ -56,20 +56,30 @@ export const pullAndPushWithDeletions = (context: Context) => {
     // Analyze the output
     // Operations are deleted with the flows (cascade)
     // Panels are deleted with the dashboards (cascade)
+    // Permissions are deleted with the policies (cascade)
     // Settings is not deleted
     const expectCount = (collection: string) =>
-      ['operations', 'panels', 'settings'].includes(collection) ? 0 : 1;
+      ['operations', 'panels', 'permissions', 'settings'].includes(collection)
+        ? 0
+        : 1;
+
     expect(pushOutput).toContain(info('[snapshot] No changes to apply'));
     for (const collection of collections) {
-      expect(pushOutput).toContain(
-        info(`[${collection}] Deleted 0 dangling items`),
-      );
-      expect(pushOutput).toContain(info(`[${collection}] Created 0 items`));
-      expect(pushOutput).toContain(info(`[${collection}] Updated 0 items`));
+      expect(pushOutput)
+        .withContext(collection)
+        .toContain(info(`[${collection}] Deleted 0 dangling items`));
+      expect(pushOutput)
+        .withContext(collection)
+        .toContain(info(`[${collection}] Created 0 items`));
+      expect(pushOutput)
+        .withContext(collection)
+        .toContain(info(`[${collection}] Updated 0 items`));
       if (collection !== 'settings') {
-        expect(pushOutput).toContain(
-          info(`[${collection}] Deleted ${expectCount(collection)} items`),
-        );
+        expect(pushOutput)
+          .withContext(collection)
+          .toContain(
+            info(`[${collection}] Deleted ${expectCount(collection)} items`),
+          );
       }
 
       // Nothing created, updated or deleted
@@ -81,9 +91,11 @@ export const pullAndPushWithDeletions = (context: Context) => {
     // Check deleted sync id
     // Todo: Should clean up the sync id maps for cascading deletion
     for (const collection of collections) {
-      expect((await directus.getSyncIdMaps(collection)).length).toBe(
-        expectCount(collection) ? 0 : 1,
-      );
+      expect((await directus.getSyncIdMaps(collection)).length)
+        .withContext(collection)
+        .toBe(
+          (expectCount(collection) ? 0 : 1) + getDefaultItemsCount(collection),
+        );
     }
   });
 };

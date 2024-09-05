@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "name": "Administrator",
+    "icon": "verified",
+    "description": "$t:admin_description",
+    "parent": null,
+    "_syncId": "_sync_default_admin_role"
+  },
+  {
+    "name": "cohibeo",
+    "icon": "account_box",
+    "description": "Surculus ipsa aiunt rerum voco auctor terreo damnatio ademptio vacuus cognatus tabernus.",
+    "parent": null,
+    "_syncId": "5acb1b4a-64bb-484a-9e76-76ed9b13251e"
+  }
+]

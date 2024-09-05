@@ -1,12 +1,17 @@
-import { DirectusPermission } from '@directus/sdk';
-import { PermissionAction, SystemCollection } from '../../sdk/index.js';
+import {
+  FixPermission,
+  PermissionAction,
+  Schema,
+  SystemCollection,
+} from '../../sdk/index.js';
 import { faker } from '@faker-js/faker';
+import { DirectusPermission } from '@directus/sdk';
 
 export function getPermission(
-  role: string | null,
+  policy: string,
   collection: SystemCollection,
   action: PermissionAction,
-): Omit<DirectusPermission<object>, 'id'> {
+): Omit<FixPermission<DirectusPermission<Schema>>, 'id'> {
   const dummyPermission = {
     id: {
       _eq: '$CURRENT_USER',
@@ -31,7 +36,7 @@ export function getPermission(
       : faker.helpers.arrayElement([{}, dummyPermission] as const);
 
   return {
-    role,
+    policy,
     collection: `directus_${collection}`,
     action: action,
     permissions: permissions,

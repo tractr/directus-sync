@@ -5,6 +5,7 @@ import {
   createOperation,
   createPanel,
   createPermission,
+  createPolicy,
   createPreset,
   createRole,
   createTranslation,
@@ -14,27 +15,32 @@ import {
   deleteOperations,
   deletePanels,
   deletePermissions,
+  deletePolicies,
   deletePresets,
   deleteRoles,
   deleteTranslations,
   DirectusClient,
+  DirectusPermission,
+  DirectusPolicy,
   DirectusSettings,
+  Query,
+  readCollections,
   readDashboards,
+  readFields,
   readFlows,
   readFolders,
   readOperations,
   readPanels,
   readPermissions,
+  readPolicies,
   readPresets,
+  readRelations,
   readRoles,
   readSettings,
   readTranslations,
   RestClient,
   updateFlow,
   updateSettings,
-  readCollections,
-  readFields,
-  readRelations,
 } from '@directus/sdk';
 import {
   getDashboard,
@@ -43,6 +49,7 @@ import {
   getOperation,
   getPanel,
   getPermission,
+  getPolicy,
   getPreset,
   getRole,
   getSettings,
@@ -51,9 +58,13 @@ import {
 import {
   DirectusId,
   DirectusSettingsExtra,
-  notAdministratorRoles,
+  FixPermission,
+  FixPolicy,
+  notDefaultPolicies,
+  notDefaultRoles,
   notNullId,
   notSystemPermissions,
+  Schema,
   SystemCollectionsPartial,
   SystemCollectionsRecordPartial,
 } from '../sdk/index.js';
@@ -62,7 +73,7 @@ export type SingularCollectionName = keyof Awaited<
   ReturnType<typeof createOneItemInEachSystemCollection>
 >;
 export async function createOneItemInEachSystemCollection(
-  client: DirectusClient<object> & RestClient<object>,
+  client: DirectusClient<Schema> & RestClient<Schema>,
   override?: SystemCollectionsPartial,
 ) {
   const dashboard = await client.request(
@@ -84,9 +95,31 @@ export async function createOneItemInEachSystemCollection(
   const role = await client.request(
     createRole({ ...getRole(), ...override?.roles }),
   );
+
+  // --------------------------------------------------------
+  // Create and fetch policy in order to include deep fields
+  const policyRaw = await client.request(
+    createPolicy({
+      ...getPolicy(role.id),
+      ...override?.policies,
+      // Todo: remove this once it is fixed in the SDK
+    } as unknown as DirectusPolicy<Schema>),
+  );
+  const [policy] = (await client.request(
+    readPolicies({
+      filter: { id: policyRaw.id },
+      fields: ['*', 'roles.role', 'roles.sort'],
+      // Todo: remove this once it is fixed in the SDK
+    } as Query<Schema, DirectusPolicy<Schema>>),
+  )) as unknown as FixPolicy<DirectusPolicy<Schema>>[];
+  if (!policy) {
+    throw new Error('Policy not found');
+  }
+  // --------------------------------------------------------
+
   const permission = await client.request(
     createPermission({
-      ...getPermission(role.id, 'dashboards', 'update'),
+      ...getPermission(policy.id, 'dashboards', 'update'),
       ...override?.permissions,
     }),
   );
@@ -95,7 +128,7 @@ export async function createOneItemInEachSystemCollection(
   );
   const settings = (await client.request(
     updateSettings({ ...getSettings(role.id), ...override?.settings }),
-  )) as never as DirectusSettings<object> & DirectusSettingsExtra;
+  )) as never as DirectusSettings<Schema> & DirectusSettingsExtra;
   const translation = await client.request(
     createTranslation({ ...getTranslation(), ...override?.translations }),
   );
@@ -111,6 +144,7 @@ export async function createOneItemInEachSystemCollection(
     operation,
     panel,
     role,
+    policy,
     permission,
     preset,
     settings,
@@ -119,7 +153,7 @@ export async function createOneItemInEachSystemCollection(
 }
 
 export async function deleteItemsFromSystemCollections(
-  client: DirectusClient<object> & RestClient<object>,
+  client: DirectusClient<Schema> & RestClient<Schema>,
   ids: SystemCollectionsRecordPartial<DirectusId[]>,
 ) {
   if (ids.panels?.length) {
@@ -140,6 +174,9 @@ export async function deleteItemsFromSystemCollections(
   if (ids.permissions?.length) {
     await client.request(deletePermissions(ids.permissions as number[]));
   }
+  if (ids.policies?.length) {
+    await client.request(deletePolicies(ids.policies as string[]));
+  }
   if (ids.roles?.length) {
     await client.request(deleteRoles(ids.roles as string[]));
   }
@@ -152,26 +189,39 @@ export async function deleteItemsFromSystemCollections(
 }
 
 export async function readAllSystemCollections(
-  client: DirectusClient<object> & RestClient<object>,
+  client: DirectusClient<Schema> & RestClient<Schema>,
+  keepDefault = false,
 ) {
+  const roles = await client.request(readRoles());
+
+  const policies = (await client.request(
+    readPolicies({
+      fields: ['*', 'roles.role', 'roles.sort'],
+      // Todo: remove this once it is fixed in the SDK
+    } as Query<Schema, DirectusPolicy<Schema>>),
+  )) as unknown as FixPolicy<DirectusPolicy<Schema>>[];
+
+  const permissions = (await client.request(
+    readPermissions(),
+  )) as unknown as FixPermission<DirectusPermission<Schema>>[];
+
   return {
     dashboards: await client.request(readDashboards()),
     flows: await client.request(readFlows()),
     folders: await client.request(readFolders()),
     operations: await client.request(readOperations()),
     panels: await client.request(readPanels()),
-    permissions: (await client.request(readPermissions())).filter(
-      notSystemPermissions,
-    ),
+    permissions: permissions.filter(notSystemPermissions),
+    policies: keepDefault ? policies : policies.filter(notDefaultPolicies),
     presets: await client.request(readPresets()),
-    roles: (await client.request(readRoles())).filter(notAdministratorRoles),
+    roles: keepDefault ? roles : roles.filter(notDefaultRoles),
     settings: [await client.request(readSettings())].filter(notNullId),
     translations: await client.request(readTranslations()),
   };
 }
 
 export async function readAllCollectionsFieldsAndRelations(
-  client: DirectusClient<object> & RestClient<object>,
+  client: DirectusClient<Schema> & RestClient<Schema>,
 ) {
   return {
     collections: await client.request(readCollections()),

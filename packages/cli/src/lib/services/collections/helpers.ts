@@ -16,6 +16,7 @@ import {
   TRANSLATIONS_COLLECTION,
   TranslationsIdMapperClient,
 } from './translations';
+import { POLICIES_COLLECTION, PoliciesIdMapperClient } from './policies';
 
 export function getIdMapperClientByName(collection: string) {
   let idMapper: IdMapperClient;
@@ -37,6 +38,9 @@ export function getIdMapperClientByName(collection: string) {
       break;
     case PERMISSIONS_COLLECTION:
       idMapper = Container.get(PermissionsIdMapperClient);
+      break;
+    case POLICIES_COLLECTION:
+      idMapper = Container.get(PoliciesIdMapperClient);
       break;
     case PRESETS_COLLECTION:
       idMapper = Container.get(PresetsIdMapperClient);

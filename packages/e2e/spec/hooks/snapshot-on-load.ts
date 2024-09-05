@@ -8,7 +8,6 @@ export const snapshotOnLoad = (context: Context) => {
     // Init sync client
     const sync = await context.getSync(
       'sources/snapshot-with-custom-model',
-      false,
       'snapshot-on-load/directus-sync.config.cjs',
     );
     const directus = context.getDirectus();

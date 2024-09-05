@@ -1,11 +1,12 @@
 import { faker } from '@faker-js/faker';
 import { getIcon } from '../helpers/index.js';
 import { DirectusPreset } from '@directus/sdk';
+import { Schema } from '../../sdk/index.js';
 
 export function getPreset(
   role?: string,
   user?: string,
-): Omit<DirectusPreset<object>, 'id'> {
+): Omit<DirectusPreset<Schema>, 'id'> {
   return {
     bookmark: faker.lorem.word(),
     role: role ?? null,

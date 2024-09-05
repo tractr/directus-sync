@@ -48,6 +48,14 @@ module.exports = {
         });
       },
     },
+    policies: {
+      onSave: (policies) => {
+        return policies.map((policy) => {
+          policy.name = `[onSave policy] ${policy.name}`;
+          return policy;
+        });
+      },
+    },
     permissions: {
       onSave: (permissions) => {
         return permissions.map((permission) => {

@@ -5,16 +5,18 @@ import {
   ClientOptions,
   createDirectus,
   DirectusClient,
-  readMe,
   rest,
   RestClient,
   RestConfig,
+  serverInfo,
 } from '@directus/sdk';
 import { Inject, Service } from 'typedi';
 import pino from 'pino';
 import { LOGGER } from '../constants';
 import { ConfigService, isDirectusConfigWithToken } from './config';
 import { getChildLogger } from '../helpers';
+import { compareVersions } from 'compare-versions';
+import { Cacheable } from 'typescript-cacheable';
 
 @Service()
 export class MigrationClient {
@@ -40,22 +42,6 @@ export class MigrationClient {
       this.client = await this.createClient();
     }
     return this.client;
-  }
-
-  /**
-   * This method return the role of the current user as the Admin role
-   */
-  async getAdminRoleId() {
-    if (!this.adminRoleId) {
-      const directus = await this.get();
-      const { role } = await directus.request(
-        readMe({
-          fields: ['role'],
-        }),
-      );
-      this.adminRoleId = role as string;
-    }
-    return this.adminRoleId;
   }
 
   /**
@@ -93,7 +79,55 @@ export class MigrationClient {
       token = response.access_token;
     }
 
-    client.setToken(token);
+    await client.setToken(token);
     return client;
+  }
+
+  /**
+   * Get the server version
+   */
+  @Cacheable()
+  protected async getDirectusVersion() {
+    const client = await this.get();
+    const info = await client.request<{ version?: string }>(serverInfo());
+    if (!info?.version) {
+      throw new Error('Could not get the Directus version');
+    }
+    return info.version;
+  }
+
+  /**
+   * This method compares the Directus instance version with the given one.
+   */
+  protected async compareWithDirectusVersion(
+    version: string,
+  ): Promise<'equal' | 'greater' | 'smaller'> {
+    const directusVersion = await this.getDirectusVersion();
+    const diff = compareVersions(version, directusVersion);
+    if (diff === 0) {
+      return 'equal';
+    } else if (diff > 0) {
+      return 'greater';
+    } else {
+      return 'smaller';
+    }
+  }
+
+  /**
+   * This method validate that the Directus instance version is compatible with the current CLI version.
+   */
+  async validateDirectusVersion() {
+    const directusVersion = await this.getDirectusVersion();
+    if ((await this.compareWithDirectusVersion('10.0.0')) === 'greater') {
+      throw new Error(
+        `This CLI is not compatible with Directus ${directusVersion}. Please upgrade Directus to 10.0.0 (or higher).`,
+      );
+    }
+    if ((await this.compareWithDirectusVersion('11.0.0')) === 'greater') {
+      throw new Error(
+        `This CLI is not compatible with Directus ${directusVersion}. Please use \`npx directus-sync@2.2.0 [command]\` or upgrade Directus to 11.0.0 (or higher).`,
+      );
+    }
+    this.logger.debug(`Directus ${directusVersion} is compatible`);
   }
 }

@@ -1,5 +1,5 @@
 {
   "version": 1,
-  "directus": "10.13.2",
+  "directus": "11.1.0",
   "vendor": "sqlite"
 }

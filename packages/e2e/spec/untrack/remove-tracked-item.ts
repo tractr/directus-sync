@@ -1,4 +1,9 @@
-import { Context, newPermission, newRole } from '../helpers/index.js';
+import {
+  Context,
+  newPermission,
+  newPolicy,
+  newRole,
+} from '../helpers/index.js';
 
 export const removeTrackedItem = (context: Context) => {
   it('should remove entry from tracked ids map', async () => {
@@ -9,10 +14,12 @@ export const removeTrackedItem = (context: Context) => {
 
     // Create new permissions
     const role = await newRole(client);
-    await newPermission(client, role.id, 'panels', 'update');
-    const perm = await newPermission(client, role.id, 'panels', 'create');
-    await newPermission(client, null, 'panels', 'delete');
-    await newPermission(client, null, 'panels', 'read');
+    const policy = await newPolicy(client, role.id);
+    const publicPolicy = await newPolicy(client, null);
+    await newPermission(client, policy.id, 'panels', 'update');
+    const perm = await newPermission(client, policy.id, 'panels', 'create');
+    await newPermission(client, publicPolicy.id, 'panels', 'delete');
+    await newPermission(client, publicPolicy.id, 'panels', 'read');
 
     // Pull data to create the tracked ids map
     await sync.pull();

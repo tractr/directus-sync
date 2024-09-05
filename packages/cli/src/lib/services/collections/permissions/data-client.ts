@@ -8,7 +8,7 @@ import {
 } from '@directus/sdk';
 import { Inject, Service } from 'typedi';
 import { MigrationClient } from '../../migration-client';
-import { DirectusPermission } from './interfaces';
+import { BaseDirectusPermission, DirectusPermission } from './interfaces';
 import { LOGGER } from '../../../constants';
 import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
@@ -47,7 +47,7 @@ export class PermissionsDataClient extends DataClient<DirectusPermission> {
     const permissions = await directus.request(
       readPermissions({
         filter: {
-          role: item.role ? { _eq: item.role as string } : { _null: true },
+          policy: { _eq: item.policy as string },
           collection: { _eq: item.collection },
           action: { _eq: item.action },
         },
@@ -58,7 +58,7 @@ export class PermissionsDataClient extends DataClient<DirectusPermission> {
 
     if (existingPermissions.length) {
       this.logger.warn(
-        `Found duplicate permissions for ${item.collection}.${item.action} with role ${(item.role as string) ?? 'null'}. Deleting them.`,
+        `Found duplicate permissions for ${item.collection}.${item.action} with policy ${item.policy as string}. Deleting them.`,
       );
       return [
         deletePermissions(existingPermissions),
@@ -70,7 +70,7 @@ export class PermissionsDataClient extends DataClient<DirectusPermission> {
   }
 
   protected getQueryCommand(query: Query<DirectusPermission>) {
-    return readPermissions({ ...query } as Query<DirectusPermission>);
+    return readPermissions({ ...query } as Query<BaseDirectusPermission>);
   }
 
   protected getUpdateCommand(
