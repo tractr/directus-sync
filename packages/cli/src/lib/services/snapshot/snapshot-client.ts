@@ -15,7 +15,6 @@ import { LOGGER } from '../../constants';
 import pino from 'pino';
 import { getChildLogger, loadJsonFilesRecursively } from '../../helpers';
 import { ConfigService, SnapshotHooks } from '../config';
-import { compareVersions } from 'compare-versions';
 
 const SNAPSHOT_JSON = 'snapshot.json';
 const INFO_JSON = 'info.json';
@@ -34,8 +33,6 @@ export class SnapshotClient {
   protected readonly logger: pino.Logger;
 
   protected readonly hooks: SnapshotHooks;
-
-  protected snapshot: Snapshot | undefined;
 
   constructor(
     config: ConfigService,
@@ -126,17 +123,11 @@ export class SnapshotClient {
   }
 
   /**
-   * Get the snapshot from cache or from the Directus instance.
-   * This ensures to get the snapshot only once.
-   * If forceRefresh is true, the snapshot is fetched from the Directus instance.
-   * @protected
+   * Get the snapshot from the Directus instance.
    */
-  protected async getSnapshot(forceRefresh = false): Promise<Snapshot> {
-    if (!this.snapshot || forceRefresh) {
-      const directus = await this.migrationClient.get();
-      this.snapshot = await directus.request<Snapshot>(schemaSnapshot()); // Get better types
-    }
-    return this.snapshot;
+  protected async getSnapshot(): Promise<Snapshot> {
+    const directus = await this.migrationClient.get();
+    return await directus.request<Snapshot>(schemaSnapshot()); // Get better types
   }
 
   /**
@@ -238,31 +229,6 @@ export class SnapshotClient {
     } else {
       const filePath = path.join(this.dumpPath, SNAPSHOT_JSON);
       return readJsonSync(filePath, 'utf-8') as Snapshot;
-    }
-  }
-
-  /**
-   * Get the server version
-   */
-  async getDirectusVersion() {
-    const snapshot = await this.getSnapshot();
-    return snapshot.directus;
-  }
-
-  /**
-   * This method compares the Directus instance version with the given one.
-   */
-  async compareWithDirectusVersion(
-    version: string,
-  ): Promise<'equal' | 'greater' | 'smaller'> {
-    const directusVersion = await this.getDirectusVersion();
-    const diff = compareVersions(version, directusVersion);
-    if (diff === 0) {
-      return 'equal';
-    } else if (diff > 0) {
-      return 'greater';
-    } else {
-      return 'smaller';
     }
   }
 }

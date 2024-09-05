@@ -9,8 +9,10 @@ export async function runPush() {
   const config = Container.get(ConfigService);
   const snapshotConfig = config.getSnapshotConfig();
 
-  // Clear the cache
-  await Container.get(MigrationClient).clearCache();
+  // Check and prepare instance
+  const migrationClient = Container.get(MigrationClient);
+  await migrationClient.validateDirectusVersion();
+  await migrationClient.clearCache();
 
   // Snapshot
   if (snapshotConfig.enabled) {
