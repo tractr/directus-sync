@@ -3,8 +3,8 @@
 ![Directus 10.13.3](https://img.shields.io/badge/Directus-10.13.3-64f?style=for-the-badge&logo=directus)
 
 > [!IMPORTANT]
-> Latest version of `directus-sync` has breaking changes and does not support Directus 10.x.x.
-> If you are using Directus 10.x.x, please use `npx directus-sync@2.2.0`
+> Latest version of `directus-sync` introduces breaking changes and is not compatible with Directus 10.x.x.
+> If you are using Directus 10.x.x, please run `npx directus-sync@2.2.0`
 
 > [!NOTE]
 > Help us improve Directus Sync by sharing your feedback! Take a quick survey about your usage here: https://forms.gle/LnaB89uVkZCDqRfGA
@@ -506,14 +506,14 @@ A[Pull command] --> Pull --> Post --> Z[End]
 For these collections, data changes are committed to the code, allowing for replication on other Directus instances. A
 mapping table links Directus instance IDs with SyncIDs, managed by the `directus-extension-sync`.
 
-#### Roles & policies
+#### Roles & Policies
 
-Roles and policies are tracked.
-By default, Directus creates a default administrator role and 2 default policies: _admin_ and _public_.
+Roles and policies are tracked.  
+By default, Directus creates a default administrator role and two default policies: _admin_ and _public_.
 
-1. To avoid to recreate the default _admin_ role, `directus-sync` uses its user's role as the default _admin_ role. 
-2. To avoid to recreate the default _public_ policy, `directus-sync` uses the first policy found with `role = null`.
-3. To avoid to recreate the default _admin_ policy, `directus-sync` uses the first policy link to the _admin_ role and with `admin_access = true`.
+1. To avoid recreating the default _admin_ role, `directus-sync` uses the user's role as the default _admin_ role.
+2. To avoid recreating the default _public_ policy, `directus-sync` uses the first policy found with `role = null`.
+3. To avoid recreating the default _admin_ policy, `directus-sync` uses the first policy linked to the _admin_ role with `admin_access = true`.
 
 #### Presets
 
