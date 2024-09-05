@@ -4,7 +4,7 @@ export interface Item {
   [key: string]: Id | Id[] | Item | Item[] | unknown;
 }
 export type InputValue = Id | Id[] | Item | Item[] | unknown;
-export type Mapper = (id: Id) => Id | Promise<Id | undefined>;
+export type Mapper = (id: Id) => Id | undefined | Promise<Id | undefined>;
 export interface RecursiveRecord<T> {
   [key: string]: T | RecursiveRecord<T>;
 }
