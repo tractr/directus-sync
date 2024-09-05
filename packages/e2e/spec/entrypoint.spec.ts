@@ -38,6 +38,7 @@ import {
   createOperationsWithConflicts,
   updateOperationsWithConflicts,
 } from './operations/index.js';
+import { updateDefaultData } from './default-data/index.js';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
@@ -70,6 +71,8 @@ describe('Tests entrypoint ->', () => {
   pullWithNewData(context);
   pushOnEmptyInstance(context);
   pushTwiceOnEmptyInstance(context);
+
+  updateDefaultData(context);
 
   pushWithDependencies(context);
 
