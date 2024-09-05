@@ -12,7 +12,7 @@ export class PoliciesDataMapper extends DataMapper<DirectusPolicy> {
   protected fieldsToIgnore: Field<DirectusPolicy>[] = ['users', 'permissions'];
   protected idMappers: IdMappers<DirectusPolicy> = {
     roles: {
-      // @ts-ignore TODO: Bad SDK Typing
+      // @ts-expect-error TODO: Bad SDK Typing
       role: Container.get(RolesIdMapperClient),
     },
   };

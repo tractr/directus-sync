@@ -30,5 +30,24 @@
       }
     ],
     "_syncId": "_sync_default_public_policy"
+  },
+  {
+    "name": "trado",
+    "icon": "ads_click",
+    "description": "Vigor ambitus ipsam amissio pauci vehemens valeo tempora defluo nulla studio capillus summisse tersus adiuvo ciminatio.",
+    "ip_access": [
+      "158.128.199.122",
+      "120.209.198.210"
+    ],
+    "enforce_tfa": true,
+    "admin_access": false,
+    "app_access": true,
+    "roles": [
+      {
+        "role": "5acb1b4a-64bb-484a-9e76-76ed9b13251e",
+        "sort": 1
+      }
+    ],
+    "_syncId": "8e3c67a0-f076-4316-8a7a-c145b3dc7091"
   }
 ]

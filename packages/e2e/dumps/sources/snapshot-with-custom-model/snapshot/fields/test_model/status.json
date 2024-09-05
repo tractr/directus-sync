@@ -2,69 +2,7 @@
   "collection": "test_model",
   "field": "status",
   "type": "string",
-  "meta": {
-    "collection": "test_model",
-    "conditions": null,
-    "display": "labels",
-    "display_options": {
-      "choices": [
-        {
-          "text": "$t:published",
-          "value": "published",
-          "color": "var(--theme--primary)",
-          "foreground": "var(--theme--primary)",
-          "background": "var(--theme--primary-background)"
-        },
-        {
-          "text": "$t:draft",
-          "value": "draft",
-          "color": "var(--theme--foreground)",
-          "foreground": "var(--theme--foreground)",
-          "background": "var(--theme--background-normal)"
-        },
-        {
-          "text": "$t:archived",
-          "value": "archived",
-          "color": "var(--theme--warning)",
-          "foreground": "var(--theme--warning)",
-          "background": "var(--theme--warning-background)"
-        }
-      ],
-      "showAsDot": true
-    },
-    "field": "status",
-    "group": null,
-    "hidden": false,
-    "interface": "select-dropdown",
-    "note": null,
-    "options": {
-      "choices": [
-        {
-          "text": "$t:published",
-          "value": "published",
-          "color": "var(--theme--primary)"
-        },
-        {
-          "text": "$t:draft",
-          "value": "draft",
-          "color": "var(--theme--foreground)"
-        },
-        {
-          "text": "$t:archived",
-          "value": "archived",
-          "color": "var(--theme--warning)"
-        }
-      ]
-    },
-    "readonly": false,
-    "required": false,
-    "sort": 2,
-    "special": null,
-    "translations": null,
-    "validation": null,
-    "validation_message": null,
-    "width": "full"
-  },
+  "meta": null,
   "schema": {
     "name": "status",
     "table": "test_model",

@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "name": "aptus victoria",
+    "key": "substantia-volo",
+    "type": "exec",
+    "position_x": 89,
+    "position_y": 8,
+    "options": {
+      "code": "module.exports = async function(data) {\n\treturn { test: true, ...data };\n}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "c5337337-8375-4194-8fb1-38b2cfe68f30",
+    "_syncId": "7d9135b1-0a93-489b-8a29-de072e3584e0"
+  }
+]

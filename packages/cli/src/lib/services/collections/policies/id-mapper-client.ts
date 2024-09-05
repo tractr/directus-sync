@@ -90,7 +90,7 @@ export class PoliciesIdMapperClient extends IdMapperClient {
           fields: ['id'],
           filter: {
             _and: [
-              // @ts-ignore TODO: Bad SDK Typing
+              // @ts-expect-error TODO: Bad SDK Typing
               { roles: { role: { _eq: adminRoleId } } },
               { admin_access: { _eq: true } },
             ],
@@ -122,9 +122,9 @@ export class PoliciesIdMapperClient extends IdMapperClient {
           fields: ['id'],
           filter: {
             _and: [
-              // @ts-ignore TODO: Bad SDK Typing
+              // @ts-expect-error TODO: Bad SDK Typing
               { roles: { role: { _null: true } } },
-              // @ts-ignore TODO: Bad SDK Typing
+              // @ts-expect-error TODO: Bad SDK Typing
               { roles: { sort: { _eq: 1 } } },
             ],
           },

@@ -48,6 +48,7 @@ export function excludeDefaultSystemCollectionsEntries(
   for (const key of keys) {
     collections[key] = collections[key]?.filter(
       (item) => !item._syncId.startsWith('_sync_default_'),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ) as any;
   }
   return collections;

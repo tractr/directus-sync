@@ -25,7 +25,7 @@ export class RolesDataClient extends DataClient<DirectusRole> {
     return createRole(item);
   }
 
-  protected async getQueryCommand(query: Query<DirectusRole>) {
+  protected getQueryCommand(query: Query<DirectusRole>) {
     return readRoles(query);
   }
 

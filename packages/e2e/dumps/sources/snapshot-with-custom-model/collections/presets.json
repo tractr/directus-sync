@@ -1,1 +1,50 @@
-[]
+[
+  {
+    "bookmark": "ulterius",
+    "role": null,
+    "collection": "directus_users",
+    "search": "celer",
+    "layout": "tabular",
+    "layout_query": {
+      "cards": {
+        "sort": [
+          "email"
+        ]
+      },
+      "tabular": {
+        "fields": [
+          "email",
+          "first_name",
+          "last_name",
+          "password"
+        ]
+      }
+    },
+    "layout_options": {
+      "cards": {
+        "icon": "account_circle",
+        "title": "{{ first_name }} {{ last_name }}",
+        "subtitle": "{{ email }}",
+        "size": 3
+      },
+      "tabular": {
+        "widths": {
+          "email": 266
+        }
+      }
+    },
+    "refresh_interval": 35980,
+    "filter": {
+      "_and": [
+        {
+          "email": {
+            "_eq": "Dereck50@yahoo.com"
+          }
+        }
+      ]
+    },
+    "icon": "account_circle",
+    "color": "#CCFFD1",
+    "_syncId": "00894591-9a44-467a-9970-d47e1ef39306"
+  }
+]

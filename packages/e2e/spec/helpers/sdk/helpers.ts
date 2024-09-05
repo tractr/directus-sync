@@ -21,7 +21,7 @@ export function notSystemPermissions(
 export function notDefaultRoles(role: DirectusRole<Schema>): boolean {
   return (
     role.name !== 'Administrator' &&
-    !(role.description || '').includes('$t:admin_description')
+    !(role.description ?? '').includes('$t:admin_description')
   );
 }
 
@@ -32,7 +32,7 @@ export function notDefaultPolicies(
     '$t:admin_description',
     '$t:admin_policy_description',
     '$t:public_description',
-  ].every((text) => !(policy.description || '').includes(text));
+  ].every((text) => !(policy.description ?? '').includes(text));
 }
 
 export function notNullId<T extends { id: string | number | null }>(

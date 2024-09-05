@@ -2,28 +2,7 @@
   "collection": "test_model",
   "field": "user_updated",
   "type": "string",
-  "meta": {
-    "collection": "test_model",
-    "conditions": null,
-    "display": "user",
-    "display_options": null,
-    "field": "user_updated",
-    "group": null,
-    "hidden": true,
-    "interface": "select-dropdown-m2o",
-    "note": null,
-    "options": {
-      "template": "{{avatar.$thumbnail}} {{first_name}} {{last_name}}"
-    },
-    "readonly": true,
-    "required": false,
-    "sort": 6,
-    "special": ["user-updated"],
-    "translations": null,
-    "validation": null,
-    "validation_message": null,
-    "width": "half"
-  },
+  "meta": null,
   "schema": {
     "name": "user_updated",
     "table": "test_model",

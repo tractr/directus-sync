@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-explicit-any: 0 */
 import { applyMappers, bindMappers, Id } from './apply-mapper';
 
 describe('applyMappers', () => {
@@ -25,7 +26,7 @@ describe('applyMappers', () => {
       ],
     };
 
-    const mapperFactory = (index: number) => async (value: Id) =>
+    const mapperFactory = (index: number) => (value: Id) =>
       `${value} mapped [${index}]`;
     const mappers = {
       key1: mapperFactory(1),
@@ -77,7 +78,7 @@ describe('applyMappers', () => {
       },
     };
 
-    const mapperFactory = (index: number) => async (value: Id) =>
+    const mapperFactory = (index: number) => (value: Id) =>
       `${value} mapped [${index}]`;
     const mappers = {
       key1: mapperFactory(1),
@@ -108,7 +109,7 @@ describe('applyMappers', () => {
       },
     };
 
-    const mapperFactory = (index: number) => async (value: Id) =>
+    const mapperFactory = (index: number) => (value: Id) =>
       `${value} mapped [${index}]`;
     const mappers = {
       key1: mapperFactory(1),
@@ -125,7 +126,7 @@ describe('applyMappers', () => {
       key1: 'value2',
     };
 
-    const mapperFactory = (index: number) => async (value: Id) =>
+    const mapperFactory = (index: number) => (value: Id) =>
       `${value} mapped [${index}]`;
     const mappers = {
       key1: {
@@ -145,7 +146,7 @@ describe('applyMappers', () => {
       key3: 'value3',
     };
 
-    const mapperFactory = (index: number) => async (value: Id) =>
+    const mapperFactory = (index: number) => (value: Id) =>
       index === 3 ? undefined : `${value} mapped [${index}]`;
     const mappers = {
       key1: mapperFactory(1),
@@ -166,7 +167,7 @@ describe('applyMappers', () => {
       },
     };
 
-    const mapperFactory = (index: number) => async (value: Id) =>
+    const mapperFactory = (index: number) => (value: Id) =>
       index === 3 ? undefined : `${value} mapped [${index}]`;
     const mappers = {
       key1: mapperFactory(1),

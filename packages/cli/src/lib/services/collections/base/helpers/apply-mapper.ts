@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-redundant-type-constituents: 0 */
 export type Id = string | number;
 export interface Item {
   [key: string]: Id | Id[] | Item | Item[] | unknown;
