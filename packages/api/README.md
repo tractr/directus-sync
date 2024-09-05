@@ -74,7 +74,7 @@ SyncIDs. These endpoints include:
 ### Helpers
 
 - `DELETE /directus-extension-sync/helpers/permissions/duplicates`: Remove conflicts in permissions when there are
-  duplicated groups "role + collection + action".
+  duplicated groups "policy + collection + action".
 
 ## Development
 

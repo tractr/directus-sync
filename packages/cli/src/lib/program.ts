@@ -226,7 +226,7 @@ export function createProgram() {
   helpers
     .command('remove-permission-duplicates')
     .description(
-      'remove conflicts in permissions when there are duplicated groups "role + collection + action".',
+      'remove conflicts in permissions when there are duplicated groups "policy + collection + action".',
     )
     .option(
       '--keep <keep>',
