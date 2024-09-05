@@ -6,7 +6,7 @@
 > Latest version of `directus-sync` has breaking changes and does not support Directus 10.x.x.
 > If you are using Directus 10.x.x, please use `npx directus-sync@2.2.0`
 
-> [!INFO]
+> [!NOTE]
 > Help us improve Directus Sync by sharing your feedback! Take a quick survey about your usage here: https://forms.gle/LnaB89uVkZCDqRfGA
 
 The `directus-sync` command-line interface (CLI) provides a set of tools for managing and synchronizing the schema and
