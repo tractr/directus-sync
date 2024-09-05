@@ -50,11 +50,11 @@ function wrapAction(program: Command, action: () => Promise<void>) {
 function getVersion(): string {
   try {
     const { version } = readJSONSync(
-      resolve(__dirname, '..', 'package.json'),
+      resolve(__dirname, '..', '..', 'package.json'),
     ) as { version?: string };
     return version ?? 'undefined';
   } catch (e) {
-    return 'error';
+    return (e as Error).message ?? 'error';
   }
 }
 
