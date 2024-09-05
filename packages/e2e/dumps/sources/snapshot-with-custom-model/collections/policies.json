@@ -35,10 +35,7 @@
     "name": "trado",
     "icon": "ads_click",
     "description": "Vigor ambitus ipsam amissio pauci vehemens valeo tempora defluo nulla studio capillus summisse tersus adiuvo ciminatio.",
-    "ip_access": [
-      "158.128.199.122",
-      "120.209.198.210"
-    ],
+    "ip_access": ["158.128.199.122", "120.209.198.210"],
     "enforce_tfa": true,
     "admin_access": false,
     "app_access": true,

@@ -9,9 +9,7 @@
     },
     "validation": null,
     "presets": null,
-    "fields": [
-      "id"
-    ],
+    "fields": ["id"],
     "policy": "8e3c67a0-f076-4316-8a7a-c145b3dc7091",
     "_syncId": "05d397cb-b2cd-46a0-96ee-f925f63bb0cd"
   }
