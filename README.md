@@ -1,6 +1,6 @@
 # Directus Sync
 
-![Directus 10.13.2](https://img.shields.io/badge/Directus-10.13.2-64f?style=for-the-badge&logo=directus)
+![Directus 10.13.3](https://img.shields.io/badge/Directus-10.13.3-64f?style=for-the-badge&logo=directus)
 
 > [!IMPORTANT]
 > Help us improve Directus Sync by sharing your feedback! Take a quick survey about your usage here: https://forms.gle/LnaB89uVkZCDqRfGA

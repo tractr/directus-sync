@@ -4,7 +4,7 @@ import path from 'path';
 import { readdir } from 'fs/promises';
 
 const actual = '10.13.2';
-const next = '10.13.2';
+const next = '10.13.3';
 
 if (actual === next) {
   console.log('Nothing to upgrade');
