@@ -3,6 +3,10 @@
 ![Directus 10.13.3](https://img.shields.io/badge/Directus-10.13.3-64f?style=for-the-badge&logo=directus)
 
 > [!IMPORTANT]
+> Latest version of `directus-sync` has breaking changes and does not support Directus 10.x.x.
+> If you are using Directus 10.x.x, please use `npx directus-sync@2.2.0`
+
+> [!INFO]
 > Help us improve Directus Sync by sharing your feedback! Take a quick survey about your usage here: https://forms.gle/LnaB89uVkZCDqRfGA
 
 The `directus-sync` command-line interface (CLI) provides a set of tools for managing and synchronizing the schema and
@@ -214,7 +218,7 @@ module.exports = {
   },
   dumpPath: './directus-config',
   collectionsPath: 'collections',
-  onlyCollections: ['roles', 'permissions', 'settings'],
+  onlyCollections: ['roles', 'policies', 'permissions', 'settings'],
   excludeCollections: ['settings'],
   preserveIds: ['roles', 'panels'], // can be '*' or 'all' to preserve all ids, or an array of collections
   snapshotPath: 'snapshot',
@@ -234,7 +238,7 @@ going to Directus.
 Hooks are defined in the configuration file using the `hooks` property. Under this property, you can define the
 collection name and the hook function to be executed.
 Available collection names
-are: `dashboards`, `flows`, `folders`, `operations`, `panels`, `permissions`, `presets`, `roles`, `settings` and `translations`.
+are: `dashboards`, `flows`, `folders`, `operations`, `panels`, `policies`, `permissions`, `presets`, `roles`, `settings` and `translations`.
 
 For each collection, available hook functions are: `onQuery`, `onLoad`, `onSave`, and `onDump`.
 These can be asynchronous functions.
@@ -492,6 +496,7 @@ A[Pull command] --> Pull --> Post --> Z[End]
 - folders
 - operations
 - panels
+- policies
 - permissions
 - presets
 - roles
@@ -501,13 +506,14 @@ A[Pull command] --> Pull --> Post --> Z[End]
 For these collections, data changes are committed to the code, allowing for replication on other Directus instances. A
 mapping table links Directus instance IDs with SyncIDs, managed by the `directus-extension-sync`.
 
-#### Roles
+#### Roles & policies
 
-Roles are tracked, but the _main_ administrator role is not tracked.
-This is because the administrator role is a system role and is automatically created by Directus.
-It will cause conflicts if it is tracked.
+Roles and policies are tracked.
+By default, Directus creates a default administrator role and 2 default policies: _admin_ and _public_.
 
-The _main_ administrator is the role of the curent user, used to authenticate the `directus-sync` commands.
+1. To avoid to recreate the default _admin_ role, `directus-sync` uses its user's role as the default _admin_ role. 
+2. To avoid to recreate the default _public_ policy, `directus-sync` uses the first policy found with `role = null`.
+3. To avoid to recreate the default _admin_ policy, `directus-sync` uses the first policy link to the _admin_ role and with `admin_access = true`.
 
 #### Presets
 
