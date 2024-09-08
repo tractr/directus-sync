@@ -42,10 +42,9 @@ const directusVersions = [
   // '11.0.0',
   // '11.0.1',
   // '11.0.2',
-  // '11.0.3',
 
   '11.1',
-  '11.1.0',
+  // '11.1.0',
 ];
 
 const platforms = ['linux/amd64', 'linux/arm64'];
