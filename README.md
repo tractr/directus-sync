@@ -630,3 +630,11 @@ to upgrading Directus using `directus-sync`:
 
 - [Synchronization Failures Due to Firewall Configurations](./docs/troubleshooting/firewall-configurations/README.md)
 - [Collections can't start with "directus_"](./docs/troubleshooting/collections-cant-start-with-directus_/README.md)
+
+## Donate
+
+If Directus Sync has helped you in your projects, please consider donating to support its ongoing development and 
+maintenance.
+
+[![Donate](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/Directus-Sync/donate)
+
