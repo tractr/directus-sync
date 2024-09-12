@@ -11,8 +11,7 @@
     "directus": "directus",
     "directus-sync": "directus-sync",
     "bootstrap": "./bootstrap.sh",
-    "test": "rm -f ./logs/*.log && jasmine",
-    "build-test": "npm run build && npm run test",
+    "test": "npm run build && rm -f ./logs/*.log && jasmine",
     "upgrade": "zx upgrade-directus-version.mjs && zx update-dumps-from-current-version.mjs"
   },
   "keywords": [],
