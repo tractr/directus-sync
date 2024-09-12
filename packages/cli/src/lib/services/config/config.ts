@@ -18,7 +18,6 @@ import deepmerge from 'deepmerge';
 import { DefaultConfig, DefaultConfigPaths } from './default-config';
 import { CollectionsList, OptionsSchema } from './schema';
 import { LOGGER } from '../../constants';
-import pino from 'pino';
 
 @Service()
 export class ConfigService {
@@ -213,7 +212,7 @@ export class ConfigService {
    * See loader.ts file for more information
    */
   protected getLogger() {
-    const baseLogger = Container.get(LOGGER) as pino.Logger;
+    const baseLogger = Container.get(LOGGER);
     return getChildLogger(baseLogger, 'config');
   }
 }
