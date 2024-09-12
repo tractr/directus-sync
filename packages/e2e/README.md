@@ -25,6 +25,8 @@ Then, you can run the tests:
 npm run test
 ```
 
+If you have edited the extension or the CLI, you need to rebuild them.
+
 ### Running a single test
 
 By design, the tests are ran sequentially. This is done to avoid conflicts between Directus servers.

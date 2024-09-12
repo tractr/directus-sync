@@ -1,1 +1,1 @@
-export * from './wrong-config-path.js';
+export * from './config-path-info.js';
