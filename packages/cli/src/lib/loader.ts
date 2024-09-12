@@ -26,18 +26,18 @@ export async function initContext(
   programOptions: object,
   commandOptions: object,
 ) {
-  // Set temporary logger, in case of error when loading the config
-  Container.set(
-    LOGGER,
-    Logger({
-      transport: getPinoTransport(),
-      level: 'error',
-    }),
-  );
+  // Set temporary logger. This allows the config process to log infos and errors
+  const tempLogger = Logger({
+    transport: getPinoTransport(),
+    level: 'info',
+  });
+  Container.set(LOGGER, tempLogger);
   // Get the config service
   const config = Container.get(ConfigService);
   // Set the options
   config.setOptions(programOptions, commandOptions);
+  // Flush previous logs
+  tempLogger.flush();
   // Define the logger
   Container.set(
     LOGGER,
