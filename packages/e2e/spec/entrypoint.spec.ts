@@ -39,6 +39,7 @@ import {
   updateOperationsWithConflicts,
 } from './operations/index.js';
 import { updateDefaultData } from './default-data/index.js';
+import { wrongConfigPath } from './config/index.js';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
@@ -91,6 +92,8 @@ describe('Tests entrypoint ->', () => {
   excludeSomeCollections(context);
   includeSomeCollections(context);
   noSnapshot(context);
+
+  wrongConfigPath(context);
 
   insertDuplicatedPermissions(context);
   removePermissionDuplicates(context);

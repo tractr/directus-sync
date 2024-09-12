@@ -4,6 +4,7 @@ import fs from 'fs-extra';
 import { DirectusSync } from './directus-sync.js';
 import { SqliteClient } from './sqlite-client.js';
 import { sleep } from './async/index.js';
+import { DirectusSyncArgs } from './interfaces';
 
 const dumpBaseDirectory = Path.resolve('dumps');
 const configBaseDirectory = Path.resolve('configs');
@@ -45,7 +46,11 @@ export class Context {
     return this.instance;
   }
 
-  async getSync(dumpFolder: string, configPath?: string) {
+  async getSync(
+    dumpFolder: string,
+    configPath?: string,
+    factory: new (options: DirectusSyncArgs) => DirectusSync = DirectusSync,
+  ): Promise<DirectusSync> {
     const dumpPath = Path.resolve(dumpBaseDirectory, dumpFolder);
     const clearDumpPath = dumpFolder.startsWith('temp');
     if (clearDumpPath) {
@@ -53,13 +58,14 @@ export class Context {
     }
     const directus = this.getDirectus();
     const instance = this.getInstance();
-    return new DirectusSync({
+    const options = {
       token: await directus.requireToken(),
       url: instance.getUrl(),
       dumpPath,
       configPath: configPath
         ? Path.resolve(configBaseDirectory, configPath)
         : undefined,
-    });
+    };
+    return new factory(options);
   }
 }
