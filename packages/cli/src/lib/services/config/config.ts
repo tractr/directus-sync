@@ -213,7 +213,7 @@ export class ConfigService {
    * See loader.ts file for more information
    */
   protected getLogger() {
-    const baseLogger = Container.get(LOGGER) as pino.Logger;
+    const baseLogger = Container.get<pino.Logger>(LOGGER);
     return getChildLogger(baseLogger, 'config');
   }
 }
