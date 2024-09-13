@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.1.0](https://github.com/tractr/directus-sync/compare/directus-sync@3.0.0...directus-sync@3.1.0) (2024-09-13)
+
+
+### Features
+
+* **cli:** check directus-extension-sync is installed before push ([#97](https://github.com/tractr/directus-sync/issues/97)) ([f78fac7](https://github.com/tractr/directus-sync/commit/f78fac7b67468c4ccf144f8ad5f71bf8183c38aa))
+* **cli:** log config file loading status ([#95](https://github.com/tractr/directus-sync/issues/95)) ([97f4b15](https://github.com/tractr/directus-sync/commit/97f4b15fbd5be23a2b8c6bc772d0800abce07f1a))
+
+
+
+
+
 # [3.0.0](https://github.com/tractr/directus-sync/compare/directus-sync@2.2.0...directus-sync@3.0.0) (2024-09-05)
 
 
