@@ -2,6 +2,10 @@
 
 set -e
 
+# Ensure we are on the main branch
+git checkout main
+git pull
+
 npm install
 npm run format
 npm run lint
