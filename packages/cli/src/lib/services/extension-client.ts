@@ -2,6 +2,8 @@ import createHttpError from 'http-errors';
 import { MigrationClient } from './migration-client';
 import { Cacheable } from 'typescript-cacheable';
 
+export const NO_ID_MAP_MESSAGE = 'No id map found';
+
 /**
  * This class provides an interface to interact with the Directus extension sync endpoints.
  */

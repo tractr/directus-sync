@@ -1,6 +1,11 @@
 import { Container } from 'typedi';
 import pino from 'pino';
-import { ConfigService, MigrationClient, SnapshotClient } from '../services';
+import {
+  ConfigService,
+  MigrationClient,
+  PingClient,
+  SnapshotClient,
+} from '../services';
 import { loadCollections } from '../loader';
 import { LOGGER } from '../constants';
 
@@ -16,6 +21,10 @@ export async function runPush() {
 
   // Snapshot
   if (snapshotConfig.enabled) {
+    // Test if the directus extension is installed
+    // At this point, it could be not installed and cause an issue with the snapshot push
+    await Container.get(PingClient).test();
+
     logger.info(`---- Push schema ----`);
     await Container.get(SnapshotClient).push();
   } else {

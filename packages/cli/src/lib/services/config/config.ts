@@ -1,22 +1,24 @@
-import { Service } from 'typedi';
+import { Container, Service } from 'typedi';
 import {
+  CollectionHooks,
+  CollectionName,
+  CollectionPreservableIdName,
   ConfigFileOptions,
   DirectusConfigWithCredentials,
   DirectusConfigWithToken,
-  CollectionName,
-  CollectionHooks,
-  SnapshotHooks,
   OptionName,
   Options,
-  CollectionPreservableIdName,
+  SnapshotHooks,
 } from './interfaces';
 import Path from 'path';
 import { Cacheable } from 'typescript-cacheable';
 import { ConfigFileLoader } from './config-file-loader';
-import { zodParse } from '../../helpers';
+import { getChildLogger, zodParse } from '../../helpers';
 import deepmerge from 'deepmerge';
 import { DefaultConfig, DefaultConfigPaths } from './default-config';
 import { CollectionsList, OptionsSchema } from './schema';
+import { LOGGER } from '../../constants';
+import pino from 'pino';
 
 @Service()
 export class ConfigService {
@@ -185,6 +187,7 @@ export class ConfigService {
 
   @Cacheable()
   protected getFileOptions(): ConfigFileOptions | undefined {
+    const logger = this.getLogger();
     const customConfigPath = this.programOptions?.configPath;
     const possiblePaths = [
       ...(customConfigPath ? [Path.resolve(customConfigPath)] : []),
@@ -195,10 +198,22 @@ export class ConfigService {
     for (const configPath of possiblePaths) {
       const config = new ConfigFileLoader(configPath).get();
       if (config) {
+        logger.info(`Loaded config file from ${configPath}`);
         return config;
       }
     }
-
+    logger.info(
+      `No config file found. Tried path: \n- ${possiblePaths.join('\n- ')}`,
+    );
     return undefined;
+  }
+
+  /**
+   * Returns a temporary logger as it may be changed by another one with specific options
+   * See loader.ts file for more information
+   */
+  protected getLogger() {
+    const baseLogger = Container.get<pino.Logger>(LOGGER);
+    return getChildLogger(baseLogger, 'config');
   }
 }
