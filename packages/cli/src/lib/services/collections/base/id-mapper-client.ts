@@ -1,5 +1,5 @@
 import { MigrationClient } from '../../migration-client';
-import { ExtensionClient } from '../../extension-client';
+import { ExtensionClient, NO_ID_MAP_MESSAGE } from '../../extension-client';
 import pino from 'pino';
 
 export interface IdMap {
@@ -40,7 +40,7 @@ export abstract class IdMapperClient extends ExtensionClient {
     const idMap = await this.fetch<IdMap>(
       `/table/${this.table}/sync_id/${syncId}`,
     ).catch((error) => {
-      if (error.message === 'No id map found') {
+      if (error.message === NO_ID_MAP_MESSAGE) {
         return undefined;
       }
       throw error;
@@ -62,7 +62,7 @@ export abstract class IdMapperClient extends ExtensionClient {
     const idMap = await this.fetch<IdMap>(
       `/table/${this.table}/local_id/${localId}`,
     ).catch((error) => {
-      if (error.message === 'No id map found') {
+      if (error.message === NO_ID_MAP_MESSAGE) {
         return undefined;
       }
       throw error;

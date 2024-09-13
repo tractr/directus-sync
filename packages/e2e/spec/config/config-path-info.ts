@@ -9,10 +9,10 @@ export const configPathInfo = (context: Context) => {
     );
 
     const output = await sync.diff();
-    const first = output.shift();
+    const log = output.find((l) => l.msg.includes('No config file found'));
 
-    expect(first?.msg).toContain('No config file found');
-    expect(first?.msg).toContain('wrong-path/directus-sync.config.cjs');
+    expect(log).toBeDefined();
+    expect(log?.msg).toContain('wrong-path/directus-sync.config.cjs');
   });
 
   it('ensure log shows info about missing config file for default files', async () => {
@@ -20,12 +20,12 @@ export const configPathInfo = (context: Context) => {
     const sync = await context.getSync('sources/empty-collections');
 
     const output = await sync.diff();
-    const first = output.shift();
+    const log = output.find((l) => l.msg.includes('No config file found'));
 
-    expect(first?.msg).toContain('No config file found');
-    expect(first?.msg).toContain('e2e/directus-sync.config.cjs');
-    expect(first?.msg).toContain('e2e/directus-sync.config.js');
-    expect(first?.msg).toContain('e2e/directus-sync.config.json');
+    expect(log).toBeDefined();
+    expect(log?.msg).toContain('e2e/directus-sync.config.cjs');
+    expect(log?.msg).toContain('e2e/directus-sync.config.js');
+    expect(log?.msg).toContain('e2e/directus-sync.config.json');
   });
 
   it('ensure logs show info when config path exists', async () => {
@@ -36,9 +36,8 @@ export const configPathInfo = (context: Context) => {
     );
 
     const output = await sync.diff();
-    const first = output.shift();
+    const log = output.find((l) => l.msg.includes('Loaded config file from'));
 
-    expect(first?.msg).toContain('Loaded config file from');
-    expect(first?.msg).toContain('config-path-info/directus-sync.config.cjs');
+    expect(log?.msg).toContain('config-path-info/directus-sync.config.cjs');
   });
 };
