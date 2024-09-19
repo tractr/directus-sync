@@ -67,6 +67,8 @@ module.exports = {
 };
 ```
 
+For detailed configuration options, refer to the [full documentation](https://github.com/tractr/directus-sync/blob/main/DOCUMENTATION.md).
+
 ## Roadmap
 
 We're constantly working to improve Directus Sync. Some features we're considering for future releases:
