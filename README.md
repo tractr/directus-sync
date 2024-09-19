@@ -1,6 +1,6 @@
 # Directus Sync
 
-![Directus 11.1.0](https://img.shields.io/badge/Directus-11.1.0-64f?style=for-the-badge&logo=directus)
+![Directus 11.1.0](https://img.shields.io/badge/Directus-11.1.0-64f?style=for-the-badge&logo=directus) [![Donate](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/Directus-Sync/donate)
 
 > [!IMPORTANT]
 > **Documentation**: Check the [documentation](https://github.com/tractr/directus-sync/blob/main/DOCUMENTATION.md) for detailed
@@ -9,7 +9,6 @@
 > [!NOTE]
 > **Donate**: If Directus Sync is enhancing your team's productivity in a commercial setting, please consider supporting our project
 > financially.
-> [![Donate](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/Directus-Sync/donate)
 
 ## Overview
 
