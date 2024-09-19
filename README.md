@@ -8,7 +8,7 @@
 
 > [!NOTE]
 > **Donate**: If Directus Sync is enhancing your team's productivity in a commercial setting, please consider supporting our project
-> financially.
+> financially. More information in the [Donate](#donate) section.
 
 ## Overview
 
