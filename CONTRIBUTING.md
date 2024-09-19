@@ -56,7 +56,17 @@ Before submitting a PR, please make sure it adheres to the guidelines mentioned 
    npm install
    ```
 
-3. **Run tests**:  
+3. **Add a new feature or fix a bug**:
+   Create a new branch for your changes.
+   Make your changes and commit them.
+
+4. **Build project**:
+   Make sure that the project is building correctly.
+   ```bash
+   npm run build
+   ```
+
+5. **Run tests**:  
    Make sure to run tests before submitting a PR to ensure that your code doesn't break existing functionality.
    ```bash
    npm test
