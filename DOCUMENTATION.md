@@ -559,7 +559,7 @@ maintaining the integrity and links between different entities.
 
 > [!TIP]
 > You can use the `--preserve-ids` option to preserve the original ids of some collections.
-> Eligible collections are collections using UUID: `dashboards`, `operations`, `panels`, `roles` and `translations`.
+> Eligible collections are collections using UUID: `dashboards`, `operations`, `panels`, `policies`, `roles` and `translations`.
 > If you have already used the `pull` command, you may use the `untrack` helper to remove the id tracking of an element
 > before using this option.
 
