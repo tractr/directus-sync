@@ -91,7 +91,9 @@ export const pushWithDependencies = (context: Context) => {
 
   fit('push with settings dependencies on an empty instance', async () => {
     // Init sync client
-    const sync = await context.getSync('sources/dependencies-settings');
+    const sync = await context.getSync(
+      'sources/dependencies-settings-default-folder',
+    );
     const directus = context.getDirectus();
     const client = directus.get();
 
@@ -105,5 +107,24 @@ export const pushWithDependencies = (context: Context) => {
     expect(folders.length).toEqual(1);
     expect(settings[0]?.storage_default_folder).toBeDefined();
     expect(settings[0]?.storage_default_folder).toEqual(folders[0]?.id);
+  });
+
+  fit('push with settings dependencies on an empty instance', async () => {
+    // Init sync client
+    const sync = await context.getSync(
+      'sources/dependencies-settings-default-role',
+    );
+    const directus = context.getDirectus();
+    const client = directus.get();
+
+    const pushOutput = await sync.push();
+    expect(pushOutput).toContain(info('[snapshot] No changes to apply'));
+    expect(pushOutput).toContain(info('[roles] Created 1 items'));
+    expect(pushOutput).toContain(info('[settings] Updated 1 items'));
+
+    const { settings, roles } = await readAllSystemCollections(client);
+    expect(settings.length).toEqual(1);
+    expect(roles.length).toEqual(2);
+    expect(settings[0]?.public_registration_role).toEqual(roles[1]?.id);
   });
 };

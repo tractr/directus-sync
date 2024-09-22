@@ -1,0 +1,23 @@
+{
+  "collection": "directus_sync_id_map",
+  "field": "created_at",
+  "type": "dateTime",
+  "meta": null,
+  "schema": {
+    "name": "created_at",
+    "table": "directus_sync_id_map",
+    "data_type": "datetime",
+    "default_value": "CURRENT_TIMESTAMP",
+    "max_length": null,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}

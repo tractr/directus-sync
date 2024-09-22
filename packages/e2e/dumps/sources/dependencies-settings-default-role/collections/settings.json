@@ -1,0 +1,36 @@
+[
+  {
+    "project_name": "animadverto",
+    "project_color": "#6644FF",
+    "public_note": "Traho cognomen arcus abduco excepturi.",
+    "auth_login_attempts": 16,
+    "auth_password_policy": "/^.{8,}$/",
+    "storage_asset_transform": "none",
+    "storage_asset_presets": null,
+    "custom_css": "body {\n  --v-button-background-color: #6644FF !important;\n}\n",
+    "storage_default_folder": null,
+    "basemaps": null,
+    "mapbox_key": "p0l7oxn7yEUmthIaWYH8LKkyAI48fVg3",
+    "module_bar": null,
+    "project_descriptor": "Test project",
+    "default_language": "en-US",
+    "custom_aspect_ratios": null,
+    "default_appearance": "light",
+    "default_theme_light": "Directus Default",
+    "theme_light_overrides": {
+      "borderRadius": "2px"
+    },
+    "default_theme_dark": null,
+    "theme_dark_overrides": {
+      "borderRadius": "1px"
+    },
+    "report_error_url": null,
+    "report_bug_url": null,
+    "report_feature_url": null,
+    "public_registration": false,
+    "public_registration_verify_email": true,
+    "public_registration_role": "52183adc-3e8e-4746-abd2-ee8dfc58efd5",
+    "public_registration_email_filter": null,
+    "_syncId": "26aa9eb5-11af-44cb-9f5b-073c55b57974"
+  }
+]

@@ -14,6 +14,7 @@ import {
 } from '@directus/sdk';
 import { FixPolicy } from './policy';
 import { FixPermission } from './permissions';
+import { FixSettings } from './settings';
 
 export type DirectusId = number | string;
 export type Schema = object;
@@ -41,7 +42,7 @@ export interface SystemCollectionsTypes {
   policies: FixPolicy<DirectusPolicy<Schema>>;
   presets: DirectusPreset<Schema>;
   roles: DirectusRole<Schema>;
-  settings: DirectusSettings<Schema>;
+  settings: FixSettings<DirectusSettings<Schema>>;
   translations: DirectusTranslation<Schema>;
 }
 
