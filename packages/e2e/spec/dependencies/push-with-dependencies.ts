@@ -3,18 +3,19 @@ import {
   getDefaultItemsCount,
   getSystemCollectionsNames,
   info,
+  readAllSystemCollections,
 } from '../helpers/index.js';
 
-const expectedAmount = (collection: string) => {
-  if (collection === 'flows') return 1;
-  if (collection === 'operations') return 3;
-  return 0;
-};
-
 export const pushWithDependencies = (context: Context) => {
-  it('push with dependencies on an empty instance', async () => {
+  it('push with operations multiple dependencies on an empty instance', async () => {
+    const expectedAmount = (collection: string) => {
+      if (collection === 'flows') return 1;
+      if (collection === 'operations') return 3;
+      return 0;
+    };
+
     // Init sync client
-    const sync = await context.getSync('sources/multiple-dependencies');
+    const sync = await context.getSync('sources/dependencies-operations');
     const directus = context.getDirectus();
     const collections = getSystemCollectionsNames();
 
@@ -86,5 +87,44 @@ export const pushWithDependencies = (context: Context) => {
       // Nothing deleted
       expect(pushOutput).not.toContain(info(`[${collection}] Deleted 1 items`));
     }
+  });
+
+  it('push with settings dependencies on an empty instance', async () => {
+    // Init sync client
+    const sync = await context.getSync(
+      'sources/dependencies-settings-default-folder',
+    );
+    const directus = context.getDirectus();
+    const client = directus.get();
+
+    const pushOutput = await sync.push();
+    expect(pushOutput).toContain(info('[snapshot] No changes to apply'));
+    expect(pushOutput).toContain(info('[folders] Created 1 items'));
+    expect(pushOutput).toContain(info('[settings] Created 1 items'));
+
+    const { settings, folders } = await readAllSystemCollections(client);
+    expect(settings.length).toEqual(1);
+    expect(folders.length).toEqual(1);
+    expect(settings[0]?.storage_default_folder).toBeDefined();
+    expect(settings[0]?.storage_default_folder).toEqual(folders[0]?.id);
+  });
+
+  it('push with settings dependencies on an empty instance', async () => {
+    // Init sync client
+    const sync = await context.getSync(
+      'sources/dependencies-settings-default-role',
+    );
+    const directus = context.getDirectus();
+    const client = directus.get();
+
+    const pushOutput = await sync.push();
+    expect(pushOutput).toContain(info('[snapshot] No changes to apply'));
+    expect(pushOutput).toContain(info('[roles] Created 1 items'));
+    expect(pushOutput).toContain(info('[settings] Created 1 items'));
+
+    const { settings, roles } = await readAllSystemCollections(client);
+    expect(settings.length).toEqual(1);
+    expect(roles.length).toEqual(1);
+    expect(settings[0]?.public_registration_role).toEqual(roles[0]?.id);
   });
 };

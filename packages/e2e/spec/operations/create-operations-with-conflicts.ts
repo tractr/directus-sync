@@ -12,7 +12,7 @@ type OperationFromJson = SystemCollectionsContentWithSyncId['operations'][0];
 export const createOperationsWithConflicts = (context: Context) => {
   it('create an operation that conflicts with other', async () => {
     // Init sync client
-    const sync = await context.getSync('sources/multiple-dependencies');
+    const sync = await context.getSync('sources/dependencies-operations');
     const directus = context.getDirectus();
     const client = directus.get();
     await sync.push();

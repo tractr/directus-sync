@@ -60,6 +60,7 @@ import {
   DirectusSettingsExtra,
   FixPermission,
   FixPolicy,
+  FixSettings,
   notDefaultPolicies,
   notDefaultRoles,
   notNullId,
@@ -215,7 +216,9 @@ export async function readAllSystemCollections(
     policies: keepDefault ? policies : policies.filter(notDefaultPolicies),
     presets: await client.request(readPresets()),
     roles: keepDefault ? roles : roles.filter(notDefaultRoles),
-    settings: [await client.request(readSettings())].filter(notNullId),
+    settings: [await client.request(readSettings())].filter(
+      notNullId,
+    ) as unknown as FixSettings<DirectusSettings<Schema>>[],
     translations: await client.request(readTranslations()),
   };
 }

@@ -7,6 +7,7 @@ import { LOGGER } from '../../../constants';
 import { SETTINGS_COLLECTION } from './constants';
 import { DirectusSettings } from './interfaces';
 import { RolesIdMapperClient } from '../roles';
+import { FoldersIdMapperClient } from '../folders';
 
 @Service()
 export class SettingsDataMapper extends DataMapper<DirectusSettings> {
@@ -22,6 +23,7 @@ export class SettingsDataMapper extends DataMapper<DirectusSettings> {
   protected idMappers: IdMappers<DirectusSettings, 'public_registration_role'> =
     {
       public_registration_role: Container.get(RolesIdMapperClient),
+      storage_default_folder: Container.get(FoldersIdMapperClient),
     };
 
   constructor(@Inject(LOGGER) baseLogger: pino.Logger) {
