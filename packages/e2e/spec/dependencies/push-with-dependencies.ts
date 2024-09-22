@@ -3,6 +3,7 @@ import {
   getDefaultItemsCount,
   getSystemCollectionsNames,
   info,
+  readAllSystemCollections,
 } from '../helpers/index.js';
 
 export const pushWithDependencies = (context: Context) => {
@@ -86,5 +87,23 @@ export const pushWithDependencies = (context: Context) => {
       // Nothing deleted
       expect(pushOutput).not.toContain(info(`[${collection}] Deleted 1 items`));
     }
+  });
+
+  fit('push with settings dependencies on an empty instance', async () => {
+    // Init sync client
+    const sync = await context.getSync('sources/dependencies-settings');
+    const directus = context.getDirectus();
+    const client = directus.get();
+
+    const pushOutput = await sync.push();
+    expect(pushOutput).toContain(info('[snapshot] No changes to apply'));
+    expect(pushOutput).toContain(info('[folder] Created 1 items'));
+    expect(pushOutput).toContain(info('[settings] Updated 1 items'));
+
+    const { settings, folders } = await readAllSystemCollections(client);
+    expect(settings.length).toEqual(1);
+    expect(folders.length).toEqual(1);
+    expect(settings[0]?.storage_default_folder).toBeDefined();
+    expect(settings[0]?.storage_default_folder).toEqual(folders[0]?.id);
   });
 };
