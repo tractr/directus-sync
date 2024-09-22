@@ -99,8 +99,8 @@ export const pushWithDependencies = (context: Context) => {
 
     const pushOutput = await sync.push();
     expect(pushOutput).toContain(info('[snapshot] No changes to apply'));
-    expect(pushOutput).toContain(info('[folder] Created 1 items'));
-    expect(pushOutput).toContain(info('[settings] Updated 1 items'));
+    expect(pushOutput).toContain(info('[folders] Created 1 items'));
+    expect(pushOutput).toContain(info('[settings] Created 1 items'));
 
     const { settings, folders } = await readAllSystemCollections(client);
     expect(settings.length).toEqual(1);
@@ -120,11 +120,11 @@ export const pushWithDependencies = (context: Context) => {
     const pushOutput = await sync.push();
     expect(pushOutput).toContain(info('[snapshot] No changes to apply'));
     expect(pushOutput).toContain(info('[roles] Created 1 items'));
-    expect(pushOutput).toContain(info('[settings] Updated 1 items'));
+    expect(pushOutput).toContain(info('[settings] Created 1 items'));
 
     const { settings, roles } = await readAllSystemCollections(client);
     expect(settings.length).toEqual(1);
-    expect(roles.length).toEqual(2);
-    expect(settings[0]?.public_registration_role).toEqual(roles[1]?.id);
+    expect(roles.length).toEqual(1);
+    expect(settings[0]?.public_registration_role).toEqual(roles[0]?.id);
   });
 };
