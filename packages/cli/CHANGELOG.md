@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.3](https://github.com/tractr/directus-sync/compare/directus-sync@3.1.2...directus-sync@3.1.3) (2024-09-22)
+
+
+### Bug Fixes
+
+* **cli:** map id of settings.storage_default_folder ([#104](https://github.com/tractr/directus-sync/issues/104)) ([bc060b1](https://github.com/tractr/directus-sync/commit/bc060b154d7405fc00bfadd6bd42eff905b7c5dd))
+
+
+
+
+
 ## [3.1.2](https://github.com/tractr/directus-sync/compare/directus-sync@3.1.0...directus-sync@3.1.2) (2024-09-13)
 
 **Note:** Version bump only for package directus-sync

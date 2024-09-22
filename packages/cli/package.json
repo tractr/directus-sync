@@ -1,6 +1,6 @@
 {
   "name": "directus-sync",
-  "version": "3.1.2",
+  "version": "3.1.3",
   "description": "This is a CLI tool to sync schema and configuration from one Directus instance to another.",
   "main": "./dist/index.js",
   "bin": {
