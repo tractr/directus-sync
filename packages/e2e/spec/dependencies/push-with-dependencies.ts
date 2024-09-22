@@ -5,14 +5,14 @@ import {
   info,
 } from '../helpers/index.js';
 
-const expectedAmount = (collection: string) => {
-  if (collection === 'flows') return 1;
-  if (collection === 'operations') return 3;
-  return 0;
-};
-
 export const pushWithDependencies = (context: Context) => {
-  it('push with dependencies on an empty instance', async () => {
+  it('push with operations multiple dependencies on an empty instance', async () => {
+    const expectedAmount = (collection: string) => {
+      if (collection === 'flows') return 1;
+      if (collection === 'operations') return 3;
+      return 0;
+    };
+
     // Init sync client
     const sync = await context.getSync('sources/dependencies-operations');
     const directus = context.getDirectus();
