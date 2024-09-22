@@ -89,7 +89,7 @@ export const pushWithDependencies = (context: Context) => {
     }
   });
 
-  fit('push with settings dependencies on an empty instance', async () => {
+  it('push with settings dependencies on an empty instance', async () => {
     // Init sync client
     const sync = await context.getSync(
       'sources/dependencies-settings-default-folder',
@@ -109,7 +109,7 @@ export const pushWithDependencies = (context: Context) => {
     expect(settings[0]?.storage_default_folder).toEqual(folders[0]?.id);
   });
 
-  fit('push with settings dependencies on an empty instance', async () => {
+  it('push with settings dependencies on an empty instance', async () => {
     // Init sync client
     const sync = await context.getSync(
       'sources/dependencies-settings-default-role',
