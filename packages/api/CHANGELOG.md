@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.1](https://github.com/tractr/directus-sync/compare/directus-extension-sync@3.0.0...directus-extension-sync@3.0.1) (2024-09-25)
+
+
+### Bug Fixes
+
+* **api:** update directus extension host version ([e528843](https://github.com/tractr/directus-sync/commit/e5288433a85848be66824bd7eb212faf83bf2381))
+
+
+
+
+
 # [3.0.0](https://github.com/tractr/directus-sync/compare/directus-extension-sync@2.0.0...directus-extension-sync@3.0.0) (2024-09-05)
 
 
