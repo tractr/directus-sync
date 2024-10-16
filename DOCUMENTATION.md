@@ -334,8 +334,7 @@ module.exports = {
 ```
 
 > [!WARNING]
-> Directus-Sync may alter the query after this hook. For example, for `roles`, the query excludes the current `admin`
-> role.
+> Directus-Sync may alter the query after this hook.
 
 ##### Using the Directus client
 
@@ -511,7 +510,7 @@ mapping table links Directus instance IDs with SyncIDs, managed by the `directus
 Roles and policies are tracked.  
 By default, Directus creates a default administrator role and two default policies: _admin_ and _public_.
 
-1. To avoid recreating the default _admin_ role, `directus-sync` uses the user's role as the default _admin_ role.
+1. To avoid recreating the default _admin_ role, `directus-sync` uses the CLI user's role as the default _admin_ role.
 2. To avoid recreating the default _public_ policy, `directus-sync` uses the first policy found with `role = null`.
 3. To avoid recreating the default _admin_ policy, `directus-sync` uses the first policy linked to the _admin_ role with `admin_access = true`.
 
