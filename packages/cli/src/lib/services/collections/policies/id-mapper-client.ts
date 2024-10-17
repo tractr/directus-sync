@@ -124,8 +124,16 @@ export class PoliciesIdMapperClient extends IdMapperClient {
             _and: [
               // @ts-expect-error TODO: Bad SDK Typing
               { roles: { role: { _null: true } } },
-              // @ts-expect-error TODO: Bad SDK Typing
-              { roles: { sort: { _eq: 1 } } },
+              {
+                _or: [
+                  // @ts-expect-error TODO: Bad SDK Typing
+                  { roles: { sort: { _eq: 1 } } },
+                  // Allow to find the policy even if the sort is not set.
+                  // This may occur after migrations from 10.x to 11.x
+                  // @ts-expect-error TODO: Bad SDK Typing
+                  { roles: { sort: { _null: true } } },
+                ],
+              },
             ],
           },
           limit: 1,
