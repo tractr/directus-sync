@@ -11,8 +11,8 @@ async function writeJSON(path, data) {
   await writeFileSync(path, JSON.stringify(data, null, 2));
 }
 
-const actual = '11.0.2';
-const next = '11.1.0';
+const actual = '11.1.0';
+const next = '11.1.1';
 
 if (actual === next) {
   console.log('Nothing to upgrade');
@@ -34,6 +34,19 @@ const cliProgramArgs = [
   '--directus-password',
   ADMIN_PASSWORD,
 ];
+
+// Ensure latest version of directus-sync is installed
+console.log(
+  chalk.yellow(
+    '---> Ensure the latest version of directus-sync from npm is installed',
+  ),
+);
+console.log(
+  chalk.yellow(
+    `If the following command fails or never ends, please run "npx directus-sync@${version} --version" manually to fix the issue`,
+  ),
+);
+await $`npx directus-sync@${version} --version`;
 
 // Change the version of directus-sync in package.json to avoid conflicts
 cliPackage.version = 'next';
