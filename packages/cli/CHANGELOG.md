@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.4](https://github.com/tractr/directus-sync/compare/directus-sync@3.1.3...directus-sync@3.1.4) (2024-10-17)
+
+
+### Bug Fixes
+
+* **cli:** allow sort to be null ([#109](https://github.com/tractr/directus-sync/issues/109)) ([471896f](https://github.com/tractr/directus-sync/commit/471896fd3e73639c1f9432ace4b7fb46dc89412b))
+
+
+
+
+
 ## [3.1.3](https://github.com/tractr/directus-sync/compare/directus-sync@3.1.2...directus-sync@3.1.3) (2024-09-22)
 
 
