@@ -2,6 +2,7 @@ import { IdMap, IdMapperClient } from './id-mapper-client';
 import {
   DirectusBaseType,
   DirectusCollectionExtraConfig,
+  DirectusError,
   DirectusId,
   Query,
   UpdateItem,
@@ -17,6 +18,7 @@ import pino from 'pino';
 import { DataMapper } from './data-mapper';
 import { CollectionHooks } from '../../config';
 import { MigrationClient } from '../../migration-client';
+import { unwrapDirectusRequestError } from './helpers';
 
 /**
  * This class is responsible for merging the data from a dump to a target table.
@@ -216,8 +218,21 @@ export abstract class DirectusCollection<
       if (this.preserveIds) {
         createPayload.id = _syncId as DirectusId;
       }
-      const newItem = await this.dataClient.create(createPayload);
-      this.logger.debug(sourceItem, `Created item`);
+      // In some cases, the sync id map may be missing but the item is already in the target table
+      // If the ids are preserved, the creation will fail because the id already exists
+      // We have to handle this case and recreate the missing id map
+      //https://github.com/tractr/directus-sync/issues/92
+      let newItem: DirectusType;
+      try {
+        newItem = await this.dataClient.create(createPayload);
+        this.logger.debug(sourceItem, `Created item`);
+      } catch (error) {
+        newItem = await this.handleCreationError(
+          unwrapDirectusRequestError(error),
+          createPayload,
+          _syncId,
+        );
+      }
 
       // Create new entry in the id mapper
       const syncId = await this.idMapper.create(newItem.id, _syncId);
@@ -232,6 +247,47 @@ export abstract class DirectusCollection<
       );
     }
     return toRetry.length > 0;
+  }
+
+  /**
+   * Handle the error when creating an item.
+   * Returns the item if the error can be handled.
+   * Re-throws the error otherwise.
+   */
+  protected async handleCreationError(
+    error: DirectusError,
+    payload: WithoutSyncId<DirectusType>,
+    _syncId: string,
+  ): Promise<DirectusType> {
+    if (error.code === 'RECORD_NOT_UNIQUE') {
+      // In some cases, the sync id map may be missing but the item is already in the target table
+      // If the ids are preserved, the creation will fail because the id already exists
+      // We have to handle this case and recreate the missing id map
+      //https://github.com/tractr/directus-sync/issues/92
+      if (this.preserveIds) {
+        // Check if the id is defined in the payload
+        if (!payload.id) {
+          throw new Error(
+            `Item id is missing in the payload. Previous error: ${error.message}`,
+          );
+        }
+        const [existingItem] = await this.dataClient.query({
+          filter: { id: { _eq: payload.id } },
+          limit: 1,
+        });
+        if (!existingItem) {
+          throw new Error(
+            `Cannot find item that should already exist. Previous error: ${error.message}`,
+          );
+        }
+        this.logger.warn(
+          { payload, _syncId },
+          `Item ${payload.id} already exists but id map was missing. Will recreate id map.`,
+        );
+        return existingItem;
+      }
+    }
+    throw error;
   }
 
   /**
