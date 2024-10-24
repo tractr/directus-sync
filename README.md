@@ -6,7 +6,8 @@
 
 > [!IMPORTANT]
 > **Documentation**: Check the [documentation](https://github.com/tractr/directus-sync/blob/main/DOCUMENTATION.md) for detailed
-> information.
+> information. You **need to install** the required Directus extension `directus-extension-sync` on your Directus instance to
+> use Directus-Sync. Follow the installation instructions in the [directus-extension-sync documentation](https://github.com/tractr/directus-sync/tree/main/packages/api#directus-extension-sync).
 
 > [!NOTE]
 > **Donate**: If Directus Sync is enhancing your team's productivity in a commercial setting, please consider supporting our project
