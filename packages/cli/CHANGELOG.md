@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.5](https://github.com/tractr/directus-sync/compare/directus-sync@3.1.4...directus-sync@3.1.5) (2024-10-24)
+
+
+### Bug Fixes
+
+* **cli:** handle RECORD_NOT_UNIQUE response on creation ([#112](https://github.com/tractr/directus-sync/issues/112)) ([aa48bbf](https://github.com/tractr/directus-sync/commit/aa48bbf59cf81bead43e2308e7d291c02338dca0))
+
+
+
+
+
 ## [3.1.4](https://github.com/tractr/directus-sync/compare/directus-sync@3.1.3...directus-sync@3.1.4) (2024-10-17)
 
 
