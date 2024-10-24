@@ -2,7 +2,6 @@ import { IdMap, IdMapperClient } from './id-mapper-client';
 import {
   DirectusBaseType,
   DirectusCollectionExtraConfig,
-  DirectusError,
   DirectusId,
   Query,
   UpdateItem,
@@ -228,7 +227,7 @@ export abstract class DirectusCollection<
         this.logger.debug(sourceItem, `Created item`);
       } catch (error) {
         newItem = await this.handleCreationError(
-          unwrapDirectusRequestError(error),
+          error as Error,
           createPayload,
           _syncId,
         );
@@ -255,11 +254,12 @@ export abstract class DirectusCollection<
    * Re-throws the error otherwise.
    */
   protected async handleCreationError(
-    error: DirectusError,
+    error: Error,
     payload: WithoutSyncId<DirectusType>,
     _syncId: string,
   ): Promise<DirectusType> {
-    if (error.code === 'RECORD_NOT_UNIQUE') {
+    const flattenError = unwrapDirectusRequestError(error);
+    if (flattenError.code === 'RECORD_NOT_UNIQUE') {
       // In some cases, the sync id map may be missing but the item is already in the target table
       // If the ids are preserved, the creation will fail because the id already exists
       // We have to handle this case and recreate the missing id map
@@ -268,7 +268,7 @@ export abstract class DirectusCollection<
         // Check if the id is defined in the payload
         if (!payload.id) {
           throw new Error(
-            `Item id is missing in the payload. Previous error: ${error.message}`,
+            `Item id is missing in the payload. Previous error: ${flattenError.message}`,
           );
         }
         const [existingItem] = await this.dataClient.query({
@@ -277,7 +277,7 @@ export abstract class DirectusCollection<
         });
         if (!existingItem) {
           throw new Error(
-            `Cannot find item that should already exist. Previous error: ${error.message}`,
+            `Cannot find item that should already exist. Previous error: ${flattenError.message}`,
           );
         }
         this.logger.warn(

@@ -13,7 +13,7 @@ export interface DirectusRequestError {
       code: string;
     };
   }[];
-  response: any;
+  response: unknown;
 }
 export interface DirectusError {
   message: string;

@@ -6,7 +6,7 @@ import {
 } from '../helpers/index.js';
 
 export const pushWithExistingUuid = (context: Context) => {
-  fit('delete id map and push again with preserved uuid', async () => {
+  it('delete id map and push again with preserved uuid', async () => {
     // Init sync client
     const sync = await context.getSync('sources/one-item-per-collection');
     const dumpPath = sync.getDumpPath();
@@ -18,8 +18,11 @@ export const pushWithExistingUuid = (context: Context) => {
     await sync.push();
 
     // Untrack a flow and a folder
-    const flowId = jsonCollections.flows[0]?._syncId!;
-    const folderId = jsonCollections.folders[0]?._syncId!;
+    const flowId = jsonCollections.flows[0]?._syncId;
+    const folderId = jsonCollections.folders[0]?._syncId;
+    if (!flowId || !folderId) {
+      throw new Error('Flow or folder id is missing');
+    }
     await sync.untrack('flows', flowId);
     await sync.untrack('folders', folderId);
 
