@@ -4,6 +4,24 @@ import { CollectionHooks } from '../../config';
 
 export type DirectusId = number | string;
 
+export interface DirectusRequestError {
+  errors: {
+    message: string;
+    extensions: {
+      collection?: string;
+      field?: string;
+      code: string;
+    };
+  }[];
+  response: unknown;
+}
+export interface DirectusError {
+  message: string;
+  collection?: string;
+  field?: string;
+  code: string;
+}
+
 export interface DirectusBaseType {
   id: DirectusId;
 }
