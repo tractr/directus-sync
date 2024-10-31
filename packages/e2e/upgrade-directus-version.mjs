@@ -1,8 +1,8 @@
 #!/usr/bin/env zx
 import 'dotenv/config';
 import path from 'path';
-import { readdir } from 'fs/promises';
-import { readFileSync, writeFileSync } from 'fs';
+import {readdir} from 'fs/promises';
+import {readFileSync, writeFileSync} from 'fs';
 
 async function readJSON(path) {
   return JSON.parse(await readFileSync(path, 'utf8'));
@@ -11,8 +11,8 @@ async function writeJSON(path, data) {
   await writeFileSync(path, JSON.stringify(data, null, 2));
 }
 
-const actual = '11.1.0';
-const next = '11.1.1';
+const actual = '11.1.1';
+const next = '11.1.2';
 
 if (actual === next) {
   console.log('Nothing to upgrade');
@@ -35,6 +35,10 @@ const cliProgramArgs = [
   ADMIN_PASSWORD,
 ];
 
+// Change the version of directus-sync in package.json to avoid conflicts
+cliPackage.version = 'next';
+await writeJSON(cliPackagePath, cliPackage);
+
 // Ensure latest version of directus-sync is installed
 console.log(
   chalk.yellow(
@@ -43,14 +47,10 @@ console.log(
 );
 console.log(
   chalk.yellow(
-    `If the following command fails or never ends, please run "npx directus-sync@${version} --version" manually to fix the issue`,
+    `If the following command fails or never ends, please run "npx directus-sync@${version} --version" manually from another directory to fix the issue`,
   ),
 );
 await $`npx directus-sync@${version} --version`;
-
-// Change the version of directus-sync in package.json to avoid conflicts
-cliPackage.version = 'next';
-await writeJSON(cliPackagePath, cliPackage);
 
 for (const source of sources) {
   // Compute source path
