@@ -41,6 +41,7 @@ import {
 } from './operations/index.js';
 import { updateDefaultData } from './default-data/index.js';
 import { configPathInfo } from './config/index.js';
+import { groupAndFieldNamesConflict } from './snapshot/index.js';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
@@ -100,6 +101,8 @@ describe('Tests entrypoint ->', () => {
   insertDuplicatedPermissions(context);
   removePermissionDuplicates(context);
   pullAndPushPublicPermissions(context);
+
+  groupAndFieldNamesConflict(context);
 
   removeTrackedItem(context);
 });
