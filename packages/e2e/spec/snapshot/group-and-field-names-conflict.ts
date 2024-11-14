@@ -3,7 +3,7 @@ import Path from 'path';
 import Fs from 'fs-extra';
 
 export const groupAndFieldNamesConflict = (context: Context) => {
-  it('group and field with same name', async () => {
+  fit('group and field with same name', async () => {
     // --------------------------------------------------------------------
     // Init sync client and push
     const syncInit = await context.getSync(
@@ -14,14 +14,28 @@ export const groupAndFieldNamesConflict = (context: Context) => {
     // Create another sync client and pull
     const sync = await context.getSync('temp/group-and-field-names-conflict');
     await sync.pull();
+    const dumpPath = sync.getDumpPath();
 
     // --------------------------------------------------------------------
     // Get the files names in the snapshot folder
-    const dumpPath = sync.getDumpPath();
+    const collectionsPath = Path.join(
+      dumpPath,
+      'snapshot',
+      'collections',
+      'profile',
+    );
+    const collectionsFiles = Fs.readdirSync(collectionsPath);
+
+    expect(collectionsFiles).toHaveSize(3);
+    expect(collectionsFiles).toContain('directus_sync_id_map.json');
+    expect(collectionsFiles).toContain('profile.json');
+    expect(collectionsFiles).toContain('profile_2.json');
+
+    // --------------------------------------------------------------------
+    // Get the files names in the snapshot folder
     const fieldsPath = Path.join(dumpPath, 'snapshot', 'fields', 'profile');
     const fieldsFiles = Fs.readdirSync(fieldsPath);
 
-    // --------------------------------------------------------------------
     expect(fieldsFiles).toHaveSize(4);
     expect(fieldsFiles).toContain('id.json');
     expect(fieldsFiles).toContain('avatar_url.json');
