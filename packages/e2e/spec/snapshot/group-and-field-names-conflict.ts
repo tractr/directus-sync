@@ -3,7 +3,7 @@ import Path from 'path';
 import Fs from 'fs-extra';
 
 export const groupAndFieldNamesConflict = (context: Context) => {
-  fit('group and field with same name', async () => {
+  it('group and field with same name', async () => {
     // --------------------------------------------------------------------
     // Init sync client and push
     const syncInit = await context.getSync(
@@ -18,17 +18,12 @@ export const groupAndFieldNamesConflict = (context: Context) => {
 
     // --------------------------------------------------------------------
     // Get the files names in the snapshot folder
-    const collectionsPath = Path.join(
-      dumpPath,
-      'snapshot',
-      'collections',
-      'profile',
-    );
+    const collectionsPath = Path.join(dumpPath, 'snapshot', 'collections');
     const collectionsFiles = Fs.readdirSync(collectionsPath);
 
     expect(collectionsFiles).toHaveSize(3);
     expect(collectionsFiles).toContain('directus_sync_id_map.json');
-    expect(collectionsFiles).toContain('profile.json');
+    expect(collectionsFiles).toContain('Profile.json');
     expect(collectionsFiles).toContain('profile_2.json');
 
     // --------------------------------------------------------------------
@@ -39,7 +34,7 @@ export const groupAndFieldNamesConflict = (context: Context) => {
     expect(fieldsFiles).toHaveSize(4);
     expect(fieldsFiles).toContain('id.json');
     expect(fieldsFiles).toContain('avatar_url.json');
-    expect(fieldsFiles).toContain('content.json');
+    expect(fieldsFiles).toContain('Content.json');
     expect(fieldsFiles).toContain('content_2.json');
   });
 };
