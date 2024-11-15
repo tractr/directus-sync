@@ -19,6 +19,7 @@ export const DefaultConfig: Pick<
   | 'split'
   | 'specsPath'
   | 'specs'
+  | 'seedPath'
   | 'force'
   | 'keep'
 > = {
@@ -38,6 +39,8 @@ export const DefaultConfig: Pick<
   // Specifications
   specsPath: 'specs',
   specs: true,
+  // Seed
+  seedPath: 'seed',
   // Diff, push
   force: false,
   // Remove Permission Duplicates
