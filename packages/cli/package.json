@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@directus/sdk": "^17.0.1",
+    "case": "^1.6.3",
     "commander": "^12.1.0",
     "compare-versions": "^6.1.1",
     "deep-object-diff": "^1.1.9",
