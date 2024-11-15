@@ -281,6 +281,17 @@ export class SnapshotClient {
   }
 
   /**
+   * Returns the list of fields of type "many-to-one" of a model.
+   */
+  @Cacheable()
+  protected async getRelationFields(model: string): Promise<string[]> {
+    const snapshot = await this.getSnapshot();
+    return snapshot.relations
+      .filter((r) => r.collection === model)
+      .map((r) => r.field);
+  }
+
+  /**
    * Returns the target model of a many-to-one relation.
    * Throw an error if the relation is not many-to-one
    * or the model does not exist or the field does not exist.
