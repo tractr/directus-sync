@@ -6,3 +6,4 @@ export * from './helpers-client';
 export * from './snapshot';
 export * from './specifications';
 export * from './collections';
+export * from './seed';
