@@ -77,8 +77,12 @@ export class ConfigService {
 
   @Cacheable()
   getSeedConfig() {
-    const seed = this.getOptions('seed');
-    return { seed };
+    const paths = this.getOptions('seedPath') ?? [];
+    const seedPaths = Array.isArray(paths) ? paths : [paths];
+    const seedFullPaths = seedPaths.map((p) => Path.resolve(p));
+    return {
+      paths: seedFullPaths,
+    };
   }
 
   /**
