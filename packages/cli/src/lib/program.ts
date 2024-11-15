@@ -12,6 +12,7 @@ import {
   runRemovePermissionDuplicates,
   runUntrack,
 } from './index';
+import { runSeedPush } from './commands/seed';
 
 /**
  * Remove some default values from the program options that overrides the config file
@@ -209,6 +210,25 @@ export function createProgram() {
     .addOption(forceOption)
     .action(wrapAction(program, runPush));
 
+  // ---------------------------------------------------------------------------------
+  // Seed
+  const seedPathOption = new Option(
+    '--seed-path <seedPath...>',
+    `the base path(s) for the seed (default "${DefaultConfig.seedPath}")`,
+  );
+
+  const seed = program
+    .command('seed')
+    .description('seed the custom collections with data');
+
+  seed
+    .command('push')
+    .description('push the seed data')
+    .addOption(seedPathOption)
+    .action(wrapAction(program, runSeedPush));
+
+  // ---------------------------------------------------------------------------------
+  // Helpers
   const helpers = program
     .command('helpers')
     .description('a set of helper utilities');
