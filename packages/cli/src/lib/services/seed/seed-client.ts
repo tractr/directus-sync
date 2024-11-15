@@ -16,7 +16,7 @@ export class SeedClient {
   protected readonly logger: pino.Logger;
 
   constructor(
-    @Inject(LOGGER) baseLogger: pino.Logger,
+    @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
     protected readonly migrationClient: MigrationClient,
     protected readonly config: ConfigService,
   ) {
@@ -43,7 +43,7 @@ export class SeedClient {
   }
 
   protected async getSeed() {
-    const { seed: rawSeed } = this.config.getSeedConfig();
+    const paths = this.config.getSeedConfig();
 
     const seed =
       typeof rawSeed === 'function'
@@ -61,6 +61,7 @@ export class SeedClient {
   protected getIdMapper(collection: string) {
     return new SeedIdMapperClient(
       this.migrationClient,
+      this.baseLogger,
       this.getNormalizedCollection(collection),
     );
   }
