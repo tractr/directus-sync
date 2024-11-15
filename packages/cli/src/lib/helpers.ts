@@ -66,6 +66,24 @@ export function loadJsonFilesRecursively<T>(dirPath: string): T[] {
 }
 
 /**
+ * Recursively load json files from a directory and validate them against a zod schema
+ * The root path could be a folder or a JSON file
+ */
+export function loadJsonFilesRecursivelyWithSchema<T extends ZodSchema>(
+  rootPath: string,
+  schema: T,
+  errorContext?: string,
+): z.infer<T>[] {
+  if (rootPath.endsWith('.json')) {
+    const file = readJsonSync(rootPath, 'utf-8');
+    return [zodParse(file, schema, errorContext)];
+  }
+  return loadJsonFilesRecursively(rootPath).map((file) =>
+    zodParse(file, schema, errorContext),
+  );
+}
+
+/**
  * Validate an object against a zod schema and format the error if it fails
  */
 export function zodParse<T extends ZodSchema>(
