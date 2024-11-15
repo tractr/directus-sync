@@ -123,7 +123,7 @@ export const OptionsFields = {
   // Hooks
   hooks: OptionsHooksSchema.optional(),
   // Seed
-  seedPath: z.string().or(z.array(z.string())).optional(),
+  seedPath: z.string().or(z.array(z.string())),
 };
 export const OptionsSchema = z.object(OptionsFields);
 
