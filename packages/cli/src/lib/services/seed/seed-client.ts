@@ -1,12 +1,17 @@
 import { Inject, Service } from 'typedi';
 import { MigrationClient } from '../migration-client';
-import { Cacheable } from 'typescript-cacheable';
 import { LOGGER } from '../../constants';
 import pino from 'pino';
-import { getChildLogger } from '../../helpers';
+import {
+  getChildLogger,
+  loadJsonFilesRecursivelyWithSchema,
+} from '../../helpers';
 import { SEED } from './constants';
-import { CollectionItemSeed, ConfigService } from '../config';
+import { ConfigService } from '../config';
 import { SeedIdMapperClient } from './id-mapper-client';
+import { Seed } from './interfaces';
+import * as Fs from 'fs-extra';
+import { SeedsFileSchema } from './schema';
 
 const DIRECTUS_COLLECTIONS_PREFIX = 'directus_';
 const ITEMS_PREFIX = 'items';
@@ -24,45 +29,61 @@ export class SeedClient {
   }
 
   async push() {
-    const seed = await this.getSeed();
-    if (!seed) {
+    const seeds = await this.loadSeeds();
+    if (!seeds) {
       this.logger.warn('Seed config is not defined');
       return;
     }
 
-    for (const [collection, items] of Object.entries(seed)) {
-      for (const item of items) {
-        await this.pushItem(collection, item);
+    for (const seed of seeds) {
+      await this.pushItems(seed);
+    }
+  }
+
+  protected async pushItems(seed: Seed) {
+    const idMapper = this.createIdMapper(seed);
+    await idMapper.getAll();
+  }
+
+  protected async loadSeeds(): Promise<Seed[]> {
+    const { paths } = this.config.getSeedConfig();
+    const seeds: Seed[] = [];
+
+    for (const path of paths) {
+      // Test if the path exists
+      if (!Fs.pathExistsSync(path)) {
+        this.logger.warn(`Seed path does not exist: ${path}`);
       }
-    }
-  }
-
-  protected async pushItem(collection: string, item: CollectionItemSeed) {
-    const idMapper = this.getIdMapper(collection);
-    //....
-  }
-
-  protected async getSeed() {
-    const paths = this.config.getSeedConfig();
-
-    const seed =
-      typeof rawSeed === 'function'
-        ? await rawSeed(await this.migrationClient.get())
-        : rawSeed;
-
-    if (!seed || Object.keys(seed).length === 0) {
-      return undefined;
+      seeds.push(
+        ...loadJsonFilesRecursivelyWithSchema(
+          path,
+          SeedsFileSchema,
+          'Load seeds',
+        ).flat(2),
+      );
     }
 
-    return seed;
+    // Order seeds by meta.insert_order
+    // Leave seeds with undefined insert_order at the end, in the order they were loaded
+    // For seeds with insert_order, sort them by insert_order in ascending order
+    const unsortableSeeds = seeds.filter(
+      (seed) => seed.meta?.insert_order === undefined,
+    );
+    const sortableSeeds = seeds.filter(
+      (seed) => seed.meta?.insert_order !== undefined,
+    );
+    sortableSeeds.sort((a, b) => {
+      return a.meta!.insert_order! - b.meta!.insert_order!;
+    });
+    return [...sortableSeeds, ...unsortableSeeds];
   }
 
-  @Cacheable()
-  protected getIdMapper(collection: string) {
+  protected createIdMapper(seed: Seed) {
     return new SeedIdMapperClient(
       this.migrationClient,
       this.baseLogger,
-      this.getNormalizedCollection(collection),
+      this.getNormalizedCollection(seed.collection),
+      seed.meta,
     );
   }
 
