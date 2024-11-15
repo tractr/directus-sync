@@ -6,7 +6,6 @@ import {
   getChildLogger,
   loadJsonFilesRecursivelyWithSchema,
 } from '../../helpers';
-import { SEED } from './constants';
 import { ConfigService } from '../config';
 import { SeedIdMapperClient } from './id-mapper-client';
 import { Seed } from './interfaces';
@@ -25,19 +24,21 @@ export class SeedClient {
     protected readonly migrationClient: MigrationClient,
     protected readonly config: ConfigService,
   ) {
-    this.logger = getChildLogger(baseLogger, SEED);
+    this.logger = getChildLogger(baseLogger, 'seed-client');
   }
 
   async push() {
     const seeds = await this.loadSeeds();
     if (!seeds) {
-      this.logger.warn('Seed config is not defined');
-      return;
+      this.logger.warn('No seeds found');
+      return false;
     }
 
     for (const seed of seeds) {
       await this.pushItems(seed);
     }
+
+    return false;
   }
 
   protected async pushItems(seed: Seed) {
@@ -76,6 +77,10 @@ export class SeedClient {
       return a.meta!.insert_order! - b.meta!.insert_order!;
     });
     return [...sortableSeeds, ...unsortableSeeds];
+  }
+
+  async cleanUp() {
+    // TODO: Implement
   }
 
   protected createIdMapper(seed: Seed) {

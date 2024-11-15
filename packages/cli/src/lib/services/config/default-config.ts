@@ -6,6 +6,7 @@ export const DefaultConfigPaths = [
   './directus-sync.config.json',
 ];
 
+const defaultDumpPath = './directus-config';
 export const DefaultConfig: Pick<
   Options,
   | 'debug'
@@ -26,7 +27,7 @@ export const DefaultConfig: Pick<
   // Global
   debug: false,
   // Pull, diff, push
-  dumpPath: './directus-config',
+  dumpPath: defaultDumpPath,
   // Collections
   collectionsPath: 'collections',
   excludeCollections: [],
@@ -40,7 +41,7 @@ export const DefaultConfig: Pick<
   specsPath: 'specs',
   specs: true,
   // Seed
-  seedPath: 'seed',
+  seedPath: `${defaultDumpPath}/seed`,
   // Diff, push
   force: false,
   // Remove Permission Duplicates
