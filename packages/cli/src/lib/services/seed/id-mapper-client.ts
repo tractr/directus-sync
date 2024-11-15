@@ -1,13 +1,26 @@
 import { IdMapperClient } from '../collections';
 import { MigrationClient } from '../migration-client';
 import { Cacheable } from 'typescript-cacheable';
+import { pascal } from 'case';
+import pino from 'pino';
+import { Inject } from 'typedi';
+import { LOGGER } from '../../constants';
+import { getChildLogger } from '../../helpers';
 
 const DIRECTUS_COLLECTIONS_PREFIX = 'directus_';
-const CUSTOM_COLLECTIONS_PREFIX = 'cus:';
+const CUSTOM_COLLECTIONS_PREFIX = 'items:';
 
-export class al extends IdMapperClient {
-  constructor(migrationClient: MigrationClient, collection: string) {
-    super(migrationClient, collection);
+export class SeedIdMapperClient extends IdMapperClient {
+  constructor(
+    migrationClient: MigrationClient,
+    @Inject(LOGGER) baseLogger: pino.Logger,
+    collection: string,
+  ) {
+    super(
+      migrationClient,
+      getChildLogger(baseLogger, `Items:${pascal(collection)}`),
+      collection,
+    );
   }
 
   @Cacheable()
