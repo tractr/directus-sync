@@ -1,16 +1,12 @@
-import { Inject, Service } from 'typedi';
-import { MigrationClient } from '../migration-client';
-import { LOGGER } from '../../constants';
+import {Inject, Service} from 'typedi';
+import {MigrationClient} from '../migration-client';
+import {LOGGER} from '../../constants';
 import pino from 'pino';
-import {
-  getChildLogger,
-  loadJsonFilesRecursivelyWithSchema,
-} from '../../helpers';
-import { ConfigService } from '../config';
-import { SeedIdMapperClient } from './id-mapper-client';
-import { Seed } from './interfaces';
-import * as Fs from 'fs-extra';
-import { SeedsFileSchema } from './schema';
+import {getChildLogger,} from '../../helpers';
+import {ConfigService} from '../config';
+import {SeedIdMapperClient} from './id-mapper-client';
+import {Seed} from './interfaces';
+import {SeedLoader} from "./seed-loader";
 
 const DIRECTUS_COLLECTIONS_PREFIX = 'directus_';
 const ITEMS_PREFIX = 'items';
@@ -23,12 +19,13 @@ export class SeedClient {
     @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
     protected readonly migrationClient: MigrationClient,
     protected readonly config: ConfigService,
+    protected readonly seedLoader: SeedLoader,
   ) {
     this.logger = getChildLogger(baseLogger, 'seed-client');
   }
 
   async push() {
-    const seeds = await this.loadSeeds();
+    const seeds = await this.seedLoader.loadFromFiles();
     if (!seeds) {
       this.logger.warn('No seeds found');
       return false;
@@ -44,39 +41,6 @@ export class SeedClient {
   protected async pushItems(seed: Seed) {
     const idMapper = this.createIdMapper(seed);
     await idMapper.getAll();
-  }
-
-  protected async loadSeeds(): Promise<Seed[]> {
-    const { paths } = this.config.getSeedConfig();
-    const seeds: Seed[] = [];
-
-    for (const path of paths) {
-      // Test if the path exists
-      if (!Fs.pathExistsSync(path)) {
-        this.logger.warn(`Seed path does not exist: ${path}`);
-      }
-      seeds.push(
-        ...loadJsonFilesRecursivelyWithSchema(
-          path,
-          SeedsFileSchema,
-          'Load seeds',
-        ).flat(2),
-      );
-    }
-
-    // Order seeds by meta.insert_order
-    // Leave seeds with undefined insert_order at the end, in the order they were loaded
-    // For seeds with insert_order, sort them by insert_order in ascending order
-    const unsortableSeeds = seeds.filter(
-      (seed) => seed.meta?.insert_order === undefined,
-    );
-    const sortableSeeds = seeds.filter(
-      (seed) => seed.meta?.insert_order !== undefined,
-    );
-    sortableSeeds.sort((a, b) => {
-      return a.meta!.insert_order! - b.meta!.insert_order!;
-    });
-    return [...sortableSeeds, ...unsortableSeeds];
   }
 
   async cleanUp() {
