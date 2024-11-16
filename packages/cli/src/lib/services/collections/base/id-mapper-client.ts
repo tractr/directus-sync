@@ -1,5 +1,5 @@
-import { MigrationClient } from '../../migration-client';
-import { ExtensionClient, NO_ID_MAP_MESSAGE } from '../../extension-client';
+import {MigrationClient} from '../../migration-client';
+import {ExtensionClient, NO_ID_MAP_MESSAGE} from '../../extension-client';
 import pino from 'pino';
 
 export interface IdMap {
@@ -38,7 +38,7 @@ export abstract class IdMapperClient extends ExtensionClient {
     }
     // Try to get from server
     const idMap = await this.fetch<IdMap>(
-      `/table/${this.getStoredTableName()}/sync_id/${syncId}`,
+      `/table/${this.table}/sync_id/${syncId}`,
     ).catch((error) => {
       if (error.message === NO_ID_MAP_MESSAGE) {
         return undefined;
@@ -60,7 +60,7 @@ export abstract class IdMapperClient extends ExtensionClient {
     }
     // Try to get from server
     const idMap = await this.fetch<IdMap>(
-      `/table/${this.getStoredTableName()}/local_id/${localId}`,
+      `/table/${this.table}/local_id/${localId}`,
     ).catch((error) => {
       if (error.message === NO_ID_MAP_MESSAGE) {
         return undefined;
@@ -76,7 +76,7 @@ export abstract class IdMapperClient extends ExtensionClient {
 
   async getAll(): Promise<IdMap[]> {
     const all = await this.fetch<IdMap[]>(
-      `/table/${this.getStoredTableName()}`,
+      `/table/${this.table}`,
     );
     // Add to cache
     all.forEach((idMap) => {
@@ -87,10 +87,10 @@ export abstract class IdMapperClient extends ExtensionClient {
 
   async create(localId: string | number, syncId?: string): Promise<string> {
     const data = await this.fetch<{ sync_id: string }>(
-      `/table/${this.getStoredTableName()}`,
+      `/table/${this.table}`,
       'POST',
       {
-        table: this.getStoredTableName(),
+        table: this.table, // TODO: Could remove this (to be tested)
         local_id: localId,
         sync_id: syncId,
       },
@@ -100,7 +100,7 @@ export abstract class IdMapperClient extends ExtensionClient {
 
   async removeBySyncId(syncId: string): Promise<void> {
     await this.fetch(
-      `/table/${this.getStoredTableName()}/sync_id/${syncId}`,
+      `/table/${this.table}/sync_id/${syncId}`,
       'DELETE',
     );
     this.removeCacheBySyncId(syncId);
@@ -108,7 +108,7 @@ export abstract class IdMapperClient extends ExtensionClient {
 
   async removeByLocalId(localId: string): Promise<void> {
     await this.fetch(
-      `/table/${this.getStoredTableName()}/local_id/${localId}`,
+      `/table/${this.table}/local_id/${localId}`,
       'DELETE',
     );
     this.removeCacheByLocalId(localId);
@@ -144,10 +144,4 @@ export abstract class IdMapperClient extends ExtensionClient {
     }
   }
 
-  /**
-   * Return the table name to store sync id mappings
-   */
-  protected getStoredTableName() {
-    return this.table;
-  }
 }
