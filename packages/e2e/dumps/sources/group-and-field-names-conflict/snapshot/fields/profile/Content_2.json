@@ -1,0 +1,25 @@
+{
+  "collection": "profile",
+  "field": "Content",
+  "type": "alias",
+  "meta": {
+    "collection": "profile",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "Content",
+    "group": null,
+    "hidden": false,
+    "interface": "group-raw",
+    "note": null,
+    "options": null,
+    "readonly": false,
+    "required": false,
+    "sort": 3,
+    "special": ["alias", "no-data", "group"],
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  }
+}

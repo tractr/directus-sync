@@ -167,29 +167,74 @@ export class SnapshotClient {
       { path: INFO_JSON, content: info },
     ];
 
-    // Split collections
+    /*
+     * Split collections
+     * Folder and collections may have the same name (with different casing).
+     * Also, some file systems are case-insensitive.
+     */
+    const existingCollections = new Set<string>();
     for (const collection of collections) {
+      const suffix = this.getSuffix(collection.collection, existingCollections);
       files.push({
-        path: `${COLLECTIONS_DIR}/${collection.collection}.json`,
+        path: `${COLLECTIONS_DIR}/${collection.collection}${suffix}.json`,
         content: collection,
       });
     }
-    // Split fields
+
+    /*
+     * Split fields
+     * Groups and fields may have the same name (with different casing).
+     * Also, some file systems are case-insensitive.
+     * Therefore, inside a collection we have to deal with names conflicts.
+     */
+    const existingFiles = new Set<string>();
     for (const field of fields) {
+      const suffix = this.getSuffix(
+        `${field.collection}/${field.field}`,
+        existingFiles,
+      );
       files.push({
-        path: `${FIELDS_DIR}/${field.collection}/${field.field}.json`,
+        path: `${FIELDS_DIR}/${field.collection}/${field.field}${suffix}.json`,
         content: field,
       });
     }
-    // Split relations
+
+    /*
+     * Split relations
+     * There should not be any conflicts here, but we still split them for consistency.
+     */
+    const existingRelations = new Set<string>();
     for (const relation of relations) {
+      const suffix = this.getSuffix(
+        `${relation.collection}/${relation.field}`,
+        existingRelations,
+      );
       files.push({
-        path: `${RELATIONS_DIR}/${relation.collection}/${relation.field}.json`,
+        path: `${RELATIONS_DIR}/${relation.collection}/${relation.field}${suffix}.json`,
         content: relation,
       });
     }
 
     return files;
+  }
+
+  /**
+   * Get the suffix that should be added to the field name in order to avoid conflicts.
+   */
+  protected getSuffix(baseName: string, existing: Set<string>): string {
+    const base = baseName.toLowerCase(); // Some file systems are case-insensitive
+    let suffix = '';
+
+    if (existing.has(base)) {
+      let i = 2;
+      while (existing.has(`${base}_${i}`)) {
+        i++;
+      }
+      suffix = `_${i}`;
+    }
+
+    existing.add(`${base}${suffix}`);
+    return suffix;
   }
 
   /**
