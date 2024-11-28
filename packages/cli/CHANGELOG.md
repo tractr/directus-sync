@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.6](https://github.com/tractr/directus-sync/compare/directus-sync@3.1.5...directus-sync@3.1.6) (2024-11-28)
+
+
+### Bug Fixes
+
+* **cli:** handles fields and collections naming conflicts in snapshot files ([#119](https://github.com/tractr/directus-sync/issues/119)) ([#120](https://github.com/tractr/directus-sync/issues/120)) ([955233a](https://github.com/tractr/directus-sync/commit/955233a6336e4a8370cd8b1eae47967b14ce5a42))
+
+
+
+
+
 ## [3.1.5](https://github.com/tractr/directus-sync/compare/directus-sync@3.1.4...directus-sync@3.1.5) (2024-10-24)
 
 
