@@ -1,6 +1,6 @@
 # Directus Sync
 
-![Directus 11.3.0](https://img.shields.io/badge/Directus-11.3.0-64f?style=for-the-badge&logo=directus)
+![Directus 11.3.1](https://img.shields.io/badge/Directus-11.3.1-64f?style=for-the-badge&logo=directus)
 
 > [!IMPORTANT]
 > Latest version of `directus-sync` introduces breaking changes and is not compatible with Directus 10.x.x.
