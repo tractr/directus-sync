@@ -1,5 +1,5 @@
-import {MigrationClient} from '../../migration-client';
-import {ExtensionClient, NO_ID_MAP_MESSAGE} from '../../extension-client';
+import { MigrationClient } from '../../migration-client';
+import { ExtensionClient, NO_ID_MAP_MESSAGE } from '../../extension-client';
 import pino from 'pino';
 
 export interface IdMap {
@@ -75,9 +75,7 @@ export abstract class IdMapperClient extends ExtensionClient {
   }
 
   async getAll(): Promise<IdMap[]> {
-    const all = await this.fetch<IdMap[]>(
-      `/table/${this.table}`,
-    );
+    const all = await this.fetch<IdMap[]>(`/table/${this.table}`);
     // Add to cache
     all.forEach((idMap) => {
       this.addToCache(idMap);
@@ -99,18 +97,12 @@ export abstract class IdMapperClient extends ExtensionClient {
   }
 
   async removeBySyncId(syncId: string): Promise<void> {
-    await this.fetch(
-      `/table/${this.table}/sync_id/${syncId}`,
-      'DELETE',
-    );
+    await this.fetch(`/table/${this.table}/sync_id/${syncId}`, 'DELETE');
     this.removeCacheBySyncId(syncId);
   }
 
   async removeByLocalId(localId: string): Promise<void> {
-    await this.fetch(
-      `/table/${this.table}/local_id/${localId}`,
-      'DELETE',
-    );
+    await this.fetch(`/table/${this.table}/local_id/${localId}`, 'DELETE');
     this.removeCacheByLocalId(localId);
   }
 
@@ -143,5 +135,4 @@ export abstract class IdMapperClient extends ExtensionClient {
       this.removeFromCache(idMap);
     }
   }
-
 }
