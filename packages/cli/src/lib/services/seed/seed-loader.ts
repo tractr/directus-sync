@@ -1,11 +1,14 @@
-import {Inject, Service} from 'typedi';
-import {LOGGER} from '../../constants';
+import { Inject, Service } from 'typedi';
+import { LOGGER } from '../../constants';
 import pino from 'pino';
-import {getChildLogger, loadJsonFilesRecursivelyWithSchema,} from '../../helpers';
-import {ConfigService} from '../config';
-import {Seed} from './interfaces';
+import {
+  getChildLogger,
+  loadJsonFilesRecursivelyWithSchema,
+} from '../../helpers';
+import { ConfigService } from '../config';
+import { Seed } from './interfaces';
 import * as Fs from 'fs-extra';
-import {SeedsFileSchema} from './schema';
+import { SeedsFileSchema } from './schema';
 
 @Service()
 export class SeedLoader {

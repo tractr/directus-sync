@@ -1,12 +1,12 @@
-import {Inject, Service} from 'typedi';
-import {MigrationClient} from '../migration-client';
-import {LOGGER} from '../../constants';
+import { Inject, Service } from 'typedi';
+import { MigrationClient } from '../migration-client';
+import { LOGGER } from '../../constants';
 import pino from 'pino';
-import {getChildLogger,} from '../../helpers';
-import {ConfigService} from '../config';
-import {SeedIdMapperClient} from './id-mapper-client';
-import {Seed} from './interfaces';
-import {SeedLoader} from "./seed-loader";
+import { getChildLogger } from '../../helpers';
+import { ConfigService } from '../config';
+import { SeedIdMapperClient } from './id-mapper-client';
+import { Seed } from './interfaces';
+import { SeedLoader } from './seed-loader';
 
 const DIRECTUS_COLLECTIONS_PREFIX = 'directus_';
 const ITEMS_PREFIX = 'items';
