@@ -1,22 +1,22 @@
 import { IdMapperClient } from '../collections';
 import { MigrationClient } from '../migration-client';
-import { pascal } from 'case';
 import pino from 'pino';
-import { Inject } from 'typedi';
+import Container from 'typedi';
 import { LOGGER } from '../../constants';
 import { getChildLogger } from '../../helpers';
-import { SeedMeta } from './interfaces';
+import { Cacheable } from 'typescript-cacheable';
 
 const DIRECTUS_COLLECTIONS_PREFIX = 'directus_';
 const CUSTOM_COLLECTIONS_PREFIX = 'items:';
 
 export class SeedIdMapperClient extends IdMapperClient {
-  constructor(
-    migrationClient: MigrationClient,
-    @Inject(LOGGER) baseLogger: pino.Logger,
-    collection: string,
-    protected readonly meta: SeedMeta | undefined,
-  ) {
+  
+  protected constructor(collection: string) {
+    // Get migration client
+    const migrationClient = Container.get(MigrationClient);
+    // Get base logger
+    const baseLogger = Container.get<pino.Logger>(LOGGER);
+
     // Get the stored table name
     const storedTableName = collection.startsWith(DIRECTUS_COLLECTIONS_PREFIX)
       ? collection.slice(DIRECTUS_COLLECTIONS_PREFIX.length)
@@ -24,8 +24,17 @@ export class SeedIdMapperClient extends IdMapperClient {
 
     super(
       migrationClient,
-      getChildLogger(baseLogger, `Items:${pascal(collection)}`),
+      getChildLogger(baseLogger, collection),
       storedTableName,
     );
   }
+
+  /**
+   * Get or create a SeedIdMapperClient instance for a specific collection
+   */
+  @Cacheable()
+  static forCollection(collection: string) {
+    return new SeedIdMapperClient(collection);
+  }
+
 }
