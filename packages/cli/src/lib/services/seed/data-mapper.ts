@@ -9,10 +9,9 @@ import { SeedIdMapperClient } from './id-mapper-client';
 import { SeedMeta } from './interfaces';
 
 export class SeedDataMapper extends DataMapper<DirectusUnknownType> {
-
   /**
    * Indicates if the data mapper has been initialized
-   */   
+   */
   protected initialized = false;
 
   /**
@@ -20,7 +19,6 @@ export class SeedDataMapper extends DataMapper<DirectusUnknownType> {
    */
   protected snapshotClient: SnapshotClient;
 
-  
   constructor(
     protected readonly collection: string,
     protected readonly meta: SeedMeta | undefined,
@@ -41,15 +39,15 @@ export class SeedDataMapper extends DataMapper<DirectusUnknownType> {
     }
 
     const relationFields = await this.snapshotClient.getRelationFields(
+      this.collection,
+    );
+
+    for (const field of relationFields) {
+      const targetModel = await this.snapshotClient.getTargetModel(
         this.collection,
+        field,
       );
-  
-      for (const field of relationFields) {
-        const targetModel = await this.snapshotClient.getTargetModel(
-          this.collection,
-          field,
-        );
-  
+
       this.idMappers[field] = SeedIdMapperClient.forCollection(targetModel);
     }
 
