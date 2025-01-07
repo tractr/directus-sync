@@ -306,10 +306,7 @@ export class SnapshotClient {
    * or the model does not exist or the field does not exist.
    */
   @Cacheable()
-  async getTargetModel(
-    model: string,
-    field: string,
-  ): Promise<string> {
+  async getTargetModel(model: string, field: string): Promise<string> {
     const snapshot = await this.getSnapshot();
     const relation = snapshot.relations.find(
       (r) => r.collection === model && r.field === field,
@@ -326,9 +323,7 @@ export class SnapshotClient {
    * Returns the primary field of a model.
    */
   @Cacheable()
-  async getPrimaryField(
-    model: string,
-  ): Promise<{ name: string; type: Type }> {
+  async getPrimaryField(model: string): Promise<{ name: string; type: Type }> {
     const snapshot = await this.getSnapshot();
     const fields = snapshot.fields.filter((c) => c.collection === model);
     const primaryField = fields.find((f) => f.schema?.is_primary_key);

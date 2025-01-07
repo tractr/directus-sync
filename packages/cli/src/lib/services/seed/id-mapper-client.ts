@@ -10,7 +10,6 @@ const DIRECTUS_COLLECTIONS_PREFIX = 'directus_';
 const CUSTOM_COLLECTIONS_PREFIX = 'items:';
 
 export class SeedIdMapperClient extends IdMapperClient {
-  
   protected constructor(collection: string) {
     // Get migration client
     const migrationClient = Container.get(MigrationClient);
@@ -36,5 +35,4 @@ export class SeedIdMapperClient extends IdMapperClient {
   static forCollection(collection: string) {
     return new SeedIdMapperClient(collection);
   }
-
 }
