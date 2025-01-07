@@ -281,10 +281,19 @@ export class SnapshotClient {
   }
 
   /**
+   * Returns the list of fields of a model.
+   */
+  @Cacheable()
+  async getFields(model: string): Promise<Field[]> {
+    const snapshot = await this.getSnapshot();
+    return snapshot.fields.filter((f) => f.collection === model);
+  }
+
+  /**
    * Returns the list of fields of type "many-to-one" of a model.
    */
   @Cacheable()
-  protected async getRelationFields(model: string): Promise<string[]> {
+  async getRelationFields(model: string): Promise<string[]> {
     const snapshot = await this.getSnapshot();
     return snapshot.relations
       .filter((r) => r.collection === model)
@@ -297,7 +306,7 @@ export class SnapshotClient {
    * or the model does not exist or the field does not exist.
    */
   @Cacheable()
-  protected async getTargetModel(
+  async getTargetModel(
     model: string,
     field: string,
   ): Promise<string> {
@@ -317,7 +326,7 @@ export class SnapshotClient {
    * Returns the primary field of a model.
    */
   @Cacheable()
-  protected async getPrimaryField(
+  async getPrimaryField(
     model: string,
   ): Promise<{ name: string; type: Type }> {
     const snapshot = await this.getSnapshot();

@@ -1,5 +1,4 @@
 import {
-  DirectusBaseType,
   DirectusId,
   Field,
   IdMappers,
@@ -9,16 +8,16 @@ import pino from 'pino';
 import { IdMapperClient } from './id-mapper-client';
 import { applyMappers, bindMappers, Item, MapperRecord } from './helpers';
 
-export abstract class DataMapper<DT extends DirectusBaseType> {
+export abstract class DataMapper<T> {
   /**
    * These field will be ignored when saving and restoring the data.
    */
-  protected fieldsToIgnore: Field<DT, string>[] = [];
+  protected fieldsToIgnore: Field<T, string>[] = [];
 
   /**
    * Returns a map of fields and id mapper to use when mapping the ids of the items.
    */
-  protected idMappers = {} as IdMappers<DT>;
+  protected idMappers = {} as IdMappers<T>;
 
   /**
    * Computed mapper functions from local to sync id from the id mappers.
@@ -37,9 +36,9 @@ export abstract class DataMapper<DT extends DirectusBaseType> {
    * without the fields to ignore.
    */
   async mapIdsToSyncIdAndRemoveIgnoredFields(
-    items: WithSyncIdAndWithoutId<DT>[],
-  ): Promise<WithSyncIdAndWithoutId<DT>[]> {
-    const output: WithSyncIdAndWithoutId<DT>[] = [];
+    items: WithSyncIdAndWithoutId<T>[],
+  ): Promise<WithSyncIdAndWithoutId<T>[]> {
+    const output: WithSyncIdAndWithoutId<T>[] = [];
     for (const item of items) {
       const withoutFields = this.removeFieldsToIgnore(item);
       const newItem = await this.mapLocalIdToSyncIdIfPossible(withoutFields);
@@ -52,8 +51,8 @@ export abstract class DataMapper<DT extends DirectusBaseType> {
    * Discard the fields to ignore from the items.
    */
   protected removeFieldsToIgnore(
-    item: WithSyncIdAndWithoutId<DT>,
-  ): WithSyncIdAndWithoutId<DT> {
+    item: WithSyncIdAndWithoutId<T>,
+  ): WithSyncIdAndWithoutId<T> {
     const newItem = { ...item };
     for (const field of this.fieldsToIgnore) {
       delete newItem[field as keyof typeof newItem];

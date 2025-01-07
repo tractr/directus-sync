@@ -8,9 +8,6 @@ import { SeedIdMapperClient } from './id-mapper-client';
 import { Seed } from './interfaces';
 import { SeedLoader } from './seed-loader';
 
-const DIRECTUS_COLLECTIONS_PREFIX = 'directus_';
-const ITEMS_PREFIX = 'items';
-
 @Service()
 export class SeedClient {
   protected readonly logger: pino.Logger;
@@ -48,18 +45,6 @@ export class SeedClient {
   }
 
   protected createIdMapper(seed: Seed) {
-    return new SeedIdMapperClient(
-      this.migrationClient,
-      this.baseLogger,
-      this.getNormalizedCollection(seed.collection),
-      seed.meta,
-    );
-  }
-
-  protected getNormalizedCollection(collection: string) {
-    if (collection.startsWith(DIRECTUS_COLLECTIONS_PREFIX)) {
-      return collection.slice(DIRECTUS_COLLECTIONS_PREFIX.length);
-    }
-    return `${ITEMS_PREFIX}:${collection}`;
+    return SeedIdMapperClient.forCollection(seed.collection);
   }
 }

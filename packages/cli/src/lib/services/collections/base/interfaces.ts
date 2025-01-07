@@ -26,6 +26,10 @@ export interface DirectusBaseType {
   id: DirectusId;
 }
 
+export interface DirectusUnknownType {
+  [key: string]: unknown;
+}
+
 export type WithSyncId<T> = T & {
   _syncId: string;
 };
