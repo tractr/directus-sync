@@ -7,7 +7,7 @@ import { ConfigService } from '../config';
 import { SeedIdMapperClient } from './id-mapper-client';
 import { Seed } from './interfaces';
 import { SeedLoader } from './seed-loader';
-
+import { SeedCollection } from './collection';
 @Service()
 export class SeedClient {
   protected readonly logger: pino.Logger;
@@ -36,8 +36,8 @@ export class SeedClient {
   }
 
   protected async pushItems(seed: Seed) {
-    const idMapper = this.createIdMapper(seed);
-    await idMapper.getAll();
+    const collection = seed.collection;
+    const seedCollection = new SeedCollection(collection, seed.meta);
   }
 
   async cleanUp() {

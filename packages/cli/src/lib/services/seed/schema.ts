@@ -10,7 +10,12 @@ export const SeedSchema = z.object({
       delete: z.boolean().default(true),
       preserve_ids: z.boolean().default(false),
     })
-    .optional(),
+    .default({
+      create: true,
+      update: true,
+      delete: true,
+      preserve_ids: false,
+    }),
   data: z.array(
     z.object({
       _sync_id: z.string(),
