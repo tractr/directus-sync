@@ -11,10 +11,8 @@ export class SeedDataClient {
   protected readonly logger: pino.Logger;
   protected readonly migrationClient: MigrationClient;
   protected readonly snapshotClient: SnapshotClient;
-  
-  constructor(
-    protected readonly collection: string,
-  ) {
+
+  constructor(protected readonly collection: string) {
     // Get base logger
     const baseLogger = Container.get<pino.Logger>(LOGGER);
     this.logger = getChildLogger(baseLogger, `Collection:${collection}`);
@@ -31,7 +29,9 @@ export class SeedDataClient {
    */
   async query<T extends DirectusUnknownType>(query: Query<T>): Promise<T[]> {
     const directus = await this.migrationClient.get();
-    const response = await directus.request<T | T[]>(readItems(this.collection, query));
+    const response = await directus.request<T | T[]>(
+      readItems(this.collection, query),
+    );
 
     if (Array.isArray(response)) {
       return response;
@@ -52,11 +52,19 @@ export class SeedDataClient {
     values: string | string[],
     query: Query<T> = {},
   ): Promise<T[]> {
-    const primaryField = await this.snapshotClient.getPrimaryField(this.collection);
+    const primaryField = await this.snapshotClient.getPrimaryField(
+      this.collection,
+    );
     if (Array.isArray(values)) {
-      return await this.query<T>({ [primaryField.name]: { _in: values }, ...query });
+      return await this.query<T>({
+        [primaryField.name]: { _in: values },
+        ...query,
+      });
     }
-    return await this.query<T>({ [primaryField.name]: { _eq: values }, ...query });
+    return await this.query<T>({
+      [primaryField.name]: { _eq: values },
+      ...query,
+    });
   }
 
   /**
@@ -84,5 +92,5 @@ export class SeedDataClient {
   async delete<T extends DirectusUnknownType>(key: DirectusId): Promise<void> {
     const directus = await this.migrationClient.get();
     await directus.request<T>(deleteItem(this.collection, key));
-    }
-} 
+  }
+}

@@ -56,7 +56,8 @@ export type IdMappers<T, Virtual extends string = never> = {
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type BaseSchema = any;
-export type Query<T extends DirectusBaseType | DirectusUnknownType> = DirectusQuery<BaseSchema, T>;
+export type Query<T extends DirectusBaseType | DirectusUnknownType> =
+  DirectusQuery<BaseSchema, T>;
 export type Command<T> = RestCommand<T, BaseSchema>; // Shortcode for RestCommand
 export type SingleRestCommand<T> = Command<T> | Promise<Command<T>>;
 
