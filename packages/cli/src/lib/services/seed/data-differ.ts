@@ -2,7 +2,6 @@ import {
   DirectusId,
   DirectusUnknownType,
   WithSyncId,
-  WithSyncIdAndWithoutId,
   IdMap,
   IdMapperClient,
 } from '../collections';
@@ -14,10 +13,12 @@ import { LOGGER } from '../../constants';
 import { getChildLogger } from '../../helpers';
 import { diff } from 'deep-object-diff';
 import { SnapshotClient } from '../snapshot';
+import { SeedMeta } from './interfaces';
 
 export class SeedDataDiffer {
-  protected readonly fieldsToIgnore: string[] = ['id', '_syncId'];
-  protected sourceData: WithSyncIdAndWithoutId<DirectusUnknownType>[] = [];
+  protected fieldsToIgnore: string[] = [];
+  protected initialized = false;
+
   protected readonly logger: pino.Logger;
   protected readonly snapshotClient: SnapshotClient;
 
@@ -26,6 +27,7 @@ export class SeedDataDiffer {
     protected readonly dataClient: SeedDataClient,
     protected readonly dataMapper: SeedDataMapper,
     protected readonly idMapper: IdMapperClient,
+    protected readonly meta: SeedMeta,
   ) {
     const baseLogger = Container.get<pino.Logger>(LOGGER);
     this.logger = getChildLogger(baseLogger, `Differ:${collection}`);
@@ -33,17 +35,65 @@ export class SeedDataDiffer {
   }
 
   /**
-   * Set the source data to compare with the target data
+   * Initialize the data differ
    */
-  setSourceData(data: WithSyncIdAndWithoutId<DirectusUnknownType>[]) {
-    this.sourceData = data;
+  async initialize() {
+    if (this.initialized) {
+      return;
+    }
+
+    this.fieldsToIgnore = [
+      await this.getPrimaryFieldName(),
+      '_syncId'
+    ];
+
+    this.initialized = true;
+  }
+
+
+  /**
+   * Get the diff between source data and target data
+   */
+  async getDiff(data: WithSyncId<DirectusUnknownType>[]) {
+    const toCreate: WithSyncId<DirectusUnknownType>[] = [];
+    const toUpdate: Array<{
+      sourceItem: WithSyncId<DirectusUnknownType>;
+      targetItem: WithSyncId<DirectusUnknownType>;
+      diffItem: Partial<WithSyncId<DirectusUnknownType>>;
+    }> = [];
+    const unchanged: WithSyncId<DirectusUnknownType>[] = [];
+
+    for (const sourceItem of data) {
+      const targetItem = await this.getTargetItem(sourceItem);
+      if (targetItem) {
+        const { hasDiff, diffObject } = this.getDiffBetweenItems(
+          sourceItem,
+          targetItem,
+        );
+        if (hasDiff) {
+          toUpdate.push({ sourceItem, targetItem, diffItem: diffObject });
+        } else {
+          unchanged.push(targetItem);
+        }
+      } else {
+        toCreate.push(sourceItem);
+      }
+    }
+
+    // Get manually deleted ids
+    const dangling = await this.getDanglingIds();
+
+    // Get items to delete
+    const toDelete = await this.getIdsToDelete(unchanged, toUpdate, dangling);
+
+    return { toCreate, toUpdate, toDelete, unchanged, dangling };
   }
 
   /**
    * Get the target item from the idMapper then from the target table
    */
   protected async getTargetItem(
-    sourceItem: WithSyncIdAndWithoutId<DirectusUnknownType>,
+    sourceItem: WithSyncId<DirectusUnknownType>,
   ): Promise<WithSyncId<DirectusUnknownType> | undefined> {
     const idMap = await this.idMapper.getBySyncId(sourceItem._syncId);
     if (!idMap) {
@@ -64,10 +114,10 @@ export class SeedDataDiffer {
         await this.dataMapper.mapIdsToSyncIdAndRemoveIgnoredFields([
           withSyncId,
         ]);
-
+      const primaryFieldName = await this.getPrimaryFieldName();
       return {
         ...withMappedIds,
-        id: idMap.local_id,
+        [primaryFieldName]: idMap.local_id,
       } as WithSyncId<DirectusUnknownType>;
     } catch (error) {
       this.logger.warn(
@@ -82,7 +132,7 @@ export class SeedDataDiffer {
    * Get the diff between two items and returns the source item with only the diff fields
    */
   protected getDiffBetweenItems(
-    sourceItem: WithSyncIdAndWithoutId<DirectusUnknownType>,
+    sourceItem: WithSyncId<DirectusUnknownType>,
     targetItem: WithSyncId<DirectusUnknownType>,
   ) {
     const diffObject = diff(targetItem, sourceItem) as Partial<
@@ -95,7 +145,7 @@ export class SeedDataDiffer {
 
     const diffFields = Object.keys(diffObject);
     const sourceDiffObject = {} as Partial<
-      WithSyncIdAndWithoutId<DirectusUnknownType>
+      WithSyncId<DirectusUnknownType>
     >;
 
     for (const field of diffFields) {
@@ -138,7 +188,7 @@ export class SeedDataDiffer {
   protected async getIdsToDelete(
     unchanged: WithSyncId<DirectusUnknownType>[],
     toUpdate: Array<{
-      sourceItem: WithSyncIdAndWithoutId<DirectusUnknownType>;
+      sourceItem: WithSyncId<DirectusUnknownType>;
       targetItem: WithSyncId<DirectusUnknownType>;
     }>,
     dangling: IdMap[],
@@ -168,43 +218,5 @@ export class SeedDataDiffer {
    */
   protected async getPrimaryFieldName(): Promise<string> {
     return (await this.snapshotClient.getPrimaryField(this.collection)).name;
-  }
-
-  /**
-   * Get the diff between source data and target data
-   */
-  async getDiff() {
-    const toCreate: WithSyncIdAndWithoutId<DirectusUnknownType>[] = [];
-    const toUpdate: Array<{
-      sourceItem: WithSyncIdAndWithoutId<DirectusUnknownType>;
-      targetItem: WithSyncId<DirectusUnknownType>;
-      diffItem: Partial<WithSyncIdAndWithoutId<DirectusUnknownType>>;
-    }> = [];
-    const unchanged: WithSyncId<DirectusUnknownType>[] = [];
-
-    for (const sourceItem of this.sourceData) {
-      const targetItem = await this.getTargetItem(sourceItem);
-      if (targetItem) {
-        const { hasDiff, diffObject } = this.getDiffBetweenItems(
-          sourceItem,
-          targetItem,
-        );
-        if (hasDiff) {
-          toUpdate.push({ sourceItem, targetItem, diffItem: diffObject });
-        } else {
-          unchanged.push(targetItem);
-        }
-      } else {
-        toCreate.push(sourceItem);
-      }
-    }
-
-    // Get manually deleted ids
-    const dangling = await this.getDanglingIds();
-
-    // Get items to delete
-    const toDelete = await this.getIdsToDelete(unchanged, toUpdate, dangling);
-
-    return { toCreate, toUpdate, toDelete, unchanged, dangling };
   }
 }
