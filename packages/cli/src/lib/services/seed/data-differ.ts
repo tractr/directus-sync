@@ -42,14 +42,10 @@ export class SeedDataDiffer {
       return;
     }
 
-    this.fieldsToIgnore = [
-      await this.getPrimaryFieldName(),
-      '_syncId'
-    ];
+    this.fieldsToIgnore = [await this.getPrimaryFieldName(), '_syncId'];
 
     this.initialized = true;
   }
-
 
   /**
    * Get the diff between source data and target data
@@ -144,9 +140,7 @@ export class SeedDataDiffer {
     }
 
     const diffFields = Object.keys(diffObject);
-    const sourceDiffObject = {} as Partial<
-      WithSyncId<DirectusUnknownType>
-    >;
+    const sourceDiffObject = {} as Partial<WithSyncId<DirectusUnknownType>>;
 
     for (const field of diffFields) {
       sourceDiffObject[field] = sourceItem[field];
