@@ -2,26 +2,22 @@ import { DirectusId, Query, DirectusUnknownType } from '../collections';
 import { MigrationClient } from '../migration-client';
 import pino from 'pino';
 import { getChildLogger } from '../../helpers';
-import { Container } from 'typedi';
-import { LOGGER } from '../../constants';
+import { Inject, Service } from 'typedi';
+import { COLLECTION, LOGGER } from '../../constants';
 import { SnapshotClient } from '../snapshot';
 import { createItem, deleteItem, readItems, updateItem } from '@directus/sdk';
 
+@Service()
 export class SeedDataClient {
   protected readonly logger: pino.Logger;
-  protected readonly migrationClient: MigrationClient;
-  protected readonly snapshotClient: SnapshotClient;
 
-  constructor(protected readonly collection: string) {
-    // Get base logger
-    const baseLogger = Container.get<pino.Logger>(LOGGER);
+  constructor(
+    @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
+    protected readonly migrationClient: MigrationClient,
+    protected readonly snapshotClient: SnapshotClient,
+    @Inject(COLLECTION) protected readonly collection: string,
+  ) {
     this.logger = getChildLogger(baseLogger, `Collection:${collection}`);
-
-    // Get migration client
-    this.migrationClient = Container.get('MigrationClient');
-
-    // Get snapshot client
-    this.snapshotClient = Container.get(SnapshotClient);
   }
 
   /**

@@ -1,6 +1,6 @@
-import { Container } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { DataMapper } from '../collections/base';
-import { LOGGER } from '../../constants';
+import { COLLECTION, LOGGER, META } from '../../constants';
 import pino from 'pino';
 import { getChildLogger } from '../../helpers';
 import { DirectusUnknownType } from '../collections/base/interfaces';
@@ -8,25 +8,21 @@ import { SnapshotClient } from '../snapshot/snapshot-client';
 import { SeedIdMapperClient } from './id-mapper-client';
 import { SeedMeta } from './interfaces';
 
+@Service()
 export class SeedDataMapper extends DataMapper<DirectusUnknownType> {
   /**
    * Indicates if the data mapper has been initialized
    */
   protected initialized = false;
 
-  /**
-   * Snapshot client
-   */
-  protected snapshotClient: SnapshotClient;
-
   constructor(
-    protected readonly collection: string,
-    protected readonly meta: SeedMeta | undefined,
+    @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
+    @Inject(COLLECTION) protected readonly collection: string,
+    @Inject(META) protected readonly meta: SeedMeta | undefined,
+    protected readonly snapshotClient: SnapshotClient,
   ) {
-    const baseLogger = Container.get<pino.Logger>(LOGGER);
     const logger = getChildLogger(baseLogger, `Seed:${collection}`);
     super(logger);
-    this.snapshotClient = Container.get(SnapshotClient);
   }
 
   /**

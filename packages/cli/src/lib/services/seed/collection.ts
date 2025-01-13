@@ -1,5 +1,5 @@
-import { Container } from 'typedi';
-import { LOGGER } from '../../constants';
+import { Inject, Service } from 'typedi';
+import { COLLECTION, LOGGER, META } from '../../constants';
 import pino from 'pino';
 import { getChildLogger } from '../../helpers';
 import { SeedMeta, SeedData } from './interfaces';
@@ -15,32 +15,21 @@ import {
 } from '../collections/base/interfaces';
 import { SeedDataDiffer } from './data-differ';
 
+@Service()
 export class SeedCollection {
   protected readonly logger: pino.Logger;
-  protected readonly snapshotClient: SnapshotClient;
-  protected readonly dataMapper: SeedDataMapper;
-  protected readonly idMapper: SeedIdMapperClient;
-  protected readonly dataClient: SeedDataClient;
-  protected readonly dataDiffer: SeedDataDiffer;
 
   constructor(
-    protected readonly collection: string,
-    protected readonly meta: SeedMeta,
+    @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
+    @Inject(COLLECTION) protected readonly collection: string,
+    @Inject(META) protected readonly meta: SeedMeta,
+    protected readonly dataMapper: SeedDataMapper,
+    protected readonly idMapper: SeedIdMapperClient,
+    protected readonly dataClient: SeedDataClient,
+    protected readonly dataDiffer: SeedDataDiffer,
+    protected readonly snapshotClient: SnapshotClient,
   ) {
-    // Initialize services
-    const baseLogger = Container.get<pino.Logger>(LOGGER);
     this.logger = getChildLogger(baseLogger, `Collection:${collection}`);
-    this.snapshotClient = Container.get(SnapshotClient);
-    this.dataMapper = new SeedDataMapper(collection, meta);
-    this.idMapper = SeedIdMapperClient.forCollection(collection);
-    this.dataClient = new SeedDataClient(collection);
-    this.dataDiffer = new SeedDataDiffer(
-      collection,
-      this.dataClient,
-      this.dataMapper,
-      this.idMapper,
-      meta,
-    );
   }
 
   /**

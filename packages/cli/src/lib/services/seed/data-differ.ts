@@ -8,30 +8,30 @@ import {
 import { SeedDataClient } from './data-client';
 import { SeedDataMapper } from './data-mapper';
 import pino from 'pino';
-import { Container } from 'typedi';
-import { LOGGER } from '../../constants';
+import { Inject, Service } from 'typedi';
+import { COLLECTION, LOGGER, META } from '../../constants';
 import { getChildLogger } from '../../helpers';
 import { diff } from 'deep-object-diff';
 import { SnapshotClient } from '../snapshot';
 import { SeedMeta } from './interfaces';
 
+@Service()
 export class SeedDataDiffer {
   protected fieldsToIgnore: string[] = [];
   protected initialized = false;
 
   protected readonly logger: pino.Logger;
-  protected readonly snapshotClient: SnapshotClient;
 
   constructor(
-    protected readonly collection: string,
+    @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
+    @Inject(COLLECTION) protected readonly collection: string,
+    @Inject(META) protected readonly meta: SeedMeta,
     protected readonly dataClient: SeedDataClient,
     protected readonly dataMapper: SeedDataMapper,
     protected readonly idMapper: IdMapperClient,
-    protected readonly meta: SeedMeta,
+    protected readonly snapshotClient: SnapshotClient,
   ) {
-    const baseLogger = Container.get<pino.Logger>(LOGGER);
     this.logger = getChildLogger(baseLogger, `Differ:${collection}`);
-    this.snapshotClient = Container.get(SnapshotClient);
   }
 
   /**
