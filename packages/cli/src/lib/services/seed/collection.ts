@@ -8,188 +8,202 @@ import { SeedIdMapperClient } from './id-mapper-client';
 import { SeedDataClient } from './data-client';
 import { unwrapDirectusRequestError } from '../collections/base/helpers';
 import { SnapshotClient } from '../snapshot';
-import { Cacheable } from 'typescript-cacheable';
 import {
   DirectusId,
   DirectusUnknownType,
+  WithSyncId,
 } from '../collections/base/interfaces';
+import { SeedDataDiffer } from './data-differ';
 
 export class SeedCollection {
-  /**
-   * Enable/disable operations based on meta configuration
-   */
-  protected readonly enableCreate: boolean;
-  protected readonly enableUpdate: boolean;
-  protected readonly enableDelete: boolean;
-  protected readonly preserveIds: boolean;
-
+  protected readonly logger: pino.Logger;
   protected readonly snapshotClient: SnapshotClient;
   protected readonly dataMapper: SeedDataMapper;
   protected readonly idMapper: SeedIdMapperClient;
   protected readonly dataClient: SeedDataClient;
-  protected readonly logger: pino.Logger;
+  protected readonly dataDiffer: SeedDataDiffer;
 
   constructor(
     protected readonly collection: string,
     protected readonly meta: SeedMeta,
   ) {
-    // Get base logger
+    // Initialize services
     const baseLogger = Container.get<pino.Logger>(LOGGER);
     this.logger = getChildLogger(baseLogger, `Collection:${collection}`);
-
-    // Get snapshot client
     this.snapshotClient = Container.get(SnapshotClient);
-
-    // Create data mapper
     this.dataMapper = new SeedDataMapper(collection, meta);
-
-    // Create id mapper client
     this.idMapper = SeedIdMapperClient.forCollection(collection);
-
-    // Create data client
     this.dataClient = new SeedDataClient(collection);
-
-    // Configure operations based on meta
-    this.enableCreate = meta.create;
-    this.enableUpdate = meta.update;
-    this.enableDelete = meta.delete;
-    this.preserveIds = meta.preserve_ids;
+    this.dataDiffer = new SeedDataDiffer(
+      collection,
+      this.dataClient,
+      this.dataMapper,
+      this.idMapper,
+      meta,
+    );
   }
 
   /**
    * Push the seed data to the collection
    */
   async push(data: SeedData): Promise<boolean> {
-    // Initialize data mapper
+    // Initialize data mapper and differ
     await this.dataMapper.initialize();
+    await this.dataDiffer.initialize();
 
-    // Store data in data mapper for mapping
-    const itemsWithoutIds = data.map(({ _sync_id, ...rest }) => ({
+    // Convert data to the expected format
+    const sourceData = data.map(({ _sync_id, ...rest }) => ({
       ...rest,
       _syncId: _sync_id,
     }));
 
+    // Get the diff between source and target data
+    const { toCreate, toUpdate, toDelete, unchanged, dangling } =
+      await this.dataDiffer.getDiff(sourceData);
+
+    // Log the diff
+    this.logger.info(`Dangling id maps: ${dangling.length} item(s)`);
+    this.logger.info(`To create: ${toCreate.length} item(s)`);
+    this.logger.info(`To update: ${toUpdate.length} item(s)`);
+    this.logger.info(`To delete: ${toDelete.length} item(s)`);
+    this.logger.info(`Unchanged: ${unchanged.length} item(s)`);
+
     let shouldRetryCreate = false;
     let shouldRetryUpdate = false;
 
-    // Get existing items with the same sync ids
-    const existingItems = await this.getExistingItems(data);
-
-    // Separate items to create and update
-    const toCreate = itemsWithoutIds.filter(
-      (_, index) => !existingItems[index],
-    );
-    const toUpdate = itemsWithoutIds
-      .map((item, index) => ({
-        targetItem: existingItems[index],
-        diffItem: item,
-      }))
-      .filter(({ targetItem }) => targetItem !== null);
-
-    // Process items
-    if (this.enableCreate) {
-      shouldRetryCreate = await this.createItems(toCreate);
+    // Process items based on meta configuration
+    if (this.meta.create) {
+      shouldRetryCreate = await this.create(toCreate);
     }
 
-    if (this.enableUpdate) {
-      shouldRetryUpdate = await this.updateItems(toUpdate);
+    if (this.meta.update) {
+      shouldRetryUpdate = await this.update(toUpdate);
     }
 
-    if (this.enableDelete) {
-      await this.deleteItems(data.map((item) => item._sync_id));
+    if (this.meta.delete) {
+      await this.delete(toDelete);
     }
+
+    // Clean up dangling items
+    await this.removeDangling(dangling);
 
     return shouldRetryCreate || shouldRetryUpdate;
   }
 
   /**
-   * Get existing items with the same sync ids
+   * Create new items
    */
-  protected async getExistingItems(
-    data: SeedData,
-  ): Promise<DirectusUnknownType[]> {
-    const existingItems: DirectusUnknownType[] = [];
-
-    for (const item of data) {
-      const idMap = await this.idMapper.getBySyncId(item._sync_id);
-      if (!idMap) {
-        continue;
-      }
-
-      const [existingItem] = await this.dataClient.queryByPrimaryField(
-        idMap.local_id,
-      );
-
-      if (!existingItem) {
-        this.logger.warn(
-          { item, _syncId: item._sync_id },
-          `Item ${item._sync_id} already exists but id map was missing. Will recreate id map.`,
-        );
-        continue;
-      }
-
-      existingItems.push({
-        ...existingItem,
-        id: idMap.local_id,
-        _syncId: item._sync_id,
-      });
-    }
-
-    return existingItems;
-  }
-
-  /**
-   * Create new items in the collection
-   */
-  protected async createItems(
-    items: Array<DirectusUnknownType & { _syncId: string }>,
+  protected async create(
+    toCreate: WithSyncId<DirectusUnknownType>[],
   ): Promise<boolean> {
     let shouldRetry = false;
 
-    for (const item of items) {
+    for (const sourceItem of toCreate) {
       try {
-        const mappedItem = await this.dataMapper.mapSyncIdToLocalId(item);
+        const mappedItem = await this.dataMapper.mapSyncIdToLocalId(sourceItem);
         if (!mappedItem) {
           shouldRetry = true;
           continue;
         }
 
         const { _syncId, ...createPayload } = mappedItem;
-        if (this.preserveIds) {
-          createPayload.id = _syncId;
+        if (this.meta.preserve_ids) {
+          createPayload.id = _syncId as DirectusId;
         }
 
         const newItem = await this.dataClient.create(createPayload);
-        await this.idMapper.create(await this.getPrimaryKey(newItem), _syncId);
+        const primaryKey = await this.getPrimaryKey(newItem);
+        await this.idMapper.create(primaryKey, _syncId);
+        this.logger.debug(sourceItem, 'Created item');
       } catch (error) {
-        await this.handleCreationError(error, item);
+        await this.handleCreationError(error, sourceItem);
       }
+    }
+
+    this.logger.info(`Created ${toCreate.length} items`);
+    if (shouldRetry) {
+      this.logger.warn('Some items could not be created and will be retried');
     }
 
     return shouldRetry;
   }
 
   /**
-   * Handle errors that occur during item creation
-   * If the error is due to a missing id map for an existing item,
-   * recreate the id map. Otherwise, throw the error.
+   * Update existing items
+   */
+  protected async update(
+    toUpdate: Array<{
+      sourceItem: WithSyncId<DirectusUnknownType>;
+      targetItem: WithSyncId<DirectusUnknownType>;
+      diffItem: Partial<WithSyncId<DirectusUnknownType>>;
+    }>,
+  ): Promise<boolean> {
+    let shouldRetry = false;
+
+    for (const { targetItem, diffItem } of toUpdate) {
+      const mappedItem = await this.dataMapper.mapSyncIdToLocalId(diffItem);
+      if (!mappedItem) {
+        shouldRetry = true;
+        continue;
+      }
+
+      const primaryKey = await this.getPrimaryKey(targetItem);
+      await this.dataClient.update(primaryKey, mappedItem);
+      this.logger.debug(diffItem, `Updated ${primaryKey}`);
+    }
+
+    this.logger.info(`Updated ${toUpdate.length} items`);
+    if (shouldRetry) {
+      this.logger.warn('Some items could not be updated and will be retried');
+    }
+
+    return shouldRetry;
+  }
+
+  /**
+   * Delete items
+   */
+  protected async delete(
+    toDelete: Array<{ local_id: string; sync_id: string }>,
+  ) {
+    for (const item of toDelete) {
+      await this.dataClient.delete(item.local_id);
+      await this.idMapper.removeBySyncId(item.sync_id);
+      this.logger.debug(item, `Deleted ${item.local_id}`);
+    }
+    this.logger.info(`Deleted ${toDelete.length} items`);
+  }
+
+  /**
+   * Remove dangling items
+   */
+  protected async removeDangling(
+    dangling: Array<{ local_id: string; sync_id: string }>,
+  ) {
+    for (const item of dangling) {
+      await this.idMapper.removeBySyncId(item.sync_id);
+      this.logger.debug(item, `Removed dangling id map`);
+    }
+    this.logger.info(`Removed ${dangling.length} dangling items`);
+  }
+
+  /**
+   * Handle creation errors
    */
   protected async handleCreationError(
     error: unknown,
-    item: DirectusUnknownType & { _syncId: string },
+    item: WithSyncId<DirectusUnknownType>,
   ): Promise<void> {
     const flattenError = unwrapDirectusRequestError(error);
 
-    // Check if error is due to unique constraint violation
-    if (this.preserveIds && flattenError.code === 'RECORD_NOT_UNIQUE') {
-      // Item exists but id map is missing, recreate id map
+    if (this.meta.preserve_ids && flattenError.code === 'RECORD_NOT_UNIQUE') {
       const [existingItem] = await this.dataClient.queryByPrimaryField(
         item._syncId,
       );
 
       if (existingItem) {
         this.logger.warn(
-          { item, _syncId: item._syncId },
+          { item },
           `Item ${item._syncId} already exists but id map was missing. Will recreate id map.`,
         );
         await this.idMapper.create(
@@ -204,74 +218,21 @@ export class SeedCollection {
       );
     }
 
-    // If error is not handled, rethrow it
     throw error;
-  }
-
-  /**
-   * Update existing items in the collection
-   */
-  protected async updateItems(
-    items: Array<{
-      targetItem: DirectusUnknownType & { id: string };
-      diffItem: DirectusUnknownType & { _syncId: string };
-    }>,
-  ): Promise<boolean> {
-    let shouldRetry = false;
-
-    for (const { targetItem, diffItem } of items) {
-      const mappedItem = await this.dataMapper.mapSyncIdToLocalId(diffItem);
-      if (!mappedItem) {
-        shouldRetry = true;
-        continue;
-      }
-
-      const { _syncId, ...updatePayload } = mappedItem;
-      await this.dataClient.update(targetItem.id, updatePayload);
-    }
-
-    return shouldRetry;
-  }
-
-  /**
-   * Delete items that are not in the seed data
-   */
-  protected async deleteItems(seedSyncIds: string[]): Promise<void> {
-    const allIdMaps = await this.idMapper.getAll();
-    const syncIdsSet = new Set(seedSyncIds);
-    const toDelete = allIdMaps.filter(
-      (idMap) => !syncIdsSet.has(idMap.sync_id),
-    );
-
-    for (const idMap of toDelete) {
-      await this.dataClient.delete(idMap.local_id);
-      await this.idMapper.removeBySyncId(idMap.sync_id);
-    }
-  }
-
-  /**
-   * Get the primary field of the collection
-   */
-  @Cacheable()
-  protected async getPrimaryFieldName(): Promise<string> {
-    return (await this.snapshotClient.getPrimaryField(this.collection)).name;
   }
 
   /**
    * Get the primary key from an item
    */
-  protected async getPrimaryKey(
-    item: DirectusUnknownType,
-  ): Promise<DirectusId> {
+  protected async getPrimaryKey(item: DirectusUnknownType): Promise<string> {
     const primaryFieldName = await this.getPrimaryFieldName();
-    return item[primaryFieldName] as DirectusId;
+    return item[primaryFieldName] as string;
   }
 
   /**
-   * Returns a filter for the primary key
+   * Get the primary field name
    */
-  protected async getPrimaryKeyFilter(primaryKey: DirectusId) {
-    const primaryFieldName = await this.getPrimaryFieldName();
-    return { [primaryFieldName]: { _eq: primaryKey } };
+  protected async getPrimaryFieldName(): Promise<string> {
+    return (await this.snapshotClient.getPrimaryField(this.collection)).name;
   }
 }
