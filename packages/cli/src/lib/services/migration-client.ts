@@ -18,7 +18,7 @@ import { getChildLogger } from '../helpers';
 import { compareVersions } from 'compare-versions';
 import { Cacheable } from 'typescript-cacheable';
 
-@Service()
+@Service({ global: true })
 export class MigrationClient {
   protected readonly logger: pino.Logger;
 

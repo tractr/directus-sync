@@ -1,11 +1,12 @@
-import { Inject, Service } from 'typedi';
-import { LOGGER } from '../../constants';
+import Container, { Inject, Service } from 'typedi';
+import { COLLECTION, LOGGER, META } from '../../constants';
 import pino from 'pino';
 import { getChildLogger } from '../../helpers';
-import { SeedIdMapperClientFactory } from './id-mapper-client';
 import { Seed } from './interfaces';
 import { SeedLoader } from './seed-loader';
 import { SeedCollection } from './collection';
+import { SeedDataMapper } from './data-mapper';
+
 @Service()
 export class SeedClient {
   protected readonly logger: pino.Logger;
@@ -13,7 +14,6 @@ export class SeedClient {
   constructor(
     @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
     protected readonly seedLoader: SeedLoader,
-    protected readonly idMapperClientFactory: SeedIdMapperClientFactory,
   ) {
     this.logger = getChildLogger(baseLogger, 'seed-client');
   }
@@ -32,13 +32,24 @@ export class SeedClient {
     return false;
   }
 
-  protected async pushItems(seed: Seed) {
-    const collection = seed.collection;
+  protected async pushItems(seed: Seed): Promise<boolean> {
+    // Get the collection and meta
+    const { collection, meta, data } = seed;
 
-    const seedCollection = new SeedCollection(collection, seed.meta);
+    // Create a new container for this seed
+    const container = Container.of(collection);
+    container.set(COLLECTION, collection);
+    container.set(META, meta);
+
+    const dataMapper = container.get(SeedDataMapper);
+    const seedCollection = container.get(SeedCollection);
+
+    // Initialize the data mapper
+    await dataMapper.initialize();
+
+    // Push the items
+    return await seedCollection.push(data);
   }
 
-  protected createIdMapper(seed: Seed) {
-    return this.idMapperClientFactory.forCollection(seed.collection);
-  }
+  async cleanUp() {}
 }
