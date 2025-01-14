@@ -24,7 +24,7 @@ const COLLECTIONS_DIR = 'collections';
 const FIELDS_DIR = 'fields';
 const RELATIONS_DIR = 'relations';
 
-@Service()
+@Service({ global: true })
 export class SnapshotClient {
   protected readonly dumpPath: string;
 

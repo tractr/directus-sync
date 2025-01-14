@@ -13,7 +13,7 @@ interface DeletedPermission {
   ids: string[];
 }
 
-@Service()
+@Service({ global: true })
 export class HelpersClient extends ExtensionClient {
   protected readonly logger: pino.Logger;
 

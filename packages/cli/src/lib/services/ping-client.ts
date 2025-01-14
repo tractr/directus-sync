@@ -2,7 +2,7 @@ import { ExtensionClient, NO_ID_MAP_MESSAGE } from './extension-client';
 import { MigrationClient } from './migration-client';
 import { Service } from 'typedi';
 
-@Service()
+@Service({ global: true })
 export class PingClient extends ExtensionClient {
   constructor(migrationClient: MigrationClient) {
     super(migrationClient);

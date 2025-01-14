@@ -36,10 +36,6 @@ export class SeedCollection {
    * Push the seed data to the collection
    */
   async push(data: SeedData): Promise<boolean> {
-    // Initialize data mapper and differ
-    await this.dataMapper.initialize();
-    await this.dataDiffer.initialize();
-
     // Convert data to the expected format
     const sourceData = data.map(({ _sync_id, ...rest }) => ({
       ...rest,

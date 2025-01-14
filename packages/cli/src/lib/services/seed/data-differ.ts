@@ -14,11 +14,11 @@ import { getChildLogger } from '../../helpers';
 import { diff } from 'deep-object-diff';
 import { SnapshotClient } from '../snapshot';
 import { SeedMeta } from './interfaces';
+import { Cacheable } from 'typescript-cacheable';
 
 @Service()
 export class SeedDataDiffer {
   protected fieldsToIgnore: string[] = [];
-  protected initialized = false;
 
   protected readonly logger: pino.Logger;
 
@@ -35,16 +35,12 @@ export class SeedDataDiffer {
   }
 
   /**
-   * Initialize the data differ
+   * Get fields to ignore
+   * Keep the response in cache
    */
-  async initialize() {
-    if (this.initialized) {
-      return;
-    }
-
-    this.fieldsToIgnore = [await this.getPrimaryFieldName(), '_syncId'];
-
-    this.initialized = true;
+  @Cacheable()
+  protected async getFieldsToIgnore() {
+    return [await this.getPrimaryFieldName(), '_syncId'];
   }
 
   /**

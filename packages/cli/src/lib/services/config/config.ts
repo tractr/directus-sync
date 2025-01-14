@@ -20,7 +20,7 @@ import { CollectionsList, OptionsSchema } from './schema';
 import { LOGGER } from '../../constants';
 import pino from 'pino';
 
-@Service()
+@Service({ global: true })
 export class ConfigService {
   protected programOptions: Partial<Options> | undefined;
 
