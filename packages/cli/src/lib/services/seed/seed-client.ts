@@ -40,6 +40,7 @@ export class SeedClient {
     const container = Container.of(collection);
     container.set(COLLECTION, collection);
     container.set(META, meta);
+    container.set(LOGGER, Container.get(LOGGER));
 
     const dataMapper = container.get(SeedDataMapper);
     const seedCollection = container.get(SeedCollection);
@@ -48,7 +49,12 @@ export class SeedClient {
     await dataMapper.initialize();
 
     // Push the items
-    return await seedCollection.push(data);
+    const retry = await seedCollection.push(data);
+
+    // Reset the container
+    container.reset();
+
+    return retry;
   }
 
   async cleanUp() {}

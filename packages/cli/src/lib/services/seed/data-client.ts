@@ -18,7 +18,7 @@ export class SeedDataClient {
     protected readonly snapshotClient: SnapshotClient,
     @Inject(COLLECTION) protected readonly collection: string,
   ) {
-    this.logger = getChildLogger(baseLogger, `Collection:${collection}`);
+    this.logger = getChildLogger(baseLogger, collection);
   }
 
   /**
