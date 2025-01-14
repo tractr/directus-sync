@@ -5,7 +5,7 @@ import pino from 'pino';
 import { getChildLogger } from '../../helpers';
 import { DirectusUnknownType } from '../collections/base/interfaces';
 import { SnapshotClient } from '../snapshot/snapshot-client';
-import { SeedIdMapperClient } from './id-mapper-client';
+import { SeedIdMapperClientFactory } from './id-mapper-client';
 import { SeedMeta } from './interfaces';
 
 @Service()
@@ -20,6 +20,7 @@ export class SeedDataMapper extends DataMapper<DirectusUnknownType> {
     @Inject(COLLECTION) protected readonly collection: string,
     @Inject(META) protected readonly meta: SeedMeta | undefined,
     protected readonly snapshotClient: SnapshotClient,
+    protected readonly idMapperClientFactory: SeedIdMapperClientFactory,
   ) {
     const logger = getChildLogger(baseLogger, `Seed:${collection}`);
     super(logger);
@@ -44,7 +45,8 @@ export class SeedDataMapper extends DataMapper<DirectusUnknownType> {
         field,
       );
 
-      this.idMappers[field] = SeedIdMapperClient.forCollection(targetModel);
+      this.idMappers[field] =
+        this.idMapperClientFactory.forCollection(targetModel);
     }
 
     this.initialized = true;
