@@ -17,9 +17,11 @@ export const SeedSchema = z.object({
       preserve_ids: false,
     }),
   data: z.array(
-    z.object({
-      _sync_id: z.string(),
-    }),
+    z
+      .object({
+        _sync_id: z.string(),
+      })
+      .passthrough(),
   ),
 });
 

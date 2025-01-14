@@ -22,7 +22,7 @@ export class SeedDataMapper extends DataMapper<DirectusUnknownType> {
     protected readonly snapshotClient: SnapshotClient,
     protected readonly idMapperClientFactory: SeedIdMapperClientFactory,
   ) {
-    const logger = getChildLogger(baseLogger, `Seed:${collection}`);
+    const logger = getChildLogger(baseLogger, collection);
     super(logger);
   }
 

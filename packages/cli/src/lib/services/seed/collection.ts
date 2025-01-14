@@ -4,7 +4,10 @@ import pino from 'pino';
 import { getChildLogger } from '../../helpers';
 import { SeedMeta, SeedData } from './interfaces';
 import { SeedDataMapper } from './data-mapper';
-import { SeedIdMapperClient } from './id-mapper-client';
+import {
+  SeedIdMapperClient,
+  SeedIdMapperClientFactory,
+} from './id-mapper-client';
 import { SeedDataClient } from './data-client';
 import {
   DirectusId,
@@ -18,18 +21,20 @@ import { DirectusUnknownType } from '../interfaces';
 @Service()
 export class SeedCollection {
   protected readonly logger: pino.Logger;
+  protected readonly idMapper: SeedIdMapperClient;
 
   constructor(
     @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
     @Inject(COLLECTION) protected readonly collection: string,
     @Inject(META) protected readonly meta: SeedMeta,
     protected readonly dataMapper: SeedDataMapper,
-    protected readonly idMapper: SeedIdMapperClient,
+    protected readonly idMapperFactory: SeedIdMapperClientFactory,
     protected readonly dataClient: SeedDataClient,
     protected readonly dataDiffer: SeedDataDiffer,
     protected readonly snapshotClient: SnapshotClient,
   ) {
-    this.logger = getChildLogger(baseLogger, `Collection:${collection}`);
+    this.logger = getChildLogger(baseLogger, collection);
+    this.idMapper = this.idMapperFactory.forCollection(collection);
   }
 
   /**
