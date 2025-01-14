@@ -1,10 +1,8 @@
 import { Inject, Service } from 'typedi';
-import { MigrationClient } from '../migration-client';
 import { LOGGER } from '../../constants';
 import pino from 'pino';
 import { getChildLogger } from '../../helpers';
-import { ConfigService } from '../config';
-import { SeedIdMapperClient } from './id-mapper-client';
+import { SeedIdMapperClientFactory } from './id-mapper-client';
 import { Seed } from './interfaces';
 import { SeedLoader } from './seed-loader';
 import { SeedCollection } from './collection';
@@ -15,6 +13,7 @@ export class SeedClient {
   constructor(
     @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
     protected readonly seedLoader: SeedLoader,
+    protected readonly idMapperClientFactory: SeedIdMapperClientFactory,
   ) {
     this.logger = getChildLogger(baseLogger, 'seed-client');
   }
@@ -35,10 +34,11 @@ export class SeedClient {
 
   protected async pushItems(seed: Seed) {
     const collection = seed.collection;
+
     const seedCollection = new SeedCollection(collection, seed.meta);
   }
 
   protected createIdMapper(seed: Seed) {
-    return SeedIdMapperClient.forCollection(seed.collection);
+    return this.idMapperClientFactory.forCollection(seed.collection);
   }
 }
