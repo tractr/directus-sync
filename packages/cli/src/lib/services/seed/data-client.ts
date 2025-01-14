@@ -1,4 +1,5 @@
-import { DirectusId, Query, DirectusUnknownType } from '../collections';
+import { DirectusId, Query } from '../collections';
+import { DirectusUnknownType } from '../interfaces';
 import { MigrationClient } from '../migration-client';
 import pino from 'pino';
 import { getChildLogger } from '../../helpers';

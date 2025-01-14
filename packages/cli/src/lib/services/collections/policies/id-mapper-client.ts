@@ -90,7 +90,6 @@ export class PoliciesIdMapperClient extends IdMapperClient {
           fields: ['id'],
           filter: {
             _and: [
-              // @ts-expect-error TODO: Bad SDK Typing
               { roles: { role: { _eq: adminRoleId } } },
               { admin_access: { _eq: true } },
             ],
@@ -122,15 +121,12 @@ export class PoliciesIdMapperClient extends IdMapperClient {
           fields: ['id'],
           filter: {
             _and: [
-              // @ts-expect-error TODO: Bad SDK Typing
               { roles: { role: { _null: true } } },
               {
                 _or: [
-                  // @ts-expect-error TODO: Bad SDK Typing
                   { roles: { sort: { _eq: 1 } } },
                   // Allow to find the policy even if the sort is not set.
                   // This may occur after migrations from 10.x to 11.x
-                  // @ts-expect-error TODO: Bad SDK Typing
                   { roles: { sort: { _null: true } } },
                 ],
               },

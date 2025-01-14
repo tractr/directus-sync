@@ -1,10 +1,10 @@
 import { Inject, Service } from 'typedi';
-import { DataMapper } from '../collections/base';
+import { DataMapper } from '../collections';
 import { COLLECTION, LOGGER, META } from '../../constants';
 import pino from 'pino';
 import { getChildLogger } from '../../helpers';
-import { DirectusUnknownType } from '../collections/base/interfaces';
-import { SnapshotClient } from '../snapshot/snapshot-client';
+import { DirectusUnknownType } from '../interfaces';
+import { SnapshotClient } from '../snapshot';
 import { SeedIdMapperClientFactory } from './id-mapper-client';
 import { SeedMeta } from './interfaces';
 
