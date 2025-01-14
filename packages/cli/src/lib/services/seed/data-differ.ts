@@ -17,8 +17,6 @@ import {
 
 @Service()
 export class SeedDataDiffer {
-  protected fieldsToIgnore: string[] = [];
-
   protected readonly logger: pino.Logger;
   protected readonly idMapper: SeedIdMapperClient;
 
@@ -59,7 +57,7 @@ export class SeedDataDiffer {
     for (const sourceItem of data) {
       const targetItem = await this.getTargetItem(sourceItem);
       if (targetItem) {
-        const { hasDiff, diffObject } = this.getDiffBetweenItems(
+        const { hasDiff, diffObject } = await this.getDiffBetweenItems(
           sourceItem,
           targetItem,
         );
@@ -102,7 +100,19 @@ export class SeedDataDiffer {
         return undefined;
       }
 
-      const withSyncId = { ...targetItem, _syncId: sourceItem._syncId };
+      // Remove all fields that are not in the source item
+      const targetItemWithoutFields = Object.keys(sourceItem).reduce(
+        (acc, field) => {
+          acc[field] = targetItem[field];
+          return acc;
+        },
+        {} as DirectusUnknownType,
+      );
+
+      const withSyncId = {
+        ...targetItemWithoutFields,
+        _syncId: sourceItem._syncId,
+      };
       const [withMappedIds] =
         await this.dataMapper.mapIdsToSyncIdAndRemoveIgnoredFields([
           withSyncId,
@@ -124,7 +134,7 @@ export class SeedDataDiffer {
   /**
    * Get the diff between two items and returns the source item with only the diff fields
    */
-  protected getDiffBetweenItems(
+  protected async getDiffBetweenItems(
     sourceItem: WithSyncId<DirectusUnknownType>,
     targetItem: WithSyncId<DirectusUnknownType>,
   ) {
@@ -132,7 +142,8 @@ export class SeedDataDiffer {
       WithSyncId<DirectusUnknownType>
     >;
 
-    for (const field of this.fieldsToIgnore) {
+    const fieldsToIgnore = await this.getFieldsToIgnore();
+    for (const field of fieldsToIgnore) {
       delete diffObject[field];
     }
 

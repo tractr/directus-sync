@@ -7,6 +7,7 @@ import { Inject, Service } from 'typedi';
 import { COLLECTION, LOGGER } from '../../constants';
 import { SnapshotClient } from '../snapshot';
 import { createItem, deleteItem, readItems, updateItem } from '@directus/sdk';
+import deepmerge from 'deepmerge';
 
 @Service()
 export class SeedDataClient {
@@ -52,16 +53,11 @@ export class SeedDataClient {
     const primaryField = await this.snapshotClient.getPrimaryField(
       this.collection,
     );
-    if (Array.isArray(values)) {
-      return await this.query<T>({
-        [primaryField.name]: { _in: values },
-        ...query,
-      });
-    }
-    return await this.query<T>({
-      [primaryField.name]: { _eq: values },
-      ...query,
-    });
+    const filter: Query<T> = Array.isArray(values)
+      ? { filter: { [primaryField.name]: { _in: values } } }
+      : { filter: { [primaryField.name]: { _eq: values } } };
+
+    return await this.query<T>(deepmerge(filter, query));
   }
 
   /**
