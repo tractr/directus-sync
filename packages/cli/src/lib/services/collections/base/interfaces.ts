@@ -1,6 +1,7 @@
 import { IdMapperClient } from './id-mapper-client';
 import { Query as DirectusQuery, RestCommand } from '@directus/sdk';
 import { CollectionHooks } from '../../config';
+import { DirectusUnknownType } from '../../interfaces';
 
 export type DirectusId = number | string;
 
@@ -24,10 +25,6 @@ export interface DirectusError {
 
 export interface DirectusBaseType {
   id: DirectusId;
-}
-
-export interface DirectusUnknownType {
-  [key: string]: unknown;
 }
 
 export type WithSyncId<T> = T & {

@@ -6,14 +6,14 @@ import { SeedMeta, SeedData } from './interfaces';
 import { SeedDataMapper } from './data-mapper';
 import { SeedIdMapperClient } from './id-mapper-client';
 import { SeedDataClient } from './data-client';
-import { unwrapDirectusRequestError } from '../collections/base/helpers';
-import { SnapshotClient } from '../snapshot';
 import {
   DirectusId,
-  DirectusUnknownType,
   WithSyncId,
-} from '../collections/base/interfaces';
+  unwrapDirectusRequestError,
+} from '../collections';
+import { SnapshotClient } from '../snapshot';
 import { SeedDataDiffer } from './data-differ';
+import { DirectusUnknownType } from '../interfaces';
 
 @Service()
 export class SeedCollection {

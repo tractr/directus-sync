@@ -1,10 +1,5 @@
-import {
-  DirectusId,
-  DirectusUnknownType,
-  WithSyncId,
-  IdMap,
-  IdMapperClient,
-} from '../collections';
+import { DirectusId, WithSyncId, IdMap, IdMapperClient } from '../collections';
+import { DirectusUnknownType } from '../interfaces';
 import { SeedDataClient } from './data-client';
 import { SeedDataMapper } from './data-mapper';
 import pino from 'pino';

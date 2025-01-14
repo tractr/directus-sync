@@ -1,3 +1,4 @@
+export * from './interfaces';
 export * from './config';
 export * from './migration-client';
 export * from './extension-client';
