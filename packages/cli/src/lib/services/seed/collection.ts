@@ -231,4 +231,57 @@ export class SeedCollection {
   protected async getPrimaryFieldName(): Promise<string> {
     return (await this.snapshotClient.getPrimaryField(this.collection)).name;
   }
+
+  /**
+   * Display the diff between source and target data
+   */
+  async diff(data: SeedData) {
+    // Convert data to the expected format
+    const sourceData = data.map(({ _sync_id, ...rest }) => ({
+      ...rest,
+      _syncId: _sync_id,
+    }));
+
+    // Get the diff between source and target data
+    const { toCreate, toUpdate, toDelete, unchanged, dangling } =
+      await this.dataDiffer.getDiff(sourceData);
+
+    // Log dangling items
+    this.logger.info(`Dangling id maps: ${dangling.length} item(s)`);
+    for (const idMap of dangling) {
+      this.logger.debug(idMap, `Will remove dangling id map`);
+    }
+
+    // Log items to create
+    this.logger.info(`To create: ${toCreate.length} item(s)`);
+    for (const item of toCreate) {
+      this.logger.debug(item, `Will create item`);
+    }
+
+    // Log items to update
+    this.logger.info(`To update: ${toUpdate.length} item(s)`);
+    for (const { targetItem, diffItem } of toUpdate) {
+      const primaryKey = await this.getPrimaryKey(targetItem);
+      this.logger.debug(
+        { diffItem, primaryKey },
+        `Will update item (${primaryKey})`,
+      );
+    }
+
+    // Log items to delete
+    this.logger.info(`To delete: ${toDelete.length} item(s)`);
+    for (const item of toDelete) {
+      this.logger.debug(item, `Will delete item (${item.local_id})`);
+    }
+
+    // Log unchanged items
+    this.logger.info(`Unchanged: ${unchanged.length} item(s)`);
+    for (const item of unchanged) {
+      const primaryKey = await this.getPrimaryKey(item);
+      this.logger.debug(`Item ${primaryKey} is unchanged`);
+    }
+
+    // Return the diff results
+    return { toCreate, toUpdate, toDelete, unchanged, dangling };
+  }
 }

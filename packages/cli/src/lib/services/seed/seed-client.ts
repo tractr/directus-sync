@@ -18,39 +18,66 @@ export class SeedClient {
     this.logger = getChildLogger(baseLogger, 'seed-client');
   }
 
-  async push() {
+  /**
+   * Denotes if seeds exist
+   */
+  async hasSeeds(): Promise<boolean> {
     const seeds = await this.seedLoader.loadFromFiles();
-    if (!seeds) {
+    return seeds.length > 0;
+  }
+
+  /**
+   * Display diff for all seeds
+   */
+  async diff(): Promise<void> {
+    const seeds = await this.seedLoader.loadFromFiles();
+    if (!seeds.length) {
       this.logger.warn('No seeds found');
-      return;
+    }
+    for (const seed of seeds) {
+      await this.diffSeed(seed);
+    }
+  }
+
+  /**
+   * Display diff for a seed
+   */
+  protected async diffSeed(seed: Seed): Promise<void> {
+    const container = await this.createContainer(seed);
+    const seedCollection = container.get(SeedCollection);
+    await seedCollection.diff(seed.data);
+    container.reset();
+  }
+
+  /**
+   * Push all seeds
+   */
+  async push(): Promise<boolean> {
+    const seeds = await this.seedLoader.loadFromFiles();
+    if (!seeds.length) {
+      this.logger.warn('No seeds found');
+      return false;
     }
 
     let retry = false;
-
     for (const seed of seeds) {
-      retry = (await this.pushItems(seed)) || retry;
+      retry = (await this.pushSeed(seed)) || retry;
     }
 
     return retry;
   }
 
-  protected async pushItems(seed: Seed): Promise<boolean> {
-    // Create a new container for this seed
+  protected async pushSeed(seed: Seed): Promise<boolean> {
     const container = await this.createContainer(seed);
-
-    // Push the items
     const seedCollection = container.get(SeedCollection);
     const retry = await seedCollection.push(seed.data);
-
-    // Reset the container
     container.reset();
-
     return retry;
   }
 
   async cleanUp(): Promise<void> {
     const seeds = await this.seedLoader.loadFromFiles();
-    if (!seeds) {
+    if (!seeds.length) {
       return;
     }
 
@@ -61,11 +88,8 @@ export class SeedClient {
 
   protected async cleanUpCollection(seed: Seed): Promise<void> {
     const container = await this.createContainer(seed);
-
     const seedCollection = container.get(SeedCollection);
     await seedCollection.cleanUp();
-
-    // Reset the container
     container.reset();
   }
 
