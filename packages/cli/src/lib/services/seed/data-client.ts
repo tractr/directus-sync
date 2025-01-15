@@ -56,7 +56,11 @@ export class SeedDataClient {
     );
     const isNumber = primaryField.type === Type.Integer;
     const isArray = Array.isArray(values);
-    const castedValues = isNumber ? (isArray ? values.map(Number) : Number(values)) : values;
+    const castedValues = isNumber
+      ? isArray
+        ? values.map(Number)
+        : Number(values)
+      : values;
 
     const filter: Query<T> = Array.isArray(castedValues)
       ? { filter: { [primaryField.name]: { _in: castedValues } } }
