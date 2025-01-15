@@ -74,10 +74,16 @@ export class SeedCollection {
       await this.delete(toDelete);
     }
 
-    // Clean up dangling items
-    await this.removeDangling(dangling);
-
     return shouldRetryCreate || shouldRetryUpdate;
+  }
+
+  /**
+   * Clean up dangling dangling items
+   */
+  async cleanUp() {
+    const dangling = await this.dataDiffer.getDanglingIds();
+    await this.removeDangling(dangling);
+    this.idMapper.clearCache();
   }
 
   /**
