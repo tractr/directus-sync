@@ -12,7 +12,7 @@ import {
   runRemovePermissionDuplicates,
   runUntrack,
 } from './index';
-import { runSeedPush } from './commands/seed';
+import { runSeedPush, runSeedDiff } from './commands/seed';
 
 /**
  * Remove some default values from the program options that overrides the config file
@@ -226,6 +226,12 @@ export function createProgram() {
     .description('push the seed data')
     .addOption(seedPathOption)
     .action(wrapAction(program, runSeedPush));
+
+  seed
+    .command('diff')
+    .description('describe the seed data diff')
+    .addOption(seedPathOption)
+    .action(wrapAction(program, runSeedDiff));
 
   // ---------------------------------------------------------------------------------
   // Helpers
