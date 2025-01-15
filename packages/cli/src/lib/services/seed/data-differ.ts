@@ -17,6 +17,7 @@ import {
 
 @Service()
 export class SeedDataDiffer {
+
   protected readonly logger: pino.Logger;
   protected readonly idMapper: SeedIdMapperClient;
 
@@ -113,10 +114,9 @@ export class SeedDataDiffer {
         ...targetItemWithoutFields,
         _syncId: sourceItem._syncId,
       };
-      const [withMappedIds] =
-        await this.dataMapper.mapIdsToSyncIdAndRemoveIgnoredFields([
-          withSyncId,
-        ]);
+      const [withMappedIds] = await this.dataMapper.mapIdsToSyncIdAndRemoveIgnoredFields([
+        withSyncId,
+      ]);
       const primaryFieldName = await this.getPrimaryFieldName();
       return {
         ...withMappedIds,
@@ -178,7 +178,8 @@ export class SeedDataDiffer {
     });
     const existingIds = new Set<DirectusId>();
     for (const item of existingItems) {
-      existingIds.add(await this.getPrimaryKey(item));
+      const primaryKey = await this.getPrimaryKey(item);
+      existingIds.add(primaryKey.toString());
     }
 
     return allIdsMap.filter((item) => !existingIds.has(item.local_id));
