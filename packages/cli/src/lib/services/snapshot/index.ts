@@ -1,2 +1,2 @@
-export type { Snapshot } from './interfaces';
+export type { Snapshot, Type } from './interfaces';
 export * from './snapshot-client';
