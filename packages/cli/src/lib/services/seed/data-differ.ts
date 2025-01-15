@@ -163,7 +163,7 @@ export class SeedDataDiffer {
   /**
    * Get manually deleted items
    */
-  protected async getDanglingIds(): Promise<IdMap[]> {
+  async getDanglingIds(): Promise<IdMap[]> {
     const allIdsMap = await this.idMapper.getAll();
     const localIds = allIdsMap.map((item) => item.local_id);
 

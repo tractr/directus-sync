@@ -9,8 +9,9 @@ import { ConfigService } from '../config';
 import { Seed } from './interfaces';
 import * as Fs from 'fs-extra';
 import { SeedsFileSchema } from './schema';
+import { Cacheable } from 'typescript-cacheable';
 
-@Service()
+@Service({ global: true })
 export class SeedLoader {
   protected readonly logger: pino.Logger;
 
@@ -21,6 +22,7 @@ export class SeedLoader {
     this.logger = getChildLogger(baseLogger, 'seed-loader');
   }
 
+  @Cacheable()
   async loadFromFiles(): Promise<Seed[]> {
     const { paths } = this.config.getSeedConfig();
     const seeds: Seed[] = [];
