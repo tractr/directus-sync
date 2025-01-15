@@ -5,10 +5,9 @@ import pino from 'pino';
 import { getChildLogger } from '../../helpers';
 import { Inject, Service } from 'typedi';
 import { COLLECTION, LOGGER } from '../../constants';
-import { SnapshotClient } from '../snapshot';
+import { SnapshotClient, Type } from '../snapshot';
 import { createItem, deleteItem, readItems, updateItem } from '@directus/sdk';
 import deepmerge from 'deepmerge';
-import { Type } from '../snapshot/interfaces';
 
 @Service()
 export class SeedDataClient {
