@@ -8,6 +8,7 @@ import { COLLECTION, LOGGER } from '../../constants';
 import { SnapshotClient } from '../snapshot';
 import { createItem, deleteItem, readItems, updateItem } from '@directus/sdk';
 import deepmerge from 'deepmerge';
+import { Type } from '../snapshot/interfaces';
 
 @Service()
 export class SeedDataClient {
@@ -53,9 +54,13 @@ export class SeedDataClient {
     const primaryField = await this.snapshotClient.getPrimaryField(
       this.collection,
     );
-    const filter: Query<T> = Array.isArray(values)
-      ? { filter: { [primaryField.name]: { _in: values } } }
-      : { filter: { [primaryField.name]: { _eq: values } } };
+    const isNumber = primaryField.type === Type.Integer;
+    const isArray = Array.isArray(values);
+    const castedValues = isNumber ? (isArray ? values.map(Number) : Number(values)) : values;
+
+    const filter: Query<T> = Array.isArray(castedValues)
+      ? { filter: { [primaryField.name]: { _in: castedValues } } }
+      : { filter: { [primaryField.name]: { _eq: castedValues } } };
 
     return await this.query<T>(deepmerge(filter, query));
   }
