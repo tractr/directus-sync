@@ -1,0 +1,45 @@
+{
+  "collection": "city",
+  "field": "user_updated",
+  "type": "string",
+  "meta": {
+    "collection": "city",
+    "conditions": null,
+    "display": "user",
+    "display_options": null,
+    "field": "user_updated",
+    "group": null,
+    "hidden": true,
+    "interface": "select-dropdown-m2o",
+    "note": null,
+    "options": {
+      "template": "{{avatar}} {{first_name}} {{last_name}}"
+    },
+    "readonly": true,
+    "required": false,
+    "sort": 4,
+    "special": ["user-updated"],
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "half"
+  },
+  "schema": {
+    "name": "user_updated",
+    "table": "city",
+    "data_type": "char",
+    "default_value": null,
+    "max_length": 36,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_indexed": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": "directus_users",
+    "foreign_key_column": "id"
+  }
+}

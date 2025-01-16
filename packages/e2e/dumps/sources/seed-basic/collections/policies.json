@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Administrator",
+    "icon": "verified",
+    "description": "$t:admin_description",
+    "ip_access": null,
+    "enforce_tfa": false,
+    "admin_access": true,
+    "app_access": true,
+    "roles": [
+      {
+        "role": "_sync_default_admin_role",
+        "sort": null
+      }
+    ],
+    "_syncId": "_sync_default_admin_policy"
+  },
+  {
+    "name": "$t:public_label",
+    "icon": "public",
+    "description": "$t:public_description",
+    "ip_access": null,
+    "enforce_tfa": false,
+    "admin_access": false,
+    "app_access": false,
+    "roles": [
+      {
+        "role": null,
+        "sort": 1
+      }
+    ],
+    "_syncId": "_sync_default_public_policy"
+  }
+]

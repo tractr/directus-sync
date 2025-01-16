@@ -1,0 +1,23 @@
+{
+  "collection": "language",
+  "meta": {
+    "insert_order": 1
+  },
+  "data": [
+    {
+      "_sync_id": "lang-en",
+      "name": "English",
+      "code": "en"
+    },
+    {
+      "_sync_id": "lang-es",
+      "name": "Spanish",
+      "code": "es"
+    },
+    {
+      "_sync_id": "lang-fr",
+      "name": "French",
+      "code": "fr"
+    }
+  ]
+}

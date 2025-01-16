@@ -1,0 +1,25 @@
+{
+  "collection": "city",
+  "field": "country",
+  "related_collection": "country",
+  "meta": {
+    "junction_field": null,
+    "many_collection": "city",
+    "many_field": "country",
+    "one_allowed_collections": null,
+    "one_collection": "country",
+    "one_collection_field": null,
+    "one_deselect_action": "nullify",
+    "one_field": null,
+    "sort_field": null
+  },
+  "schema": {
+    "table": "city",
+    "column": "country",
+    "foreign_key_table": "country",
+    "foreign_key_column": "id",
+    "constraint_name": null,
+    "on_update": "NO ACTION",
+    "on_delete": "SET NULL"
+  }
+}

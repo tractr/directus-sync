@@ -1,0 +1,86 @@
+{
+  "collection": "city",
+  "field": "status",
+  "type": "string",
+  "meta": {
+    "collection": "city",
+    "conditions": null,
+    "display": "labels",
+    "display_options": {
+      "choices": [
+        {
+          "background": "var(--theme--primary-background)",
+          "color": "var(--theme--primary)",
+          "foreground": "var(--theme--primary)",
+          "text": "$t:published",
+          "value": "published"
+        },
+        {
+          "background": "var(--theme--background-normal)",
+          "color": "var(--theme--foreground)",
+          "foreground": "var(--theme--foreground)",
+          "text": "$t:draft",
+          "value": "draft"
+        },
+        {
+          "background": "var(--theme--warning-background)",
+          "color": "var(--theme--warning)",
+          "foreground": "var(--theme--warning)",
+          "text": "$t:archived",
+          "value": "archived"
+        }
+      ],
+      "showAsDot": true
+    },
+    "field": "status",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown",
+    "note": null,
+    "options": {
+      "choices": [
+        {
+          "color": "var(--theme--primary)",
+          "text": "$t:published",
+          "value": "published"
+        },
+        {
+          "color": "var(--theme--foreground)",
+          "text": "$t:draft",
+          "value": "draft"
+        },
+        {
+          "color": "var(--theme--warning)",
+          "text": "$t:archived",
+          "value": "archived"
+        }
+      ]
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 2,
+    "special": null,
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  },
+  "schema": {
+    "name": "status",
+    "table": "city",
+    "data_type": "varchar",
+    "default_value": "draft",
+    "max_length": 255,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": false,
+    "is_unique": false,
+    "is_indexed": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}
