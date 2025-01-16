@@ -1,0 +1,28 @@
+{
+  "collection": "directus_sync_id_map",
+  "meta": {
+    "accountability": "all",
+    "archive_app_filter": true,
+    "archive_field": null,
+    "archive_value": null,
+    "collapse": "open",
+    "collection": "directus_sync_id_map",
+    "color": null,
+    "display_template": null,
+    "group": null,
+    "hidden": false,
+    "icon": null,
+    "item_duplication_fields": null,
+    "note": null,
+    "preview_url": null,
+    "singleton": false,
+    "sort": null,
+    "sort_field": null,
+    "translations": null,
+    "unarchive_value": null,
+    "versioning": false
+  },
+  "schema": {
+    "name": "directus_sync_id_map"
+  }
+}

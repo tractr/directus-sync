@@ -1,0 +1,9 @@
+[
+  {
+    "name": "Administrator",
+    "icon": "verified",
+    "description": "$t:admin_description",
+    "parent": null,
+    "_syncId": "_sync_default_admin_role"
+  }
+]
