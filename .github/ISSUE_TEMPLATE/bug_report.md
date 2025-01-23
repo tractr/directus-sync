@@ -23,6 +23,7 @@ A clear and concise description of what you expected to happen.
 **Versions (please complete the following information):**
  - Directus-Sync version: [e.g. `1.5.2`]
  - Directus version: [e.g. `10.10.7`]
+ - Database: [e.g. `PostgreSQL`]
  - Directus environment [e.g. Docker/Self-hosted, Cloud]
 
 **Additional context**
