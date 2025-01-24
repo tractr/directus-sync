@@ -5,17 +5,17 @@
   },
   "data": [
     {
-      "_sync_id": "cl-1",
+      "_sync_id": "country-language-1",
       "country": "country-usa",
       "language": "lang-en"
     },
     {
-      "_sync_id": "cl-2",
+      "_sync_id": "country-language-2",
       "country": "country-spain",
       "language": "lang-es"
     },
     {
-      "_sync_id": "cl-3",
+      "_sync_id": "country-language-3",
       "country": "country-france",
       "language": "lang-fr"
     }

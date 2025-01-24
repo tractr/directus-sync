@@ -16,7 +16,7 @@
     "note": null,
     "preview_url": null,
     "singleton": false,
-    "sort": null,
+    "sort": 1,
     "sort_field": null,
     "translations": null,
     "unarchive_value": "draft",

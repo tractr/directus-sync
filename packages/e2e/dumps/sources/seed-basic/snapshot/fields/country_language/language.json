@@ -1,7 +1,7 @@
 {
   "collection": "country_language",
   "field": "language",
-  "type": "integer",
+  "type": "string",
   "meta": {
     "collection": "country_language",
     "conditions": null,
@@ -25,9 +25,9 @@
   "schema": {
     "name": "language",
     "table": "country_language",
-    "data_type": "integer",
+    "data_type": "varchar",
     "default_value": null,
-    "max_length": null,
+    "max_length": 255,
     "numeric_precision": null,
     "numeric_scale": null,
     "is_nullable": true,
@@ -38,6 +38,6 @@
     "generation_expression": null,
     "has_auto_increment": false,
     "foreign_key_table": "language",
-    "foreign_key_column": "id"
+    "foreign_key_column": "code"
   }
 }

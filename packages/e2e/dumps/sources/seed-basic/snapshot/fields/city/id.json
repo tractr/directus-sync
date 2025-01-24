@@ -32,7 +32,7 @@
     "numeric_scale": null,
     "is_nullable": false,
     "is_unique": true,
-    "is_indexed": true,
+    "is_indexed": false,
     "is_primary_key": true,
     "is_generated": false,
     "generation_expression": null,
