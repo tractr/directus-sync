@@ -53,6 +53,34 @@ export class SeedLoader {
     sortableSeeds.sort((a, b) => {
       return a.meta!.insert_order! - b.meta!.insert_order!;
     });
-    return [...sortableSeeds, ...unsortableSeeds];
+    const sortedSeeds = [...sortableSeeds, ...unsortableSeeds];
+
+    // Merge seeds with the same collection name
+    const mergedSeeds = sortedSeeds.reduce((acc, seed) => {
+      const existing = acc.find((s) => s.collection === seed.collection);
+      if (existing) {
+        this.mergeSeeds(existing, seed);
+      } else {
+        acc.push(seed);
+      }
+      return acc;
+    }, [] as Seed[]);
+
+    return mergedSeeds;
+  }
+
+  /**
+   * Merge two seeds
+   *  - merge data with concat
+   *  - merge meta.create, meta.update, meta.delete with AND logic
+   *  - merge meta.preserve_ids with OR logic
+   */
+  protected mergeSeeds(existing: Seed, seed: Seed): void {
+    existing.data = [...existing.data, ...seed.data];
+    existing.meta.create = existing.meta.create && seed.meta.create;
+    existing.meta.update = existing.meta.update && seed.meta.update;
+    existing.meta.delete = existing.meta.delete && seed.meta.delete;
+    existing.meta.preserve_ids =
+      existing.meta.preserve_ids || seed.meta.preserve_ids;
   }
 }

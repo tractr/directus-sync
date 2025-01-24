@@ -2,4 +2,8 @@ export * from './schema';
 export * from './interfaces';
 export * from './seed-client';
 export * from './seed-loader';
+export * from './collection';
+export * from './seed-client';
+export * from './data-differ';
+export * from './data-mapper';
 export * from './id-mapper-client';
