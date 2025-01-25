@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { LOGGER } from '../../../constants';
-import { COLLECTION, META } from '../constants';
+import { COLLECTION, META, SCHEMA_CLIENT } from '../constants';
 import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
 import { SeedMeta, SeedData } from '../interfaces';
@@ -32,7 +32,7 @@ export class SeedCollection {
     protected readonly idMapperFactory: SeedIdMapperClientFactory,
     protected readonly dataClient: SeedDataClient,
     protected readonly dataDiffer: SeedDataDiffer,
-    protected readonly schemaClient: SchemaClient,
+    @Inject(SCHEMA_CLIENT) protected readonly schemaClient: SchemaClient,
   ) {
     this.logger = getChildLogger(baseLogger, collection);
     this.idMapper = this.idMapperFactory.forCollection(collection);

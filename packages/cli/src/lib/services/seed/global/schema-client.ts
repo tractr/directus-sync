@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { LOGGER } from '../../../constants';
-import { DIRECTUS_COLLECTIONS_PREFIX } from '../constants';
+import { DIRECTUS_COLLECTIONS_PREFIX, SCHEMA_CLIENT } from '../constants';
 import { getChildLogger } from '../../../helpers';
 import pino from 'pino';
 import { Cacheable } from 'typescript-cacheable';
@@ -13,7 +13,8 @@ import {
 // Re-export the enum for easier access
 export { Type };
 
-@Service({ global: true })
+// TypeDI doest not detect SchemaClient identifier automatically. Need to set it manually using id option.
+@Service({ global: true, id: SCHEMA_CLIENT })
 export class SchemaClient {
   protected readonly logger: pino.Logger;
 

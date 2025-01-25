@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { DataMapper } from '../../collections';
 import { LOGGER } from '../../../constants';
-import { COLLECTION, META } from '../constants';
+import { COLLECTION, META, SCHEMA_CLIENT } from '../constants';
 import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
 import { DirectusUnknownType } from '../../interfaces';
@@ -20,7 +20,7 @@ export class SeedDataMapper extends DataMapper<DirectusUnknownType> {
     @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
     @Inject(COLLECTION) protected readonly collection: string,
     @Inject(META) protected readonly meta: SeedMeta | undefined,
-    protected readonly schemaClient: SchemaClient,
+    @Inject(SCHEMA_CLIENT) protected readonly schemaClient: SchemaClient,
     protected readonly idMapperClientFactory: SeedIdMapperClientFactory,
   ) {
     const logger = getChildLogger(baseLogger, collection);

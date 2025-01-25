@@ -5,7 +5,7 @@ import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
 import { Inject, Service } from 'typedi';
 import { LOGGER } from '../../../constants';
-import { COLLECTION } from '../constants';
+import { COLLECTION, SCHEMA_CLIENT } from '../constants';
 import deepmerge from 'deepmerge';
 import { createOne, deleteOne, readMany, updateOne } from './requests';
 import { SchemaClient, Type } from '../global';
@@ -17,7 +17,7 @@ export class SeedDataClient {
   constructor(
     @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
     protected readonly migrationClient: MigrationClient,
-    protected readonly schemaClient: SchemaClient,
+    @Inject(SCHEMA_CLIENT) protected readonly schemaClient: SchemaClient,
     @Inject(COLLECTION) protected readonly collection: string,
   ) {
     this.logger = getChildLogger(baseLogger, collection);

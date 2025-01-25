@@ -5,7 +5,7 @@ import { SeedDataMapper } from './data-mapper';
 import pino from 'pino';
 import { Inject, Service } from 'typedi';
 import { LOGGER } from '../../../constants';
-import { COLLECTION, META } from '../constants';
+import { COLLECTION, META, SCHEMA_CLIENT } from '../constants';
 import { getChildLogger } from '../../../helpers';
 import { diff } from 'deep-object-diff';
 import { SeedMeta } from '../interfaces';
@@ -28,7 +28,7 @@ export class SeedDataDiffer {
     protected readonly dataClient: SeedDataClient,
     protected readonly dataMapper: SeedDataMapper,
     protected readonly idMapperFactory: SeedIdMapperClientFactory,
-    protected readonly schemaClient: SchemaClient,
+    @Inject(SCHEMA_CLIENT) protected readonly schemaClient: SchemaClient,
   ) {
     this.logger = getChildLogger(baseLogger, collection);
     this.idMapper = this.idMapperFactory.forCollection(collection);
