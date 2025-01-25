@@ -4,7 +4,7 @@ import { DIRECTUS_COLLECTIONS_PREFIX } from '../constants';
 import { getChildLogger } from '../../../helpers';
 import pino from 'pino';
 import { Cacheable } from 'typescript-cacheable';
-import { SnapshotClient, Field, Type } from '../../snapshot';
+import { SnapshotClient, SnapshotField, Type } from '../../snapshot';
 
 // Re-export the enum for easier access
 export { Type };
@@ -24,7 +24,7 @@ export class SchemaClient {
    * Returns the list of fields of a model.
    */
   @Cacheable()
-  async getFields(model: string): Promise<Field[]> {
+  async getFields(model: string): Promise<SnapshotField[]> {
     const snapshot = await this.snapshotClient.getSnapshot();
     return snapshot.fields.filter((f) => f.collection === model);
   }
