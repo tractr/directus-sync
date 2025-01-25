@@ -324,6 +324,11 @@ export class SnapshotClient {
    */
   @Cacheable()
   async getPrimaryField(model: string): Promise<{ name: string; type: Type }> {
+    // TODO: Find a better way to handle directus collections
+    if (model === 'directus_users') {
+      return { name: 'id', type: Type.UUID };
+    }
+
     const snapshot = await this.getSnapshot();
     const fields = snapshot.fields.filter((c) => c.collection === model);
     const primaryField = fields.find((f) => f.schema?.is_primary_key);
