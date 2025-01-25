@@ -4,7 +4,7 @@ import { COLLECTION, LOGGER, META } from '../../../constants';
 import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
 import { DirectusUnknownType } from '../../interfaces';
-import { SnapshotClient } from '../../snapshot';
+import { SchemaClient } from '../global';
 import { SeedIdMapperClientFactory } from '../global';
 import { SeedMeta } from '../interfaces';
 
@@ -19,7 +19,7 @@ export class SeedDataMapper extends DataMapper<DirectusUnknownType> {
     @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
     @Inject(COLLECTION) protected readonly collection: string,
     @Inject(META) protected readonly meta: SeedMeta | undefined,
-    protected readonly snapshotClient: SnapshotClient,
+    protected readonly schemaClient: SchemaClient,
     protected readonly idMapperClientFactory: SeedIdMapperClientFactory,
   ) {
     const logger = getChildLogger(baseLogger, collection);
@@ -35,12 +35,12 @@ export class SeedDataMapper extends DataMapper<DirectusUnknownType> {
       return;
     }
 
-    const relationFields = await this.snapshotClient.getRelationFields(
+    const relationFields = await this.schemaClient.getRelationFields(
       this.collection,
     );
 
     for (const field of relationFields) {
-      const targetModel = await this.snapshotClient.getTargetModel(
+      const targetModel = await this.schemaClient.getTargetModel(
         this.collection,
         field,
       );

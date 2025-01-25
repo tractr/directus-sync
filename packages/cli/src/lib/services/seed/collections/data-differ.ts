@@ -7,10 +7,9 @@ import { Inject, Service } from 'typedi';
 import { COLLECTION, LOGGER, META } from '../../../constants';
 import { getChildLogger } from '../../../helpers';
 import { diff } from 'deep-object-diff';
-import { SnapshotClient } from '../../snapshot';
 import { SeedMeta } from '../interfaces';
 import { Cacheable } from 'typescript-cacheable';
-import { SeedIdMapperClient, SeedIdMapperClientFactory } from '../global';
+import { SchemaClient, SeedIdMapperClient, SeedIdMapperClientFactory } from '../global';
 
 @Service()
 export class SeedDataDiffer {
@@ -24,7 +23,7 @@ export class SeedDataDiffer {
     protected readonly dataClient: SeedDataClient,
     protected readonly dataMapper: SeedDataMapper,
     protected readonly idMapperFactory: SeedIdMapperClientFactory,
-    protected readonly snapshotClient: SnapshotClient,
+    protected readonly schemaClient: SchemaClient,
   ) {
     this.logger = getChildLogger(baseLogger, collection);
     this.idMapper = this.idMapperFactory.forCollection(collection);
@@ -221,6 +220,6 @@ export class SeedDataDiffer {
    * Get the primary field name from the collection
    */
   protected async getPrimaryFieldName(): Promise<string> {
-    return (await this.snapshotClient.getPrimaryField(this.collection)).name;
+    return (await this.schemaClient.getPrimaryField(this.collection)).name;
   }
 }

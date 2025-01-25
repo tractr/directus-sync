@@ -5,9 +5,9 @@ import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
 import { Inject, Service } from 'typedi';
 import { COLLECTION, LOGGER } from '../../../constants';
-import { SnapshotClient, Type } from '../../snapshot';
 import deepmerge from 'deepmerge';
 import { createOne, deleteOne, readMany, updateOne } from './requests';
+import { SchemaClient, Type } from '../global';
 
 @Service()
 export class SeedDataClient {
@@ -16,7 +16,7 @@ export class SeedDataClient {
   constructor(
     @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
     protected readonly migrationClient: MigrationClient,
-    protected readonly snapshotClient: SnapshotClient,
+    protected readonly schemaClient: SchemaClient,
     @Inject(COLLECTION) protected readonly collection: string,
   ) {
     this.logger = getChildLogger(baseLogger, collection);
@@ -50,7 +50,7 @@ export class SeedDataClient {
     values: string | string[],
     query: Query<T> = {},
   ): Promise<T[]> {
-    const primaryField = await this.snapshotClient.getPrimaryField(
+    const primaryField = await this.schemaClient.getPrimaryField(
       this.collection,
     );
     const isNumber = primaryField.type === Type.Integer;
