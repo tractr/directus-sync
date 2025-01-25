@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0](https://github.com/tractr/directus-sync/compare/directus-sync@3.1.6...directus-sync@3.2.0) (2025-01-25)
+
+
+### Features
+
+* add seed commands and improve logging ([#146](https://github.com/tractr/directus-sync/issues/146)) ([cbc8835](https://github.com/tractr/directus-sync/commit/cbc883573aef1df9880d0e2e5278ec7f971163e7)), closes [#142](https://github.com/tractr/directus-sync/issues/142) [#144](https://github.com/tractr/directus-sync/issues/144) [#145](https://github.com/tractr/directus-sync/issues/145)
+
+
+
+
+
 ## [3.1.6](https://github.com/tractr/directus-sync/compare/directus-sync@3.1.5...directus-sync@3.1.6) (2024-11-28)
 
 
