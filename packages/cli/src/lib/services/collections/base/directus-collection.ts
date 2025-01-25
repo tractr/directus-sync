@@ -161,7 +161,7 @@ export abstract class DirectusCollection<
    * Clean collections and orphan sync id
    */
   async cleanUp() {
-    const { dangling } = await this.dataDiffer.getDiff();
+    const dangling = await this.dataDiffer.getDanglingIds();
     // All dangling items should be deleted first
     await this.removeDangling(dangling);
     // Clear the id mapper cache
