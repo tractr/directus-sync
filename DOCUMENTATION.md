@@ -32,6 +32,15 @@ for targeted updates and clearer oversight of your Directus configurations.
       * [Pull](#pull)
       * [Diff](#diff)
       * [Push](#push)
+    * [Seed](#seed)
+      * [Seed Diff](#seed-diff)
+      * [Seed Push](#seed-push)
+      * [Creating Seed Data](#creating-seed-data)
+        * [Structure of Seed Files](#structure-of-seed-files)
+        * [Example: Basic Collection](#example-basic-collection)
+        * [Example: Collection with Relations](#example-collection-with-relations)
+        * [Seed files and collections](#seed-files-and-collections)
+        * [Best Practices](#best-practices)
     * [Available options](#available-options)
       * [CLI and environment variables](#cli-and-environment-variables)
       * [Configuration file](#configuration-file)
@@ -115,6 +124,174 @@ npx directus-sync push
 Applies the changes from your local environment to the Directus instance. This command pushes your local schema and
 collection configurations to Directus, updating the instance to reflect your local state.
 
+
+### Seed
+
+Directus Sync allows you to manage seed data for your collections. This data is used to populate your Directus instance with initial data.
+
+Seed data must be written in JSON format and must be placed in the `./directus-config/seed` directory (this can be changed using the `--seed-path` option).
+Any file in this directory will be automatically detected and used by the `seed diff` and `seed push` commands.
+
+#### Seed Diff
+
+```shell
+npx directus-sync seed diff
+```
+
+Analyzes and describes the differences between your local seed data and the data in your Directus instance. This command is non-destructive and does not apply any changes to the database.
+
+#### Seed Push
+
+```shell
+npx directus-sync seed push
+```
+
+Applies the seed data changes from your local environment to the Directus instance. This command pushes your local seed data to Directus, creating, updating, or deleting items as needed.
+
+The command will:
+1. Create new items that exist locally but not in Directus
+2. Update existing items that have differences
+3. Delete items in Directus that don't exist locally (if they were previously tracked)
+
+> [!NOTE]
+> The seed commands require the schema to be synchronized first. Make sure to run `npx directus-sync push` before running any seed commands.
+
+
+#### Creating Seed Data
+
+Seed data allows you to define initial or reference data for your Directus collections. The seed data is stored in JSON files in the `seed` directory (by default `directus-config/seed`).
+
+##### Structure of Seed Files
+
+Each collection has its own seed file. Here's the basic structure of a seed file:
+
+```json
+{
+    "collection": "collection_name",
+    "meta": {
+        "insert_order": 1,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "preserve_ids": false
+    },
+    "data": [
+        {
+            "_sync_id": "unique-identifier",
+            "field1": "value1",
+            "field2": "value2"
+        }
+    ]
+}
+```
+
+- `collection`: The name of the Directus collection
+- `meta.insert_order`: Optional. The order in which the collection should be seeded (useful for managing dependencies)
+- `meta.create`: Optional. Whether to create new items in the collection (default: `true`)
+- `meta.update`: Optional. Whether to update existing items in the collection (default: `true`)
+- `meta.delete`: Optional. Whether to delete items in the collection (default: `true`)
+- `meta.preserve_ids`: Optional. Whether to preserve the original ids during the `push` command (default: `false`)
+- `data`: An array of items to be created in the collection
+- `_sync_id`: A unique identifier for each item, used by directus-sync to track items
+
+#### Example: Basic Collection
+
+Here's an example of a seed file for a countries collection (`countries.json`):
+
+```json
+{
+    "collection": "country",
+    "meta": {
+        "insert_order": 2
+    },
+    "data": [
+        {
+            "_sync_id": "country-usa",
+            "name": "United States",
+            "status": "published",
+            "population": 331893744
+        },
+        {
+            "_sync_id": "country-france",
+            "name": "France",
+            "status": "published",
+            "population": 67413000
+        }
+    ]
+}
+```
+
+#### Example: Collection with Relations
+
+Here's an example of a seed file with relations (`cities.json`):
+
+```json
+{
+    "collection": "city",
+    "meta": {
+        "insert_order": 3
+    },
+    "data": [
+        {
+            "_sync_id": "city-nyc",
+            "name": "New York",
+            "status": "published",
+            "description": "The city that never sleeps",
+            "country": "country-usa"
+        },
+        {
+            "_sync_id": "city-paris",
+            "name": "Paris",
+            "status": "published",
+            "description": "The city of love",
+            "country": "country-france"
+        }
+    ]
+}
+```
+
+Note how the `country` field references the `_sync_id` of items in the countries collection.
+
+#### Seed files and collections
+
+You can have multiple seed files in the `seed` directory.
+Each may contain one collection (as shown in the examples above) or multiple collections.
+
+In case of multiple collections in a single file, the content of the JSON should be an array of collections :
+
+```json
+[
+    {
+        "collection": "collection_1",
+        "meta": { ... },
+        "data": [ ... ]
+    },
+    {
+        "collection": "collection_2",
+        "meta": { ... },
+        "data": [ ... ]
+    }
+]
+```
+
+> [!NOTE]
+> If there is many seeds for the same collection, those seeds will be merged.
+> The `meta` values are merged and the lowest `insert_order` is used.
+
+#### Best Practices
+
+1. **Insert Order**: Set the `insert_order` carefully to ensure dependencies are created in the correct order. Collections with no dependencies should have lower numbers.
+
+2. **Sync IDs**: 
+   - Use meaningful and consistent naming for `_sync_id`
+   - Prefix them with the collection name (e.g., `country-usa`, `city-paris`)
+   - Keep them unique across your seed data
+
+3. **Relations**: 
+   - Use the `_sync_id` of related items to establish relationships
+   - Ensure related items exist in their respective seed files
+   - Make sure the insert order respects these relationships
+
 ### Available options
 
 Options are merged from the following sources, in order of precedence:
@@ -152,6 +329,10 @@ These options can be used with any command to configure the operation of `direct
 - `--dump-path <dumpPath>`  
   Set the base path for the dump. This must be an absolute path. The default
   is `"./directus-config"`.
+
+- `--seed-path <seedPath>`  
+  Set the base path for the seed data. This must be an absolute path. The default
+  is `"./directus-config/seed"`.
 
 - `--collections-path <collectionPath>`  
   Specify the path for the collections dump, relative to the dump path. The default is `"collections"`.
@@ -217,6 +398,7 @@ module.exports = {
     restConfig: {}, // see https://docs.directus.io/packages/@directus/sdk/rest/interfaces/RestConfig.html
   },
   dumpPath: './directus-config',
+  seedPath: './directus-config/seed',
   collectionsPath: 'collections',
   onlyCollections: ['roles', 'policies', 'permissions', 'settings'],
   excludeCollections: ['settings'],
