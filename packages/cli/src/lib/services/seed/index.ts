@@ -1,6 +1,5 @@
 export * from './schema';
 export * from './interfaces';
-export * from './constants';
 export * from './seed-client';
 export * from './seed-loader';
 export * from './collection';

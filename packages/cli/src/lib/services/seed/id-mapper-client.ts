@@ -6,9 +6,9 @@ import { LOGGER } from '../../constants';
 import { getChildLogger } from '../../helpers';
 import { Cacheable } from 'typescript-cacheable';
 import {
-  CUSTOM_COLLECTIONS_PREFIX,
+  CUSTOM_COLLECTIONS_MAPPING_PREFIX,
   DIRECTUS_COLLECTIONS_PREFIX,
-} from './constants';
+} from '../../constants';
 
 export class SeedIdMapperClient extends IdMapperClient {}
 
@@ -31,7 +31,7 @@ export class SeedIdMapperClientFactory {
     // Get the stored table name
     const storedTableName = collection.startsWith(DIRECTUS_COLLECTIONS_PREFIX)
       ? collection.slice(DIRECTUS_COLLECTIONS_PREFIX.length)
-      : `${CUSTOM_COLLECTIONS_PREFIX}:${collection}`;
+      : `${CUSTOM_COLLECTIONS_MAPPING_PREFIX}:${collection}`;
 
     return new SeedIdMapperClient(
       this.migrationClient,

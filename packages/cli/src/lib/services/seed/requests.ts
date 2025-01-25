@@ -12,7 +12,7 @@ import {
   deleteUser,
 } from '@directus/sdk';
 import { DirectusSchema, DirectusUnknownType } from '../interfaces';
-import { DIRECTUS_COLLECTIONS_PREFIX } from './constants';
+import { DIRECTUS_COLLECTIONS_PREFIX } from '../../constants';
 import { DirectusId } from '../collections';
 
 type S = DirectusSchema;

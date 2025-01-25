@@ -12,7 +12,7 @@ import {
   Type,
 } from './interfaces';
 import { mkdirpSync, readJsonSync, removeSync, writeJsonSync } from 'fs-extra';
-import { LOGGER } from '../../constants';
+import { DIRECTUS_COLLECTIONS_PREFIX, LOGGER } from '../../constants';
 import pino from 'pino';
 import { getChildLogger, loadJsonFilesRecursively } from '../../helpers';
 import { ConfigService, SnapshotHooks } from '../config';
@@ -23,8 +23,6 @@ const INFO_JSON = 'info.json';
 const COLLECTIONS_DIR = 'collections';
 const FIELDS_DIR = 'fields';
 const RELATIONS_DIR = 'relations';
-
-const DIRECTUS_COLLECTIONS_PREFIX = 'directus_';
 
 @Service({ global: true })
 export class SnapshotClient {
