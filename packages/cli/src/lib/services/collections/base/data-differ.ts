@@ -106,7 +106,7 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
    * This method will also test every item with the local id from the id mapper.
    * This should be used to find items that were deleted manually and clean up the sync id map.
    */
-  protected async getDanglingIds() {
+  async getDanglingIds() {
     const allIdsMap = await this.idMapper.getAll();
 
     // Find all items that are in the ids map
