@@ -9,7 +9,11 @@ import { getChildLogger } from '../../../helpers';
 import { diff } from 'deep-object-diff';
 import { SeedMeta } from '../interfaces';
 import { Cacheable } from 'typescript-cacheable';
-import { SchemaClient, SeedIdMapperClient, SeedIdMapperClientFactory } from '../global';
+import {
+  SchemaClient,
+  SeedIdMapperClient,
+  SeedIdMapperClientFactory,
+} from '../global';
 
 @Service()
 export class SeedDataDiffer {

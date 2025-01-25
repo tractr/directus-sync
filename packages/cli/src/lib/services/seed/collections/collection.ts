@@ -4,7 +4,11 @@ import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
 import { SeedMeta, SeedData } from '../interfaces';
 import { SeedDataMapper } from './data-mapper';
-import { SchemaClient, SeedIdMapperClient, SeedIdMapperClientFactory } from '../global';
+import {
+  SchemaClient,
+  SeedIdMapperClient,
+  SeedIdMapperClientFactory,
+} from '../global';
 import { SeedDataClient } from './data-client';
 import {
   DirectusId,

@@ -1,12 +1,12 @@
-import { Inject, Service } from "typedi";
-import { LOGGER, DIRECTUS_COLLECTIONS_PREFIX } from "../../../constants";
-import { getChildLogger } from "../../../helpers";
-import pino from "pino";
+import { Inject, Service } from 'typedi';
+import { LOGGER, DIRECTUS_COLLECTIONS_PREFIX } from '../../../constants';
+import { getChildLogger } from '../../../helpers';
+import pino from 'pino';
 import { Cacheable } from 'typescript-cacheable';
-import { SnapshotClient, Field, Type } from "../../snapshot";
+import { SnapshotClient, Field, Type } from '../../snapshot';
 
 // Re-export the enum for easier access
-export { Type }
+export { Type };
 
 @Service({ global: true })
 export class SchemaClient {
