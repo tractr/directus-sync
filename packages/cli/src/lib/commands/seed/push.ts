@@ -26,7 +26,9 @@ export async function runSeedPush() {
     stop = !(await seedClient.push()); // Return true when should retry
     index++;
     if (maxPushRetries > 0 && index > maxPushRetries) {
-      throw new Error(`Push: max retries reached after ${maxPushRetries} attempts`);
+      throw new Error(
+        `Push: max retries reached after ${maxPushRetries} attempts`,
+      );
     }
   }
 }
