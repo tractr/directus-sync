@@ -1,7 +1,7 @@
 import { Context, getAllItems, info } from '../helpers/index.js';
 
 export const seedPushOnEmptyInstance = (context: Context) => {
-  fit('seed diff and push on an empty instance', async () => {
+  it('seed diff and push on an empty instance', async () => {
     // Init sync client
     const sync = await context.getSync('sources/seed-basic');
     const directus = context.getDirectus();
