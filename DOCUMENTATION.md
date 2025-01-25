@@ -130,7 +130,10 @@ collection configurations to Directus, updating the instance to reflect your loc
 
 Directus Sync allows you to manage seed data for your collections. This data is used to populate your Directus instance with initial data.
 
-Seed data must be written in JSON format and must be placed in the `./directus-config/seed` directory (this can be changed using the `--seed-path` option).
+As for the synchronization process, the seed data are tracked. Therefore if any change is made to the seed data, it will be updated in the Directus instance. Also, if a seed data is deleted, it will be removed from the Directus instance.
+
+The main difference with the synchronization process is that the seed data are not pulled from the Directus instance.
+You have to create the seed data manually. Seed data must be written in JSON format and must be placed in the `./directus-config/seed` directory (this can be changed using the `--seed-path` option).
 Any file in this directory will be automatically detected and used by the `seed diff` and `seed push` commands.
 
 #### Seed Diff
@@ -161,6 +164,15 @@ The command will:
 #### Creating Seed Data
 
 Seed data allows you to define initial or reference data for your Directus collections. The seed data is stored in JSON files in the `seed` directory (by default `directus-config/seed`).
+
+Here is an example of the folder structure of the seed data:
+
+```text
+directus-config/seed/
+├── cities.json
+├── countries.json
+└── directus_users.json
+```
 
 ##### Structure of Seed Files
 
@@ -270,7 +282,7 @@ This is an example of a seed file for the `directus_users` collection:
             "first_name": "John",
             "last_name": "Doe",
             "email": "john.doe@example.com",
-            "role": "a7f5f073-538a-4ebd-ac1c-df588ce28cb9"
+            "role": "_sync_default_admin_role"
         },
         {
             "_sync_id": "user-2",
@@ -283,7 +295,10 @@ This is an example of a seed file for the `directus_users` collection:
 }
 ```
 
-The `role` field references the real id of the role in the `directus_roles` collection.
+The `role` field references the the sync id of the role. You can find it in the file `directus-config/collections/roles.json`.
+
+`password` field is automatically ignored during update. This is to prevent the password from being reset on every push.
+
 The `directus_roles` collection is not managed by the `seed push` but by the `pull` and `push` commands.
 
 > [!NOTE]
