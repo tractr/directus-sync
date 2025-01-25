@@ -18,6 +18,7 @@ import { DataMapper } from './data-mapper';
 import { CollectionHooks } from '../../config';
 import { MigrationClient } from '../../migration-client';
 import { unwrapDirectusRequestError } from './helpers';
+import { debugOrInfoLogger } from '../../../helpers';
 
 /**
  * This class is responsible for merging the data from a dump to a target table.
@@ -43,6 +44,11 @@ export abstract class DirectusCollection<
    */
   protected tempData: WithSyncIdAndWithoutId<DirectusType>[] = [];
 
+  /**
+   * Log message to debug or info, depending on the debug flag
+   */
+  protected readonly debugOrInfo: ReturnType<typeof debugOrInfoLogger>;
+
   constructor(
     protected readonly logger: pino.Logger,
     protected readonly dataDiffer: DataDiffer<DirectusType>,
@@ -56,6 +62,7 @@ export abstract class DirectusCollection<
     this.hooks = extraConfig.hooks;
     // Override preserveIds if it is set to true in the extra config
     this.preserveIds = extraConfig.preserveIds ? true : this.preserveIds;
+    this.debugOrInfo = debugOrInfoLogger(this.logger);
   }
 
   /**
@@ -90,27 +97,39 @@ export abstract class DirectusCollection<
     const { toCreate, toUpdate, toDelete, unchanged, dangling } =
       await this.dataDiffer.getDiff();
 
-    this.logger.info(`Dangling id maps: ${dangling.length} item(s)`);
+    this.debugOrInfo(
+      dangling.length > 0,
+      `Dangling id maps: ${dangling.length} item(s)`,
+    );
     for (const idMap of dangling) {
       this.logger.debug(idMap, `Will remove dangling id map`);
     }
 
-    this.logger.info(`To create: ${toCreate.length} item(s)`);
+    this.debugOrInfo(
+      toCreate.length > 0,
+      `To create: ${toCreate.length} item(s)`,
+    );
     for (const item of toCreate) {
-      this.logger.debug(item, `Will create item`);
+      this.logger.info(item, `Will create item`);
     }
 
-    this.logger.info(`To update: ${toUpdate.length} item(s)`);
+    this.debugOrInfo(
+      toUpdate.length > 0,
+      `To update: ${toUpdate.length} item(s)`,
+    );
     for (const { targetItem, diffItem } of toUpdate) {
-      this.logger.debug(diffItem, `Will update item (id: ${targetItem.id})`);
+      this.logger.info(diffItem, `Will update item (id: ${targetItem.id})`);
     }
 
-    this.logger.info(`To delete: ${toDelete.length} item(s)`);
+    this.debugOrInfo(
+      toDelete.length > 0,
+      `To delete: ${toDelete.length} item(s)`,
+    );
     for (const item of toDelete) {
-      this.logger.debug(item, `Will delete item (id: ${item.id})`);
+      this.logger.info(item, `Will delete item (id: ${item.id})`);
     }
 
-    this.logger.info(`Unchanged: ${unchanged.length} item(s)`);
+    this.logger.debug(`Unchanged: ${unchanged.length} item(s)`);
     for (const item of unchanged) {
       this.logger.debug(`Item ${item.id} is unchanged`);
     }
@@ -239,7 +258,10 @@ export abstract class DirectusCollection<
     }
 
     // Log results
-    this.logger.info(`Created ${toCreate.length} items`);
+    this.debugOrInfo(
+      toCreate.length > 0,
+      `Created ${toCreate.length} items`,
+    );
     if (toRetry.length) {
       this.logger.warn(
         `Could not create ${toRetry.length} items. Must run again.`,
@@ -310,7 +332,10 @@ export abstract class DirectusCollection<
     }
 
     // Log results
-    this.logger.info(`Updated ${toUpdate.length} items`);
+    this.debugOrInfo(
+      toUpdate.length > 0,
+      `Updated ${toUpdate.length} items`,
+    );
     if (toRetry.length) {
       this.logger.warn(
         `Could not update ${toRetry.length} items. Must run again.`,
@@ -334,7 +359,10 @@ export abstract class DirectusCollection<
         `Deleted id map`,
       );
     }
-    this.logger.info(`Deleted ${toDelete.length} items`);
+    this.debugOrInfo(
+      toDelete.length > 0,
+      `Deleted ${toDelete.length} items`,
+    );
   }
 
   protected async removeDangling(dangling: IdMap[]) {
@@ -349,6 +377,9 @@ export abstract class DirectusCollection<
         `Deleted id map`,
       );
     }
-    this.logger.info(`Deleted ${dangling.length} dangling items`);
+    this.debugOrInfo(
+      dangling.length > 0,
+      `Deleted ${dangling.length} dangling items`,
+    );
   }
 }
