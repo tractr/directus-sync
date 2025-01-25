@@ -21,8 +21,8 @@ export class SeedClient {
   /**
    * Denotes if seeds exist
    */
-  async hasSeeds(): Promise<boolean> {
-    const seeds = await this.seedLoader.loadFromFiles();
+  hasSeeds(): boolean {
+    const seeds = this.seedLoader.loadFromFiles();
     return seeds.length > 0;
   }
 
@@ -30,7 +30,7 @@ export class SeedClient {
    * Display diff for all seeds
    */
   async diff(): Promise<void> {
-    const seeds = await this.seedLoader.loadFromFiles();
+    const seeds = this.seedLoader.loadFromFiles();
     if (!seeds.length) {
       this.logger.warn('No seeds found');
     }
@@ -53,7 +53,7 @@ export class SeedClient {
    * Push all seeds
    */
   async push(): Promise<boolean> {
-    const seeds = await this.seedLoader.loadFromFiles();
+    const seeds = this.seedLoader.loadFromFiles();
     if (!seeds.length) {
       this.logger.warn('No seeds found');
       return false;
@@ -76,7 +76,7 @@ export class SeedClient {
   }
 
   async cleanUp(): Promise<void> {
-    const seeds = await this.seedLoader.loadFromFiles();
+    const seeds = this.seedLoader.loadFromFiles();
     if (!seeds.length) {
       return;
     }

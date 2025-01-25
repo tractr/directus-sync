@@ -129,11 +129,11 @@ export class SeedCollection {
    * Update existing items
    */
   protected async update(
-    toUpdate: Array<{
+    toUpdate: {
       sourceItem: WithSyncId<DirectusUnknownType>;
       targetItem: WithSyncId<DirectusUnknownType>;
       diffItem: Partial<WithSyncId<DirectusUnknownType>>;
-    }>,
+    }[],
   ): Promise<boolean> {
     let shouldRetry = false;
 
@@ -161,7 +161,7 @@ export class SeedCollection {
    * Delete items
    */
   protected async delete(
-    toDelete: Array<{ local_id: string; sync_id: string }>,
+    toDelete: { local_id: string; sync_id: string }[],
   ) {
     for (const item of toDelete) {
       await this.dataClient.delete(item.local_id);
@@ -175,7 +175,7 @@ export class SeedCollection {
    * Remove dangling items
    */
   protected async removeDangling(
-    dangling: Array<{ local_id: string; sync_id: string }>,
+    dangling: { local_id: string; sync_id: string }[],
   ) {
     for (const item of dangling) {
       await this.idMapper.removeBySyncId(item.sync_id);

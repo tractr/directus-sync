@@ -17,6 +17,8 @@ import getenv from 'getenv';
 const DIRECTUS_COLLECTIONS_PREFIX = 'directus_';
 const CUSTOM_COLLECTIONS_PREFIX = 'items:';
 
+// TODO: Improve directus collections type
+/* eslint-disable @typescript-eslint/no-explicit-any */
 type Collections = any;
 
 export interface IdMap {

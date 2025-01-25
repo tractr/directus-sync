@@ -52,11 +52,11 @@ export class SeedDataDiffer {
    */
   async getDiff(data: WithSyncId<DirectusUnknownType>[]) {
     const toCreate: WithSyncId<DirectusUnknownType>[] = [];
-    const toUpdate: Array<{
+    const toUpdate: {
       sourceItem: WithSyncId<DirectusUnknownType>;
       targetItem: WithSyncId<DirectusUnknownType>;
       diffItem: Partial<WithSyncId<DirectusUnknownType>>;
-    }> = [];
+    }[] = [];
     const unchanged: WithSyncId<DirectusUnknownType>[] = [];
 
     for (const sourceItem of data) {
@@ -195,10 +195,10 @@ export class SeedDataDiffer {
    */
   protected async getIdsToDelete(
     unchanged: WithSyncId<DirectusUnknownType>[],
-    toUpdate: Array<{
+    toUpdate: {
       sourceItem: WithSyncId<DirectusUnknownType>;
       targetItem: WithSyncId<DirectusUnknownType>;
-    }>,
+    }[],
     dangling: IdMap[],
   ): Promise<IdMap[]> {
     const allIdsMap = await this.idMapper.getAll();

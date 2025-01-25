@@ -41,7 +41,7 @@ export class SeedDataClient {
       return [];
     }
 
-    return [response as T];
+    return [response];
   }
 
   /**

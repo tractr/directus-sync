@@ -18,6 +18,9 @@ import { DirectusId } from '../../collections';
 type S = DirectusSchema;
 type C = RegularCollections<S>;
 type Q = Query<S, C>;
+
+// TODO: Improve directus query type
+/* eslint-disable @typescript-eslint/no-explicit-any */
 type AnyQuery = any;
 type AnyItem = DirectusUnknownType | DirectusUser;
 

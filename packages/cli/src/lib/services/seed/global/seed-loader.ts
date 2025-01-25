@@ -26,7 +26,7 @@ export class SeedLoader {
   }
 
   @Cacheable()
-  async loadFromFiles(): Promise<Seed[]> {
+  loadFromFiles(): Seed[] {
     const { paths } = this.config.getSeedConfig();
     const seeds: Seed[] = [];
 
@@ -54,7 +54,7 @@ export class SeedLoader {
       (seed) => seed.meta?.insert_order !== undefined,
     );
     sortableSeeds.sort((a, b) => {
-      return a.meta!.insert_order! - b.meta!.insert_order!;
+      return a.meta.insert_order! - b.meta.insert_order!;
     });
     const sortedSeeds = [...sortableSeeds, ...unsortableSeeds];
 

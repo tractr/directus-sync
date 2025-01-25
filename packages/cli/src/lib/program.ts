@@ -218,9 +218,12 @@ export function createProgram() {
 
   // ---------------------------------------------------------------------------------
   // Seed
+  const defaultSeedPath = Array.isArray(DefaultConfig.seedPath)
+    ? DefaultConfig.seedPath.join(', ')
+    : DefaultConfig.seedPath;
   const seedPathOption = new Option(
     '--seed-path <seedPath...>',
-    `the base path(s) for the seed (default "${DefaultConfig.seedPath}")`,
+    `the base path(s) for the seed (default "${defaultSeedPath}")`,
   );
 
   const seed = program

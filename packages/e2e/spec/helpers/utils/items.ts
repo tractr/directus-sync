@@ -8,7 +8,10 @@ import {
   updateItem as updateItemRequest,
 } from '@directus/sdk';
 
+// TODO: Improve directus schema type
+/* eslint-disable @typescript-eslint/no-explicit-any */
 type Schema = any;
+/* eslint-disable @typescript-eslint/no-explicit-any */
 type DefaultItem = Record<string, any>;
 
 export async function getAllItems<T = DefaultItem>(
