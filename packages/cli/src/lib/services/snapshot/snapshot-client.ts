@@ -24,6 +24,8 @@ const COLLECTIONS_DIR = 'collections';
 const FIELDS_DIR = 'fields';
 const RELATIONS_DIR = 'relations';
 
+const DIRECTUS_COLLECTIONS_PREFIX = 'directus_';
+
 @Service({ global: true })
 export class SnapshotClient {
   protected readonly dumpPath: string;
@@ -324,11 +326,9 @@ export class SnapshotClient {
    */
   @Cacheable()
   async getPrimaryField(model: string): Promise<{ name: string; type: Type }> {
-    // TODO: Find a better way to handle directus collections
-    if (model === 'directus_users') {
-      return { name: 'id', type: Type.UUID };
+    if (model.startsWith(DIRECTUS_COLLECTIONS_PREFIX)) {
+      return this.getDirectusCollectionPrimaryField(model);
     }
-
     const snapshot = await this.getSnapshot();
     const fields = snapshot.fields.filter((c) => c.collection === model);
     const primaryField = fields.find((f) => f.schema?.is_primary_key);
@@ -336,5 +336,15 @@ export class SnapshotClient {
       throw new Error(`Primary field not found in ${model}`);
     }
     return { name: primaryField.field, type: primaryField.type };
+  }
+
+  /**
+   * Returns the primary field type of a directus model.
+   */
+  protected getDirectusCollectionPrimaryField(model: string): { name: string; type: Type } {
+    if (['directus_permissions', 'directus_presets'].includes(model)) {
+      return { name: 'id', type: Type.Integer };
+    }
+    return { name: 'id', type: Type.UUID };
   }
 }
