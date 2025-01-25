@@ -1,4 +1,4 @@
-import { Context, getAllItems, info } from '../helpers/index.js';
+import { Context, debug, getAllItems, info } from '../helpers/index.js';
 
 export const seedPushOnEmptyInstance = (context: Context) => {
   it('seed diff and push on an empty instance', async () => {
@@ -16,31 +16,31 @@ export const seedPushOnEmptyInstance = (context: Context) => {
     // --------------------------------------------------------------------------
     // Check differences for each collection
     expect(diffOutput).toContain(info('[country] To create: 3 item(s)'));
-    expect(diffOutput).toContain(info('[country] To update: 0 item(s)'));
-    expect(diffOutput).toContain(info('[country] To delete: 0 item(s)'));
-    expect(diffOutput).toContain(info('[country] Unchanged: 0 item(s)'));
+    expect(diffOutput).toContain(debug('[country] To update: 0 item(s)'));
+    expect(diffOutput).toContain(debug('[country] To delete: 0 item(s)'));
+    expect(diffOutput).toContain(debug('[country] Unchanged: 0 item(s)'));
 
     expect(diffOutput).toContain(info('[language] To create: 3 item(s)'));
-    expect(diffOutput).toContain(info('[language] To update: 0 item(s)'));
-    expect(diffOutput).toContain(info('[language] To delete: 0 item(s)'));
-    expect(diffOutput).toContain(info('[language] Unchanged: 0 item(s)'));
+    expect(diffOutput).toContain(debug('[language] To update: 0 item(s)'));
+    expect(diffOutput).toContain(debug('[language] To delete: 0 item(s)'));
+    expect(diffOutput).toContain(debug('[language] Unchanged: 0 item(s)'));
 
     expect(diffOutput).toContain(info('[city] To create: 4 item(s)'));
-    expect(diffOutput).toContain(info('[city] To update: 0 item(s)'));
-    expect(diffOutput).toContain(info('[city] To delete: 0 item(s)'));
-    expect(diffOutput).toContain(info('[city] Unchanged: 0 item(s)'));
+    expect(diffOutput).toContain(debug('[city] To update: 0 item(s)'));
+    expect(diffOutput).toContain(debug('[city] To delete: 0 item(s)'));
+    expect(diffOutput).toContain(debug('[city] Unchanged: 0 item(s)'));
 
     expect(diffOutput).toContain(
       info('[country_language] To create: 3 item(s)'),
     );
     expect(diffOutput).toContain(
-      info('[country_language] To update: 0 item(s)'),
+      debug('[country_language] To update: 0 item(s)'),
     );
     expect(diffOutput).toContain(
-      info('[country_language] To delete: 0 item(s)'),
+      debug('[country_language] To delete: 0 item(s)'),
     );
     expect(diffOutput).toContain(
-      info('[country_language] Unchanged: 0 item(s)'),
+      debug('[country_language] Unchanged: 0 item(s)'),
     );
 
     // --------------------------------------------------------------------------
@@ -75,20 +75,20 @@ export const seedPushOnEmptyInstance = (context: Context) => {
     // --------------------------------------------------------------------------
     // Analyze output
     expect(pushOutput).toContain(info('[country] Created 3 items'));
-    expect(pushOutput).toContain(info('[country] Updated 0 items'));
-    expect(pushOutput).toContain(info('[country] Deleted 0 items'));
+    expect(pushOutput).toContain(debug('[country] Updated 0 items'));
+    expect(pushOutput).toContain(debug('[country] Deleted 0 items'));
 
     expect(pushOutput).toContain(info('[language] Created 3 items'));
-    expect(pushOutput).toContain(info('[language] Updated 0 items'));
-    expect(pushOutput).toContain(info('[language] Deleted 0 items'));
+    expect(pushOutput).toContain(debug('[language] Updated 0 items'));
+    expect(pushOutput).toContain(debug('[language] Deleted 0 items'));
 
     expect(pushOutput).toContain(info('[city] Created 4 items'));
-    expect(pushOutput).toContain(info('[city] Updated 0 items'));
-    expect(pushOutput).toContain(info('[city] Deleted 0 items'));
+    expect(pushOutput).toContain(debug('[city] Updated 0 items'));
+    expect(pushOutput).toContain(debug('[city] Deleted 0 items'));
 
     expect(pushOutput).toContain(info('[country_language] Created 3 items'));
-    expect(pushOutput).toContain(info('[country_language] Updated 0 items'));
-    expect(pushOutput).toContain(info('[country_language] Deleted 0 items'));
+    expect(pushOutput).toContain(debug('[country_language] Updated 0 items'));
+    expect(pushOutput).toContain(debug('[country_language] Deleted 0 items'));
 
     // --------------------------------------------------------------------------
     // Check that the items have been created

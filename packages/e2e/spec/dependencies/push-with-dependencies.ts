@@ -1,5 +1,6 @@
 import {
   Context,
+  debug,
   getDefaultItemsCount,
   getSystemCollectionsNames,
   info,
@@ -20,25 +21,24 @@ export const pushWithDependencies = (context: Context) => {
     const collections = getSystemCollectionsNames();
 
     const diffOutput = await sync.diff();
-    expect(diffOutput).toContain(info('[snapshot] No changes to apply'));
+    expect(diffOutput).toContain(debug('[snapshot] No changes to apply'));
 
     for (const collection of collections) {
       expect(diffOutput).toContain(
-        info(`[${collection}] Dangling id maps: 0 item(s)`),
+        debug(`[${collection}] Dangling id maps: 0 item(s)`),
+      );
+      const amount = expectedAmount(collection);
+      expect(diffOutput).toContain(
+        (amount ? info : debug)(`[${collection}] To create: ${amount} item(s)`),
       );
       expect(diffOutput).toContain(
-        info(
-          `[${collection}] To create: ${expectedAmount(collection)} item(s)`,
-        ),
+        debug(`[${collection}] To update: 0 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(`[${collection}] To update: 0 item(s)`),
+        debug(`[${collection}] To delete: 0 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(`[${collection}] To delete: 0 item(s)`),
-      );
-      expect(diffOutput).toContain(
-        info(
+        debug(
           `[${collection}] Unchanged: ${getDefaultItemsCount(collection)} item(s)`,
         ),
       );
@@ -65,23 +65,25 @@ export const pushWithDependencies = (context: Context) => {
     }
 
     // Analyze the output
-    expect(pushOutput).toContain(info('[snapshot] No changes to apply'));
-    expect(pushOutput).toContain(info('---- Push: iteration 1 ----'));
-    expect(pushOutput).toContain(info('---- Push: iteration 2 ----'));
-    expect(pushOutput).toContain(info('---- Push: iteration 3 ----'));
-    expect(pushOutput).toContain(info('---- Push: iteration 4 ----'));
-    expect(pushOutput).not.toContain(info('---- Push: iteration 5 ----'));
+    expect(pushOutput).toContain(debug('[snapshot] No changes to apply'));
+    expect(pushOutput).toContain(info('⬆️  Push: iteration 1'));
+    expect(pushOutput).toContain(info('⬆️  Push: iteration 2'));
+    expect(pushOutput).toContain(info('⬆️  Push: iteration 3'));
+    expect(pushOutput).toContain(info('⬆️  Push: iteration 4'));
+    expect(pushOutput).not.toContain(info('⬆️  Push: iteration 5'));
 
     for (const collection of collections) {
       expect(pushOutput).toContain(
-        info(`[${collection}] Deleted 0 dangling items`),
+        debug(`[${collection}] Deleted 0 dangling items`),
       );
+
+      const amount = expectedAmount(collection);
       expect(pushOutput).toContain(
-        info(`[${collection}] Created ${expectedAmount(collection)} items`),
+        (amount ? info : debug)(`[${collection}] Created ${amount} items`),
       );
-      expect(pushOutput).toContain(info(`[${collection}] Updated 0 items`));
+      expect(pushOutput).toContain(debug(`[${collection}] Updated 0 items`));
       if (collection !== 'settings') {
-        expect(pushOutput).toContain(info(`[${collection}] Deleted 0 items`));
+        expect(pushOutput).toContain(debug(`[${collection}] Deleted 0 items`));
       }
 
       // Nothing deleted
@@ -98,7 +100,7 @@ export const pushWithDependencies = (context: Context) => {
     const client = directus.get();
 
     const pushOutput = await sync.push();
-    expect(pushOutput).toContain(info('[snapshot] No changes to apply'));
+    expect(pushOutput).toContain(debug('[snapshot] No changes to apply'));
     expect(pushOutput).toContain(info('[folders] Created 1 items'));
     expect(pushOutput).toContain(info('[settings] Created 1 items'));
 
@@ -118,7 +120,7 @@ export const pushWithDependencies = (context: Context) => {
     const client = directus.get();
 
     const pushOutput = await sync.push();
-    expect(pushOutput).toContain(info('[snapshot] No changes to apply'));
+    expect(pushOutput).toContain(debug('[snapshot] No changes to apply'));
     expect(pushOutput).toContain(info('[roles] Created 1 items'));
     expect(pushOutput).toContain(info('[settings] Created 1 items'));
 

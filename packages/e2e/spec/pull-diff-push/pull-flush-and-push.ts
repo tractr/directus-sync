@@ -1,6 +1,7 @@
 import {
   Context,
   createOneItemInEachSystemCollection,
+  debug,
   deleteItemsFromSystemCollections,
   DirectusClient,
   DirectusSync,
@@ -39,19 +40,19 @@ export const pushFlushAndPush = (context: Context) => {
 
     const output = await sync.diff();
     const collections = getSystemCollectionsNames();
-    expect(output).toContain(info('[snapshot] No changes to apply'));
+    expect(output).toContain(debug('[snapshot] No changes to apply'));
 
     for (const collection of collections) {
       if (collection === 'settings') {
         // public_registration_role is null after role deletion
         expect(output).toContain(
-          info(`[${collection}] Dangling id maps: 0 item(s)`),
+          debug(`[${collection}] Dangling id maps: 0 item(s)`),
         );
-        expect(output).toContain(info(`[${collection}] To create: 0 item(s)`));
+        expect(output).toContain(debug(`[${collection}] To create: 0 item(s)`));
         expect(output).toContain(info(`[${collection}] To update: 1 item(s)`));
-        expect(output).toContain(info(`[${collection}] To delete: 0 item(s)`));
+        expect(output).toContain(debug(`[${collection}] To delete: 0 item(s)`));
         expect(output).toContain(
-          info(
+          debug(
             `[${collection}] Unchanged: ${getDefaultItemsCount(collection)} item(s)`,
           ),
         );
@@ -60,10 +61,10 @@ export const pushFlushAndPush = (context: Context) => {
           info(`[${collection}] Dangling id maps: 1 item(s)`),
         );
         expect(output).toContain(info(`[${collection}] To create: 1 item(s)`));
-        expect(output).toContain(info(`[${collection}] To update: 0 item(s)`));
-        expect(output).toContain(info(`[${collection}] To delete: 0 item(s)`));
+        expect(output).toContain(debug(`[${collection}] To update: 0 item(s)`));
+        expect(output).toContain(debug(`[${collection}] To delete: 0 item(s)`));
         expect(output).toContain(
-          info(
+          debug(
             `[${collection}] Unchanged: ${getDefaultItemsCount(collection)} item(s)`,
           ),
         );
@@ -81,22 +82,22 @@ export const pushFlushAndPush = (context: Context) => {
     const client = directus.get();
     const output = await sync.push();
     const collections = getSystemCollectionsNames();
-    expect(output).toContain(info('[snapshot] No changes to apply'));
+    expect(output).toContain(debug('[snapshot] No changes to apply'));
 
     for (const collection of collections) {
       if (collection === 'settings') {
         expect(output).toContain(
-          info(`[${collection}] Deleted 0 dangling items`),
+          debug(`[${collection}] Deleted 0 dangling items`),
         );
-        expect(output).toContain(info(`[${collection}] Created 0 items`));
+        expect(output).toContain(debug(`[${collection}] Created 0 items`));
         expect(output).toContain(info(`[${collection}] Updated 1 items`));
       } else {
         expect(output).toContain(
           info(`[${collection}] Deleted 1 dangling items`),
         );
         expect(output).toContain(info(`[${collection}] Created 1 items`));
-        expect(output).toContain(info(`[${collection}] Updated 0 items`));
-        expect(output).toContain(info(`[${collection}] Deleted 0 items`));
+        expect(output).toContain(debug(`[${collection}] Updated 0 items`));
+        expect(output).toContain(debug(`[${collection}] Deleted 0 items`));
       }
     }
 
