@@ -22,13 +22,15 @@ export async function runSeedPush() {
   let stop = false;
   let index = 1;
   while (!stop) {
-    logger.info(`---- Push: iteration ${index} ----`);
-    stop = !(await seedClient.push()); // Return true when should retry
-    index++;
+    // Check if max retries is reached
     if (maxPushRetries > 0 && index > maxPushRetries) {
       throw new Error(
         `Push: max retries reached after ${maxPushRetries} attempts`,
       );
     }
+
+    logger.info(`---- Push: iteration ${index} ----`);
+    stop = !(await seedClient.push()); // Return true when should retry
+    index++;
   }
 }
