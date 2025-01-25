@@ -69,6 +69,26 @@ export class DirectusSync {
     );
   }
 
+  seedPush(args?: string[]) {
+    return this.runCliCommand(
+      'seed',
+      'push',
+      '--seed-path',
+      this.options.seedPath,
+      ...(args ?? []),
+    );
+  }
+
+  seedDiff(args?: string[]) {
+    return this.runCliCommand(
+      'seed',
+      'diff',
+      '--seed-path',
+      this.options.seedPath,
+      ...(args ?? []),
+    );
+  }
+
   protected async runCliCommand(...args: string[]) {
     // Avoid running multiple commands at the same time
     if (this.running) {
