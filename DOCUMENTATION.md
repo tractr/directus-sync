@@ -192,6 +192,7 @@ Each collection has its own seed file. Here's the basic structure of a seed file
 - `meta.update`: Optional. Whether to update existing items in the collection (default: `true`)
 - `meta.delete`: Optional. Whether to delete items in the collection (default: `true`)
 - `meta.preserve_ids`: Optional. Whether to preserve the original ids during the `push` command (default: `false`)
+- `meta.ignore_on_update`: Optional. An array of fields to ignore during the `push` command. This is useful for fields that should not be updated (default: `[]`)
 - `data`: An array of items to be created in the collection
 - `_sync_id`: A unique identifier for each item, used by directus-sync to track items
 

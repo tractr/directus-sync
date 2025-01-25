@@ -39,7 +39,11 @@ export class SeedDataDiffer {
    */
   @Cacheable()
   protected async getFieldsToIgnore() {
-    return [await this.getPrimaryFieldName(), '_syncId'];
+    return [
+      await this.getPrimaryFieldName(),
+      '_syncId',
+      ...this.meta.ignore_on_update,
+    ];
   }
 
   /**
