@@ -45,6 +45,21 @@ export function getChildLogger(
 }
 
 /**
+ * Log message to debug or info, depending on the debug flag
+ */
+export function debugOrInfoLogger(
+  logger: pino.Logger,
+): (info: boolean, message: string) => void {
+  return (info: boolean, message: string) => {
+    if (info) {
+      logger.info(message);
+    } else {
+      logger.debug(message);
+    }
+  };
+}
+
+/**
  * Load all JSON files from a directory recursively.
  */
 export function loadJsonFilesRecursively<T>(dirPath: string): T[] {
