@@ -174,7 +174,10 @@ export class SeedCollection {
       await this.idMapper.removeBySyncId(item.sync_id);
       this.logger.debug(item, `Removed dangling id map`);
     }
-    this.debugOrInfo(dangling.length > 0, `Removed ${dangling.length} dangling items`);
+    this.debugOrInfo(
+      dangling.length > 0,
+      `Removed ${dangling.length} dangling items`,
+    );
   }
 
   /**
@@ -241,26 +244,38 @@ export class SeedCollection {
       await this.dataDiffer.getDiff(sourceData);
 
     // Log dangling items
-    this.debugOrInfo(dangling.length > 0, `Dangling id maps: ${dangling.length} item(s)`);
+    this.debugOrInfo(
+      dangling.length > 0,
+      `Dangling id maps: ${dangling.length} item(s)`,
+    );
     for (const idMap of dangling) {
       this.logger.debug(idMap, `Will remove dangling id map`);
     }
 
     // Log items to create
-    this.debugOrInfo(toCreate.length > 0, `To create: ${toCreate.length} item(s)`);
+    this.debugOrInfo(
+      toCreate.length > 0,
+      `To create: ${toCreate.length} item(s)`,
+    );
     for (const item of toCreate) {
       this.logger.info(item, `Will create item`);
     }
 
     // Log items to update
-    this.debugOrInfo(toUpdate.length > 0, `To update: ${toUpdate.length} item(s)`);
+    this.debugOrInfo(
+      toUpdate.length > 0,
+      `To update: ${toUpdate.length} item(s)`,
+    );
     for (const { targetItem, diffItem } of toUpdate) {
       const primaryKey = await this.getPrimaryKey(targetItem);
       this.logger.info(diffItem, `Will update item (${primaryKey})`);
     }
 
     // Log items to delete
-    this.debugOrInfo(toDelete.length > 0, `To delete: ${toDelete.length} item(s)`);
+    this.debugOrInfo(
+      toDelete.length > 0,
+      `To delete: ${toDelete.length} item(s)`,
+    );
     for (const item of toDelete) {
       this.logger.info(item, `Will delete item (${item.local_id})`);
     }
@@ -271,8 +286,5 @@ export class SeedCollection {
       const primaryKey = await this.getPrimaryKey(item);
       this.logger.debug(`Item ${primaryKey} is unchanged`);
     }
-
-    // Return the diff results
-    return { toCreate, toUpdate, toDelete, unchanged, dangling };
   }
 }
