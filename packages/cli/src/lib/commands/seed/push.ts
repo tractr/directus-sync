@@ -16,7 +16,7 @@ export async function runSeedPush() {
   await migrationClient.clearCache();
 
   // Clean up the seed (dangling id maps, etc.)
-  logger.info(`---- Clean up seeds ----`);
+  logger.info(`🧹  Clean up seeds`);
   await seedClient.cleanUp();
 
   let stop = false;
@@ -29,7 +29,7 @@ export async function runSeedPush() {
       );
     }
 
-    logger.info(`---- Push: iteration ${index} ----`);
+    logger.info(`⬆️  Push: iteration ${index}`);
     stop = !(await seedClient.push()); // Return true when should retry
     index++;
   }
