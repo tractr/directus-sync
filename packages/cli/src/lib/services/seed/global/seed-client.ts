@@ -1,5 +1,6 @@
 import Container, { ContainerInstance, Inject, Service } from 'typedi';
-import { COLLECTION, LOGGER, META } from '../../../constants';
+import { LOGGER } from '../../../constants';
+import { COLLECTION, META } from '../constants';
 import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
 import { Seed } from '../interfaces';

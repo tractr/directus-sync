@@ -8,7 +8,7 @@ import { Cacheable } from 'typescript-cacheable';
 import {
   CUSTOM_COLLECTIONS_MAPPING_PREFIX,
   DIRECTUS_COLLECTIONS_PREFIX,
-} from '../../../constants';
+} from '../constants';
 
 export class SeedIdMapperClient extends IdMapperClient {}
 

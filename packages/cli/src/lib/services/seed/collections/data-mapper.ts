@@ -1,6 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { DataMapper } from '../../collections';
-import { COLLECTION, LOGGER, META } from '../../../constants';
+import { LOGGER } from '../../../constants';
+import { COLLECTION, META } from '../constants';
 import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
 import { DirectusUnknownType } from '../../interfaces';
