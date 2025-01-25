@@ -9,6 +9,10 @@ import { ConfigService } from '../../config';
 import { Seed, SeedsFileSchema } from '../interfaces';
 import * as Fs from 'fs-extra';
 import { Cacheable } from 'typescript-cacheable';
+import {
+  DirectusNativeStructure,
+  SupportedDirectusCollections,
+} from './directus-structure';
 
 @Service({ global: true })
 export class SeedLoader {
@@ -65,6 +69,9 @@ export class SeedLoader {
       return acc;
     }, [] as Seed[]);
 
+    // Apply defaults for directus collections
+    mergedSeeds.forEach((seed) => this.applyDirectusCollectionDefaults(seed));
+
     return mergedSeeds;
   }
 
@@ -81,5 +88,34 @@ export class SeedLoader {
     existing.meta.delete = existing.meta.delete && seed.meta.delete;
     existing.meta.preserve_ids =
       existing.meta.preserve_ids || seed.meta.preserve_ids;
+    existing.meta.ignore_on_update = [
+      ...existing.meta.ignore_on_update,
+      ...seed.meta.ignore_on_update,
+    ];
+  }
+
+  /**
+   * Applies the defaults for directus collections.
+   *  - ignore_on_update: add the fields that are ignored on update in the Directus structure
+   */
+  protected applyDirectusCollectionDefaults(seed: Seed): void {
+    if (this.isDirectusCollection(seed.collection)) {
+      const structure = DirectusNativeStructure[seed.collection];
+      seed.meta.ignore_on_update = [
+        ...structure.ignoreOnUpdate,
+        ...seed.meta.ignore_on_update,
+      ];
+    }
+  }
+
+  /**
+   * Denotes if the collection is a directus collection.
+   */
+  protected isDirectusCollection(
+    collection: string,
+  ): collection is SupportedDirectusCollections {
+    return SupportedDirectusCollections.includes(
+      collection as SupportedDirectusCollections,
+    );
   }
 }

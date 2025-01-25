@@ -1,4 +1,4 @@
-export type { Snapshot, Field as SnapshotField } from './interfaces';
+export type { Snapshot } from './interfaces';
 export {
   Accountability,
   Collapse,
