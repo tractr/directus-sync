@@ -341,7 +341,10 @@ export class SnapshotClient {
   /**
    * Returns the primary field type of a directus model.
    */
-  protected getDirectusCollectionPrimaryField(model: string): { name: string; type: Type } {
+  protected getDirectusCollectionPrimaryField(model: string): {
+    name: string;
+    type: Type;
+  } {
     if (['directus_permissions', 'directus_presets'].includes(model)) {
       return { name: 'id', type: Type.Integer };
     }

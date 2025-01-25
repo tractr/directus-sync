@@ -39,6 +39,7 @@ for targeted updates and clearer oversight of your Directus configurations.
         * [Structure of Seed Files](#structure-of-seed-files)
         * [Example: Basic Collection](#example-basic-collection)
         * [Example: Collection with Relations](#example-collection-with-relations)
+        * [Example: Directus Users](#example-directus-users)
         * [Seed files and collections](#seed-files-and-collections)
         * [Best Practices](#best-practices)
     * [Available options](#available-options)
@@ -251,6 +252,41 @@ Here's an example of a seed file with relations (`cities.json`):
 ```
 
 Note how the `country` field references the `_sync_id` of items in the countries collection.
+
+#### Example: Directus Users
+
+This is an example of a seed file for the `directus_users` collection:
+
+```json
+{
+    "collection": "directus_users",
+    "meta": {
+        "insert_order": 1
+    },
+    "data": [
+        {
+            "_sync_id": "user-1",
+            "first_name": "John",
+            "last_name": "Doe",
+            "email": "john.doe@example.com",
+            "role": "a7f5f073-538a-4ebd-ac1c-df588ce28cb9"
+        },
+        {
+            "_sync_id": "user-2",
+            "first_name": "Jane",
+            "last_name": "Smith",
+            "email": "jane.smith@example.com",
+            "password": "password"
+        }
+    ]
+}
+```
+
+The `role` field references the real id of the role in the `directus_roles` collection.
+The `directus_roles` collection is not managed by the `seed push` but by the `pull` and `push` commands.
+
+> [!NOTE]
+> The seed of the `directus_users` collection is experimental and may change in the future.
 
 #### Seed files and collections
 
