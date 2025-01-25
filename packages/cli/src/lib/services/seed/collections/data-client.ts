@@ -1,11 +1,11 @@
-import { DirectusId, Query } from '../collections';
-import { DirectusUnknownType } from '../interfaces';
-import { MigrationClient } from '../migration-client';
+import { DirectusId, Query } from '../../collections';
+import { DirectusUnknownType } from '../../interfaces';
+import { MigrationClient } from '../../migration-client';
 import pino from 'pino';
-import { getChildLogger } from '../../helpers';
+import { getChildLogger } from '../../../helpers';
 import { Inject, Service } from 'typedi';
-import { COLLECTION, LOGGER } from '../../constants';
-import { SnapshotClient, Type } from '../snapshot';
+import { COLLECTION, LOGGER } from '../../../constants';
+import { SnapshotClient, Type } from '../../snapshot';
 import deepmerge from 'deepmerge';
 import { createOne, deleteOne, readMany, updateOne } from './requests';
 

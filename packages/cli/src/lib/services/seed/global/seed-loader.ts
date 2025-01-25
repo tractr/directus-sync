@@ -1,14 +1,13 @@
 import { Inject, Service } from 'typedi';
-import { LOGGER } from '../../constants';
+import { LOGGER } from '../../../constants';
 import pino from 'pino';
 import {
   getChildLogger,
   loadJsonFilesRecursivelyWithSchema,
-} from '../../helpers';
-import { ConfigService } from '../config';
-import { Seed } from './interfaces';
+} from '../../../helpers';
+import { ConfigService } from '../../config';
+import { Seed, SeedsFileSchema } from '../interfaces';
 import * as Fs from 'fs-extra';
-import { SeedsFileSchema } from './schema';
 import { Cacheable } from 'typescript-cacheable';
 
 @Service({ global: true })

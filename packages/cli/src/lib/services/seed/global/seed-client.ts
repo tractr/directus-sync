@@ -1,11 +1,10 @@
 import Container, { ContainerInstance, Inject, Service } from 'typedi';
-import { COLLECTION, LOGGER, META } from '../../constants';
+import { COLLECTION, LOGGER, META } from '../../../constants';
 import pino from 'pino';
-import { getChildLogger } from '../../helpers';
-import { Seed } from './interfaces';
+import { getChildLogger } from '../../../helpers';
+import { Seed } from '../interfaces';
 import { SeedLoader } from './seed-loader';
-import { SeedCollection } from './collection';
-import { SeedDataMapper } from './data-mapper';
+import { SeedCollection, SeedDataMapper } from '../collections';
 
 @Service({ global: true })
 export class SeedClient {

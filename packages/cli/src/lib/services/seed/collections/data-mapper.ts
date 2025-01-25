@@ -1,12 +1,12 @@
 import { Inject, Service } from 'typedi';
-import { DataMapper } from '../collections';
-import { COLLECTION, LOGGER, META } from '../../constants';
+import { DataMapper } from '../../collections';
+import { COLLECTION, LOGGER, META } from '../../../constants';
 import pino from 'pino';
-import { getChildLogger } from '../../helpers';
-import { DirectusUnknownType } from '../interfaces';
-import { SnapshotClient } from '../snapshot';
-import { SeedIdMapperClientFactory } from './id-mapper-client';
-import { SeedMeta } from './interfaces';
+import { getChildLogger } from '../../../helpers';
+import { DirectusUnknownType } from '../../interfaces';
+import { SnapshotClient } from '../../snapshot';
+import { SeedIdMapperClientFactory } from '../global';
+import { SeedMeta } from '../interfaces';
 
 @Service()
 export class SeedDataMapper extends DataMapper<DirectusUnknownType> {

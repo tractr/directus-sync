@@ -1,19 +1,16 @@
-import { DirectusId, WithSyncId, IdMap } from '../collections';
-import { DirectusUnknownType } from '../interfaces';
+import { DirectusId, WithSyncId, IdMap } from '../../collections';
+import { DirectusUnknownType } from '../../interfaces';
 import { SeedDataClient } from './data-client';
 import { SeedDataMapper } from './data-mapper';
 import pino from 'pino';
 import { Inject, Service } from 'typedi';
-import { COLLECTION, LOGGER, META } from '../../constants';
-import { getChildLogger } from '../../helpers';
+import { COLLECTION, LOGGER, META } from '../../../constants';
+import { getChildLogger } from '../../../helpers';
 import { diff } from 'deep-object-diff';
-import { SnapshotClient } from '../snapshot';
-import { SeedMeta } from './interfaces';
+import { SnapshotClient } from '../../snapshot';
+import { SeedMeta } from '../interfaces';
 import { Cacheable } from 'typescript-cacheable';
-import {
-  SeedIdMapperClient,
-  SeedIdMapperClientFactory,
-} from './id-mapper-client';
+import { SeedIdMapperClient, SeedIdMapperClientFactory } from '../global';
 
 @Service()
 export class SeedDataDiffer {

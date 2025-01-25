@@ -11,9 +11,9 @@ import {
   deleteItem,
   deleteUser,
 } from '@directus/sdk';
-import { DirectusSchema, DirectusUnknownType } from '../interfaces';
-import { DIRECTUS_COLLECTIONS_PREFIX } from '../../constants';
-import { DirectusId } from '../collections';
+import { DirectusSchema, DirectusUnknownType } from '../../interfaces';
+import { DIRECTUS_COLLECTIONS_PREFIX } from '../../../constants';
+import { DirectusId } from '../../collections';
 
 type S = DirectusSchema;
 type C = RegularCollections<S>;

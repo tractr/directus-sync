@@ -1,14 +1,14 @@
-import { IdMapperClient } from '../collections';
-import { MigrationClient } from '../migration-client';
+import { IdMapperClient } from '../../collections';
+import { MigrationClient } from '../../migration-client';
 import pino from 'pino';
 import { Inject, Service } from 'typedi';
-import { LOGGER } from '../../constants';
-import { getChildLogger } from '../../helpers';
+import { LOGGER } from '../../../constants';
+import { getChildLogger } from '../../../helpers';
 import { Cacheable } from 'typescript-cacheable';
 import {
   CUSTOM_COLLECTIONS_MAPPING_PREFIX,
   DIRECTUS_COLLECTIONS_PREFIX,
-} from '../../constants';
+} from '../../../constants';
 
 export class SeedIdMapperClient extends IdMapperClient {}
 

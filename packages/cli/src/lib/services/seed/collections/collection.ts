@@ -1,22 +1,19 @@
 import { Inject, Service } from 'typedi';
-import { COLLECTION, LOGGER, META } from '../../constants';
+import { COLLECTION, LOGGER, META } from '../../../constants';
 import pino from 'pino';
-import { getChildLogger } from '../../helpers';
-import { SeedMeta, SeedData } from './interfaces';
+import { getChildLogger } from '../../../helpers';
+import { SeedMeta, SeedData } from '../interfaces';
 import { SeedDataMapper } from './data-mapper';
-import {
-  SeedIdMapperClient,
-  SeedIdMapperClientFactory,
-} from './id-mapper-client';
+import { SeedIdMapperClient, SeedIdMapperClientFactory } from '../global';
 import { SeedDataClient } from './data-client';
 import {
   DirectusId,
   WithSyncId,
   unwrapDirectusRequestError,
-} from '../collections';
-import { SnapshotClient } from '../snapshot';
+} from '../../collections';
+import { SnapshotClient } from '../../snapshot';
 import { SeedDataDiffer } from './data-differ';
-import { DirectusUnknownType } from '../interfaces';
+import { DirectusUnknownType } from '../../interfaces';
 
 @Service()
 export class SeedCollection {
