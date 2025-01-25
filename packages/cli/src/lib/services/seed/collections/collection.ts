@@ -160,9 +160,7 @@ export class SeedCollection {
   /**
    * Delete items
    */
-  protected async delete(
-    toDelete: { local_id: string; sync_id: string }[],
-  ) {
+  protected async delete(toDelete: { local_id: string; sync_id: string }[]) {
     for (const item of toDelete) {
       await this.dataClient.delete(item.local_id);
       await this.idMapper.removeBySyncId(item.sync_id);
