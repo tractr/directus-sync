@@ -387,6 +387,9 @@ These options can be used with any command to configure the operation of `direct
   `flows` and `folders` ids are always preserved.  
   The value can be `*` or `all` to preserve ids of all collections, when applicable.
 
+- `--max-push-retries <maxPushRetries>`  
+  The number of retries for the `push` and `seed push` operations. The default is `20`. Use `0` to disable limit.
+
 - `--snapshot-path <snapshotPath>`  
   Specify the path for the schema snapshot dump, relative to the dump path. The default is `"snapshot"`.
 
@@ -440,6 +443,7 @@ module.exports = {
   onlyCollections: ['roles', 'policies', 'permissions', 'settings'],
   excludeCollections: ['settings'],
   preserveIds: ['roles', 'panels'], // can be '*' or 'all' to preserve all ids, or an array of collections
+  maxPushRetries: 20,
   snapshotPath: 'snapshot',
   snapshot: true,
   split: true,

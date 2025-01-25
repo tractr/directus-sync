@@ -98,6 +98,7 @@ export const OptionsFields = {
     .optional(),
   // Pull, diff, push
   dumpPath: z.string(),
+  maxPushRetries: z.number().or(z.string().transform(Number)),
   // Collections
   collectionsPath: z.string(),
   excludeCollections: z.array(CollectionEnum).optional(),
@@ -144,6 +145,7 @@ export const ConfigFileOptionsSchema = z.object({
     .optional(),
   // Dump config
   dumpPath: OptionsFields.dumpPath.optional(),
+  maxPushRetries: OptionsFields.maxPushRetries.optional(),
   // Collections config
   collectionsPath: OptionsFields.collectionsPath.optional(),
   excludeCollections: OptionsFields.excludeCollections.optional(),

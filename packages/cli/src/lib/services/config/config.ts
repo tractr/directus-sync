@@ -85,6 +85,13 @@ export class ConfigService {
     };
   }
 
+  @Cacheable()
+  getPushConfig() {
+    return {
+      maxPushRetries: this.requireOptions('maxPushRetries'),
+    };
+  }
+
   /**
    * Returns the Directus config, either with a token or with an email/password
    */

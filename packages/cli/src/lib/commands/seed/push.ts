@@ -1,11 +1,14 @@
 import { Container } from 'typedi';
 import pino from 'pino';
-import { MigrationClient, SeedClient } from '../../services';
+import { ConfigService, MigrationClient, SeedClient } from '../../services';
 import { LOGGER } from '../../constants';
 
 export async function runSeedPush() {
   const logger: pino.Logger = Container.get(LOGGER);
   const seedClient = Container.get(SeedClient);
+
+  const config = Container.get(ConfigService);
+  const maxPushRetries = config.getPushConfig().maxPushRetries;
 
   // Check and prepare instance
   const migrationClient = Container.get(MigrationClient);
@@ -22,5 +25,8 @@ export async function runSeedPush() {
     logger.info(`---- Push: iteration ${index} ----`);
     stop = !(await seedClient.push()); // Return true when should retry
     index++;
+    if (maxPushRetries > 0 && index > maxPushRetries) {
+      throw new Error(`Push: max retries reached after ${maxPushRetries} attempts`);
+    }
   }
 }

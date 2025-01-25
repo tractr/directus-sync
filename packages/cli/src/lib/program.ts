@@ -113,6 +113,11 @@ export function createProgram() {
     `the base path for the dump (default "${DefaultConfig.dumpPath}")`,
   );
 
+  const maxPushRetriesOption = new Option(
+    '--max-push-retries <maxPushRetries>',
+    `the number of retries for the push operation (default "${DefaultConfig.maxPushRetries}")`,
+  );
+
   const collectionsPathOption = new Option(
     '--collections-path <collectionPath>',
     `the path for the collections dump, relative to the dump path (default "${DefaultConfig.collectionsPath}")`,
@@ -208,6 +213,7 @@ export function createProgram() {
     .addOption(noSnapshotOption)
     .addOption(noSplitOption)
     .addOption(forceOption)
+    .addOption(maxPushRetriesOption)
     .action(wrapAction(program, runPush));
 
   // ---------------------------------------------------------------------------------
@@ -225,6 +231,7 @@ export function createProgram() {
     .command('push')
     .description('push the seed data')
     .addOption(seedPathOption)
+    .addOption(maxPushRetriesOption)
     .action(wrapAction(program, runSeedPush));
 
   seed

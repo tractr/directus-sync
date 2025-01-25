@@ -11,6 +11,7 @@ export const DefaultConfig: Pick<
   Options,
   | 'debug'
   | 'dumpPath'
+  | 'maxPushRetries'
   | 'collectionsPath'
   | 'excludeCollections'
   | 'onlyCollections'
@@ -28,6 +29,7 @@ export const DefaultConfig: Pick<
   debug: false,
   // Pull, diff, push
   dumpPath: defaultDumpPath,
+  maxPushRetries: 20,
   // Collections
   collectionsPath: 'collections',
   excludeCollections: [],
