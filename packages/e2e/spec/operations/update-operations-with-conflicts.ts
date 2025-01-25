@@ -1,4 +1,4 @@
-import { Context, info } from '../helpers/index.js';
+import { Context, debug, info } from '../helpers/index.js';
 
 export const updateOperationsWithConflicts = (context: Context) => {
   it('reverse 2 operations conflicts', async () => {
@@ -14,10 +14,10 @@ export const updateOperationsWithConflicts = (context: Context) => {
     );
     const output = await sync.push();
 
-    expect(output).toContain(info(`[operations] Deleted 0 dangling items`));
-    expect(output).toContain(info(`[operations] Created 0 items`));
+    expect(output).toContain(debug(`[operations] Deleted 0 dangling items`));
+    expect(output).toContain(debug(`[operations] Created 0 items`));
     expect(output).toContain(info(`[operations] Updated 3 items`));
-    expect(output).toContain(info(`[operations] Deleted 0 items`));
+    expect(output).toContain(debug(`[operations] Deleted 0 items`));
 
     // Ensure that no activities were created
     const activities = (await directus.getActivities(beforePushDate)).filter(

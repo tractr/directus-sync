@@ -1,5 +1,6 @@
 import {
   Context,
+  debug,
   getDefaultItemsCount,
   getSystemCollectionsNames,
   info,
@@ -21,23 +22,23 @@ export const pullAndPushWithDeletions = (context: Context) => {
     const collections = getSystemCollectionsNames();
 
     const diffOutput = await sync.diff();
-    expect(diffOutput).toContain(info('[snapshot] No changes to apply'));
+    expect(diffOutput).toContain(debug('[snapshot] No changes to apply'));
 
     for (const collection of collections) {
       expect(diffOutput).toContain(
-        info(`[${collection}] Dangling id maps: 0 item(s)`),
+        debug(`[${collection}] Dangling id maps: 0 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(`[${collection}] To create: 0 item(s)`),
+        debug(`[${collection}] To create: 0 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(`[${collection}] To update: 0 item(s)`),
+        debug(`[${collection}] To update: 0 item(s)`),
       );
       expect(diffOutput).toContain(
         info(`[${collection}] To delete: 1 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(
+        debug(
           `[${collection}] Unchanged: ${getDefaultItemsCount(collection)} item(s)`,
         ),
       );
@@ -63,22 +64,23 @@ export const pullAndPushWithDeletions = (context: Context) => {
         ? 0
         : 1;
 
-    expect(pushOutput).toContain(info('[snapshot] No changes to apply'));
+    expect(pushOutput).toContain(debug('[snapshot] No changes to apply'));
     for (const collection of collections) {
       expect(pushOutput)
         .withContext(collection)
-        .toContain(info(`[${collection}] Deleted 0 dangling items`));
+        .toContain(debug(`[${collection}] Deleted 0 dangling items`));
       expect(pushOutput)
         .withContext(collection)
-        .toContain(info(`[${collection}] Created 0 items`));
+        .toContain(debug(`[${collection}] Created 0 items`));
       expect(pushOutput)
         .withContext(collection)
-        .toContain(info(`[${collection}] Updated 0 items`));
+        .toContain(debug(`[${collection}] Updated 0 items`));
       if (collection !== 'settings') {
+        const amount = expectCount(collection);
         expect(pushOutput)
           .withContext(collection)
           .toContain(
-            info(`[${collection}] Deleted ${expectCount(collection)} items`),
+            (amount ? info : debug)(`[${collection}] Deleted ${amount} items`),
           );
       }
 

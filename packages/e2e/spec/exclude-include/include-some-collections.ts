@@ -112,7 +112,7 @@ export const includeSomeCollections = (context: Context) => {
         .not.toContain(info(`[${collection}] Created 1 items`));
       expect(output)
         .withContext(collection)
-        .not.toContain(info(`[${collection}] Created 0 items`));
+        .not.toContain(debug(`[${collection}] Created 0 items`));
     }
     for (const collection of collectionsToInclude) {
       expect(output)

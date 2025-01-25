@@ -1,9 +1,9 @@
 import {
   Context,
+  debug,
   getDefaultItemsCount,
   getDumpedSystemCollectionsContents,
   getSystemCollectionsNames,
-  info,
   readAllSystemCollections,
   SystemCollection,
 } from '../helpers/index.js';
@@ -57,19 +57,19 @@ export const pullAndPushWithoutData = (context: Context) => {
     await sync.pull();
     const output = await sync.diff();
 
-    expect(output).toContain(info('[snapshot] No changes to apply'));
+    expect(output).toContain(debug('[snapshot] No changes to apply'));
 
     const collections = getSystemCollectionsNames();
 
     for (const collection of collections) {
       expect(output).toContain(
-        info(`[${collection}] Dangling id maps: 0 item(s)`),
+        debug(`[${collection}] Dangling id maps: 0 item(s)`),
       );
-      expect(output).toContain(info(`[${collection}] To create: 0 item(s)`));
-      expect(output).toContain(info(`[${collection}] To update: 0 item(s)`));
-      expect(output).toContain(info(`[${collection}] To delete: 0 item(s)`));
+      expect(output).toContain(debug(`[${collection}] To create: 0 item(s)`));
+      expect(output).toContain(debug(`[${collection}] To update: 0 item(s)`));
+      expect(output).toContain(debug(`[${collection}] To delete: 0 item(s)`));
       expect(output).toContain(
-        info(
+        debug(
           `[${collection}] Unchanged: ${getDefaultItemsCount(collection)} item(s)`,
         ),
       );

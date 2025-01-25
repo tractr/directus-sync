@@ -2,7 +2,7 @@ import { Inject, Service } from 'typedi';
 import { LOGGER } from '../../../constants';
 import { COLLECTION, META, SCHEMA_CLIENT } from '../constants';
 import pino from 'pino';
-import { getChildLogger } from '../../../helpers';
+import { debugOrInfoLogger, getChildLogger } from '../../../helpers';
 import { SeedMeta, SeedData } from '../interfaces';
 import { SeedDataMapper } from './data-mapper';
 import {
@@ -22,6 +22,7 @@ import { DirectusUnknownType } from '../../interfaces';
 @Service()
 export class SeedCollection {
   protected readonly logger: pino.Logger;
+  protected readonly debugOrInfo: ReturnType<typeof debugOrInfoLogger>;
   protected readonly idMapper: SeedIdMapperClient;
 
   constructor(
@@ -35,6 +36,7 @@ export class SeedCollection {
     @Inject(SCHEMA_CLIENT) protected readonly schemaClient: SchemaClient,
   ) {
     this.logger = getChildLogger(baseLogger, collection);
+    this.debugOrInfo = debugOrInfoLogger(this.logger);
     this.idMapper = this.idMapperFactory.forCollection(collection);
   }
 
@@ -49,15 +51,8 @@ export class SeedCollection {
     }));
 
     // Get the diff between source and target data
-    const { toCreate, toUpdate, toDelete, unchanged, dangling } =
+    const { toCreate, toUpdate, toDelete } =
       await this.dataDiffer.getDiff(sourceData);
-
-    // Log the diff
-    this.logger.info(`Dangling id maps: ${dangling.length} item(s)`);
-    this.logger.info(`To create: ${toCreate.length} item(s)`);
-    this.logger.info(`To update: ${toUpdate.length} item(s)`);
-    this.logger.info(`To delete: ${toDelete.length} item(s)`);
-    this.logger.info(`Unchanged: ${unchanged.length} item(s)`);
 
     let shouldRetryCreate = false;
     let shouldRetryUpdate = false;
@@ -117,7 +112,7 @@ export class SeedCollection {
       }
     }
 
-    this.logger.info(`Created ${toCreate.length} items`);
+    this.debugOrInfo(toCreate.length > 0, `Created ${toCreate.length} items`);
     if (shouldRetry) {
       this.logger.warn('Some items could not be created and will be retried');
     }
@@ -149,7 +144,7 @@ export class SeedCollection {
       this.logger.debug(diffItem, `Updated ${primaryKey}`);
     }
 
-    this.logger.info(`Updated ${toUpdate.length} items`);
+    this.debugOrInfo(toUpdate.length > 0, `Updated ${toUpdate.length} items`);
     if (shouldRetry) {
       this.logger.warn('Some items could not be updated and will be retried');
     }
@@ -166,7 +161,7 @@ export class SeedCollection {
       await this.idMapper.removeBySyncId(item.sync_id);
       this.logger.debug(item, `Deleted ${item.local_id}`);
     }
-    this.logger.info(`Deleted ${toDelete.length} items`);
+    this.debugOrInfo(toDelete.length > 0, `Deleted ${toDelete.length} items`);
   }
 
   /**
@@ -179,7 +174,10 @@ export class SeedCollection {
       await this.idMapper.removeBySyncId(item.sync_id);
       this.logger.debug(item, `Removed dangling id map`);
     }
-    this.logger.info(`Removed ${dangling.length} dangling items`);
+    this.debugOrInfo(
+      dangling.length > 0,
+      `Removed ${dangling.length} dangling items`,
+    );
   }
 
   /**
@@ -246,41 +244,47 @@ export class SeedCollection {
       await this.dataDiffer.getDiff(sourceData);
 
     // Log dangling items
-    this.logger.info(`Dangling id maps: ${dangling.length} item(s)`);
+    this.debugOrInfo(
+      dangling.length > 0,
+      `Dangling id maps: ${dangling.length} item(s)`,
+    );
     for (const idMap of dangling) {
       this.logger.debug(idMap, `Will remove dangling id map`);
     }
 
     // Log items to create
-    this.logger.info(`To create: ${toCreate.length} item(s)`);
+    this.debugOrInfo(
+      toCreate.length > 0,
+      `To create: ${toCreate.length} item(s)`,
+    );
     for (const item of toCreate) {
-      this.logger.debug(item, `Will create item`);
+      this.logger.info(item, `Will create item`);
     }
 
     // Log items to update
-    this.logger.info(`To update: ${toUpdate.length} item(s)`);
+    this.debugOrInfo(
+      toUpdate.length > 0,
+      `To update: ${toUpdate.length} item(s)`,
+    );
     for (const { targetItem, diffItem } of toUpdate) {
       const primaryKey = await this.getPrimaryKey(targetItem);
-      this.logger.debug(
-        { diffItem, primaryKey },
-        `Will update item (${primaryKey})`,
-      );
+      this.logger.info(diffItem, `Will update item (${primaryKey})`);
     }
 
     // Log items to delete
-    this.logger.info(`To delete: ${toDelete.length} item(s)`);
+    this.debugOrInfo(
+      toDelete.length > 0,
+      `To delete: ${toDelete.length} item(s)`,
+    );
     for (const item of toDelete) {
-      this.logger.debug(item, `Will delete item (${item.local_id})`);
+      this.logger.info(item, `Will delete item (${item.local_id})`);
     }
 
     // Log unchanged items
-    this.logger.info(`Unchanged: ${unchanged.length} item(s)`);
+    this.logger.debug(`Unchanged: ${unchanged.length} item(s)`);
     for (const item of unchanged) {
       const primaryKey = await this.getPrimaryKey(item);
       this.logger.debug(`Item ${primaryKey} is unchanged`);
     }
-
-    // Return the diff results
-    return { toCreate, toUpdate, toDelete, unchanged, dangling };
   }
 }

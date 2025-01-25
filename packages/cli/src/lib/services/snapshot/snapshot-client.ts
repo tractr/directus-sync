@@ -73,7 +73,7 @@ export class SnapshotClient {
     if (!diff) {
       this.logger.error('Could not get the diff from the Directus instance');
     } else if (!diff.diff) {
-      this.logger.info('No changes to apply');
+      this.logger.debug('No changes to apply');
     } else {
       const directus = await this.migrationClient.get();
       await directus.request(schemaApply(diff as RawSchemaDiffOutput));
@@ -89,7 +89,7 @@ export class SnapshotClient {
     if (!diff) {
       this.logger.error('Could not get the diff from the Directus instance');
     } else if (!diff.diff) {
-      this.logger.info('No changes to apply');
+      this.logger.debug('No changes to apply');
     } else {
       const { collections, fields, relations } = diff.diff;
       if (collections) {

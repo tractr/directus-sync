@@ -1,6 +1,7 @@
 import {
   Context,
   createOneItemInEachSystemCollection,
+  debug,
   getDefaultItemsCount,
   getSystemCollectionsNames,
   info,
@@ -18,23 +19,23 @@ export const pullAndPushWithoutChanges = (context: Context) => {
     const collections = getSystemCollectionsNames();
 
     const diffOutput = await sync.diff();
-    expect(diffOutput).toContain(info('[snapshot] No changes to apply'));
+    expect(diffOutput).toContain(debug('[snapshot] No changes to apply'));
 
     for (const collection of collections) {
       expect(diffOutput).toContain(
-        info(`[${collection}] Dangling id maps: 0 item(s)`),
+        debug(`[${collection}] Dangling id maps: 0 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(`[${collection}] To create: 0 item(s)`),
+        debug(`[${collection}] To create: 0 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(`[${collection}] To update: 0 item(s)`),
+        debug(`[${collection}] To update: 0 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(`[${collection}] To delete: 0 item(s)`),
+        debug(`[${collection}] To delete: 0 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(
+        debug(
           `[${collection}] Unchanged: ${getDefaultItemsCount(collection) + 1} item(s)`,
         ),
       );
@@ -51,15 +52,15 @@ export const pullAndPushWithoutChanges = (context: Context) => {
     expect(activities.filter((a) => a.action === 'delete')).toEqual([]);
 
     // Analyze the output
-    expect(pushOutput).toContain(info('[snapshot] No changes to apply'));
+    expect(pushOutput).toContain(debug('[snapshot] No changes to apply'));
     for (const collection of collections) {
       expect(pushOutput).toContain(
-        info(`[${collection}] Deleted 0 dangling items`),
+        debug(`[${collection}] Deleted 0 dangling items`),
       );
-      expect(pushOutput).toContain(info(`[${collection}] Created 0 items`));
-      expect(pushOutput).toContain(info(`[${collection}] Updated 0 items`));
+      expect(pushOutput).toContain(debug(`[${collection}] Created 0 items`));
+      expect(pushOutput).toContain(debug(`[${collection}] Updated 0 items`));
       if (collection !== 'settings') {
-        expect(pushOutput).toContain(info(`[${collection}] Deleted 0 items`));
+        expect(pushOutput).toContain(debug(`[${collection}] Deleted 0 items`));
       }
 
       // Nothing created, updated or deleted
