@@ -14,6 +14,8 @@ export async function runPush() {
   const config = Container.get(ConfigService);
   const snapshotConfig = config.getSnapshotConfig();
 
+  const maxPushRetries = config.getPushConfig().maxPushRetries;
+
   // Check and prepare instance
   const migrationClient = Container.get(MigrationClient);
   await migrationClient.validateDirectusVersion();
@@ -44,6 +46,13 @@ export async function runPush() {
   let stop = false;
   let index = 1;
   while (!stop) {
+    // Check if max retries is reached
+    if (maxPushRetries > 0 && index > maxPushRetries) {
+      throw new Error(
+        `Push: max retries reached after ${maxPushRetries} attempts`,
+      );
+    }
+
     logger.info(`---- Push: iteration ${index} ----`);
     stop = true;
     for (const collection of collections) {

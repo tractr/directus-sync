@@ -20,7 +20,7 @@ import { CollectionsList, OptionsSchema } from './schema';
 import { LOGGER } from '../../constants';
 import pino from 'pino';
 
-@Service()
+@Service({ global: true })
 export class ConfigService {
   protected programOptions: Partial<Options> | undefined;
 
@@ -72,6 +72,23 @@ export class ConfigService {
     return {
       dumpPath: specificationsPath,
       enabled: this.requireOptions('specs'),
+    };
+  }
+
+  @Cacheable()
+  getSeedConfig() {
+    const paths = this.requireOptions('seedPath');
+    const seedPaths = Array.isArray(paths) ? paths : [paths];
+    const seedFullPaths = seedPaths.map((p) => Path.resolve(p));
+    return {
+      paths: seedFullPaths,
+    };
+  }
+
+  @Cacheable()
+  getPushConfig() {
+    return {
+      maxPushRetries: this.requireOptions('maxPushRetries'),
     };
   }
 

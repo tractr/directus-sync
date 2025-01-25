@@ -88,7 +88,7 @@ export abstract class IdMapperClient extends ExtensionClient {
       `/table/${this.table}`,
       'POST',
       {
-        table: this.table,
+        table: this.table, // TODO: Could remove this (to be tested)
         local_id: localId,
         sync_id: syncId,
       },

@@ -1,0 +1,25 @@
+{
+  "collection": "country",
+  "field": "languages",
+  "type": "alias",
+  "meta": {
+    "collection": "country",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "languages",
+    "group": null,
+    "hidden": false,
+    "interface": "list-m2m",
+    "note": null,
+    "options": null,
+    "readonly": false,
+    "required": false,
+    "sort": 6,
+    "special": ["m2m"],
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  }
+}

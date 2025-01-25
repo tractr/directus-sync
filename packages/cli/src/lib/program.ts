@@ -12,6 +12,7 @@ import {
   runRemovePermissionDuplicates,
   runUntrack,
 } from './index';
+import { runSeedPush, runSeedDiff } from './commands/seed';
 
 /**
  * Remove some default values from the program options that overrides the config file
@@ -112,6 +113,11 @@ export function createProgram() {
     `the base path for the dump (default "${DefaultConfig.dumpPath}")`,
   );
 
+  const maxPushRetriesOption = new Option(
+    '--max-push-retries <maxPushRetries>',
+    `the number of retries for the push operation (default "${DefaultConfig.maxPushRetries}")`,
+  );
+
   const collectionsPathOption = new Option(
     '--collections-path <collectionPath>',
     `the path for the collections dump, relative to the dump path (default "${DefaultConfig.collectionsPath}")`,
@@ -207,8 +213,38 @@ export function createProgram() {
     .addOption(noSnapshotOption)
     .addOption(noSplitOption)
     .addOption(forceOption)
+    .addOption(maxPushRetriesOption)
     .action(wrapAction(program, runPush));
 
+  // ---------------------------------------------------------------------------------
+  // Seed
+  const defaultSeedPath = Array.isArray(DefaultConfig.seedPath)
+    ? DefaultConfig.seedPath.join(', ')
+    : DefaultConfig.seedPath;
+  const seedPathOption = new Option(
+    '--seed-path <seedPath...>',
+    `the base path(s) for the seed (default "${defaultSeedPath}")`,
+  );
+
+  const seed = program
+    .command('seed')
+    .description('seed the custom collections with data');
+
+  seed
+    .command('push')
+    .description('push the seed data')
+    .addOption(seedPathOption)
+    .addOption(maxPushRetriesOption)
+    .action(wrapAction(program, runSeedPush));
+
+  seed
+    .command('diff')
+    .description('describe the seed data diff')
+    .addOption(seedPathOption)
+    .action(wrapAction(program, runSeedDiff));
+
+  // ---------------------------------------------------------------------------------
+  // Helpers
   const helpers = program
     .command('helpers')
     .description('a set of helper utilities');

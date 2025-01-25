@@ -52,6 +52,7 @@ export class Context {
     factory: new (options: DirectusSyncArgs) => DirectusSync = DirectusSync,
   ): Promise<DirectusSync> {
     const dumpPath = Path.resolve(dumpBaseDirectory, dumpFolder);
+    const seedPath = Path.resolve(dumpPath, 'seed');
     const clearDumpPath = dumpFolder.startsWith('temp');
     if (clearDumpPath) {
       fs.rmSync(dumpPath, { recursive: true, force: true });
@@ -62,6 +63,7 @@ export class Context {
       token: await directus.requireToken(),
       url: instance.getUrl(),
       dumpPath,
+      seedPath,
       configPath: configPath
         ? Path.resolve(configBaseDirectory, configPath)
         : undefined,

@@ -42,6 +42,7 @@ import {
 import { updateDefaultData } from './default-data/index.js';
 import { configPathInfo } from './config/index.js';
 import { groupAndFieldNamesConflict } from './snapshot/index.js';
+import { seedPushOnEmptyInstance } from './seed/index.js';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
@@ -105,4 +106,6 @@ describe('Tests entrypoint ->', () => {
   groupAndFieldNamesConflict(context);
 
   removeTrackedItem(context);
+
+  seedPushOnEmptyInstance(context);
 });

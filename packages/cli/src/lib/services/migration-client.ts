@@ -17,17 +17,17 @@ import { ConfigService, isDirectusConfigWithToken } from './config';
 import { getChildLogger } from '../helpers';
 import { compareVersions } from 'compare-versions';
 import { Cacheable } from 'typescript-cacheable';
-
-@Service()
+import { DirectusSchema } from './interfaces';
+@Service({ global: true })
 export class MigrationClient {
   protected readonly logger: pino.Logger;
 
   protected adminRoleId: string | undefined;
 
   protected client:
-    | (DirectusClient<object> &
-        RestClient<object> &
-        AuthenticationClient<object>)
+    | (DirectusClient<DirectusSchema> &
+        RestClient<DirectusSchema> &
+        AuthenticationClient<DirectusSchema>)
     | undefined;
 
   constructor(

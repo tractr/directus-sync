@@ -15,6 +15,7 @@ import { LOGGER } from '../../constants';
 import pino from 'pino';
 import { getChildLogger, loadJsonFilesRecursively } from '../../helpers';
 import { ConfigService, SnapshotHooks } from '../config';
+import { Cacheable } from 'typescript-cacheable';
 
 const SNAPSHOT_JSON = 'snapshot.json';
 const INFO_JSON = 'info.json';
@@ -22,7 +23,7 @@ const COLLECTIONS_DIR = 'collections';
 const FIELDS_DIR = 'fields';
 const RELATIONS_DIR = 'relations';
 
-@Service()
+@Service({ global: true })
 export class SnapshotClient {
   protected readonly dumpPath: string;
 
@@ -125,7 +126,8 @@ export class SnapshotClient {
   /**
    * Get the snapshot from the Directus instance.
    */
-  protected async getSnapshot(): Promise<Snapshot> {
+  @Cacheable()
+  async getSnapshot(): Promise<Snapshot> {
     const directus = await this.migrationClient.get();
     return await directus.request<Snapshot>(schemaSnapshot()); // Get better types
   }
