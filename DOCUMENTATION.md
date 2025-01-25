@@ -130,11 +130,14 @@ collection configurations to Directus, updating the instance to reflect your loc
 
 Directus Sync allows you to manage seed data for your collections. This data is used to populate your Directus instance with initial data.
 
-As for the synchronization process, the seed data are tracked. Therefore if any change is made to the seed data, it will be updated in the Directus instance. Also, if a seed data is deleted, it will be removed from the Directus instance.
+The seed process is different from the synchronization process.
+It is more flexible but not plug and play as the synchronization process. It requires more configurations.
 
 The main difference with the synchronization process is that the seed data are not pulled from the Directus instance.
 You have to create the seed data manually. Seed data must be written in JSON format and must be placed in the `./directus-config/seed` directory (this can be changed using the `--seed-path` option).
 Any file in this directory will be automatically detected and used by the `seed diff` and `seed push` commands.
+
+As for the synchronization process, the seed data are tracked. Therefore if any change is made to the seed data, it will be updated in the Directus instance. Also, if a seed data is deleted, it will be removed from the Directus instance.
 
 #### Seed Diff
 
@@ -159,7 +162,6 @@ The command will:
 
 > [!NOTE]
 > The seed commands require the schema to be synchronized first. Make sure to run `npx directus-sync push` before running any seed commands.
-
 
 #### Creating Seed Data
 
@@ -266,6 +268,10 @@ Here's an example of a seed file with relations (`cities.json`):
 
 Note how the `country` field references the `_sync_id` of items in the countries collection.
 
+> [!NOTE]
+> The relations between collections are automatically inferred from the schema snapshot of Directus.
+> This means that the schema snapshot must be pushed first by running `npx directus-sync push`.
+
 #### Example: Directus Users
 
 This is an example of a seed file for the `directus_users` collection:
@@ -301,7 +307,7 @@ The `role` field references the the sync id of the role. You can find it in the 
 
 The `directus_roles` collection is not managed by the `seed push` but by the `pull` and `push` commands.
 
-> [!NOTE]
+> [!WARNING]
 > The seed of the `directus_users` collection is experimental and may change in the future.
 
 #### Seed files and collections
@@ -315,13 +321,13 @@ In case of multiple collections in a single file, the content of the JSON should
 [
     {
         "collection": "collection_1",
-        "meta": { ... },
-        "data": [ ... ]
+        "meta": {},
+        "data": []
     },
     {
         "collection": "collection_2",
-        "meta": { ... },
-        "data": [ ... ]
+        "meta": {},
+        "data": []
     }
 ]
 ```
