@@ -258,10 +258,7 @@ export abstract class DirectusCollection<
     }
 
     // Log results
-    this.debugOrInfo(
-      toCreate.length > 0,
-      `Created ${toCreate.length} items`,
-    );
+    this.debugOrInfo(toCreate.length > 0, `Created ${toCreate.length} items`);
     if (toRetry.length) {
       this.logger.warn(
         `Could not create ${toRetry.length} items. Must run again.`,
@@ -332,10 +329,7 @@ export abstract class DirectusCollection<
     }
 
     // Log results
-    this.debugOrInfo(
-      toUpdate.length > 0,
-      `Updated ${toUpdate.length} items`,
-    );
+    this.debugOrInfo(toUpdate.length > 0, `Updated ${toUpdate.length} items`);
     if (toRetry.length) {
       this.logger.warn(
         `Could not update ${toRetry.length} items. Must run again.`,
@@ -359,10 +353,7 @@ export abstract class DirectusCollection<
         `Deleted id map`,
       );
     }
-    this.debugOrInfo(
-      toDelete.length > 0,
-      `Deleted ${toDelete.length} items`,
-    );
+    this.debugOrInfo(toDelete.length > 0, `Deleted ${toDelete.length} items`);
   }
 
   protected async removeDangling(dangling: IdMap[]) {
