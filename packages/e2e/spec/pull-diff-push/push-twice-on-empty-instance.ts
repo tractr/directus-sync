@@ -1,4 +1,9 @@
-import { Context, getSystemCollectionsNames, info } from '../helpers/index.js';
+import {
+  Context,
+  debug,
+  getSystemCollectionsNames,
+  info,
+} from '../helpers/index.js';
 
 export const pushTwiceOnEmptyInstance = (context: Context) => {
   it('push twice on an empty instance', async () => {
@@ -21,15 +26,15 @@ export const pushTwiceOnEmptyInstance = (context: Context) => {
     expect(activities.filter((a) => a.action === 'delete')).toEqual([]);
 
     // Analyze the output
-    expect(pushOutput).toContain(info('[snapshot] No changes to apply'));
+    expect(pushOutput).toContain(debug('[snapshot] No changes to apply'));
     for (const collection of collections) {
       expect(pushOutput).toContain(
-        info(`[${collection}] Deleted 0 dangling items`),
+        debug(`[${collection}] Deleted 0 dangling items`),
       );
-      expect(pushOutput).toContain(info(`[${collection}] Created 0 items`));
-      expect(pushOutput).toContain(info(`[${collection}] Updated 0 items`));
+      expect(pushOutput).toContain(debug(`[${collection}] Created 0 items`));
+      expect(pushOutput).toContain(debug(`[${collection}] Updated 0 items`));
       if (collection !== 'settings') {
-        expect(pushOutput).toContain(info(`[${collection}] Deleted 0 items`));
+        expect(pushOutput).toContain(debug(`[${collection}] Deleted 0 items`));
       }
 
       // Nothing created, updated or deleted

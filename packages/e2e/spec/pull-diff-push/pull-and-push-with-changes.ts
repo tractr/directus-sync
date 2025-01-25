@@ -1,5 +1,6 @@
 import {
   Context,
+  debug,
   getDefaultItemsCount,
   getSystemCollectionsNames,
   info,
@@ -21,23 +22,23 @@ export const pullAndPushWithChanges = (context: Context) => {
 
     // --------------------------------------------------------------------
     const diffOutput = await sync.diff();
-    expect(diffOutput).toContain(info('[snapshot] No changes to apply'));
+    expect(diffOutput).toContain(debug('[snapshot] No changes to apply'));
 
     for (const collection of collections) {
       expect(diffOutput).toContain(
-        info(`[${collection}] Dangling id maps: 0 item(s)`),
+        debug(`[${collection}] Dangling id maps: 0 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(`[${collection}] To create: 0 item(s)`),
+        debug(`[${collection}] To create: 0 item(s)`),
       );
       expect(diffOutput).toContain(
         info(`[${collection}] To update: 1 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(`[${collection}] To delete: 0 item(s)`),
+        debug(`[${collection}] To delete: 0 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(
+        debug(
           `[${collection}] Unchanged: ${getDefaultItemsCount(collection)} item(s)`,
         ),
       );
@@ -72,15 +73,15 @@ export const pullAndPushWithChanges = (context: Context) => {
     }
 
     // Analyze the output
-    expect(pushOutput).toContain(info('[snapshot] No changes to apply'));
+    expect(pushOutput).toContain(debug('[snapshot] No changes to apply'));
     for (const collection of collections) {
       expect(pushOutput).toContain(
-        info(`[${collection}] Deleted 0 dangling items`),
+        debug(`[${collection}] Deleted 0 dangling items`),
       );
-      expect(pushOutput).toContain(info(`[${collection}] Created 0 items`));
+      expect(pushOutput).toContain(debug(`[${collection}] Created 0 items`));
       expect(pushOutput).toContain(info(`[${collection}] Updated 1 items`));
       if (collection !== 'settings') {
-        expect(pushOutput).toContain(info(`[${collection}] Deleted 0 items`));
+        expect(pushOutput).toContain(debug(`[${collection}] Deleted 0 items`));
       }
 
       // Nothing created or deleted
@@ -91,23 +92,23 @@ export const pullAndPushWithChanges = (context: Context) => {
     // --------------------------------------------------------------------
     // Check if the content was updated correctly
     const finalDiffOutput = await sync.diff();
-    expect(finalDiffOutput).toContain(info('[snapshot] No changes to apply'));
+    expect(finalDiffOutput).toContain(debug('[snapshot] No changes to apply'));
 
     for (const collection of collections) {
       expect(finalDiffOutput).toContain(
-        info(`[${collection}] Dangling id maps: 0 item(s)`),
+        debug(`[${collection}] Dangling id maps: 0 item(s)`),
       );
       expect(finalDiffOutput).toContain(
-        info(`[${collection}] To create: 0 item(s)`),
+        debug(`[${collection}] To create: 0 item(s)`),
       );
       expect(finalDiffOutput).toContain(
-        info(`[${collection}] To update: 0 item(s)`),
+        debug(`[${collection}] To update: 0 item(s)`),
       );
       expect(finalDiffOutput).toContain(
-        info(`[${collection}] To delete: 0 item(s)`),
+        debug(`[${collection}] To delete: 0 item(s)`),
       );
       expect(finalDiffOutput).toContain(
-        info(
+        debug(
           `[${collection}] Unchanged: ${getDefaultItemsCount(collection) + 1} item(s)`,
         ),
       );

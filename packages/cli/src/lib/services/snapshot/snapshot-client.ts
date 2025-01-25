@@ -15,6 +15,7 @@ import { LOGGER } from '../../constants';
 import pino from 'pino';
 import { getChildLogger, loadJsonFilesRecursively } from '../../helpers';
 import { ConfigService, SnapshotHooks } from '../config';
+import { Cacheable } from 'typescript-cacheable';
 
 const SNAPSHOT_JSON = 'snapshot.json';
 const INFO_JSON = 'info.json';
@@ -22,7 +23,7 @@ const COLLECTIONS_DIR = 'collections';
 const FIELDS_DIR = 'fields';
 const RELATIONS_DIR = 'relations';
 
-@Service()
+@Service({ global: true })
 export class SnapshotClient {
   protected readonly dumpPath: string;
 
@@ -72,7 +73,7 @@ export class SnapshotClient {
     if (!diff) {
       this.logger.error('Could not get the diff from the Directus instance');
     } else if (!diff.diff) {
-      this.logger.info('No changes to apply');
+      this.logger.debug('No changes to apply');
     } else {
       const directus = await this.migrationClient.get();
       await directus.request(schemaApply(diff as RawSchemaDiffOutput));
@@ -88,7 +89,7 @@ export class SnapshotClient {
     if (!diff) {
       this.logger.error('Could not get the diff from the Directus instance');
     } else if (!diff.diff) {
-      this.logger.info('No changes to apply');
+      this.logger.debug('No changes to apply');
     } else {
       const { collections, fields, relations } = diff.diff;
       if (collections) {
@@ -125,7 +126,8 @@ export class SnapshotClient {
   /**
    * Get the snapshot from the Directus instance.
    */
-  protected async getSnapshot(): Promise<Snapshot> {
+  @Cacheable()
+  async getSnapshot(): Promise<Snapshot> {
     const directus = await this.migrationClient.get();
     return await directus.request<Snapshot>(schemaSnapshot()); // Get better types
   }

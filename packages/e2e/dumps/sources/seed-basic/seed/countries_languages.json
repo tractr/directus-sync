@@ -1,0 +1,23 @@
+{
+  "collection": "country_language",
+  "meta": {
+    "insert_order": 4
+  },
+  "data": [
+    {
+      "_sync_id": "country-language-1",
+      "country": "country-usa",
+      "language": "lang-en"
+    },
+    {
+      "_sync_id": "country-language-2",
+      "country": "country-spain",
+      "language": "lang-es"
+    },
+    {
+      "_sync_id": "country-language-3",
+      "country": "country-france",
+      "language": "lang-fr"
+    }
+  ]
+}

@@ -45,6 +45,21 @@ export function getChildLogger(
 }
 
 /**
+ * Log message to debug or info, depending on the debug flag
+ */
+export function debugOrInfoLogger(
+  logger: pino.Logger,
+): (info: boolean, message: string) => void {
+  return (info: boolean, message: string) => {
+    if (info) {
+      logger.info(message);
+    } else {
+      logger.debug(message);
+    }
+  };
+}
+
+/**
  * Load all JSON files from a directory recursively.
  */
 export function loadJsonFilesRecursively<T>(dirPath: string): T[] {
@@ -63,6 +78,24 @@ export function loadJsonFilesRecursively<T>(dirPath: string): T[] {
     }
   }
   return files;
+}
+
+/**
+ * Recursively load json files from a directory and validate them against a zod schema
+ * The root path could be a folder or a JSON file
+ */
+export function loadJsonFilesRecursivelyWithSchema<T extends ZodSchema>(
+  rootPath: string,
+  schema: T,
+  errorContext?: string,
+): z.infer<T>[] {
+  if (rootPath.endsWith('.json')) {
+    const file = readJsonSync(rootPath, 'utf-8');
+    return [zodParse(file, schema, errorContext)];
+  }
+  return loadJsonFilesRecursively(rootPath).map((file) =>
+    zodParse(file, schema, errorContext),
+  );
 }
 
 /**

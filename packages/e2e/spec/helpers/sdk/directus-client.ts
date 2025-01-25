@@ -14,7 +14,12 @@ import {
 import { SystemCollection } from './interfaces/index.js';
 import getenv from 'getenv';
 
-type Collections = object;
+const DIRECTUS_COLLECTIONS_PREFIX = 'directus_';
+const CUSTOM_COLLECTIONS_PREFIX = 'items:';
+
+// TODO: Improve directus collections type
+/* eslint-disable @typescript-eslint/no-explicit-any */
+type Collections = any;
 
 export interface IdMap {
   id: number;
@@ -121,7 +126,23 @@ export class DirectusClient {
       .with(authentication());
   }
 
+  protected getStoredTableNameForSeedCollection(collection: string) {
+    return collection.startsWith(DIRECTUS_COLLECTIONS_PREFIX)
+      ? collection.slice(DIRECTUS_COLLECTIONS_PREFIX.length)
+      : `${CUSTOM_COLLECTIONS_PREFIX}:${collection}`;
+  }
+
   async getSyncIdMaps(table: SystemCollection) {
+    return this.getSyncIdMapsRoutine(table);
+  }
+
+  async getSyncIdMapsForSeed(collection: string) {
+    const storedTableName =
+      this.getStoredTableNameForSeedCollection(collection);
+    return this.getSyncIdMapsRoutine(storedTableName);
+  }
+
+  protected async getSyncIdMapsRoutine(table: string) {
     const response = await fetch(
       `${this.url}/directus-extension-sync/table/${table}`,
       {
@@ -140,6 +161,16 @@ export class DirectusClient {
   }
 
   async getByLocalId(table: SystemCollection, localId: string | number) {
+    return this.getByLocalIdRoutine(table, localId);
+  }
+
+  async getByLocalIdForSeed(collection: string, localId: string | number) {
+    const storedTableName =
+      this.getStoredTableNameForSeedCollection(collection);
+    return this.getByLocalIdRoutine(storedTableName, localId);
+  }
+
+  protected async getByLocalIdRoutine(table: string, localId: string | number) {
     const response = await fetch(
       `${this.url}/directus-extension-sync/table/${table}/local_id/${localId}`,
       {

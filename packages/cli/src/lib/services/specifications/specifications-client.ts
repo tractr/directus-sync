@@ -17,7 +17,7 @@ const ITEM_GRAPHQL_FILENAME = 'item.graphql';
 const SYSTEM_GRAPHQL_FILENAME = 'system.graphql';
 const OPENAPI_FILENAME = 'openapi.json';
 
-@Service()
+@Service({ global: true })
 export class SpecificationsClient {
   protected readonly dumpPath: string;
 

@@ -93,7 +93,7 @@ export const excludeSomeCollections = (context: Context) => {
         .not.toContain(info(`[${collection}] Created 1 items`));
       expect(output)
         .withContext(collection)
-        .not.toContain(info(`[${collection}] Created 0 items`));
+        .not.toContain(debug(`[${collection}] Created 0 items`));
     }
 
     // --------------------------------------------------------------------

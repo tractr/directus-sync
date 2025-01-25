@@ -1,5 +1,6 @@
 import {
   Context,
+  debug,
   getDumpedSystemCollectionsContents,
   info,
   readAllSystemCollections,
@@ -53,7 +54,7 @@ export const createOperationsWithConflicts = (context: Context) => {
     expect(output).toContain(info(`[operations] Deleted 1 dangling items`));
     expect(output).toContain(info(`[operations] Created 1 items`));
     expect(output).toContain(info(`[operations] Updated 1 items`));
-    expect(output).toContain(info(`[operations] Deleted 0 items`));
+    expect(output).toContain(debug(`[operations] Deleted 0 items`));
 
     // Ensure that no activities were created
     const activities = (await directus.getActivities(beforePushDate)).filter(

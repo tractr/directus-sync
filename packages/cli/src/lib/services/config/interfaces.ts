@@ -1,11 +1,11 @@
 import type { z } from 'zod';
-import {
+import type {
+  ClientConfigSchema,
+  CollectionEnum,
+  CollectionPreservableIdEnum,
   ConfigFileOptionsSchema,
   OptionsFields,
   OptionsSchema,
-  CollectionEnum,
-  CollectionPreservableIdEnum,
-  ClientConfigSchema,
   RestConfigSchema,
 } from './schema';
 import type { MigrationClient } from '../migration-client';
@@ -55,7 +55,7 @@ export interface SnapshotHooks {
   onSave?: TransformSnapshotFunction;
 }
 
-interface DirectusConfigBase {
+export interface DirectusConfigBase {
   url: string;
   clientConfig: z.infer<typeof ClientConfigSchema> | undefined;
   restConfig: z.infer<typeof RestConfigSchema> | undefined;
