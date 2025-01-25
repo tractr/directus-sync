@@ -49,16 +49,8 @@ export class SeedCollection {
     }));
 
     // Get the diff between source and target data
-    const { toCreate, toUpdate, toDelete, unchanged, dangling } =
+    const { toCreate, toUpdate, toDelete } =
       await this.dataDiffer.getDiff(sourceData);
-
-    // Log the diff
-    const log = debugOrInfoLogger(this.logger);
-    log(dangling.length > 0, `Dangling id maps: ${dangling.length} item(s)`);
-    log(toCreate.length > 0, `To create: ${toCreate.length} item(s)`);
-    log(toUpdate.length > 0, `To update: ${toUpdate.length} item(s)`);
-    log(toDelete.length > 0, `To delete: ${toDelete.length} item(s)`);
-    this.logger.debug(`Unchanged: ${unchanged.length} item(s)`);
 
     let shouldRetryCreate = false;
     let shouldRetryUpdate = false;
