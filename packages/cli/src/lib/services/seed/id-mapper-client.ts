@@ -5,9 +5,7 @@ import { Inject, Service } from 'typedi';
 import { LOGGER } from '../../constants';
 import { getChildLogger } from '../../helpers';
 import { Cacheable } from 'typescript-cacheable';
-
-const DIRECTUS_COLLECTIONS_PREFIX = 'directus_';
-const CUSTOM_COLLECTIONS_PREFIX = 'items:';
+import { CUSTOM_COLLECTIONS_PREFIX, DIRECTUS_COLLECTIONS_PREFIX } from './constants';
 
 export class SeedIdMapperClient extends IdMapperClient {}
 

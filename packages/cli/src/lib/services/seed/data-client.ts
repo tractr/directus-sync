@@ -6,8 +6,8 @@ import { getChildLogger } from '../../helpers';
 import { Inject, Service } from 'typedi';
 import { COLLECTION, LOGGER } from '../../constants';
 import { SnapshotClient, Type } from '../snapshot';
-import { createItem, deleteItem, readItems, updateItem } from '@directus/sdk';
 import deepmerge from 'deepmerge';
+import { createOne, deleteOne, readMany, updateOne } from './requests';
 
 @Service()
 export class SeedDataClient {
@@ -28,7 +28,7 @@ export class SeedDataClient {
   async query<T extends DirectusUnknownType>(query: Query<T>): Promise<T[]> {
     const directus = await this.migrationClient.get();
     const response = await directus.request<T | T[]>(
-      readItems(this.collection, query),
+      readMany(this.collection, query),
     );
 
     if (Array.isArray(response)) {
@@ -73,7 +73,7 @@ export class SeedDataClient {
    */
   async create<T extends DirectusUnknownType>(data: Partial<T>): Promise<T> {
     const directus = await this.migrationClient.get();
-    return await directus.request<T>(createItem(this.collection, data));
+    return await directus.request<T>(createOne(this.collection, data));
   }
 
   /**
@@ -84,7 +84,7 @@ export class SeedDataClient {
     data: Partial<T>,
   ): Promise<T> {
     const directus = await this.migrationClient.get();
-    return await directus.request<T>(updateItem(this.collection, key, data));
+    return await directus.request<T>(updateOne(this.collection, key, data));
   }
 
   /**
@@ -92,6 +92,6 @@ export class SeedDataClient {
    */
   async delete<T extends DirectusUnknownType>(key: DirectusId): Promise<void> {
     const directus = await this.migrationClient.get();
-    await directus.request<T>(deleteItem(this.collection, key));
+    await directus.request<T>(deleteOne(this.collection, key));
   }
 }
