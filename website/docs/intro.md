@@ -2,46 +2,33 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Introduction
 
-Let's discover **Docusaurus in less than 5 minutes**.
+![Directus 11.4.0](https://img.shields.io/badge/Directus-11.4.0-64f?style=for-the-badge&logo=directus)
 
-## Getting Started
+> [!IMPORTANT]
+> Latest version of `directus-sync` introduces breaking changes and is not compatible with Directus 10.x.x.
+> If you are using Directus 10.x.x, please run `npx directus-sync@2.2.0`
 
-Get started by **creating a new site**.
+> [!NOTE]
+> Help us improve Directus Sync by sharing your feedback! Take a quick survey about your usage here: https://forms.gle/LnaB89uVkZCDqRfGA
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+The `directus-sync` command-line interface (CLI) provides a set of tools for managing and synchronizing the schema and
+collections within Directus across different environments.
 
-### What you'll need
+## Key Features
 
-- [Node.js](https://nodejs.org/en/download/) version 18.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+- **API-Driven Synchronization**: Leverages Directus's REST API for high-fidelity operations that align with native application actions.
+- **Granular Updates**: Focuses on differential data changes rather than complete table overwrites, preserving data integrity and history.
+- **Organized Backups**: Separates backups into multiple files for improved readability and version control.
+- **Tracked Elements**: Manages various Directus elements including dashboards, flows, folders, operations, panels, permissions, policies, presets, roles, settings, and translations.
 
-## Generate a new site
+## Why Directus Sync?
 
-Generate a new Docusaurus site using the **classic template**.
+Directus Sync was created to solve the common challenge of maintaining consistent configurations across multiple Directus environments. Whether you're working with development, staging, or production environments, Directus Sync ensures that your schema, collections, and configurations remain synchronized and version-controlled.
 
-The classic template will automatically be added to your project after you run the command:
+## Next Steps
 
-```bash
-npm init docusaurus@latest my-website classic
-```
-
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
-
-The command also installs all necessary dependencies you need to run Docusaurus.
-
-## Start your site
-
-Run the development server:
-
-```bash
-cd my-website
-npm run start
-```
-
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
-
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
-
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+- Check the [Requirements](getting-started/requirements.md) to ensure your environment is ready
+- Follow the [Installation](getting-started/installation.md) guide to set up Directus Sync
+- Learn about the basic [Usage](getting-started/usage.md) and available commands
