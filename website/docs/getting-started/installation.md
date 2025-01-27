@@ -39,6 +39,8 @@ To build your own Docker image with the extension, follow these steps:
 }
 ```
 
+You may add other extensions to the `extensions/package.json` file, depending on your use case.
+
 2. Create a `Dockerfile` to extend the Directus Docker image:
 
 ```Dockerfile
