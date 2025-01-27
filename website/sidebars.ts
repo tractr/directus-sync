@@ -62,9 +62,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Use Cases',
-      items: [
-        'use-cases/postgresql-enum',
-      ],
+      items: ['use-cases/postgresql-enum'],
     },
     {
       type: 'category',
