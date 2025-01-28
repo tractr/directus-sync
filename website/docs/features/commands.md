@@ -2,48 +2,53 @@
 sidebar_position: 1
 ---
 
-# Available Commands
+# Commands
 
-Directus Sync provides a set of powerful commands to manage your Directus configurations. Each command can be customized with various options to suit your needs.
+## Basic Workflow
 
-## Core Commands
+```mermaid
+sequenceDiagram
+    participant A as Directus Instance A
+    participant Local as Local Files
+    participant B as Directus Instance B
 
-### Pull
-
-```bash
-npx directus-sync pull [options]
+    Note over A: Make configurations
+    A->>Local: pull
+    Local->>B: push
+    Note over A: Make more configurations
+    A->>Local: pull
+    Local-->>Local: diff
+    Note right of Local: Compare changes
+    Local->>B: push
 ```
 
-Retrieves the current state from your Directus instance:
-- Downloads schema snapshot
-- Fetches collection configurations
-- Creates tracking IDs for new elements
-- Stores everything locally
+## Pull
 
-### Diff
-
-```bash
-npx directus-sync diff [options]
+```shell
+npx directus-sync pull
 ```
 
-Shows differences between local files and Directus instance:
-- Compares schemas
-- Identifies configuration changes
-- Lists new, modified, and deleted elements
-- Non-destructive operation
+Retrieves the current schema and collections from Directus and stores them locally. This command does not modify the database.
 
-### Push
+It also retrieves the specifications (GraphQL & OpenAPI) and stores them locally. It gets specifications from the `/server/specs/*` endpoints:
+- [OpenAPI](https://docs.directus.io/reference/system/server.html#get-openapi-specification)
+- [GraphQL SDL (Item & System scopes)](https://docs.directus.io/reference/system/server.html#get-graphql-schema)
 
-```bash
-npx directus-sync push [options]
+## Diff
+
+```shell
+npx directus-sync diff
 ```
 
-Applies local changes to your Directus instance:
-- Updates schema if needed
-- Creates new elements
-- Updates modified elements
-- Removes deleted elements
-- Handles dependencies automatically
+Analyzes and describes the difference (diff) between your local schema and collections and the state of the Directus instance. This command is non-destructive and does not apply any changes to the database.
+
+## Push
+
+```shell
+npx directus-sync push
+```
+
+Applies the changes from your local environment to the Directus instance. This command pushes your local schema and collection configurations to Directus, updating the instance to reflect your local state.
 
 ## Common Options
 
@@ -68,50 +73,65 @@ Options:
 
 ### Include/Exclude Collections
 
-```bash
-# Include only specific collections
-npx directus-sync pull --only-collections roles,permissions
+Include only specific collections
 
-# Exclude specific collections
+```bash
+npx directus-sync pull --only-collections roles,permissions
+```
+
+Exclude specific collections
+
+```bash
 npx directus-sync pull --exclude-collections settings
 ```
 
 ### ID Preservation
 
-```bash
-# Preserve IDs for specific collections
-npx directus-sync pull --preserve-ids roles,panels
+Preserve IDs for specific collections
 
-# Preserve all possible IDs
+```bash
+npx directus-sync pull --preserve-ids roles,panels
+```
+
+Preserve all possible IDs
+```bash
 npx directus-sync pull --preserve-ids all
 ```
 
 ## Schema Options
 
+Skip schema operations
+
 ```bash
-# Skip schema operations
 npx directus-sync pull --no-snapshot
+```
 
-# Keep schema in single file
+Keep schema in single file
+
+```bash
 npx directus-sync pull --no-split
+```
 
-# Skip API specs
+Skip API specs
+
+```bash
 npx directus-sync pull --no-specs
 ```
 
 ## Advanced Usage
 
-### Force Mode
+Force diff even with version mismatch
 
 ```bash
-# Force diff even with version mismatch
 npx directus-sync diff --force
 ```
 
 ### Retry Configuration
 
+Set maximum push retries.
+Retries occur when a dependency between collections could not be resolved.
+
 ```bash
-# Set maximum push retries
 npx directus-sync push --max-push-retries 30
 ```
 
@@ -122,41 +142,14 @@ Instead of command-line options, you can use environment variables:
 ```bash
 DIRECTUS_URL=https://directus.example.com
 DIRECTUS_TOKEN=your-token
-# OR
+```
+
+OR
+
+```bash
 DIRECTUS_ADMIN_EMAIL=admin@example.com
 DIRECTUS_ADMIN_PASSWORD=your-password
 ```
 
-## Examples
-
-### Basic Workflow
-
-```bash
-# Pull current state
-npx directus-sync pull
-
-# Check differences
-npx directus-sync diff
-
-# Apply changes
-npx directus-sync push
-```
-
-### Targeted Sync
-
-```bash
-# Pull only roles and permissions
-npx directus-sync pull --only-collections roles,permissions --debug
-
-# Check specific changes
-npx directus-sync diff --only-collections roles,permissions
-
-# Push selected changes
-npx directus-sync push --only-collections roles,permissions
-```
-
-## Next Steps
-
-- Learn about [seed data management](seed.md)
-- Configure using [configuration files](configuration.md)
-- Implement [custom hooks](hooks.md) 
+> [!TIP]
+> You can check the [configuration options](/docs/features/configuration) for more information.

@@ -4,78 +4,40 @@ sidebar_position: 3
 
 # Basic Usage
 
-Directus Sync provides three main commands for managing your Directus configurations. Here's how to use each one:
+The CLI is available using the `npx` command.
 
-## Pull Command
+```shell
+npx directus-sync <command> [options]
+```
 
-The `pull` command retrieves the current schema and collections from your Directus instance and stores them locally:
+Here's how to use each command in the CLI:
 
-```bash
+## Commands
+
+### Pull
+
+```shell
 npx directus-sync pull
 ```
 
-This command:
-- Fetches the current state of your Directus instance
-- Stores configurations in JSON format
-- Creates or updates tracking IDs for each element
-- Does not modify your database
+Retrieves the current schema and collections from Directus and stores them locally. This command does not modify the database.
 
-## Diff Command
+It also retrieves the specifications (GraphQL & OpenAPI) and stores them locally. It gets specifications from the `/server/specs/*` endpoints:
+- [OpenAPI](https://docs.directus.io/reference/system/server.html#get-openapi-specification)
+- [GraphQL SDL (Item & System scopes)](https://docs.directus.io/reference/system/server.html#get-graphql-schema)
 
-The `diff` command shows the differences between your local configuration and the Directus instance:
+### Diff
 
-```bash
+```shell
 npx directus-sync diff
 ```
 
-This command:
-- Compares local files with the Directus instance
-- Shows what would be created, updated, or deleted
-- Is non-destructive (read-only)
-- Helps you review changes before applying them
+Analyzes and describes the difference (diff) between your local schema and collections and the state of the Directus instance. This command is non-destructive and does not apply any changes to the database.
 
-## Push Command
+### Push
 
-The `push` command applies your local configuration to the Directus instance:
-
-```bash
+```shell
 npx directus-sync push
 ```
 
-This command:
-- Updates your Directus instance to match local files
-- Creates new elements as needed
-- Updates existing elements
-- Removes tracked elements that don't exist locally
-- Handles dependencies automatically
-
-## Common Options
-
-These options can be used with any command:
-
-```bash
-# Specify configuration file location
-npx directus-sync <command> --config-path ./config.js
-
-# Enable debug logging
-npx directus-sync <command> --debug
-
-# Include only specific collections
-npx directus-sync <command> --only-collections roles,permissions
-
-# Exclude specific collections
-npx directus-sync <command> --exclude-collections settings
-```
-
-:::tip
-You can combine these options as needed. For example:
-```bash
-npx directus-sync pull --debug --only-collections roles,permissions
-```
-:::
-
-## Next Steps
-
-- Learn about [seed data management](../features/seed.md)
-- Explore [configuration options](../features/configuration.md)
-- Understand [how it works](../core-concepts/how-it-works.md) 
+Applies the changes from your local environment to the Directus instance. This command pushes your local schema and collection configurations to Directus, updating the instance to reflect your local state. 

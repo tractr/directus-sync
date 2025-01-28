@@ -33,8 +33,6 @@ const sidebars: SidebarsConfig = {
       label: 'Core Concepts',
       items: [
         'core-concepts/how-it-works',
-        'core-concepts/tagging-and-tracking',
-        'core-concepts/mapping-table',
         'core-concepts/synchronization-process',
         'core-concepts/schema-management',
       ],
