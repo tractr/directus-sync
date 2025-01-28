@@ -1,43 +1,107 @@
 ---
-sidebar_position: 3
+sidebar_position: 2
 ---
 
-# Basic Usage
+# Quick Start Guide
 
-The CLI is available using the `npx` command.
+:::warning
+Before starting, make sure you have installed the `directus-extension-sync` extension on all Directus instances you want to synchronize. This extension is required for the tool to work properly.
+You can learn more about the extension in the [installation section](installation.md).
+:::
+
+## 1. Authentication of the Directus Sync CLI
+
+Directus Sync CLI communicates with your Directus instance using the API.
+Therefore, it has to be authenticated as an **admin user**.
+
+To do so, you can provide credentials or an API token.
+
+### Using Credentials
+
+This method is useful for development purposes.
 
 ```shell
-npx directus-sync <command> [options]
+npx directus-sync pull \
+  --directus-url https://your-instance.directus.com \
+  --directus-email admin@example.com \
+  --directus-password your-password
 ```
 
-Here's how to use each command in the CLI:
+### Using API Token
 
-## Commands
-
-### Pull
+To get started, you need to create an API token for an admin user in your Directus instance:
 
 ```shell
-npx directus-sync pull
+npx directus-sync pull \
+  --directus-url https://your-instance.directus.com \
+  --directus-token your-token
 ```
 
-Retrieves the current schema and collections from Directus and stores them locally. This command does not modify the database.
+:::tip
+If you don't know how to create an API token, you can refer to the [this article](https://learndirectus.com/how-to-create-an-api-authentication-token/) for more information.
+:::
 
-It also retrieves the specifications (GraphQL & OpenAPI) and stores them locally. It gets specifications from the `/server/specs/*` endpoints:
+:::note
+In the next sections, we will use the API token for authentication, but you can use the credentials method instead.
+:::
+
+## 2. Pull Configuration
+
+To retrieve the current configuration from your Directus instance:
+
+```shell
+npx directus-sync pull \
+  --directus-url https://your-instance.directus.com \
+  --directus-token your-token
+```
+
+This command will:
+- Retrieve the current schema
+- Save collections and their configurations
+- Store everything locally in the `directus-config` folder
+
+It also retrieves the specifications (GraphQL & OpenAPI) from the `/server/specs/*` endpoints:
 - [OpenAPI](https://docs.directus.io/reference/system/server.html#get-openapi-specification)
 - [GraphQL SDL (Item & System scopes)](https://docs.directus.io/reference/system/server.html#get-graphql-schema)
 
-### Diff
+## 3. Check Differences (diff)
+
+To check differences between your local configuration and another instance:
 
 ```shell
-npx directus-sync diff
+npx directus-sync diff \
+  --directus-url https://other-instance.directus.com \
+  --directus-token other-token
 ```
 
-Analyzes and describes the difference (diff) between your local schema and collections and the state of the Directus instance. This command is non-destructive and does not apply any changes to the database.
+This command is non-destructive and shows you:
+- Elements that will be created
+- Elements that will be updated
+- Elements that will be deleted
 
-### Push
+## 4. Apply Changes (push)
+
+To apply changes to your target instance:
 
 ```shell
-npx directus-sync push
+npx directus-sync push --directus-url https://other-instance.directus.com --directus-token other-token
 ```
 
-Applies the changes from your local environment to the Directus instance. This command pushes your local schema and collection configurations to Directus, updating the instance to reflect your local state. 
+This command will:
+- Synchronize the schema
+- Update collections
+- Handle dependencies between elements
+
+## Advanced Configuration
+
+For more advanced configuration, you can create a `directus-sync.config.js` file at the root of your project to avoid specifying parameters each time:
+
+```javascript
+module.exports = {
+  directusUrl: 'https://your-instance.directus.com',
+  directusToken: 'your-token',
+  dumpPath: './directus-config'
+}
+```
+
+For more information, you can refer to the [configuration section](../features/configuration.md).

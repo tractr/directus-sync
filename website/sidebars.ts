@@ -23,7 +23,6 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Getting Started',
       items: [
-        'getting-started/requirements',
         'getting-started/installation',
         'getting-started/usage',
       ],
@@ -51,10 +50,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Use Cases',
-      items: [
-        'use-cases/postgresql-enum',
-        'use-cases/upgrade-directus'
-      ],
+      items: ['use-cases/postgresql-enum', 'use-cases/upgrade-directus'],
     },
     {
       type: 'category',
