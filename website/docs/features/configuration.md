@@ -169,9 +169,3 @@ DIRECTUS_SYNC_NO_SPECS=false
 | `excludeCollections` | Collections to exclude |
 | `preserveIds` | Collections to preserve IDs |
 | `maxPushRetries` | Maximum push retry attempts |
-
-## Next Steps
-
-- Learn about [hooks](hooks.md)
-- Explore [helper commands](helpers.md)
-- See [advanced features](../advanced/lifecycle-and-hooks.md) 

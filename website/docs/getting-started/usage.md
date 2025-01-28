@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Quick Start Guide
 
-:::warning
+:::important
 Before starting, make sure you have installed the `directus-extension-sync` extension on all Directus instances you want to synchronize. This extension is required for the tool to work properly.
 You can learn more about the extension in the [installation section](installation.md).
 :::
