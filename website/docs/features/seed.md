@@ -4,15 +4,20 @@ sidebar_position: 2
 
 # Seed Data
 
-Directus Sync provides tools to manage seed data - initial or reference data for your collections.
+Directus Sync allows you to manage seed data for your collections. This data is used to populate your Directus instance with initial data.
 
-## Overview
+The seed process is different from the synchronization process.
+It is more flexible but not plug and play as the synchronization process. It requires more configurations.
 
-Unlike schema and configuration synchronization, seed data:
-- Must be manually created
-- Is more flexible in structure
-- Requires explicit configuration
-- Is stored in JSON format
+The main difference with the synchronization process is that the seed data are not pulled from the Directus instance.
+You have to create the seed data manually. Seed data must be written in JSON format and must be placed in the `./directus-config/seed` directory (this can be changed using the `--seed-path` option).
+Any file in this directory will be automatically detected and used by the `seed diff` and `seed push` commands.
+
+As for the synchronization process, the seed data are tracked. Therefore if any change is made to the seed data, it will be updated in the Directus instance. Also, if a seed data is deleted, it will be removed from the Directus instance.
+
+:::important
+The seed commands require the schema to be synchronized first. Make sure to run `npx directus-sync push` before running any seed commands.
+:::
 
 ## Commands
 
@@ -40,7 +45,7 @@ Applies seed data changes to your Directus instance:
 - Removes tracked items not in seed files
 - Maintains relationships
 
-## Seed File Structure
+## Seed Structure
 
 ### Basic Structure
 
@@ -73,6 +78,42 @@ Applies seed data changes to your Directus instance:
 - `delete`: Whether to delete missing items
 - `preserve_ids`: Whether to keep original IDs
 - `ignore_on_update`: Fields to ignore during updates
+
+### Files Organization
+
+You can have multiple seed files in the `seed` directory.
+Each may contain one collection (as shown in the examples above) or multiple collections.
+
+In case of multiple collections in a single file, the content of the JSON should be an array of collections :
+
+```json
+[
+    {
+        "collection": "collection_1",
+        "meta": {},
+        "data": []
+    },
+    {
+        "collection": "collection_2",
+        "meta": {},
+        "data": []
+    }
+]
+```
+
+:::note
+If there is many seeds for the same collection, those seeds will be merged.
+The `meta` values are merged and the lowest `insert_order` is used.
+:::
+
+```
+directus-config/
+└── seed/
+    ├── roles.json
+    ├── users.json
+    ├── categories.json
+    └── articles.json
+```
 
 ## Examples
 
@@ -120,34 +161,62 @@ Applies seed data changes to your Directus instance:
 }
 ```
 
-### System Users
+Note how the `category` field references the `_sync_id` of items in the categories collection.
+
+:::note
+The relations between collections are automatically inferred from the schema snapshot of Directus.
+This means that the schema snapshot must be pushed first by running `npx directus-sync push`.
+:::
+
+### Directus Users
+
+This is an example of a seed file for the `directus_users` collection:
 
 ```json
 {
     "collection": "directus_users",
     "meta": {
-        "insert_order": 1,
-        "ignore_on_update": ["password"]
+        "insert_order": 1
     },
     "data": [
         {
-            "_sync_id": "user-editor",
+            "_sync_id": "user-1",
             "first_name": "John",
-            "last_name": "Editor",
-            "email": "editor@example.com",
-            "role": "_sync_editor_role"
+            "last_name": "Doe",
+            "email": "john.doe@example.com",
+            "role": "_sync_default_admin_role"
+        },
+        {
+            "_sync_id": "user-2",
+            "first_name": "Jane",
+            "last_name": "Smith",
+            "email": "jane.smith@example.com",
+            "password": "password"
         }
     ]
 }
 ```
 
-### File Organization
+The `role` field references the the sync id of the role. You can find it in the file `directus-config/collections/roles.json`.
 
-```
-directus-config/
-└── seed/
-    ├── roles.json
-    ├── users.json
-    ├── categories.json
-    └── articles.json
-```
+`password` field is automatically ignored during update. This is to prevent the password from being reset on every push.
+
+The `directus_roles` collection is not managed by the `seed push` but by the `pull` and `push` commands.
+
+:::warning
+The seed of the `directus_users` collection is experimental and may change in the future.
+:::
+
+## Best Practices
+
+1. **Insert Order**: Set the `insert_order` carefully to ensure dependencies are created in the correct order. Collections with no dependencies should have lower numbers.
+
+2. **Sync IDs**: 
+   - Use meaningful and consistent naming for `_sync_id`
+   - Prefix them with the collection name (e.g., `country-usa`, `city-paris`)
+   - Keep them unique across your seed data
+
+3. **Relations**: 
+   - Use the `_sync_id` of related items to establish relationships
+   - Ensure related items exist in their respective seed files
+   - Make sure the insert order respects these relationships
