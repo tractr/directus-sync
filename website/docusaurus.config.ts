@@ -18,7 +18,7 @@ const config: Config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'directus-sync', // Usually your GitHub org/user name.
+  organizationName: 'tractr', // Usually your GitHub org/user name.
   projectName: 'directus-sync', // Usually your repo name.
 
   onBrokenLinks: 'throw',
