@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-# Seed Data Management
+# Seed Data
 
-Directus Sync provides tools to manage seed data - initial or reference data for your collections. This feature helps maintain consistent test data across environments.
+Directus Sync provides tools to manage seed data - initial or reference data for your collections.
 
 ## Overview
 
@@ -141,45 +141,13 @@ Applies seed data changes to your Directus instance:
 }
 ```
 
-## Best Practices
-
 ### File Organization
 
 ```
 directus-config/
 └── seed/
-    ├── 01-roles.json
-    ├── 02-users.json
-    ├── 03-categories.json
-    └── 04-articles.json
+    ├── roles.json
+    ├── users.json
+    ├── categories.json
+    └── articles.json
 ```
-
-### Naming Conventions
-
-1. **Files**:
-   - Use numeric prefixes for order
-   - Use descriptive names
-   - Group related data
-
-2. **SyncIDs**:
-   - Prefix with collection name
-   - Use descriptive identifiers
-   - Maintain consistency
-
-### Relations
-
-1. **Order Matters**:
-   - Set appropriate `insert_order`
-   - Create referenced items first
-   - Handle circular dependencies
-
-2. **References**:
-   - Use `_sync_id` for relations
-   - Ensure referenced items exist
-   - Validate relationships
-
-## Next Steps
-
-- Learn about [configuration options](configuration.md)
-- Understand [hooks](hooks.md)
-- Explore [helper commands](helpers.md) 

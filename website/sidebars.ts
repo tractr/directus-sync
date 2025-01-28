@@ -30,6 +30,17 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
+      label: 'Features',
+      items: [
+        'features/synchronization',
+        'features/seed',
+        'features/configuration',
+        'features/hooks',
+        'features/helpers',
+      ],
+    },
+    {
+      type: 'category',
       label: 'Core Concepts',
       items: [
         'core-concepts/how-it-works',
@@ -39,28 +50,11 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: 'Features',
-      items: [
-        'features/commands',
-        'features/seed',
-        'features/configuration',
-        'features/hooks',
-        'features/helpers',
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Advanced',
-      items: [
-        'advanced/tracked-elements',
-        'advanced/directus-upgrades',
-        'advanced/lifecycle-and-hooks',
-      ],
-    },
-    {
-      type: 'category',
       label: 'Use Cases',
-      items: ['use-cases/postgresql-enum'],
+      items: [
+        'use-cases/postgresql-enum',
+        'use-cases/upgrade-directus'
+      ],
     },
     {
       type: 'category',

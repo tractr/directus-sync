@@ -4,69 +4,20 @@ sidebar_position: 2
 
 # Collections Prefix
 
-Managing collection prefixes in Directus Sync requires specific configuration to handle different naming conventions across environments.
+If you're facing the error `Invalid payload. Collections can't start with "directus_".`
+when running `directus-sync push`, as shown below:
 
-## Common Issues
+![Collections prefix error](collections-prefix/error.png)
 
-### Prefix Mismatch
+This is likely due to a restriction in Directus that prevents the creation of the `directus_sync_id_map` collection
+that is present in the snapshot.
 
-```bash
-# Collection not found
-Error: Collection 'dev_users' not found
-```
+This collection is essential for the operation of `directus-sync` but should not be created during the push operation.
 
-### System Collections
+This collection is created by the `directus-extension-sync` extension, which must be installed on your Directus
+instance.
 
-```bash
-# System collection error
-Error: Cannot modify system collection 'directus_users'
-```
+Therefore, to resolve this issue, ensure that you have installed
+the [directus-extension-sync](https://www.npmjs.com/package/directus-extension-sync) on your target Directus instance.
 
-## Solutions
-
-### Prefix Configuration
-
-```javascript
-// directus-sync.config.js
-module.exports = {
-  collections: {
-    prefix: {
-      source: 'dev_',
-      target: 'prod_'
-    }
-  }
-};
-```
-
-### System Collections Handling
-
-```javascript
-module.exports = {
-  collections: {
-    system: {
-      include: ['directus_users'],
-      exclude: ['directus_migrations']
-    }
-  }
-};
-```
-
-### Collection Mapping
-
-```javascript
-module.exports = {
-  collections: {
-    map: {
-      'source_collection': 'target_collection',
-      'old_name': 'new_name'
-    }
-  }
-};
-```
-
-## Best Practices
-
-1. Define consistent prefix patterns
-2. Handle system collections explicitly
-3. Document collection mappings
-4. Test prefix configurations 
+You can refer to the [installation guide](../getting-started/installation.md) for more information.

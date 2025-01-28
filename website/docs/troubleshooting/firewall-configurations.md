@@ -4,74 +4,45 @@ sidebar_position: 1
 
 # Firewall Configurations
 
-When using Directus Sync behind a firewall or proxy, you may need to configure specific settings to ensure proper connectivity.
+## Connect to Directus instance behind firewall
 
-## Common Issues
+If your Directus instance is protected by a firewall that requires additional headers or authorizations you can add them using the `directusConfig` setting:
 
-### API Access
+```js
+const addAuth = (request) => {
+    return ({
+        ...request,
+        headers: {
+            ...request.headers,
+            'Special-Access-Header': 'secret',
+        },
+    });
+};
 
-```bash
-# Error when accessing API
-Error: connect ETIMEDOUT x.x.x.x:443
-```
-
-### Rate Limiting
-
-```bash
-# Rate limit exceeded
-Error: Request failed with status code 429
-```
-
-## Solutions
-
-### Proxy Configuration
-
-```javascript
-// directus-sync.config.js
 module.exports = {
-  client: {
-    proxy: {
-      host: 'proxy.company.com',
-      port: 8080,
-      auth: {
-        username: 'user',
-        password: 'pass'
-      }
+    directusConfig: {
+        clientOptions: {
+            globals: {
+                fetch: (input, init) => {
+                    return fetch(input, addAuth(init));
+                }
+            },
+        }
     }
-  }
 };
 ```
 
-### Timeout Settings
+## Synchronization Failures Due to Firewall Configurations
 
-```javascript
-module.exports = {
-  client: {
-    timeout: 30000, // 30 seconds
-    retry: {
-      retries: 3,
-      backoff: 1000
-    }
-  }
-};
+Some requests made by `directus-sync`, particularly during the **diff** process, can be blocked by certain firewall
+configurations.
+You should see this log message if this is the case:
+
+```text
+[12:40:43.095] ERROR (54159): [snapshot] Could not get the diff from the Directus instance
 ```
 
-### Rate Limit Configuration
+Check and adjust your firewall settings to ensure they don't block or interfere with directus-sync operations.
+This may involve whitelisting IP addresses or modifying rules to allow the necessary request patterns.
+More information in this [issue](https://github.com/tractr/directus-sync/issues/33).
 
-```javascript
-module.exports = {
-  client: {
-    rateLimit: {
-      maxRequests: 100,
-      perMilliseconds: 60000
-    }
-  }
-};
-```
-
-## Best Practices
-
-1. Configure appropriate timeouts
-2. Enable request retries
-3. Set up rate limiting
-4. Use secure proxy settings 
