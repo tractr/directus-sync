@@ -6,12 +6,14 @@ sidebar_position: 1
 
 ![Directus 11.4.0](https://img.shields.io/badge/Directus-11.4.0-64f?style=for-the-badge&logo=directus)
 
-> [!IMPORTANT]
-> Latest version of `directus-sync` introduces breaking changes and is not compatible with Directus 10.x.x.
-> If you are using Directus 10.x.x, please run `npx directus-sync@2.2.0`
+:::important
+Latest version of `directus-sync` introduces breaking changes and is not compatible with Directus 10.x.x.
+If you are using Directus 10.x.x, please run `npx directus-sync@2.2.0`
+:::
 
-> [!NOTE]
-> Help us improve Directus Sync by sharing your feedback! Take a quick survey about your usage here: https://forms.gle/LnaB89uVkZCDqRfGA
+:::note
+Help us improve Directus Sync by sharing your feedback! Take a quick survey about your usage here: https://forms.gle/LnaB89uVkZCDqRfGA
+:::
 
 The `directus-sync` command-line interface (CLI) provides a set of tools for managing and synchronizing the schema and
 collections within Directus across different environments.

@@ -151,5 +151,6 @@ DIRECTUS_ADMIN_EMAIL=admin@example.com
 DIRECTUS_ADMIN_PASSWORD=your-password
 ```
 
-> [!TIP]
-> You can check the [configuration options](/docs/features/configuration) for more information.
+:::tip
+You can check the [configuration options](/docs/features/configuration) for more information.
+:::
