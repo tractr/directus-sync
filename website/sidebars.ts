@@ -39,7 +39,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Core Concepts',
       items: [
-        'core-concepts/how-it-works',
+        'core-concepts/id-mapping',
         'core-concepts/synchronization-process',
         'core-concepts/schema-management',
       ],
