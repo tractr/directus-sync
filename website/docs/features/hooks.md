@@ -54,7 +54,9 @@ module.exports = {
 };
 ```
 
-> The dump hook is called after the mapping of the SyncIDs. This means that the data received by the hook is already tracked. If you filter out some elements, they will be deleted during the `push` command.
+:::warning
+The dump hook is called after the mapping of the SyncIDs. This means that the data received by the hook is already tracked. If you filter out some elements, they will be deleted during the `push` command.
+:::
 
 ### Filtering Out Elements
 
@@ -90,7 +92,9 @@ module.exports = {
 };
 ```
 
-> Directus-Sync may alter the query after this hook.
+:::note
+Directus-Sync may alter the query after this hook.
+:::
 
 ### Using the Directus Client
 
@@ -136,7 +140,9 @@ Available hook functions are: `onLoad`, `onSave`:
 - `onLoad` is executed during the `push` and `diff` processes, just after the data is loaded from the files, and before it is sent to Directus.
 - `onSave` is executed during the `pull` process, just before the data is saved to the files.
 
-> This function can be **asynchronous**. It receives the snapshot object and the Directus client as parameters and must return the snapshot object.
+:::note
+This function can be **asynchronous**. It receives the snapshot object and the Directus client as parameters and must return the snapshot object.
+:::
 
 Here is an example of a configuration file that exclude some fields when loading the snapshot. This will be similar for the `onSave` hook.
 
@@ -169,4 +175,6 @@ module.exports = {
 };
 ```
 
-> For more information about the snapshot object, see the [Snapshot](./packages/cli/src/lib/services/snapshot/interfaces.ts) interface. 
+:::note
+For more information about the snapshot object, see the [Snapshot](./packages/cli/src/lib/services/snapshot/interfaces.ts) interface. 
+:::
