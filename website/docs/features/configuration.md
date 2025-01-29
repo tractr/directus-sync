@@ -4,168 +4,123 @@ sidebar_position: 3
 
 # Configuration
 
-Directus Sync can be configured through multiple methods, with options merging in the following order of precedence:
-1. Command-line arguments
+Options are merged from the following sources, in order of precedence:
+
+1. CLI arguments
 2. Environment variables
 3. Configuration file
 4. Default values
 
-## Configuration File
+#### CLI and environment variables
 
-### Supported Formats
+These options can be used with any command to configure the operation of `directus-sync`:
 
-The configuration file can be in JavaScript or JSON format:
-- `directus-sync.config.js`
-- `directus-sync.config.cjs`
-- `directus-sync.config.json`
+- `-c, --config-path <configPath>`  
+  Change the path to the config file. Default paths are: `./directus-sync.config.js`, `./directus-sync.config.cjs` or
+  `./directus-sync.config.json`.
 
-### Basic Configuration
+- `-d, --debug`  
+  Display additional logging information. Useful for debugging or verifying what `directus-sync` is doing under the
+  hood.
+
+- `-u, --directus-url <directusUrl>`  
+  Specify the Directus instance URL. Alternatively, set the `DIRECTUS_URL` environment variable.
+
+- `-t, --directus-token <directusToken>`  
+  Provide the Directus access token. Alternatively, set the `DIRECTUS_TOKEN` environment variable.
+  If provided, the `directus-email` and `directus-password` options are ignored.
+
+- `-e, --directus-email <directusEmail> `  
+  Provide the Directus email. Alternatively, set the `DIRECTUS_ADMIN_EMAIL` environment variable.
+
+- `-p, --directus-password <directusPassword>`  
+  Provide the Directus password. Alternatively, set the `DIRECTUS_ADMIN_PASSWORD` environment variable.
+
+- `--dump-path <dumpPath>`  
+  Set the base path for the dump. This must be an absolute path. The default
+  is `"./directus-config"`.
+
+- `--seed-path <seedPath>`  
+  Set the base path for the seed data. This must be an absolute path. The default
+  is `"./directus-config/seed"`.
+
+- `--collections-path <collectionPath>`  
+  Specify the path for the collections dump, relative to the dump path. The default is `"collections"`.
+
+- `-o, --only-collections <onlyCollections>`  
+  Comma-separated list of directus collections to include during `pull` `push` or `diff` process.
+
+- `-x, --exclude-collections <excludeCollections>`  
+  Comma-separated list of directus collections to exclude during `pull` `push` or `diff`. Can be used along
+  with `only-collections`.
+
+- `--preserve-ids <preserveIds>`  
+  Comma-separated list of directus collections to preserve the original ids during the `pull` or `push` process.  
+  Possible collections are: `dashboards`, `operations`, `panels`, `policies`, `roles` and `translations`.  
+  `flows` and `folders` ids are always preserved.  
+  The value can be `*` or `all` to preserve ids of all collections, when applicable.
+
+- `--max-push-retries <maxPushRetries>`  
+  The number of retries for the `push` and `seed push` operations. The default is `20`. Use `0` to disable limit.
+
+- `--snapshot-path <snapshotPath>`  
+  Specify the path for the schema snapshot dump, relative to the dump path. The default is `"snapshot"`.
+
+- `--no-snapshot`  
+  Do not pull and push the Directus schema. By default, the schema is pulled and pushed.
+
+- `--no-split`  
+  Indicates whether the schema snapshot should be split into multiple files. By default, snapshots are split.
+
+- `--specs-path <specsPath>`  
+  Specify the path for the specifications dump (GraphQL & OpenAPI), relative to the dump path. The default is `"specs"`.
+
+- `--no-specs`  
+  Do not dump the specifications (GraphQL & OpenAPI). By default, specifications are dumped.
+
+- `-f, --force`  
+  Force the diff of schema, even if the Directus version is different. The default is `false`.
+
+- `-h, --help`  
+  Display help information for the `directus-sync` commands.
+
+#### Configuration file
+
+The `directus-sync` CLI also supports a configuration file. This file is optional. If it is not provided, the CLI will
+use the default values for the options.
+
+The default paths for the configuration file are `./directus-sync.config.js`, `./directus-sync.config.cjs`
+or `./directus-sync.config.json`. You can change this path using the
+`--config-path` option.
+
+The configuration file can extend another configuration file using the `extends` property.
+
+This is an example of a configuration file:
 
 ```javascript
+// ./directus-sync.config.js
 module.exports = {
-  // Connection settings
+  extends: ['./directus-sync.config.base.js'],
+  debug: true,
   directusUrl: 'https://directus.example.com',
-  directusToken: 'your-token',
-  // OR
-  directusEmail: 'admin@example.com',
-  directusPassword: 'your-password',
-
-  // Path configurations
+  directusToken: 'my-directus-token',
+  directusEmail: 'admin@example.com', // ignored if directusToken is provided
+  directusPassword: 'my-directus-password', // ignored if directusToken is provided
+  directusConfig: {
+    clientOptions: {},  // see https://docs.directus.io/guides/sdk/getting-started.html#polyfilling
+    restConfig: {}, // see https://docs.directus.io/packages/@directus/sdk/rest/interfaces/RestConfig.html
+  },
   dumpPath: './directus-config',
   seedPath: './directus-config/seed',
   collectionsPath: 'collections',
+  onlyCollections: ['roles', 'policies', 'permissions', 'settings'],
+  excludeCollections: ['settings'],
+  preserveIds: ['roles', 'panels'], // can be '*' or 'all' to preserve all ids, or an array of collections
+  maxPushRetries: 20,
   snapshotPath: 'snapshot',
-  specsPath: 'specs',
-
-  // Feature flags
-  debug: false,
   snapshot: true,
   split: true,
+  specsPath: 'specs',
   specs: true,
-
-  // Collection management
-  onlyCollections: ['roles', 'permissions'],
-  excludeCollections: ['settings'],
-  preserveIds: ['roles', 'panels'],
-
-  // Advanced options
-  maxPushRetries: 20,
-}
+};
 ```
-
-### Extended Configuration
-
-```javascript
-module.exports = {
-  // Extend another config file
-  extends: ['./directus-sync.config.base.js'],
-
-  // Directus client configuration
-  directusConfig: {
-    clientOptions: {
-      // See https://docs.directus.io/guides/sdk/getting-started.html#polyfilling
-    },
-    restConfig: {
-      // See https://docs.directus.io/packages/@directus/sdk/rest/interfaces/RestConfig.html
-    },
-  },
-
-  // Hooks configuration
-  hooks: {
-    // Collection hooks
-    flows: {
-      onQuery: (query, client) => {
-        // Modify query before execution
-        return query;
-      },
-      onDump: async (flows, client) => {
-        // Process flows after retrieval
-        return flows;
-      },
-      onSave: (flows, client) => {
-        // Modify flows before saving
-        return flows;
-      },
-      onLoad: (flows, client) => {
-        // Process flows when loading from files
-        return flows;
-      },
-    },
-
-    // Schema hooks
-    snapshot: {
-      onLoad: async (snapshot, client) => {
-        // Process snapshot when loading
-        return snapshot;
-      },
-      onSave: async (snapshot, client) => {
-        // Process snapshot before saving
-        return snapshot;
-      },
-    },
-  },
-}
-```
-
-## Environment Variables
-
-```bash
-# Connection
-DIRECTUS_URL=https://directus.example.com
-DIRECTUS_TOKEN=your-token
-# OR
-DIRECTUS_ADMIN_EMAIL=admin@example.com
-DIRECTUS_ADMIN_PASSWORD=your-password
-
-# Paths
-DIRECTUS_SYNC_DUMP_PATH=./directus-config
-DIRECTUS_SYNC_SEED_PATH=./directus-config/seed
-DIRECTUS_SYNC_COLLECTIONS_PATH=collections
-DIRECTUS_SYNC_SNAPSHOT_PATH=snapshot
-DIRECTUS_SYNC_SPECS_PATH=specs
-
-# Features
-DIRECTUS_SYNC_DEBUG=true
-DIRECTUS_SYNC_NO_SNAPSHOT=false
-DIRECTUS_SYNC_NO_SPLIT=false
-DIRECTUS_SYNC_NO_SPECS=false
-```
-
-## Configuration Options
-
-### Connection Settings
-
-| Option | Environment Variable | Description |
-|--------|---------------------|-------------|
-| `directusUrl` | `DIRECTUS_URL` | Directus instance URL |
-| `directusToken` | `DIRECTUS_TOKEN` | Access token |
-| `directusEmail` | `DIRECTUS_ADMIN_EMAIL` | Admin email (if no token) |
-| `directusPassword` | `DIRECTUS_ADMIN_PASSWORD` | Admin password (if no token) |
-
-### Path Settings
-
-| Option | Environment Variable | Default | Description |
-|--------|---------------------|---------|-------------|
-| `dumpPath` | `DIRECTUS_SYNC_DUMP_PATH` | `./directus-config` | Base path for dumps |
-| `seedPath` | `DIRECTUS_SYNC_SEED_PATH` | `./directus-config/seed` | Seed data path |
-| `collectionsPath` | `DIRECTUS_SYNC_COLLECTIONS_PATH` | `collections` | Collections dump path |
-| `snapshotPath` | `DIRECTUS_SYNC_SNAPSHOT_PATH` | `snapshot` | Schema snapshot path |
-| `specsPath` | `DIRECTUS_SYNC_SPECS_PATH` | `specs` | API specs path |
-
-### Feature Flags
-
-| Option | Environment Variable | Default | Description |
-|--------|---------------------|---------|-------------|
-| `debug` | `DIRECTUS_SYNC_DEBUG` | `false` | Enable debug logging |
-| `snapshot` | `DIRECTUS_SYNC_NO_SNAPSHOT` | `true` | Enable schema snapshot |
-| `split` | `DIRECTUS_SYNC_NO_SPLIT` | `true` | Split schema files |
-| `specs` | `DIRECTUS_SYNC_NO_SPECS` | `true` | Enable API specs |
-
-### Collection Management
-
-| Option | Description |
-|--------|-------------|
-| `onlyCollections` | Collections to include |
-| `excludeCollections` | Collections to exclude |
-| `preserveIds` | Collections to preserve IDs |
-| `maxPushRetries` | Maximum push retry attempts |
