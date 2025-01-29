@@ -14,49 +14,25 @@ The synchronization process is split into two main commands:
 
 ### Pull Command
 
-```mermaid
-flowchart TB
-    Start[Start Pull] --> Config[Load Configuration]
-    Config --> Client[Initialize Client]
-    Client --> Collections[For Each Collection]
-    Collections --> Query[Build Query]
-    Query --> |onQuery| QueryHook[Query Hook]
-    QueryHook --> Fetch[Fetch Elements]
-    Fetch --> |onDump| DumpHook[Dump Hook]
-    DumpHook --> Process[Process Elements]
-    Process --> |onSave| SaveHook[Save Hook]
-    SaveHook --> Store[Store to Files]
-    Store --> Schema[Handle Schema]
-    Schema --> |onSave| SchemaHook[Schema Save Hook]
-    SchemaHook --> End[End Pull]
-```
-
-### Diff Command
 
 ```mermaid
-flowchart TB
-    Start[Start Diff] --> Config[Load Configuration]
-    Config --> Local[Load Local Files]
-    Local --> |onLoad| LoadHook[Load Hook]
-    LoadHook --> Remote[Get Remote State]
-    Remote --> Schema[Compare Schema]
-    Schema --> |onLoad| SchemaHook[Schema Load Hook]
-    SchemaHook --> Compare[Compare Elements]
-    Compare --> Report[Generate Report]
-    Report --> End[End Diff]
-```
-
-### Push Command
-
-```mermaid
-flowchart TB
-    Start[Start Push] --> Config[Load Configuration]
-    Config --> Local[Load Local Files]
-    Local --> |onLoad| LoadHook[Load Hook]
-    LoadHook --> Remote[Get Remote State]
-    Remote --> Plan[Plan Changes]
-    Plan --> Execute[Execute Changes]
-    Execute --> Retry{Retry Needed?}
-    Retry --> |Yes| Execute
-    Retry --> |No| End[End Push]
+flowchart
+subgraph Pull[Get elements - for each collection]
+direction TB
+B[Create query for all elements]
+-->|onQuery hook|C[Add collection-specific filters]
+--> D[Get elements from Directus]
+--> E[Get or create SyncId for each element. Start tracking]
+--> F[Remove original Id of each element]
+-->|onDump hook|G[Keep elements in memory]
+end
+subgraph Post[Link elements - for each collection]
+direction TB
+H[Get all elements from memory]
+--> I[Replace relations ids by SyncIds]
+--> J[Remove ignore fields]
+--> K[Sort elements]
+-->|onSave hook|L[Save to JSON file]
+end
+A[Pull command] --> Pull --> Post --> Z[End]
 ```
