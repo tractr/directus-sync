@@ -33,7 +33,41 @@ Since it's not possible to add tags directly to entities within Directus, `direc
 
 This is the main reason why `directus-sync` needs the `directus-extension-sync` extension to be installed on the Directus instances you want to synchronize.
 
-## Non-Tracked Elements and Ignored Fields
+## Tracked Elements
+
+`directus-sync` tracks the following Directus collections:
+
+- dashboards
+- flows
+- folders
+- operations
+- panels
+- permissions
+- policies
+- presets
+- roles
+- settings
+- translations
+
+For these collections, data changes are committed to the code, allowing for replication on other Directus instances. A
+mapping table links Directus instance IDs with SyncIDs, managed by the `directus-extension-sync`.
+
+### Roles & Policies
+
+Roles and policies are tracked.  
+By default, Directus creates a default administrator role and two default policies: _admin_ and _public_.
+
+1. To avoid recreating the default _admin_ role, `directus-sync` uses the CLI user's role as the default _admin_ role.
+2. To avoid recreating the default _public_ policy, `directus-sync` uses the first policy found with `role = null`.
+3. To avoid recreating the default _admin_ policy, `directus-sync` uses the first policy linked to the _admin_ role with `admin_access = true`.
+
+### Presets
+
+Global and role based presets are tracked (even the administrator role based presets).
+However, the users' presets are not tracked.
+This is because the users are not tracked and any relation with the users will cause conflicts.
+
+### Non-Tracked Elements and Ignored Fields
 
 Elements that are not meant to be tracked, such as user activities and logs, are not affected by the synchronization process. Certain fields are specifically ignored during synchronization because they are not relevant for version control purposes, such as creation dates and the identity of the user who created an entity.
 
