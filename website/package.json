@@ -14,7 +14,7 @@
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
     "directus-sync": "directus-sync",
-    "update-help-outputs": "node scripts/update-help-outputs.js"
+    "update-help-outputs": "node scripts/update-help-outputs.mjs"
   },
   "dependencies": {
     "@docusaurus/core": "3.7.0",
