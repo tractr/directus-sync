@@ -31,6 +31,5 @@ Directus Sync was created to solve the common challenge of maintaining consisten
 
 ## Next Steps
 
-- Check the [Requirements](getting-started/requirements.md) to ensure your environment is ready
 - Follow the [Installation](getting-started/installation.md) guide to set up Directus Sync
 - Learn about the basic [Usage](getting-started/usage.md) and available commands
