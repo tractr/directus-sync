@@ -24,7 +24,7 @@ During the `push` command:
 
 ### Simple Example
 
-Here is an example of a configuration file with hooks:
+Here is an example of a [configuration file](./configuration) with hooks:
 
 ```javascript
 // ./directus-sync.config.js
