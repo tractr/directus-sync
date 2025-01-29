@@ -2,6 +2,11 @@
 sidebar_position: 1
 ---
 
+import HelpPull from '../help-outputs/pull.md';
+import HelpPush from '../help-outputs/push.md';
+import HelpDiff from '../help-outputs/diff.md';
+
+
 # Synchronization
 
 ## Basic Workflow
@@ -34,6 +39,10 @@ It also retrieves the specifications (GraphQL & OpenAPI) and stores them locally
 - [OpenAPI](https://docs.directus.io/reference/system/server.html#get-openapi-specification)
 - [GraphQL SDL (Item & System scopes)](https://docs.directus.io/reference/system/server.html#get-graphql-schema)
 
+**Available Options**
+
+<HelpPull />
+
 ## Diff
 
 ```shell
@@ -41,6 +50,10 @@ npx directus-sync diff
 ```
 
 Analyzes and describes the difference (diff) between your local schema and collections and the state of the Directus instance. This command is non-destructive and does not apply any changes to the database.
+
+**Available Options**
+
+<HelpDiff />
 
 ## Push
 
@@ -50,28 +63,15 @@ npx directus-sync push
 
 Applies the changes from your local environment to the Directus instance. This command pushes your local schema and collection configurations to Directus, updating the instance to reflect your local state.
 
+**Available Options**
+
+<HelpPush />
+
 ## Common Options
 
-All commands support these options:
+### Collection Management
 
-```bash
-Options:
-  -c, --config-path <path>        Path to config file
-  -d, --debug                     Enable debug logging
-  -u, --directus-url <url>        Directus instance URL
-  -t, --directus-token <token>    Access token
-  -e, --directus-email <email>    Admin email (if no token)
-  -p, --directus-password <pass>  Admin password (if no token)
-  --dump-path <path>              Base path for dumps
-  --collections-path <path>       Collections dump path
-  --snapshot-path <path>          Schema snapshot path
-  --specs-path <path>            API specs dump path
-  -h, --help                     Display help
-```
-
-## Collection Management
-
-### Include/Exclude Collections
+#### Include/Exclude Collections
 
 Include only specific collections
 
@@ -85,7 +85,7 @@ Exclude specific collections
 npx directus-sync pull --exclude-collections settings
 ```
 
-### ID Preservation
+#### ID Preservation
 
 Preserve IDs for specific collections
 
@@ -98,7 +98,7 @@ Preserve all possible IDs
 npx directus-sync pull --preserve-ids all
 ```
 
-## Schema Options
+### Schema Options
 
 Skip schema operations
 
@@ -118,7 +118,7 @@ Skip API specs
 npx directus-sync pull --no-specs
 ```
 
-## Advanced Usage
+### Advanced Usage
 
 Force diff even with version mismatch
 
@@ -126,7 +126,7 @@ Force diff even with version mismatch
 npx directus-sync diff --force
 ```
 
-### Retry Configuration
+#### Retry Configuration
 
 Set maximum push retries.
 Retries occur when a dependency between collections could not be resolved.
@@ -135,9 +135,9 @@ Retries occur when a dependency between collections could not be resolved.
 npx directus-sync push --max-push-retries 30
 ```
 
-## Environment Variables
+### Environment Variables
 
-Instead of command-line options, you can use environment variables:
+Instead of command-line options, you can use environment variables for authentication:
 
 ```bash
 DIRECTUS_URL=https://directus.example.com
@@ -154,3 +154,4 @@ DIRECTUS_ADMIN_PASSWORD=your-password
 :::tip
 You can check the [configuration options](/docs/features/configuration) for more information.
 :::
+  

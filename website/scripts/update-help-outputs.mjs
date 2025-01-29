@@ -10,7 +10,10 @@ const commands = [
   { command: 'seed push', filename: 'seed-push.md' },
   { command: 'seed diff', filename: 'seed-diff.md' },
   { command: 'helpers untrack', filename: 'helpers-untrack.md' },
-  { command: 'helpers remove-permission-duplicates', filename: 'helpers-remove-permission-duplicates.md' },
+  {
+    command: 'helpers remove-permission-duplicates',
+    filename: 'helpers-remove-permission-duplicates.md',
+  },
 ];
 const outputDir = path.join('docs/help-outputs');
 
@@ -31,7 +34,9 @@ commands.forEach((cmd) => {
     // Extract content after "Options:"
     const optionsIndex = output.indexOf('Options:');
     if (optionsIndex === -1) {
-      console.error(`Could not find "Options:" in output for command "${command}"`);
+      console.error(
+        `Could not find "Options:" in output for command "${command}"`,
+      );
       return;
     }
 
