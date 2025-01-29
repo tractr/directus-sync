@@ -2,6 +2,8 @@
 sidebar_position: 3
 ---
 
+import HelpBase from '../help-outputs/base.md';
+
 # Configuration
 
 Options are merged from the following sources, in order of precedence:
@@ -11,7 +13,7 @@ Options are merged from the following sources, in order of precedence:
 3. Configuration file
 4. Default values
 
-#### CLI and environment variables
+## CLI and environment variables
 
 These options can be used with any command to configure the operation of `directus-sync`:
 
@@ -84,7 +86,7 @@ These options can be used with any command to configure the operation of `direct
 - `-h, --help`  
   Display help information for the `directus-sync` commands.
 
-#### Configuration file
+## Configuration file
 
 The `directus-sync` CLI also supports a configuration file. This file is optional. If it is not provided, the CLI will
 use the default values for the options.
@@ -124,3 +126,9 @@ module.exports = {
   specs: true,
 };
 ```
+
+## CLI Options
+
+These options are available for all commands:
+
+<HelpBase />
