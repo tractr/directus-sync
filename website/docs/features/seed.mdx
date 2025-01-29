@@ -2,6 +2,9 @@
 sidebar_position: 2
 ---
 
+import HelpSeedDiff from '../help-outputs/seed-diff.md';
+import HelpSeedPush from '../help-outputs/seed-push.md';
+
 # Seed Data
 
 Directus Sync allows you to manage seed data for your collections. This data is used to populate your Directus instance with initial data.
@@ -33,6 +36,10 @@ Shows differences between local seed data and Directus instance:
 - Lists items to be deleted
 - Non-destructive operation
 
+**Available Options**
+
+<HelpSeedDiff />
+
 ### Seed Push
 
 ```bash
@@ -44,6 +51,10 @@ Applies seed data changes to your Directus instance:
 - Updates existing items
 - Removes tracked items not in seed files
 - Maintains relationships
+
+**Available Options**
+
+<HelpSeedPush />
 
 ## Seed Structure
 
