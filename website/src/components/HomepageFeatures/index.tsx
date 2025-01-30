@@ -15,8 +15,9 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/sync.svg').default,
     description: (
       <>
-        Seamlessly synchronize your Directus configurations across multiple environments. 
-        Keep development, staging, and production instances perfectly aligned.
+        Seamlessly synchronize your Directus configurations across multiple
+        environments. Keep development, staging, and production instances
+        perfectly aligned.
       </>
     ),
   },
@@ -25,8 +26,9 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/json.svg').default,
     description: (
       <>
-        Populate and manage custom data across your Directus instances with powerful seeding capabilities.
-        Handle complex relationships and configurations with ease.
+        Populate and manage custom data across your Directus instances with
+        powerful seeding capabilities. Handle complex relationships and
+        configurations with ease.
       </>
     ),
   },
@@ -35,8 +37,9 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/git.svg').default,
     description: (
       <>
-        Track changes to your Directus configurations and data with Git.
-        Roll back changes, review differences, and collaborate with your team effectively.
+        Track changes to your Directus configurations and data with Git. Roll
+        back changes, review differences, and collaborate with your team
+        effectively.
       </>
     ),
   },
