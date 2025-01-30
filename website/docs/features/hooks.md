@@ -176,5 +176,5 @@ module.exports = {
 ```
 
 :::note
-For more information about the snapshot object, see the [Snapshot](./packages/cli/src/lib/services/snapshot/interfaces.ts) interface. 
+For more information about the snapshot object, see the [Snapshot](https://github.com/tractr/directus-sync/blob/main/packages/cli/src/lib/services/snapshot/interfaces.ts) interface. 
 :::

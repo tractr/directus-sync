@@ -5,9 +5,9 @@
 [![Discord](https://img.shields.io/badge/Discord-Join-5865F2?style=for-the-badge&logo=discord)](https://discord.gg/4vGzHPQmud)
 
 > [!IMPORTANT]
-> **Documentation**: Check the [documentation](https://directus-sync.github.io/docs/intro) for detailed
+> **Documentation**: Check the [documentation](https://tractr.github.io/directus-sync/docs/intro) for detailed
 > information. You **need to install** the required Directus extension `directus-extension-sync` on your Directus instance to
-> use Directus-Sync. Follow the installation instructions in the [directus-extension-sync documentation](https://directus-sync.github.io/docs/getting-started/installation).
+> use Directus-Sync. Follow the installation instructions in the [directus-extension-sync documentation](https://tractr.github.io/directus-sync/docs/getting-started/installation).
 
 > [!NOTE]
 > **Donate**: If Directus Sync is enhancing your team's productivity in a commercial setting, please consider supporting our project
@@ -49,7 +49,7 @@ To use Directus Sync, you need to install the required Directus extension `direc
 instance.
 
 Follow the installation instructions in
-the [directus-extension-sync documentation](https://directus-sync.github.io/docs/getting-started/installation).
+the [directus-extension-sync documentation](https://tractr.github.io/directus-sync/docs/getting-started/installation).
 
 ## Usage
 
@@ -72,7 +72,7 @@ module.exports = {
 };
 ```
 
-For detailed configuration options, refer to the [full documentation](https://directus-sync.github.io/docs/intro).
+For detailed configuration options, refer to the [full documentation](https://tractr.github.io/directus-sync/docs/intro).
 
 ## Roadmap
 
@@ -113,7 +113,7 @@ expand the tool. By supporting Directus Sync, **you're investing in your team's 
 
 If you encounter any issues or have questions, please:
 
-1. Check the [documentation](https://directus-sync.github.io/docs/intro) for detailed
+1. Check the [documentation](https://tractr.github.io/directus-sync/docs/intro) for detailed
    information.
 2. Search existing [issues](https://github.com/tractr/directus-sync/issues) for similar problems.
 3. If you can't find a solution, open a new issue with a detailed description of the problem.

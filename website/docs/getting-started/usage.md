@@ -104,4 +104,4 @@ module.exports = {
 }
 ```
 
-For more information, you can refer to the [configuration section](../features/configuration.md).
+For more information, you can refer to the [configuration section](../features/configuration.mdx).
