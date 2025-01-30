@@ -91,14 +91,26 @@ const config: Config = {
           title: 'Documentation',
           items: [
             {
-              label: 'Guide',
+              label: 'Introduction',
               to: '/docs/intro',
+            },
+            {
+              label: 'Installation',
+              to: '/docs/getting-started/installation',
+            },
+            {
+              label: 'Quick Start',
+              to: '/docs/getting-started/usage',
             },
           ],
         },
         {
           title: 'Community',
           items: [
+            {
+              label: 'Discord',
+              href: 'https://discord.gg/4vGzHPQmud',
+            },
             {
               label: 'GitHub Discussions',
               href: 'https://github.com/tractr/directus-sync/discussions',
