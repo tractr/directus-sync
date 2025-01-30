@@ -63,12 +63,12 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/social-card.jpg',
     navbar: {
       title: 'Directus Sync',
       logo: {
         alt: 'Directus Sync Logo',
-        src: 'img/logo.svg',
+        src: 'img/logo.png',
       },
       items: [
         {
@@ -78,7 +78,7 @@ const config: Config = {
           label: 'Documentation',
         },
         {
-          href: 'https://github.com/directus-sync/directus-sync',
+          href: 'https://github.com/tractr/directus-sync',
           label: 'GitHub',
           position: 'right',
         },
@@ -101,16 +101,16 @@ const config: Config = {
           items: [
             {
               label: 'GitHub Discussions',
-              href: 'https://github.com/directus-sync/directus-sync/discussions',
+              href: 'https://github.com/tractr/directus-sync/discussions',
             },
             {
               label: 'GitHub Issues',
-              href: 'https://github.com/directus-sync/directus-sync/issues',
+              href: 'https://github.com/tractr/directus-sync/issues',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Directus Sync. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} TRACTR. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
