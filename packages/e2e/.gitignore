@@ -1,8 +1,0 @@
-package-lock.json
-node_modules
-tmp/*
-logs/*.log
-!.env
-
-dumps/temp
-dumps/sources/**/specs/*

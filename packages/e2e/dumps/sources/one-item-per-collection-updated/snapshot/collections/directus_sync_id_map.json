@@ -1,7 +1,0 @@
-{
-  "collection": "directus_sync_id_map",
-  "meta": null,
-  "schema": {
-    "name": "directus_sync_id_map"
-  }
-}
