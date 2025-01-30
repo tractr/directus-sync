@@ -39,9 +39,9 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Core Concepts',
       items: [
-        'core-concepts/id-mapping',
-        'core-concepts/synchronization-process',
-        'core-concepts/schema-management',
+        'how-it-works/id-mapping',
+        'how-it-works/synchronization-process',
+        'how-it-works/schema-management',
       ],
     },
     {
