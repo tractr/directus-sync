@@ -22,7 +22,7 @@ function HomepageHeader() {
             className="button button--secondary button--lg"
             to="/docs/getting-started/usage"
           >
-            Directus Sync Tutorial - 5min ⏱️
+            Directus Sync Tutorial
           </Link>
         </div>
       </div>
