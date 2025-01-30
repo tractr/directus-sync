@@ -32,13 +32,3 @@
   --hero-background: #6442fe;
   --hero-color: white;
 }
-
-.intro-svg svg {
-  width: 100px;
-  height: 100px;
-}
-
-.hero, .hero-primary {
-  background-color: var(--hero-background);
-  color: var(--hero-color);
-}
