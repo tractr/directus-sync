@@ -7,7 +7,7 @@ import HelpSeedPush from '../help-outputs/seed-push.md';
 
 # Seed Data
 
-Directus Sync allows you to manage seed data for your collections. This data is used to populate your Directus instance with initial data.
+Directus Sync allows you to manage seed data for your collections. This data is used to populate your Directus instance with custom data.
 
 The seed process is different from the synchronization process.
 It is more flexible but not plug and play as the synchronization process. It requires more configurations.
@@ -217,6 +217,32 @@ The `directus_roles` collection is not managed by the `seed push` but by the `pu
 :::warning
 The seed of the `directus_users` collection is experimental and may change in the future.
 :::
+
+### Many-to-Many Relations
+
+Many-to-many relations have to be handled manually.
+You need to create data in the junction collection in order to create the relation.
+
+For example, if you want to create a many-to-many relation between the `articles` and `tags` collections, you need to create data in the `articles_tags` junction collection.
+
+```json
+{
+    "collection": "articles_tags",
+    "meta": {},
+    "data": [
+        {
+            "_sync_id": "article-tag-1",
+            "tag": "tag-1",
+            "article": "article-1"
+        },
+        {
+            "_sync_id": "article-tag-2",
+            "tag": "tag-2",
+            "article": "article-1"
+        }
+    ]
+}
+```
 
 ## Best Practices
 

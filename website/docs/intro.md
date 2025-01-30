@@ -24,6 +24,7 @@ collections within Directus across different environments.
 - **Granular Updates**: Focuses on differential data changes rather than complete table overwrites, preserving data integrity and history.
 - **Organized Backups**: Separates backups into multiple files for improved readability and version control.
 - **Tracked Elements**: Manages various Directus elements including dashboards, flows, folders, operations, panels, permissions, policies, presets, roles, settings, and translations.
+- **Seed Data Management**: Provides tools to manage and synchronize custom data across environments, with support for complex relationships and custom configurations.
 
 ## Why Directus Sync?
 
