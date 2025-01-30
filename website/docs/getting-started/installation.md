@@ -24,6 +24,47 @@ You can use the pre-built Docker image with this extension pre-installed.
 
 This image is available on Docker Hub: [tractr/directus-sync](https://hub.docker.com/r/tractr/directus-sync).
 
+Example of a Docker Compose stack using Postgres:
+
+```yml
+# file: docker-compose.yml
+services:
+  directus:
+    image: tractr/directus-sync:latest
+    restart: unless-stopped
+    ports:
+      - '8055:8055'
+    environment:
+      KEY: 'XXXXXXXX'
+      SECRET: 'XXXXXXXX'
+      ADMIN_EMAIL: 'admin@example.com'
+      ADMIN_PASSWORD: 'password'
+      DB_CLIENT: 'pg'
+      DB_HOST: 'postgres'
+      DB_PORT: '5432'
+      DB_DATABASE: 'directus'
+      DB_USER: 'directus'
+      DB_PASSWORD: 'password'
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgis/postgis:15-3.5-alpine
+    restart: unless-stopped
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: 'password'
+      POSTGRES_USER: 'directus'
+      POSTGRES_DB: 'directus'
+
+volumes:
+  postgres-data:
+    driver: local
+```
+
 ## Option 3: Custom Docker Image
 
 To build your own Docker image with the extension, follow these steps:
