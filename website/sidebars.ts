@@ -37,7 +37,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: 'Core Concepts',
+      label: 'How it works',
       items: [
         'how-it-works/id-mapping',
         'how-it-works/synchronization-process',
@@ -47,7 +47,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Use Cases',
-      items: ['use-cases/postgresql-enum', 'use-cases/upgrade-directus'],
+      items: ['use-cases/upgrade-directus', 'use-cases/postgresql-enum'],
     },
     {
       type: 'category',
