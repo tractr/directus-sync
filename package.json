@@ -8,7 +8,8 @@
   },
   "license": "GPL-3.0",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "website"
   ],
   "scripts": {
     "lerna": "lerna",
@@ -18,7 +19,10 @@
     "test": "lerna run test",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,gql,mjs}\"",
     "lint": "eslint --fix .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "docs:start": "npm run start --workspace=website",
+    "docs:build": "npm run build --workspace=website",
+    "docs:serve": "npm run serve --workspace=website"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.4.1",

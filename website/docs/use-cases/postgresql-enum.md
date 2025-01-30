@@ -1,4 +1,10 @@
-# Using dropdown for PostgreSQL Enums into Directus with `directus-sync`
+---
+sidebar_position: 2
+---
+
+# PostgreSQL Enum Types
+
+__Using dropdown for PostgreSQL Enums into Directus with `directus-sync`__
 
 Enumerated types (enums) in PostgreSQL provide a way to limit values in a column to a predefined set, improving data
 integrity and user input validation. However, Directus does not natively support PostgreSQL enums and treats them as
@@ -14,11 +20,11 @@ When you use an existing PostgreSQL table with an enum field in Directus, you wi
 
 **Schema**
 
-![Unkown type](schema.png)
+![Unkown type](postgresql-enum/schema.png)
 
 **Interface**
 
-![Void interface](interface.png)
+![Void interface](postgresql-enum/interface.png)
 
 ## A Workaround with directus-sync
 
@@ -105,15 +111,15 @@ After pushing the changes, you will see the following:
 
 **Interface**
 
-![Filled interface.png](filled-interface.png)
+![Filled interface](postgresql-enum/filled-interface.png)
 
 **Form**
 
-![dropdown.png](dropdown.png)
+![dropdown](postgresql-enum/dropdown.png)
 
 **Search filter**
 
-![search-filter-dropdown.png](search-filter-dropdown.png)
+![search-filter-dropdown](postgresql-enum/search-filter-dropdown.png)
 
 ## Considerations
 

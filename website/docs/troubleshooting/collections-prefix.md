@@ -1,9 +1,13 @@
-# Collections can't start with "directus_"
+---
+sidebar_position: 2
+---
+
+# Collections Prefix
 
 If you're facing the error `Invalid payload. Collections can't start with "directus_".`
 when running `directus-sync push`, as shown below:
 
-![invalid payload.png](invalid.png)
+![Collections prefix error](collections-prefix/error.png)
 
 This is likely due to a restriction in Directus that prevents the creation of the `directus_sync_id_map` collection
 that is present in the snapshot.
@@ -15,3 +19,5 @@ instance.
 
 Therefore, to resolve this issue, ensure that you have installed
 the [directus-extension-sync](https://www.npmjs.com/package/directus-extension-sync) on your target Directus instance.
+
+You can refer to the [installation guide](../getting-started/installation.md) for more information.

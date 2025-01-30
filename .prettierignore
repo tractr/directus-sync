@@ -1,4 +1,6 @@
 node_modules
+.docusaurus
+build
 dist
 package-lock.json
 directus-config

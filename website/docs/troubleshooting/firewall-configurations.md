@@ -1,4 +1,10 @@
-# Connect to Directus instance behind firewall
+---
+sidebar_position: 1
+---
+
+# Firewall Configurations
+
+## Connect to Directus instance behind firewall
 
 If your Directus instance is protected by a firewall that requires additional headers or authorizations you can add them using the `directusConfig` setting:
 
@@ -26,7 +32,7 @@ module.exports = {
 };
 ```
 
-# Synchronization Failures Due to Firewall Configurations
+## Synchronization Failures Due to Firewall Configurations
 
 Some requests made by `directus-sync`, particularly during the **diff** process, can be blocked by certain firewall
 configurations.

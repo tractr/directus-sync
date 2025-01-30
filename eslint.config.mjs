@@ -19,6 +19,7 @@ export default [
       '**/dist/',
       '**/node_modules/',
       '**/directus/',
+      'website/',
       '**/*.js',
       '**/*.cjs',
       '**/*.mjs',

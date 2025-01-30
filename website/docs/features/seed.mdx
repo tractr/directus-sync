@@ -1,0 +1,259 @@
+---
+sidebar_position: 2
+---
+
+import HelpSeedDiff from '../help-outputs/seed-diff.md';
+import HelpSeedPush from '../help-outputs/seed-push.md';
+
+# Seed Data
+
+Directus Sync allows you to manage seed data for your collections. This data is used to populate your Directus instance with custom data.
+
+The seed process is different from the synchronization process.
+It is more flexible but not plug and play as the synchronization process. It requires more configurations.
+
+The main difference with the synchronization process is that the seed data are not pulled from the Directus instance.
+You have to create the seed data manually. Seed data must be written in JSON format and must be placed in the `./directus-config/seed` directory (this can be changed using the `--seed-path` option).
+Any file in this directory will be automatically detected and used by the `seed diff` and `seed push` commands.
+
+As for the synchronization process, the seed data are tracked. Therefore if any change is made to the seed data, it will be updated in the Directus instance. Also, if a seed data is deleted, it will be removed from the Directus instance.
+
+:::important
+The seed commands require the schema to be synchronized first. Make sure to run `npx directus-sync push` before running any seed commands.
+:::
+
+## Commands
+
+### Seed Diff
+
+```bash
+npx directus-sync seed diff
+```
+
+Shows differences between local seed data and Directus instance:
+- Identifies new items to create
+- Shows modifications to existing items
+- Lists items to be deleted
+- Non-destructive operation
+
+**Available Options**
+
+<HelpSeedDiff />
+
+### Seed Push
+
+```bash
+npx directus-sync seed push
+```
+
+Applies seed data changes to your Directus instance:
+- Creates new items
+- Updates existing items
+- Removes tracked items not in seed files
+- Maintains relationships
+
+**Available Options**
+
+<HelpSeedPush />
+
+## Seed Structure
+
+### Basic Structure
+
+```json
+{
+    "collection": "collection_name",
+    "meta": {
+        "insert_order": 1,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "preserve_ids": false,
+        "ignore_on_update": []
+    },
+    "data": [
+        {
+            "_sync_id": "unique-identifier",
+            "field1": "value1",
+            "field2": "value2"
+        }
+    ]
+}
+```
+
+### Meta Options
+
+- `insert_order`: Order of insertion (for dependencies)
+- `create`: Whether to create new items
+- `update`: Whether to update existing items
+- `delete`: Whether to delete missing items
+- `preserve_ids`: Whether to keep original IDs
+- `ignore_on_update`: Fields to ignore during updates
+
+### Files Organization
+
+You can have multiple seed files in the `seed` directory.
+Each may contain one collection (as shown in the examples above) or multiple collections.
+
+In case of multiple collections in a single file, the content of the JSON should be an array of collections :
+
+```json
+[
+    {
+        "collection": "collection_1",
+        "meta": {},
+        "data": []
+    },
+    {
+        "collection": "collection_2",
+        "meta": {},
+        "data": []
+    }
+]
+```
+
+:::note
+If there is many seeds for the same collection, those seeds will be merged.
+The `meta` values are merged and the lowest `insert_order` is used.
+:::
+
+```
+directus-config/
+└── seed/
+    ├── roles.json
+    ├── users.json
+    ├── categories.json
+    └── articles.json
+```
+
+## Examples
+
+### Basic Collection
+
+```json
+{
+    "collection": "categories",
+    "meta": {
+        "insert_order": 1
+    },
+    "data": [
+        {
+            "_sync_id": "category-tech",
+            "name": "Technology",
+            "slug": "tech",
+            "status": "published"
+        },
+        {
+            "_sync_id": "category-science",
+            "name": "Science",
+            "slug": "science",
+            "status": "published"
+        }
+    ]
+}
+```
+
+### Collection with Relations
+
+```json
+{
+    "collection": "articles",
+    "meta": {
+        "insert_order": 2
+    },
+    "data": [
+        {
+            "_sync_id": "article-1",
+            "title": "Future of AI",
+            "category": "category-tech",
+            "status": "published"
+        }
+    ]
+}
+```
+
+Note how the `category` field references the `_sync_id` of items in the categories collection.
+
+:::note
+The relations between collections are automatically inferred from the schema snapshot of Directus.
+This means that the schema snapshot must be pushed first by running `npx directus-sync push`.
+:::
+
+### Directus Users
+
+This is an example of a seed file for the `directus_users` collection:
+
+```json
+{
+    "collection": "directus_users",
+    "meta": {
+        "insert_order": 1
+    },
+    "data": [
+        {
+            "_sync_id": "user-1",
+            "first_name": "John",
+            "last_name": "Doe",
+            "email": "john.doe@example.com",
+            "role": "_sync_default_admin_role"
+        },
+        {
+            "_sync_id": "user-2",
+            "first_name": "Jane",
+            "last_name": "Smith",
+            "email": "jane.smith@example.com",
+            "password": "password"
+        }
+    ]
+}
+```
+
+The `role` field references the the sync id of the role. You can find it in the file `directus-config/collections/roles.json`.
+
+`password` field is automatically ignored during update. This is to prevent the password from being reset on every push.
+
+The `directus_roles` collection is not managed by the `seed push` but by the `pull` and `push` commands.
+
+:::warning
+The seed of the `directus_users` collection is experimental and may change in the future.
+:::
+
+### Many-to-Many Relations
+
+Many-to-many relations have to be handled manually.
+You need to create data in the junction collection in order to create the relation.
+
+For example, if you want to create a many-to-many relation between the `articles` and `tags` collections, you need to create data in the `articles_tags` junction collection.
+
+```json
+{
+    "collection": "articles_tags",
+    "meta": {},
+    "data": [
+        {
+            "_sync_id": "article-tag-1",
+            "tag": "tag-1",
+            "article": "article-1"
+        },
+        {
+            "_sync_id": "article-tag-2",
+            "tag": "tag-2",
+            "article": "article-1"
+        }
+    ]
+}
+```
+
+## Best Practices
+
+1. **Insert Order**: Set the `insert_order` carefully to ensure dependencies are created in the correct order. Collections with no dependencies should have lower numbers.
+
+2. **Sync IDs**: 
+   - Use meaningful and consistent naming for `_sync_id`
+   - Prefix them with the collection name (e.g., `country-usa`, `city-paris`)
+   - Keep them unique across your seed data
+
+3. **Relations**: 
+   - Use the `_sync_id` of related items to establish relationships
+   - Ensure related items exist in their respective seed files
+   - Make sure the insert order respects these relationships

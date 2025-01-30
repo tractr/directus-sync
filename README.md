@@ -5,9 +5,9 @@
 [![Discord](https://img.shields.io/badge/Discord-Join-5865F2?style=for-the-badge&logo=discord)](https://discord.gg/4vGzHPQmud)
 
 > [!IMPORTANT]
-> **Documentation**: Check the [documentation](https://github.com/tractr/directus-sync/blob/main/DOCUMENTATION.md) for detailed
+> **Documentation**: Check the [documentation](https://tractr.github.io/directus-sync/docs/intro) for detailed
 > information. You **need to install** the required Directus extension `directus-extension-sync` on your Directus instance to
-> use Directus-Sync. Follow the installation instructions in the [directus-extension-sync documentation](https://github.com/tractr/directus-sync/tree/main/packages/api#directus-extension-sync).
+> use Directus-Sync. Follow the installation instructions in the [directus-extension-sync documentation](https://tractr.github.io/directus-sync/docs/getting-started/installation).
 
 > [!NOTE]
 > **Donate**: If Directus Sync is enhancing your team's productivity in a commercial setting, please consider supporting our project
@@ -35,6 +35,8 @@ workflows and enhances collaboration for teams managing Directus deployments.
   roles, settings, and translations.
 - **Selective & Granular Synchronization**: Include or exclude specific collections during sync operations. Enables
   precise configuration synchronization between Directus instances.
+- **Seed Data Management**: Provides tools to manage and synchronize custom data across environments, with support 
+  for complex relationships and custom configurations.
 - **Hooks System**: Customize the synchronization process using hooks for collections and snapshots.
 - **Original ID Preservation**: Offers the ability to preserve original IDs for certain collections.
 - **Sync ID Tracking**: Uses unique synchronization IDs (SyncIDs) to track configurations across instances.
@@ -47,7 +49,7 @@ To use Directus Sync, you need to install the required Directus extension `direc
 instance.
 
 Follow the installation instructions in
-the [directus-extension-sync documentation](https://github.com/tractr/directus-sync/blob/main/packages/api/README.md#installation).
+the [directus-extension-sync documentation](https://tractr.github.io/directus-sync/docs/getting-started/installation).
 
 ## Usage
 
@@ -70,7 +72,7 @@ module.exports = {
 };
 ```
 
-For detailed configuration options, refer to the [full documentation](https://github.com/tractr/directus-sync/blob/main/DOCUMENTATION.md).
+For detailed configuration options, refer to the [full documentation](https://tractr.github.io/directus-sync/docs/intro).
 
 ## Roadmap
 
@@ -111,7 +113,7 @@ expand the tool. By supporting Directus Sync, **you're investing in your team's 
 
 If you encounter any issues or have questions, please:
 
-1. Check the [documentation](https://github.com/tractr/directus-sync/blob/main/DOCUMENTATION.md) for detailed
+1. Check the [documentation](https://tractr.github.io/directus-sync/docs/intro) for detailed
    information.
 2. Search existing [issues](https://github.com/tractr/directus-sync/issues) for similar problems.
 3. If you can't find a solution, open a new issue with a detailed description of the problem.
