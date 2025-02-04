@@ -13,6 +13,7 @@ import {
   pushOnEmptyInstance,
   pushTwiceOnEmptyInstance,
   pushWithExistingUuid,
+  pushWithUserPolicyAssignment,
 } from './pull-diff-push/index.js';
 import { pushWithDependencies } from './dependencies/index.js';
 import {
@@ -76,7 +77,7 @@ describe('Tests entrypoint ->', () => {
   pushOnEmptyInstance(context);
   pushTwiceOnEmptyInstance(context);
   pushWithExistingUuid(context);
-
+  pushWithUserPolicyAssignment(context);
   updateDefaultData(context);
 
   pushWithDependencies(context);
