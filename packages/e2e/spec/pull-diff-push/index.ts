@@ -9,3 +9,4 @@ export * from './pull-and-push-with-deletions.js';
 export * from './push-on-empty-instance.js';
 export * from './push-twice-on-empty-instance.js';
 export * from './push-with-existing-uuid.js';
+export * from './push-with-user-policy-assignment.js';
