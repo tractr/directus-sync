@@ -1,13 +1,8 @@
-import {
-  createUser,
-  DirectusPolicy,
-  readPolicies,
-  readUser,
-} from '@directus/sdk';
+import { createUser, DirectusPolicy, readUser } from '@directus/sdk';
 import { Context, newPolicy, newRole, Schema } from '../helpers/index.js';
 
 export const pushWithUserPolicyAssignment = (context: Context) => {
-  fit('should preserve user policy assignments after push', async () => {
+  it('should preserve user policy assignments after push', async () => {
     // Init sync client
     const sync = await context.getSync('temp/push-with-user-policy-assignment');
     const directus = context.getDirectus();

@@ -3,11 +3,16 @@ import {
   createPolicy,
   deletePolicy,
   readPolicies,
+  readPolicy,
   updatePolicy,
 } from '@directus/sdk';
 import { Inject, Service } from 'typedi';
 import { MigrationClient } from '../../migration-client';
-import { BaseDirectusPolicy, DirectusPolicy } from './interfaces';
+import {
+  BaseDirectusPolicy,
+  DirectusPolicy,
+  DirectusPolicyAccess,
+} from './interfaces';
 import { LOGGER } from '../../../constants';
 import pino from 'pino';
 import { getChildLogger } from '../../../helpers';
@@ -39,10 +44,53 @@ export class PoliciesDataClient extends DataClient<DirectusPolicy> {
     );
   }
 
-  protected getUpdateCommand(
+  protected async getUpdateCommand(
     itemId: string,
     diffItem: Partial<WithoutIdAndSyncId<DirectusPolicy>>,
   ) {
+    // Explicit update of the roles field (many-to-many relation)
+    // Issue : https://github.com/tractr/directus-sync/issues/148
+    if (diffItem.roles) {
+      // retrieve the access ids
+      const accesses = diffItem.roles as Partial<DirectusPolicyAccess>[];
+      const rolesAccessesIdsMap = await this.getRolesAccessesIdsMap(itemId);
+      for (const access of accesses) {
+        if (access.role) {
+          access.id = rolesAccessesIdsMap.get(access.role);
+        }
+      }
+      diffItem = {
+        ...diffItem,
+        roles: {
+          update: accesses,
+        },
+      } as unknown as Partial<DirectusPolicy>;
+    }
+
     return updatePolicy(itemId, diffItem);
+  }
+
+  protected async getRolesAccessesIdsMap(
+    policyId: string,
+  ): Promise<Map<string, number>> {
+    const client = await this.migrationClient.get();
+    const policy = await client.request(
+      readPolicy(policyId, {
+        fields: ['roles.id', 'roles.role'],
+      }),
+    );
+
+    return policy.roles.reduce(
+      (
+        acc: Map<string, number>,
+        access: Pick<DirectusPolicyAccess, 'role' | 'id'>,
+      ) => {
+        if (access.role) {
+          acc.set(access.role, access.id);
+        }
+        return acc;
+      },
+      new Map<string, number>(),
+    );
   }
 }
