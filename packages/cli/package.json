@@ -23,29 +23,29 @@
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
     "@types/http-errors": "^2.0.4",
-    "@types/jest": "^29.5.12",
-    "@types/node": "22.5.4",
+    "@types/jest": "^29.5.14",
+    "@types/node": "22.13.1",
     "jest": "^29.7.0",
-    "ts-essentials": "^10.0.2",
+    "ts-essentials": "^10.0.4",
     "ts-jest": "^29.2.5",
     "ts-node": "10.9.2",
-    "typescript": "5.5.4"
+    "typescript": "5.7.3"
   },
   "dependencies": {
-    "@directus/sdk": "^17.0.1",
+    "@directus/sdk": "^19.0.1",
     "case": "^1.6.3",
-    "commander": "^12.1.0",
+    "commander": "^13.1.0",
     "compare-versions": "^6.1.1",
     "deep-object-diff": "^1.1.9",
     "deepmerge": "^4.3.1",
-    "dotenv": "^16.4.5",
-    "fs-extra": "^11.2.0",
+    "dotenv": "^16.4.7",
+    "fs-extra": "^11.3.0",
     "http-errors": "^2.0.0",
-    "pino": "^9.4.0",
-    "pino-pretty": "^11.2.2",
+    "pino": "^9.6.0",
+    "pino-pretty": "^13.0.0",
     "reflect-metadata": "^0.2.2",
     "typedi": "^0.10.0",
     "typescript-cacheable": "^3.0.3",
-    "zod": "^3.23.8"
+    "zod": "^3.24.1"
   }
 }
