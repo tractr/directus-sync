@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.2](https://github.com/tractr/directus-sync/compare/directus-sync@3.2.1...directus-sync@3.2.2) (2025-02-04)
+
+
+### Bug Fixes
+
+* **cli:** handle policy.roles addition and removal on push ([#150](https://github.com/tractr/directus-sync/issues/150)) ([a214305](https://github.com/tractr/directus-sync/commit/a214305de4042d81790a2566a81685e534214ceb))
+
+
+
+
+
 ## [3.2.1](https://github.com/tractr/directus-sync/compare/directus-sync@3.2.0...directus-sync@3.2.1) (2025-02-04)
 
 
