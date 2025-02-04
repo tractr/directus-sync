@@ -13,3 +13,8 @@ export interface DirectusPolicyAccess {
   user?: string | null;
   sort: number;
 }
+export type PolicyRolesDiff = {
+  create: Partial<DirectusPolicyAccess>[];
+  update: Partial<DirectusPolicyAccess>[];
+  delete: number[];
+};

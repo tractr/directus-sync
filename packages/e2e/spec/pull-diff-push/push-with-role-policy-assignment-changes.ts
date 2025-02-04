@@ -1,16 +1,27 @@
-import { createPolicy, DirectusPolicy, readPolicy, updatePolicy } from '@directus/sdk';
+import {
+  createPolicy,
+  DirectusPolicy,
+  readPolicy,
+  updatePolicy,
+} from '@directus/sdk';
 import { Context, getPolicy, newRole, Schema } from '../helpers/index.js';
 
 export const pushWithRolePolicyAssignmentChanges = (context: Context) => {
-  fit('should apply role policy assignments changes after push', async () => {
+  it('should apply role policy assignments changes after push', async () => {
     // Init sync client
-    const sync = await context.getSync('temp/push-with-role-policy-assignment-changes');
+    const sync = await context.getSync(
+      'temp/push-with-role-policy-assignment-changes',
+    );
     const directus = context.getDirectus();
     const client = directus.get();
 
     // Helpers
-    const roleAndSort = (role: string, sort: number) => (access: { role: string, sort: number }) => access.role === role && access.sort === sort;
-    const role = (role: string) => (access: { role: string }) => access.role === role;
+    const roleAndSort =
+      (role: string, sort: number) =>
+      (access: { role: string; sort: number }) =>
+        access.role === role && access.sort === sort;
+    const role = (role: string) => (access: { role: string }) =>
+      access.role === role;
 
     // Create 3 roles
     const role1 = await newRole(client);
