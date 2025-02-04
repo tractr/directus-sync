@@ -6,10 +6,10 @@ export type BaseDirectusPolicy = GenericBaseDirectusPolicy<BaseSchema>;
 export type DirectusPolicy = BaseDirectusPolicy & {
   name: string;
 };
-export type DirectusPolicyAccess = {
+export interface DirectusPolicyAccess {
   id: number;
   policy: string;
   role?: string | null;
   user?: string | null;
   sort: number;
-};
+}
