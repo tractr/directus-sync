@@ -70,9 +70,7 @@ export class SnapshotClient {
    */
   async push() {
     const diff = await this.diffSnapshot();
-    if (!diff) {
-      this.logger.error('Could not get the diff from the Directus instance');
-    } else if (!diff.diff) {
+    if (!diff || !diff.diff) {
       this.logger.debug('No changes to apply');
     } else {
       const directus = await this.migrationClient.get();
@@ -86,9 +84,7 @@ export class SnapshotClient {
    */
   async diff() {
     const diff = await this.diffSnapshot();
-    if (!diff) {
-      this.logger.error('Could not get the diff from the Directus instance');
-    } else if (!diff.diff) {
+    if (!diff || !diff.diff) {
       this.logger.debug('No changes to apply');
     } else {
       const { collections, fields, relations } = diff.diff;
@@ -241,8 +237,9 @@ export class SnapshotClient {
 
   /**
    * Get the diff from Directus instance
+   * From Directus 11.4.1, the diff is not returned if there are no changes.
    */
-  protected async diffSnapshot(): Promise<SchemaDiffOutput | undefined> {
+  protected async diffSnapshot(): Promise<SchemaDiffOutput | null | undefined> {
     const directus = await this.migrationClient.get();
     const { onLoad } = this.hooks;
     const snapshot = this.loadData();
