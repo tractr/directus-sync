@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.3](https://github.com/tractr/directus-sync/compare/directus-sync@3.2.2...directus-sync@3.2.3) (2025-02-05)
+
+
+### Bug Fixes
+
+* **cli:** handle directus 11.4.1 snapshot ([#151](https://github.com/tractr/directus-sync/issues/151)) ([4338e51](https://github.com/tractr/directus-sync/commit/4338e51192771ca1c47ceefe1a262efb20383d28))
+
+
+
+
+
 ## [3.2.2](https://github.com/tractr/directus-sync/compare/directus-sync@3.2.1...directus-sync@3.2.2) (2025-02-04)
 
 
