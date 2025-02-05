@@ -1,6 +1,6 @@
 ARG DIRECTUS_VERSION=latest
 
-FROM node:20-alpine AS extensions
+FROM node:22-alpine AS extensions
 WORKDIR /extensions
 RUN npm install directus-extension-sync
 
