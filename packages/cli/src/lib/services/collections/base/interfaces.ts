@@ -47,9 +47,7 @@ export type Field<T, Virtual extends string = never> =
   | Virtual; // Allows other fields
 export type IdMappers<T, Virtual extends string = never> = {
   [key in keyof T]?: IdMapperClient | IdMappers<T[key]>;
-} & {
-  [key in Virtual]?: IdMapperClient;
-};
+} & Partial<Record<Virtual, IdMapperClient>>;
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type BaseSchema = any;

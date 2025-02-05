@@ -24,9 +24,7 @@ export type CollectionPreservableIdName = z.infer<
   typeof CollectionPreservableIdEnum
 >;
 
-export type CollectionRecord<T> = {
-  [key in CollectionName]: T;
-};
+export type CollectionRecord<T> = Record<CollectionName, T>;
 
 export type TransformDataFunction = <T = unknown>(
   data: T[],

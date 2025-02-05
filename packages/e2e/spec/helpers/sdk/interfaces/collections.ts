@@ -48,12 +48,10 @@ export interface SystemCollectionsTypes {
 
 export type SystemCollection = ValueOf<SystemCollectionsNames>;
 
-export type SystemCollectionsRecord<T> = {
-  [key in SystemCollection]: T;
-};
-export type SystemCollectionsRecordPartial<T> = {
-  [key in SystemCollection]?: T;
-};
+export type SystemCollectionsRecord<T> = Record<SystemCollection, T>;
+export type SystemCollectionsRecordPartial<T> = Partial<
+  Record<SystemCollection, T>
+>;
 
 export type SystemCollectionsPartial = {
   [key in SystemCollection]?: Partial<SystemCollectionsTypes[key]>;

@@ -56,7 +56,7 @@ export const OptionsHooksSchema = z.object({
   settings: CollectionHooksSchema.optional(),
   translations: CollectionHooksSchema.optional(),
   snapshot: SnapshotHooksSchema.optional(),
-} satisfies { [key in z.infer<typeof CollectionEnum> | 'snapshot']: z.Schema });
+} satisfies Record<z.infer<typeof CollectionEnum> | 'snapshot', z.Schema>);
 
 export const ClientConfigSchema = z.object({
   globals: z

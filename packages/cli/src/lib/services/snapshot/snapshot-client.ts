@@ -70,7 +70,7 @@ export class SnapshotClient {
    */
   async push() {
     const diff = await this.diffSnapshot();
-    if (!diff || !diff.diff) {
+    if (!diff?.diff) {
       this.logger.debug('No changes to apply');
     } else {
       const directus = await this.migrationClient.get();
@@ -84,7 +84,7 @@ export class SnapshotClient {
    */
   async diff() {
     const diff = await this.diffSnapshot();
-    if (!diff || !diff.diff) {
+    if (!diff?.diff) {
       this.logger.debug('No changes to apply');
     } else {
       const { collections, fields, relations } = diff.diff;
