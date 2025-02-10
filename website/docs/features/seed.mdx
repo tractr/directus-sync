@@ -90,6 +90,11 @@ Applies seed data changes to your Directus instance:
 - `preserve_ids`: Whether to keep original IDs
 - `ignore_on_update`: Fields to ignore during updates
 
+:::warning
+When using `preserve_ids: true`, make sure that the `_sync_id` field contains a valid ID that matches the collection's primary key type.
+For example, if your collection uses UUID as primary key, the `_sync_id` must be a valid UUID.
+:::
+
 ### Files Organization
 
 You can have multiple seed files in the `seed` directory.
