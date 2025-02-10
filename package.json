@@ -23,7 +23,7 @@
     "docs:start": "npm run start --workspace=website",
     "docs:build": "npm run build --workspace=website",
     "docs:serve": "npm run serve --workspace=website",
-    "docs:deploy": "npm run build --workspace=website"
+    "docs:deploy": "npm run deploy --workspace=website"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.7.1",
