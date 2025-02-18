@@ -55,6 +55,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'troubleshooting/firewall-configurations',
         'troubleshooting/collections-prefix',
+        'troubleshooting/request-entity-too-large',
       ],
     },
   ],
