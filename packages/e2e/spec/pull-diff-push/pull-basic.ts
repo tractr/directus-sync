@@ -214,6 +214,7 @@ export const pullBasic = (context: Context) => {
         ).sync_id,
         public_registration_email_filter:
           settings.public_registration_email_filter,
+        visual_editor_urls: settings.visual_editor_urls,
       },
     ]);
     expect(collections.translations).toEqual([
