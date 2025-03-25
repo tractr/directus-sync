@@ -55,5 +55,6 @@ export function getSettings(
         },
       ],
     },
+    visual_editor_urls: [faker.internet.url()],
   };
 }
