@@ -52,6 +52,9 @@ These options can be used with any command to configure the operation of `direct
 - `-o, --only-collections <onlyCollections>`  
   Comma-separated list of directus collections to include during `pull` `push` or `diff` process.
 
+- `--no-collections`
+  Do not pull and push the Directus collections. By default, the collections are pulled and pushed.
+
 - `-x, --exclude-collections <excludeCollections>`  
   Comma-separated list of directus collections to exclude during `pull` `push` or `diff`. Can be used along
   with `only-collections`.
@@ -116,6 +119,7 @@ module.exports = {
   seedPath: './directus-config/seed',
   collectionsPath: 'collections',
   onlyCollections: ['roles', 'policies', 'permissions', 'settings'],
+  collections: true,
   excludeCollections: ['settings'],
   preserveIds: ['roles', 'panels'], // can be '*' or 'all' to preserve all ids, or an array of collections
   maxPushRetries: 20,
