@@ -52,6 +52,9 @@ These options can be used with any command to configure the operation of `direct
 - `-o, --only-collections <onlyCollections>`  
   Comma-separated list of directus collections to include during `pull` `push` or `diff` process.
 
+- `--no-collections`
+  Do not pull and push the Directus collections. By default, the collections are pulled and pushed.
+
 - `-x, --exclude-collections <excludeCollections>`  
   Comma-separated list of directus collections to exclude during `pull` `push` or `diff`. Can be used along
   with `only-collections`.
@@ -109,13 +112,14 @@ module.exports = {
   directusEmail: 'admin@example.com', // ignored if directusToken is provided
   directusPassword: 'my-directus-password', // ignored if directusToken is provided
   directusConfig: {
-    clientOptions: {},  // see https://docs.directus.io/guides/sdk/getting-started.html#polyfilling
+    clientOptions: {}, // see https://docs.directus.io/guides/sdk/getting-started.html#polyfilling
     restConfig: {}, // see https://docs.directus.io/packages/@directus/sdk/rest/interfaces/RestConfig.html
   },
   dumpPath: './directus-config',
   seedPath: './directus-config/seed',
   collectionsPath: 'collections',
   onlyCollections: ['roles', 'policies', 'permissions', 'settings'],
+  collections: true,
   excludeCollections: ['settings'],
   preserveIds: ['roles', 'panels'], // can be '*' or 'all' to preserve all ids, or an array of collections
   maxPushRetries: 20,
