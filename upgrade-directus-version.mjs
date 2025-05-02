@@ -18,7 +18,7 @@ if (!next) {
 
 // Get actual version from packages/e2e/package.json
 const packagePath = path.resolve(__dirname, 'packages/e2e/package.json');
-const actual = JSON.parse(readFileSync(packagePath, 'utf8')).dependencies
+const actual = JSON.parse(readFileSync(packagePath, 'utf8')).devDependencies
   .directus;
 
 console.log(chalk.magenta(`Upgrading Directus from ${actual} to ${next}`));
