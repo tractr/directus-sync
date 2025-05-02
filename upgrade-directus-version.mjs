@@ -105,20 +105,15 @@ replaceInFile(
   `FROM directus/directus:${next}`,
 );
 
-// Ask for confirmation
-console.log(
-  chalk.yellow(`Are you sure you want to commit and push the changes?`),
-);
-const answer = (await $`read -p "Enter 'yes' to continue: " answer`)
+// Commit the changes
+console.log(chalk.yellow(`Committing the changes`));
+const answer = (await question(`Are you sure you want to commit and push the changes?`))
   .trim()
   .toLowerCase();
 if (answer !== 'yes' && answer !== 'y') {
   console.log(chalk.red(`Aborting`));
   process.exit(1);
 }
-
-// Commit the changes
-console.log(chalk.yellow(`Committing the changes`));
 await $`git add -A`;
 await $`git commit -m "chore: update to Directus ${next}"`;
 await $`git push`;
