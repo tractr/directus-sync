@@ -18,7 +18,8 @@ if (!next) {
 
 // Get actual version from packages/e2e/package.json
 const packagePath = path.resolve(__dirname, 'packages/e2e/package.json');
-const actual = JSON.parse(readFileSync(packagePath, 'utf8')).dependencies.directus;
+const actual = JSON.parse(readFileSync(packagePath, 'utf8')).dependencies
+  .directus;
 
 console.log(chalk.magenta(`Upgrading Directus from ${actual} to ${next}`));
 
@@ -33,7 +34,9 @@ console.log(chalk.yellow(`Updating packages`));
 await $`npm install`;
 
 // Find the line "const next = 'x.x.x';" in file packages/e2e/upgrade-directus-version.mjs and replace it with the new version
-console.log(chalk.yellow(`Updating version in packages/e2e/upgrade-directus-version.mjs`));
+console.log(
+  chalk.yellow(`Updating version in packages/e2e/upgrade-directus-version.mjs`),
+);
 replaceInFile(
   path.resolve(__dirname, 'packages/e2e/upgrade-directus-version.mjs'),
   `const next = '${actual}';`,
@@ -49,7 +52,11 @@ console.log(chalk.yellow(`Running the format script`));
 await $`npm run format`;
 
 // Ignore changes in packages/e2e/dumps/sources/group-and-field-names-conflict
-console.log(chalk.yellow(`Ignoring changes in packages/e2e/dumps/sources/group-and-field-names-conflict`));
+console.log(
+  chalk.yellow(
+    `Ignoring changes in packages/e2e/dumps/sources/group-and-field-names-conflict`,
+  ),
+);
 await $`git checkout -- packages/e2e/dumps/sources/group-and-field-names-conflict`;
 
 // Test the upgrade
@@ -97,8 +104,12 @@ replaceInFile(
 );
 
 // Ask for confirmation
-console.log(chalk.yellow(`Are you sure you want to commit and push the changes?`));
-const answer = (await $`read -p "Enter 'yes' to continue: " answer`).trim().toLowerCase();
+console.log(
+  chalk.yellow(`Are you sure you want to commit and push the changes?`),
+);
+const answer = (await $`read -p "Enter 'yes' to continue: " answer`)
+  .trim()
+  .toLowerCase();
 if (answer !== 'yes' && answer !== 'y') {
   console.log(chalk.red(`Aborting`));
   process.exit(1);
