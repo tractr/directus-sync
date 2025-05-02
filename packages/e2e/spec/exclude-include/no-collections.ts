@@ -81,9 +81,7 @@ export const noCollections = (context: Context) => {
         (a) =>
           a.action === 'create' && a.collection === `directus_${collection}`,
       );
-      expect(created.length)
-        .withContext(collection)
-        .toBe(0);
+      expect(created.length).withContext(collection).toBe(0);
     }
   });
-}; 
+};
