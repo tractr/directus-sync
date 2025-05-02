@@ -45,7 +45,7 @@ replaceInFile(
 
 // Run the upgrade script
 console.log(chalk.yellow(`Running the upgrade script`));
-await $`cd packages/e2e && npm run upgrade-directus`;
+await $`cd packages/e2e && npm run upgrade`;
 
 // Run the format script
 console.log(chalk.yellow(`Running the format script`));
