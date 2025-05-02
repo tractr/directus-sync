@@ -107,7 +107,9 @@ replaceInFile(
 
 // Commit the changes
 console.log(chalk.yellow(`Committing the changes`));
-const answer = (await question(`Are you sure you want to commit and push the changes?`))
+const answer = (
+  await question(`Are you sure you want to commit and push the changes?`)
+)
   .trim()
   .toLowerCase();
 if (answer !== 'yes' && answer !== 'y') {
