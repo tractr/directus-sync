@@ -63,8 +63,11 @@ await $`git checkout packages/e2e/dumps/sources/group-and-field-names-conflict/c
 
 // Test the upgrade
 console.log(chalk.yellow(`Testing the upgrade`));
+console.log(chalk.blue(`Installing dependencies`));
 await $`npm install`;
+console.log(chalk.blue(`Building the project`));
 await $`npm run build`;
+console.log(chalk.blue(`Running the tests`));
 await $`npm run test`;
 
 // Change version in other files
@@ -108,7 +111,7 @@ replaceInFile(
 // Commit the changes
 console.log(chalk.yellow(`Committing the changes`));
 const answer = (
-  await question(`Are you sure you want to commit and push the changes?`)
+  await question(`Are you sure you want to commit and push the changes? (yes/no)`)
 )
   .trim()
   .toLowerCase();
@@ -117,7 +120,7 @@ if (answer !== 'yes' && answer !== 'y') {
   process.exit(1);
 }
 await $`git add -A`;
-await $`git commit -m "chore: update to Directus ${next}"`;
+await $`git commit -m "chore: directus ${next} compatibility"`;
 await $`git push`;
 
 // Push the new Docker images
