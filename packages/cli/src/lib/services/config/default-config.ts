@@ -15,6 +15,7 @@ export const DefaultConfig: Pick<
   | 'collectionsPath'
   | 'excludeCollections'
   | 'onlyCollections'
+  | 'collections'
   | 'preserveIds'
   | 'snapshotPath'
   | 'snapshot'
@@ -34,6 +35,7 @@ export const DefaultConfig: Pick<
   collectionsPath: 'collections',
   excludeCollections: [],
   onlyCollections: [],
+  collections: true,
   preserveIds: [],
   // Snapshot
   snapshotPath: 'snapshot',

@@ -130,6 +130,10 @@ export function createProgram() {
     '-o, --only-collections <onlyCollections>',
     `comma separated list of collections to include in the process (default to all)`,
   ).argParser(commaSeparatedList);
+  const noCollectionsOption = new Option(
+    '--no-collections',
+    `should pull and push the collections (default "${DefaultConfig.collections}")`,
+  );
   const preserveIdsOption = new Option(
     '--preserve-ids <preserveIds>',
     `comma separated list of collections that preserve their original ids (default to none). Use "*" or "all" to preserve all ids, if applicable.`,
@@ -178,6 +182,7 @@ export function createProgram() {
     .addOption(collectionsPathOption)
     .addOption(excludeCollectionsOption)
     .addOption(onlyCollectionsOption)
+    .addOption(noCollectionsOption)
     .addOption(preserveIdsOption)
     .addOption(snapshotPathOption)
     .addOption(noSnapshotOption)
@@ -195,6 +200,7 @@ export function createProgram() {
     .addOption(collectionsPathOption)
     .addOption(excludeCollectionsOption)
     .addOption(onlyCollectionsOption)
+    .addOption(noCollectionsOption)
     .addOption(snapshotPathOption)
     .addOption(noSnapshotOption)
     .addOption(noSplitOption)
@@ -208,6 +214,7 @@ export function createProgram() {
     .addOption(collectionsPathOption)
     .addOption(excludeCollectionsOption)
     .addOption(onlyCollectionsOption)
+    .addOption(noCollectionsOption)
     .addOption(preserveIdsOption)
     .addOption(snapshotPathOption)
     .addOption(noSnapshotOption)
