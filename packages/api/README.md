@@ -46,7 +46,7 @@ issue: https://github.com/tractr/directus-sync/issues/63#issuecomment-2096657924
 
 Unfortunately, the extension is not available in the Directus Marketplace out of the box.
 Directus Marketplace does not support extensions that require a database
-connection ([more details here](https://docs.directus.io/extensions/sandbox/sandbox-sdk.html#reference)).
+connection ([more details here](https://directus.io/docs/guides/extensions/api-extensions/sandbox)).
 
 **However**, you can force Directus Marketplace to show all extensions by setting the `MARKETPLACE_TRUST` environment
 variable to `all`.

@@ -25,6 +25,6 @@ This error occurs when the schema diff payload exceeds Directus's maximum allowe
 
 To resolve this issue:
 
-1. Increase the `MAX_PAYLOAD_SIZE` environment variable in your Directus instance configuration. See [Directus Configuration Options](https://docs.directus.io/self-hosted/config-options.html#general) for more details.
+1. Increase the `MAX_PAYLOAD_SIZE` environment variable in your Directus instance configuration. See [Directus Configuration Options](https://directus.io/docs/configuration/security-limits#limits-optimizations) for more details.
 
 2. If you're using a reverse proxy (like Nginx), you may also need to increase the `client_max_body_size` setting. 

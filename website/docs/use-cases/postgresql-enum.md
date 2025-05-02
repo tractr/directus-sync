@@ -35,7 +35,7 @@ Here's a step-by-step guide on how to achieve this:
    described [here](https://github.com/tractr/directus-sync).
 2. **Dump Directus Configurations**: Run `npx directus-sync pull` to export your Directus instance's configuration
    into separate JSON files. This step leverages
-   the [snapshot endpoint of Directus](https://docs.directus.io/reference/system/schema.html#retrieve-schema-snapshot).
+   the [snapshot endpoint of Directus](https://directus.io/docs/api/schema#retrieve-schema-snapshot).
 3. **Modify the Enum Field Configuration**: Identify and edit the JSON file corresponding to the enum field. For
    instance, if adjusting an enum field within the `organization` collection, you might find the file
    at `directus-config/snapshot/fields/organization/type.json`. Here, you can manually set the `meta.interface` to

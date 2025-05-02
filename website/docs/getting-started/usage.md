@@ -61,8 +61,8 @@ This command will:
 - Store everything locally in the `directus-config` folder
 
 It also retrieves the specifications (GraphQL & OpenAPI) from the `/server/specs/*` endpoints:
-- [OpenAPI](https://docs.directus.io/reference/system/server.html#get-openapi-specification)
-- [GraphQL SDL (Item & System scopes)](https://docs.directus.io/reference/system/server.html#get-graphql-schema)
+- [OpenAPI](https://directus.io/docs/api/server#get-openapi-specification)
+- [GraphQL SDL (Item & System scopes)](https://directus.io/docs/api/server#get-graphql-sdl)
 
 ## 3. Check Differences (diff)
 
