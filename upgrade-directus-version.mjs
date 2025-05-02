@@ -57,7 +57,9 @@ console.log(
     `Ignoring changes in packages/e2e/dumps/sources/group-and-field-names-conflict`,
   ),
 );
-await $`git checkout -- packages/e2e/dumps/sources/group-and-field-names-conflict`;
+await $`git checkout packages/e2e/dumps/sources/group-and-field-names-conflict/snapshot/fields`;
+await $`git checkout packages/e2e/dumps/sources/group-and-field-names-conflict/snapshot/collections`;
+await $`git checkout packages/e2e/dumps/sources/group-and-field-names-conflict/collections`;
 
 // Test the upgrade
 console.log(chalk.yellow(`Testing the upgrade`));
