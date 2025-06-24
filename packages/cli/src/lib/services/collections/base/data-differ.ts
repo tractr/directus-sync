@@ -13,6 +13,8 @@ import { DataLoader } from './data-loader';
 import { DataClient } from './data-client';
 import pino from 'pino';
 import { DataMapper } from './data-mapper';
+import { chunks } from '../../../helpers';
+import { DATA_DIFFER_MAX_IDS_PER_REQUEST } from '../../../constants';
 
 export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
   /**
@@ -128,15 +130,21 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
   protected async getExistingIds(
     localIds: string[],
   ): Promise<{ id: DirectusId }[]> {
-    return await this.dataClient.query({
-      filter: {
-        id: {
-          _in: localIds,
-        },
-      },
-      limit: -1,
-      fields: ['id'],
-    } as Query<DirectusType>);
+    return (
+      await Promise.all(
+        [...chunks(localIds, DATA_DIFFER_MAX_IDS_PER_REQUEST)].map((localIds) =>
+          this.dataClient.query({
+            filter: {
+              id: {
+                _in: localIds,
+              },
+            },
+            limit: DATA_DIFFER_MAX_IDS_PER_REQUEST,
+            fields: ['id'],
+          } as Query<DirectusType>),
+        ),
+      )
+    ).flat();
   }
 
   /**
