@@ -1,6 +1,6 @@
 ---
 description: Development workflow and debugging patterns for the API extension
-globs: packages/api/src/**/*.ts, packages/api/package.json
+globs: packages/api/src/**/*.ts,packages/api/package.json
 ---
 
 # Development Workflow Rules
