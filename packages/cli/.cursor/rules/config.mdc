@@ -1,0 +1,114 @@
+Title: CLI Config Service – architecture and change guidelines
+
+Audience: Cursor agents working on `packages/cli/src/lib/services/config/*`
+
+Scope: This rule describes how configuration is modeled, validated, merged, loaded from files, and exposed to the CLI. Follow it when adding options, getters, hooks, collections, or changing config-file loading.
+
+Context: This CLI works with the `directus-extension-sync` endpoint and the Directus API. See installation/usage context in the docs: `https://tractr.github.io/directus-sync/docs/getting-started/installation/`.
+
+High-level responsibilities
+- Centralize runtime configuration for all CLI services
+- Merge defaults, config files, and CLI flags with strict precedence
+- Validate all options with Zod before use
+- Resolve paths deterministically (absolute paths) for file operations
+- Provide typed getters for feature modules (collections, snapshot, specs, seed, push, helpers)
+
+Directory overview (files and roles)
+- `config.ts`: `ConfigService` (global `typedi` service). Builds and serves typed config via memoized getters. Precedence: Default < Config file < Program flags < Command flags. Handles path resolution and transforms (e.g., snapshot split/force, collections include/exclude, preserveIds semantics). Provides `getDirectusConfig()` union for token vs credentials.
+- `schema.ts`: Zod schemas and enums
+  - Collections lists and derived enums (`CollectionsList`, `CollectionEnum`, `CollectionWithUuidEnum`, `CollectionPreservableIdEnum`)
+  - Hooks schema (`CollectionHooksSchema`, `SnapshotHooksSchema`, `OptionsHooksSchema`)
+  - Client/REST config schemas for Directus SDK
+  - `OptionsFields`, `OptionsSchema`, `ConfigFileOptionsSchema`
+- `interfaces.ts`: Types inferred from Zod (`Options`, `ConfigFileOptions`, `CollectionName`, `CollectionPreservableIdName`) and hook function signatures. Directus config unions (`DirectusConfigWithToken` | `DirectusConfigWithCredentials`).
+- `default-config.ts`: `DefaultConfigPaths` search order and `DefaultConfig` values (dumpPath/collectionsPath/snapshot/specs/seed, etc.).
+- `helpers.ts`: Type guard `isDirectusConfigWithToken()`.
+- `config-file-loader.ts`: Loads a config file from a resolved path, validates with `ConfigFileOptionsSchema`, supports `extends` (parent merging via `deepmerge`) and prevents dependency loops via an internal visited set.
+- `index.ts`: Barrel exports of the above.
+
+Core patterns and rules
+- Option precedence (must not change):
+  1) `DefaultConfig` (baseline)
+  2) Config file (`ConfigFileLoader`, first found among `DefaultConfigPaths` or user `--configPath`)
+  3) Program options (top-level CLI flags)
+  4) Command options (subcommand flags)
+  Always validate the final object via `zodParse(..., OptionsSchema)`.
+
+- Path resolution:
+  - Always convert to absolute paths with `Path.resolve()`.
+  - For collections, snapshot, and specs, resolve relative to `dumpPath`.
+  - For seed, accept string or string[] and resolve each to absolute.
+
+- Caching and purity:
+  - All public getters on `ConfigService` are annotated with `@Cacheable()` and must be referentially transparent (no side effects, depend only on options state).
+  - Do not mutate shared state inside cached getters.
+
+- Dependency injection and logging:
+  - `ConfigService` is `@Service({ global: true })` and should be retrieved through `typedi`.
+  - Obtain a logger via the `LOGGER` token and `getChildLogger(base, 'config')`.
+
+- Authentication config:
+  - `getDirectusConfig()` returns token-based config when `directusToken` is present; otherwise requires `directusEmail` + `directusPassword`.
+  - Use `isDirectusConfigWithToken` to narrow the union.
+
+- Hooks typing:
+  - Zod schemas intentionally do not encode hook function parameter shapes; cast to `CollectionHooks` / `SnapshotHooks` in getters after existence checks.
+
+How to add a new CLI option
+1) Add the field to `OptionsFields` in `schema.ts` with a precise Zod type.
+2) Include it in `OptionsSchema` and, if file-configurable, in `ConfigFileOptionsSchema`.
+3) Provide a sane default in `DefaultConfig` (in `default-config.ts`) when appropriate.
+4) Expose a typed getter on `ConfigService` if it represents a computed or scoped sub-config. Use `requireOptions()` when it must be present; otherwise `getOptions()`.
+5) Ensure path and value normalization happens in the getter (e.g., `Path.resolve`, number coercion if needed).
+6) Add/extend tests to cover precedence, validation failures, and normalization behavior.
+7) Update public docs where relevant (e.g., configuration reference) and CLI help output if surfaced.
+
+How to add a new collection or id-preservation rule
+- Update `CollectionsList` and, if needed, `CollectionsWithUuidList` and `CollectionsWithPreservedIdList` in `schema.ts`.
+- Ensure `CollectionEnum` and derived enums reflect the change.
+- Verify `ConfigService.shouldPreserveIds()` still behaves correctly.
+- Add or update tests that cover include/exclude lists and preservation logic.
+
+Changing config-file loading semantics
+- Keep CommonJS `require(configPath)` to support `.js/.cjs/.json` files. Do not switch to ESM dynamic `import()` here. Do not support `.mjs` or TypeScript config files for now.
+- Respect `extends` precedence: parents are merged first, then child overrides (`deepmerge(parent, child)`).
+- Maintain cycle protection with `loadedConfigPaths`.
+- Only resolve parent paths relative to the current file directory (`Path.dirname(currentPath)`).
+- All loaded configs must pass `ConfigFileOptionsSchema` via `zodParse` before merging.
+
+Getter catalogue (expected behavior)
+- `getLoggerConfig()`: `{ level: 'debug' | 'info' }` from `debug`.
+- `getCollectionsConfig()`: `{ dumpPath }` resolved from `dumpPath` + `collectionsPath`.
+- `getSnapshotConfig()`: `{ dumpPath, split, force, enabled }` from `dumpPath` + `snapshotPath` and flags.
+- `getSpecificationsConfig()`: `{ dumpPath, enabled }` from `dumpPath` + `specsPath` and flag.
+- `getSeedConfig()`: `{ paths: string[] }` resolving each `seedPath` entry.
+- `getPushConfig()`: `{ maxPushRetries }`.
+- `getUntrackConfig()`: `{ collection, id }` (both required when used).
+- `getRemovePermissionDuplicatesConfig()`: `{ keep: 'first' | 'last' }`.
+- `getConfigFileLoaderConfig()`: returns the resolved config file path when provided.
+- `getCollectionHooksConfig(collection)`: returns typed hooks for a given collection or `{}`.
+- `getSnapshotHooksConfig()`: returns typed snapshot hooks or `{}`.
+- `getCollectionsToProcess()`: returns `onlyCollections` if non-empty; otherwise `CollectionsList`, minus any `excludeCollections`.
+- `shouldPreserveIds(collection)`: `true` if `preserveIds` is `'*' | 'all'` or includes the collection (per `CollectionPreservableIdEnum`).
+
+Validation discipline
+- Use `requireOptions(name)` when a field is mandatory at use time; it throws with a precise message if missing.
+- Use `getOptions(name)` when optional; handle `undefined` gracefully.
+- Centralize all shape validation through `OptionsSchema` and `ConfigFileOptionsSchema`.
+
+Testing guidance
+- Follow the existing `config-file-loader.spec.ts` patterns when tests are added:
+  - Resolve fixture paths with `Path.resolve('test/files/...')`.
+  - Cover deep merging, property filtering (extra keys dropped by schema), dependency loops, and missing parents.
+- Tests are recommended for new fields or getters but are not mandatory. If you add them, consider covering:
+  - Precedence ordering across default/file/program/command
+  - Normalization (path resolution, coercions)
+  - Required options throwing helpful errors when missing
+
+Common pitfalls to avoid
+- Adding a field to only one of `OptionsSchema` or `ConfigFileOptionsSchema` (keep them in sync, as appropriate).
+- Forgetting to update `DefaultConfig`, resulting in unexpected `requireOptions` failures.
+- Returning relative paths from getters (always resolve to absolute).
+- Performing side effects in `@Cacheable()` getters.
+- Bypassing `ConfigService` and reading env vars or globals directly.
+
