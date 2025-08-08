@@ -112,3 +112,5 @@ Common pitfalls to avoid
 - Performing side effects in `@Cacheable()` getters.
 - Bypassing `ConfigService` and reading env vars or globals directly.
 
+References
+- Installation and overall context: `https://tractr.github.io/directus-sync/docs/getting-started/installation/`
