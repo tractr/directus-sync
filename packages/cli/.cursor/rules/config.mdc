@@ -1,4 +1,9 @@
-Title: CLI Config Service – architecture and change guidelines
+---
+description: CLI Config Service architecture and change guidelines
+globs: packages/cli/src/lib/services/config/**/*.ts
+---
+
+# CLI Config Service – architecture and change guidelines
 
 Audience: Cursor agents working on `packages/cli/src/lib/services/config/*`
 

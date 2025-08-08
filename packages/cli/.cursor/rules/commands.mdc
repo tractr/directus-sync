@@ -1,4 +1,9 @@
-Title: CLI Commands – architecture and change guidelines
+---
+description: CLI commands orchestration and program wiring guidelines
+globs: packages/cli/src/lib/commands/**/*.ts,packages/cli/src/lib/program.ts,packages/cli/src/run.ts
+---
+
+# CLI Commands – architecture and change guidelines
 
 Audience: Cursor agents working on `packages/cli/src/lib/commands/*` and `packages/cli/src/lib/program.ts`
 
