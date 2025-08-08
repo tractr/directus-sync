@@ -1,0 +1,88 @@
+---
+description: Seed services architecture and change guidelines
+globs: packages/cli/src/lib/services/seed/**/*.ts
+---
+
+# Seed Services – architecture and change guidelines
+
+Audience: Cursor agents working on `packages/cli/src/lib/services/seed/**`
+
+Scope: Implements data seeding for arbitrary collections (including some Directus native ones). Reads seed files, merges and orders them, computes diffs against the instance, and pushes changes with id mapping.
+
+Core modules and responsibilities
+- `global/seed-loader.ts` (SeedLoader):
+  - Loads JSON seeds from configured paths recursively, validating with `SeedsFileSchema`.
+  - Sorts by `meta.insert_order` (ascending), appends unsorted at the end.
+  - Merges seeds per collection: data concatenation; `meta.create/update/delete` with AND; `meta.preserve_ids` with OR; `meta.ignore_on_update` concatenation.
+  - Applies defaults for Directus native collections (adds `ignore_on_update` from `DirectusNativeStructure`).
+- `global/seed-client.ts` (SeedClient):
+  - Entrypoint for seed flows: `hasSeeds()`, `diff()`, `push()`, `cleanUp()`.
+  - Creates a per-seed `Container` scope, injects `COLLECTION`, `META`, and `LOGGER`, initializes `SeedDataMapper`, then delegates to `SeedCollection`.
+  - `push()` returns whether a retry is needed (for dependency resolution across runs).
+- `global/schema-client.ts` (SchemaClient):
+  - Resolves relation fields, target models, and primary field name/type from snapshot or `DirectusNativeStructure` for native collections.
+  - Cached lookups with `@Cacheable()`.
+- `global/id-mapper-client-factory.ts`:
+  - Provides `SeedIdMapperClient` instances per target collection with stable table naming:
+    - Directus collections → strip `directus_` prefix
+    - Custom collections → prefix with `items:`
+  - Cached by collection via `@Cacheable()`.
+
+- `collections/collection.ts` (SeedCollection):
+  - Orchestrates `push()`, `cleanUp()`, and `diff()` for one seed.
+  - Honors `meta.create/update/delete/preserve_ids`.
+  - Uses `SeedDataDiffer` for diff and `SeedDataClient` for REST calls; maps ids via `SeedDataMapper`; maintains id maps via `SeedIdMapperClient`.
+  - `push()` returns `true` when any unresolved dependencies require retry.
+  - Creation handles unique violations when `preserve_ids` by re-linking missing id maps if the item already exists.
+
+- `collections/data-client.ts` (SeedDataClient):
+  - Uniform Directus REST access for arbitrary collections; supports native users via special-case requests.
+  - `queryByPrimaryField(values, query?)` casts values to match primary key type from `SchemaClient` (number vs string) and builds `_eq`/`_in` filter.
+
+- `collections/data-differ.ts` (SeedDataDiffer):
+  - Computes `toCreate`, `toUpdate`, `toDelete`, `unchanged`, `dangling` by comparing seed source to target data.
+  - Ignores fields: primary key name, `_syncId`, `meta.ignore_on_update`.
+  - Targets by id map lookup; trims target fields to those present in the source before diffing; converts to SyncIDs via mapper.
+
+- `collections/data-mapper.ts` (SeedDataMapper):
+  - On `initialize()`, queries relation fields for the current collection and builds nested `IdMapperClient`s (via factory) for each target model.
+  - Extends base `DataMapper` behavior for mapping sync/local ids and ignoring fields.
+
+Data model and validation
+- Seeds adhere to `SeedSchema`:
+  - `collection: string`
+  - `meta`: `{ insert_order?: number, create: boolean, update: boolean, delete: boolean, preserve_ids: boolean, ignore_on_update: string[] }` (defaults applied)
+  - `data`: array of objects with at least `_sync_id: string` (rest is passthrough)
+- Files can export a single seed or an array (`SeedsFileSchema` normalizes to array).
+
+Id mapping semantics
+- Store id maps per collection using `SeedIdMapperClientFactory.forCollection(name)`; table naming is deterministic (native vs custom rules above).
+- On create when `preserve_ids`: set `id = _syncId` on payload and, after creation, create id-map with the real primary key from the created item.
+- On update: resolve all referenced ids before issuing update; defer to next run if unresolved.
+- On delete/cleanup: always remove id-map by `sync_id` after deleting record.
+
+Operational rules
+- Always create a new container scope per seed to isolate dependencies; call `container.reset()` after each seed operation.
+- Use `debugOrInfoLogger` to surface key steps at info when impactful, debug otherwise.
+- Never read env/process args directly; use `ConfigService.getSeedConfig()` for paths (set in commands layer).
+
+Adding new capabilities
+- Supporting a new native Directus collection in seed:
+  1) Extend `DirectusNativeStructure` (relations, primary field, ignoreOnUpdate).
+  2) Update specialized request routing in `collections/requests.ts` if needed.
+- Custom collection support should not require code changes; relies on snapshot-derived schema.
+
+Testing guidance (recommended)
+- Unit-test `SeedLoader` merging and ordering behavior.
+- Verify `SchemaClient` resolves relation fields, target models, and primary fields for both native and custom collections.
+- Ensure `SeedDataDiffer` correctly computes diffs and dangling detection with mocked clients.
+- Validate `SeedCollection` error recovery for unique violations with `preserve_ids`.
+
+Common pitfalls to avoid
+- Forgetting to initialize `SeedDataMapper` before using it in a per-seed container
+- Not casting primary key values to the correct type in `queryByPrimaryField`
+- Leaking per-seed state by not resetting the container
+- Misnaming id-map storage table for native vs custom collections
+
+References
+- Usage context: `https://tractr.github.io/directus-sync/docs/features/seed`
