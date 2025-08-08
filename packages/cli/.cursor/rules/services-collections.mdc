@@ -77,4 +77,4 @@ Common pitfalls to avoid
 - Forgetting to clear id-mapper caches during `cleanUp()`
 
 References
-- Usage and context: `https://tractr.github.io/directus-sync/docs/getting-started/usage/`
+- Usage and context: `https://tractr.github.io/directus-sync/docs/features/synchronization/`

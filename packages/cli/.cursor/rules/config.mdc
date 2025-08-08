@@ -118,4 +118,4 @@ Common pitfalls to avoid
 - Bypassing `ConfigService` and reading env vars or globals directly.
 
 References
-- Installation and overall context: `https://tractr.github.io/directus-sync/docs/getting-started/installation/`
+- Installation and overall context: `https://tractr.github.io/directus-sync/docs/features/configuration/`
