@@ -1,0 +1,63 @@
+---
+description: End-to-end test architecture, environment, and authoring guidelines
+globs: packages/e2e/**/*.{ts,js,json,md}
+---
+
+# E2E Tests – architecture and authoring guidelines
+
+Purpose: Black-box tests against a real Directus instance, validating CLI behavior (pull/diff/push/seed/helpers) and extension endpoints.
+
+Environment and prerequisites
+- Tests run a local Directus server inside the host process (see `spec/helpers/sdk/directus-server.ts`).
+- Requires `libvips` installed on the host (see README). Build CLI and extension before running tests: `npm run build` at repo root.
+- Jasmine executes compiled JS from `dist` with config `spec/support/jasmine.json`.
+
+Execution model
+- Tests are sequential by design (avoid parallelism to prevent port and state conflicts).
+- `spec/start-server.ts` bootstraps env and starts Directus early when needed.
+- Use `Context` helper for lifecycle: `.init()` to start server, `.setup()` to reset DB/login, and `.dispose()` to stop server.
+
+Key helpers and SDK wrappers
+- `helpers/sdk/directus-instance.ts`: wraps Directus server lifecycle and readiness probe.
+- `helpers/sdk/directus-server.ts`: creates and starts the Directus API app with HOST/PORT env.
+- `helpers/sdk/directus-client.ts`: typed REST/auth wrapper for tests (login, token handling, activities, extension endpoints for id-maps, seed helpers).
+- `helpers/sdk/directus-sync.ts` (DirectusSync): runs CLI commands programmatically via `createProgram()`, captures pino logs to files, returns normalized `{level,msg}` arrays. Prevents concurrent runs.
+- `helpers/index.ts` (Context): orchestrates Directus instance, seeding, and provides `getSync(dumpFolder, configPath?)` returning a `DirectusSync` instance with token, URL, and dump/seed paths.
+
+Typical test flow
+1) `const context = new Context(); await context.init();`
+2) `await context.setup();` (resets SQLite, re-creates Directus client, login as admin)
+3) Create data via `directus.get()` SDK or helper factories.
+4) Run CLI actions via `const sync = await context.getSync('temp/foo'); await sync.pull()/push()/diff()`.
+5) Assert on CLI logs and on dumped files or Directus state via `directus` helpers.
+6) `await context.dispose();` at suite teardown.
+
+Conventions
+- Logs: Use `debug()` wrapper expectations where provided; assert counts and key messages for collections.
+- Dumps: Inspect JSON under `dumps/<suite>/**` using the helpers; prefer comparing structured objects over raw strings.
+- Temporary dumps: use `temp/<name>` so `Context.getSync()` auto-clears the folder.
+
+Adding tests
+- Place new suites under `spec/<area>/` with an index barrel re-exported by `spec/<area>/index.ts`.
+- Use `.ts` sources; rely on `npm run test` to transpile.
+- Drive state via the SDK; avoid direct DB writes unless explicitly necessary (use provided `SqliteClient` and utilities if needed).
+
+CLI invocation
+- `DirectusSync` injects logger transport to capture pino output per command, stores under `packages/e2e/logs`, waits briefly for flush, and parses JSON lines.
+- Global flags are passed programmatically: `--directus-token`, `--directus-url`, `--debug`, and optional `--config-path` pointing to `packages/e2e/configs/*`.
+
+Do/Don't
+- Do reset state with `Context.setup()` before each spec.
+- Do prefer helpers and wrappers to minimize boilerplate.
+- Don’t run multiple CLI commands concurrently (guarded in `DirectusSync`).
+- Don’t depend on network; server and CLI run locally.
+
+Troubleshooting
+- If the server port is in use, startup will throw (see `directus-server.ts`). Ensure no stray processes and re-run.
+- If logs are empty, check `packages/e2e/logs/*.log` and that `LOGGER_TRANSPORT` is set.
+- Ensure you rebuilt CLI/extension after changes.
+
+References
+- README: packages/e2e/README.md
+- Package config: packages/e2e/package.json
+- Example suite: `packages/e2e/spec/pull-diff-push`
