@@ -24,7 +24,7 @@ or by setting the LOG_LEVEL environment variable to `debug` in the `packages/e2e
 Execution model
 - Tests are sequential by design (avoid parallelism to prevent port and state conflicts).
 - `spec/start-server.ts` bootstraps env and starts Directus early when needed.
-- Use `Context` helper for lifecycle: `.init()` to start server, `.setup()` to reset DB/login, and `.dispose()` to stop server.
+- Use `Context` helper for lifecycle within a shared entrypoint: `spec/entrypoint.spec.ts` owns `.init()/.dispose()` and per-spec `.setup()/.teardown()`.
 
 Key helpers and SDK wrappers
 - `helpers/sdk/directus-instance.ts`: wraps Directus server lifecycle and readiness probe.
@@ -48,6 +48,7 @@ Conventions
 
 Adding tests
 - Place new suites under `spec/<area>/` with an index barrel re-exported by `spec/<area>/index.ts`.
+- Define suites as factory functions `export const mySuite = (context: Context) => { it(...); }` to plug into the shared entrypoint.
 - Use `.ts` sources; rely on `npm run test` to transpile.
 - Drive state via the SDK; avoid direct DB writes unless explicitly necessary (use provided `SqliteClient` and utilities if needed).
 

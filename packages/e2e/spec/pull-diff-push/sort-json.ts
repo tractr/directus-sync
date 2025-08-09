@@ -2,27 +2,10 @@ import { Context } from '../helpers/index.js';
 import fs from 'fs-extra';
 import Path from 'path';
 
-describe('Pull with --sort-json produces sorted snapshot JSON files', () => {
-  const ctx = new Context();
-
-  beforeAll(async () => {
-    await ctx.init();
-  });
-
-  afterAll(async () => {
-    await ctx.dispose();
-  });
-
-  beforeEach(async () => {
-    await ctx.setup();
-  });
-
-  afterEach(async () => {
-    await ctx.teardown();
-  });
-
+export const sortJson = (context: Context) => {
   it('should sort keys in snapshot files when --sort-json is passed', async () => {
-    const sync = await ctx.getSync('temp/sort-json');
+    await context.setup();
+    const sync = await context.getSync('temp/sort-json');
 
     // Run pull with sorting enabled
     await sync.pull(['--sort-json']);
@@ -58,6 +41,4 @@ describe('Pull with --sort-json produces sorted snapshot JSON files', () => {
       }
     }
   });
-});
-
-
+};
