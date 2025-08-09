@@ -2,6 +2,7 @@
 Options:
   -V, --version                               output the version number
   -d, --debug                                 display more logging (default "false")
+  --sort-json                                 sort JSON keys when saving files (default "false")
   -u, --directus-url <directusUrl>            Directus URL (env: DIRECTUS_URL)
   -t, --directus-token <directusToken>        Directus access token (env: DIRECTUS_TOKEN)
   -e, --directus-email <directusEmail>        Directus user email (env: DIRECTUS_ADMIN_EMAIL)
