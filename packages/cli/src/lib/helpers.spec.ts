@@ -58,8 +58,11 @@ describe('sortObjectDeep', () => {
     const result = sortObjectDeep(input);
 
     expect(Object.keys(result)).toEqual(['a', 'b']);
-    expect(Object.keys((result as any).a)).toEqual(['c', 'd', 'e']);
-    expect((result as any).a.e[0]).toEqual({ y: 2, z: 1 });
-    expect((result as any).a.e[1]).toEqual({ a: 1, b: 2 });
+    const a = (
+      result as { a: { c: number; d: number; e: Record<string, number>[] } }
+    ).a;
+    expect(Object.keys(a)).toEqual(['c', 'd', 'e']);
+    expect(a.e[0]).toEqual({ y: 2, z: 1 });
+    expect(a.e[1]).toEqual({ a: 1, b: 2 });
   });
 });

@@ -4,15 +4,15 @@ describe('runSequentially', () => {
   it('executes tasks strictly in order and returns their results', async () => {
     const executionOrder: number[] = [];
     const tasks = [
-      async () => {
+      () => {
         executionOrder.push(1);
         return 'a';
       },
-      async () => {
+      () => {
         executionOrder.push(2);
         return 'b';
       },
-      async () => {
+      () => {
         executionOrder.push(3);
         return 'c';
       },
@@ -26,15 +26,15 @@ describe('runSequentially', () => {
   it('propagates the first rejection and stops subsequent execution', async () => {
     const executionOrder: number[] = [];
     const tasks = [
-      async () => {
+      () => {
         executionOrder.push(1);
         return 'ok-1';
       },
-      async () => {
+      () => {
         executionOrder.push(2);
         throw new Error('boom');
       },
-      async () => {
+      () => {
         executionOrder.push(3);
         return 'ok-3';
       },
