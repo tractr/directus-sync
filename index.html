@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <style>
+        body,
+        html {
+            height: 100%;
+            margin: 0
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility
+        }
+
+        p {
+            text-align: center;
+            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+            color: #000;
+            font-size: 14px;
+            margin-top: -50px
+        }
+
+        p.code {
+            font-size: 24px;
+            font-weight: 500;
+            border-bottom: 1px solid #e0e1e2;
+            padding: 0 20px 15px
+        }
+
+        p.text {
+            margin: 0
+        }
+
+        a,
+        a:visited {
+            color: #aaa
+        }
+    </style>
+</head>
+
+<body>
+    <p class="code">
+        Error
+    </p>
+    <p class="text">
+        We encountered an error when trying to load your application and your page could not be served. Check the logs
+        for your application in the App Platform dashboard.
+    </p>
+    <div style="display:none;">
+        <h1>
+            via_upstream (503 URX) </h1>
+        <p data-translate="connection_timed_out">App Platform failed to forward this request to the application.</p>
+    </div>
+</body>
+
+</html>

@@ -1,3 +1,4 @@
+import * as DirectusSdk from '@directus/sdk';
 import {
   authentication,
   AuthenticationClient,
@@ -50,6 +51,22 @@ export class MigrationClient {
   async clearCache() {
     const directus = await this.get();
     await directus.request(clearCache());
+    // Clear system cache as well when endpoint is available
+    try {
+      const clearSystem = (DirectusSdk as unknown as {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        clearSystemCache?: () => any;
+      }).clearSystemCache;
+      if (typeof clearSystem === 'function') {
+        await directus.request(clearSystem());
+        this.logger.debug('System cache cleared');
+      }
+    } catch (err) {
+      this.logger.debug(
+        { err: (err as Error).message },
+        'System cache clear not supported by this Directus version',
+      );
+    }
     this.logger.debug('Cache cleared');
   }
 
