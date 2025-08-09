@@ -6,15 +6,15 @@ describe('runSequentially', () => {
     const tasks = [
       () => {
         executionOrder.push(1);
-        return 'a';
+        return Promise.resolve('a');
       },
       () => {
         executionOrder.push(2);
-        return 'b';
+        return Promise.resolve('b');
       },
       () => {
         executionOrder.push(3);
-        return 'c';
+        return Promise.resolve('c');
       },
     ];
 
@@ -28,7 +28,7 @@ describe('runSequentially', () => {
     const tasks = [
       () => {
         executionOrder.push(1);
-        return 'ok-1';
+        return Promise.resolve('ok-1');
       },
       () => {
         executionOrder.push(2);
@@ -36,7 +36,7 @@ describe('runSequentially', () => {
       },
       () => {
         executionOrder.push(3);
-        return 'ok-3';
+        return Promise.resolve('ok-3');
       },
     ];
 
