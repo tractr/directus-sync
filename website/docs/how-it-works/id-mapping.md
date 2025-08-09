@@ -71,6 +71,17 @@ This is because the users are not tracked and any relation with the users will c
 
 Elements that are not meant to be tracked, such as user activities and logs, are not affected by the synchronization process. Certain fields are specifically ignored during synchronization because they are not relevant for version control purposes, such as creation dates and the identity of the user who created an entity.
 
+### Dynamic IDs in Operation Options
+
+In some cases, you may intentionally use dynamic placeholders as IDs inside related fields. A common example is the "Trigger flow" operation, where `options.flow` can be set to a templated value like `{{ dynamic_flow_id }}` that is resolved at runtime by your own logic.
+
+Starting from the fix in PR [#172](https://github.com/tractr/directus-sync/pull/172/commits/2f9c56680ce6be284a5bb63d861e9ea23df72dc7), directus-sync will skip ID mapping for values that look like dynamic placeholders (strings starting with `{{`). This prevents mapping failures and preserves the placeholder unchanged during both pull and push.
+
+Implications:
+- Placeholders such as `{{ something }}` in relation fields are not transformed to Directus IDs or SyncIDs.
+- Dumps will keep the placeholder verbatim.
+- Push will not attempt to resolve or map these placeholders and will leave them as is on the instance.
+
 ## Strengths of `directus-sync`
 
 The strength of `directus-sync` lies in its ability to maintain consistent and reproducible configurations across multiple environments. It ensures that only the necessary changes are made, avoiding unnecessary recreation of configurations and maintaining the relationships between tracked and non-tracked entities. This selective updating is what makes `directus-sync` a robust tool for managing Directus instances in a team or multi-environment setup. 

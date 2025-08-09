@@ -1,0 +1,16 @@
+[
+  {
+    "name": "rem",
+    "icon": "alarm_add",
+    "color": "#041D31",
+    "description": "Cinis acceptus demens defessus est adsum creber depromo arcesso varius voluptatem decor voro crudelis vel maiores pecus adopto.",
+    "status": "inactive",
+    "trigger": "schedule",
+    "accountability": "activity",
+    "options": {
+      "cron": "0 0 * * *"
+    },
+    "operation": "4ca67907-c438-4a52-8ed9-e5a5df8e1e4f",
+    "_syncId": "de6b5d32-5cc2-456a-a630-66d5bcbca1ba"
+  }
+]
