@@ -8,8 +8,8 @@ globs: packages/e2e/spec/**/*.ts
 This guide shows how to structure an end-to-end test using the helpers in `packages/e2e/spec/helpers`, referencing `pull-diff-push/pull-and-push-with-changes.ts`.
 
 Boilerplate
-- Use a factory function that takes a `Context` and defines one or more `it(...)` blocks.
-- Export the factory from the suite `index.ts` so it is included by the top-level barrel.
+- Use a factory function that takes a `Context` and defines one or more `it(...)` blocks (do not create a top-level `describe` with its own lifecycle; rely on the central `entrypoint.spec.ts`).
+- Export the factory from the suite `index.ts` so it is included by the top-level barrel and imported/called in `spec/entrypoint.spec.ts`.
 
 Lifecycle
 - `Context.init()` is called by the test runner bootstrap (see `spec/start-server.ts`).
@@ -87,4 +87,4 @@ export const mySuite = (context: Context) => {
 ```
 
 Where to register
-- Export your suite from `spec/<area>/index.ts`, and ensure the top-level `spec/entrypoint.spec.ts` imports that area’s index.
+- Export your suite from `spec/<area>/index.ts`. For new targeted checks, you can also import the factory directly in `spec/entrypoint.spec.ts` and call it with the shared `Context` (see `pull-diff-push/sort-json.ts`).

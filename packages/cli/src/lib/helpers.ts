@@ -4,6 +4,7 @@ import {
   readdirSync,
   readJsonSync,
   statSync,
+  writeJsonSync as writeJsonSyncFs,
 } from 'fs-extra';
 import { z, ZodError, ZodSchema } from 'zod';
 import pino, { LoggerOptions } from 'pino';
@@ -131,4 +132,29 @@ export function getPinoTransport(): LoggerOptions['transport'] {
       colorize: true,
     },
   };
+}
+
+/**
+ * Recursively sort object keys to ensure stable JSON output.
+ * Arrays are processed element-wise. Primitives are returned as-is.
+ */
+export function sortObjectDeep<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map((item) => sortObjectDeep(item)) as unknown as T;
+  }
+  if (value !== null && typeof value === 'object') {
+    const entries = Object.entries(value as Record<string, unknown>)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([k, v]) => [k, sortObjectDeep(v)]);
+    return Object.fromEntries(entries) as unknown as T;
+  }
+  return value;
+}
+
+/**
+ * Write JSON to disk with stable key ordering.
+ */
+export function writeJsonSync(filePath: string, data: unknown, sort: boolean) {
+  const payload = sort ? sortObjectDeep(data) : data;
+  writeJsonSyncFs(filePath, payload, { spaces: 2 });
 }

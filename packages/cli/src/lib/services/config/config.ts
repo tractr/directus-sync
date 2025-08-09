@@ -42,6 +42,11 @@ export class ConfigService {
   }
 
   @Cacheable()
+  shouldSortJson() {
+    return this.requireOptions('sortJson');
+  }
+
+  @Cacheable()
   getCollectionsConfig() {
     const dumpPath = Path.resolve(this.requireOptions('dumpPath'));
     const collectionsSubPath = this.requireOptions('collectionsPath');

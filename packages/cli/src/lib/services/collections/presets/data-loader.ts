@@ -14,6 +14,6 @@ export class PresetsDataLoader extends DataLoader<DirectusPreset> {
       `${PRESETS_COLLECTION}.json`,
     );
     const hooks = config.getCollectionHooksConfig(PRESETS_COLLECTION);
-    super(filePath, migrationClient, hooks);
+    super(filePath, migrationClient, hooks, config);
   }
 }

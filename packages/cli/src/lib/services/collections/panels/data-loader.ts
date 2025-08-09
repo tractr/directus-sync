@@ -14,6 +14,6 @@ export class PanelsDataLoader extends DataLoader<DirectusPanel> {
       `${PANELS_COLLECTION}.json`,
     );
     const hooks = config.getCollectionHooksConfig(PANELS_COLLECTION);
-    super(filePath, migrationClient, hooks);
+    super(filePath, migrationClient, hooks, config);
   }
 }

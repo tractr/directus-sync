@@ -37,6 +37,7 @@ Packages
 
 - `website` (Documentation)
   - Docusaurus site documenting installation, features, and how the sync works.
+  - When updating the CLI help outputs, build the whole project (`npm run build` at the root), then run `npm run update-help-outputs` to update the help outputs in the website.
 
 Other top-level
 - `docker/`: build/publish scripts and Dockerfile for distributing Directus with the extension.
@@ -47,3 +48,9 @@ Conventions (brief)
 - TypeScript across packages; DI via `typedi`; logging via `pino`; validation via `zod`.
 - Keep business logic in services; commands/endpoints orchestrate only.
 - Follow per-package rules under `.cursor/rules/` for detailed guidance.
+
+Checks
+- Before committing, run `npm run lint` to run the linter and fix any issues.
+- Before pushing, run `npm run test` to run the tests and fix any issues.
+- Before pushing, run `npm run build` to build the project and fix any issues.
+- Before pushing, run `npm run docs:update` to update the help outputs in the website.

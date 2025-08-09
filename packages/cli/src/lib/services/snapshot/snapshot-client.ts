@@ -10,10 +10,14 @@ import {
   SchemaDiffOutput,
   Snapshot,
 } from './interfaces';
-import { mkdirpSync, readJsonSync, removeSync, writeJsonSync } from 'fs-extra';
+import { mkdirpSync, readJsonSync, removeSync } from 'fs-extra';
 import { LOGGER } from '../../constants';
 import pino from 'pino';
-import { getChildLogger, loadJsonFilesRecursively } from '../../helpers';
+import {
+  getChildLogger,
+  loadJsonFilesRecursively,
+  writeJsonSync,
+} from '../../helpers';
 import { ConfigService, SnapshotHooks } from '../config';
 import { Cacheable } from 'typescript-cacheable';
 
@@ -35,6 +39,8 @@ export class SnapshotClient {
 
   protected readonly hooks: SnapshotHooks;
 
+  protected readonly sortJson: boolean;
+
   constructor(
     config: ConfigService,
     @Inject(LOGGER) baseLogger: pino.Logger,
@@ -46,6 +52,7 @@ export class SnapshotClient {
     this.splitFiles = splitFiles;
     this.force = force;
     this.hooks = config.getSnapshotHooksConfig();
+    this.sortJson = config.shouldSortJson();
   }
 
   /**
@@ -143,12 +150,12 @@ export class SnapshotClient {
         const filePath = path.join(this.dumpPath, file.path);
         const dirPath = path.dirname(filePath);
         mkdirpSync(dirPath);
-        writeJsonSync(filePath, file.content, { spaces: 2 });
+        writeJsonSync(filePath, file.content, this.sortJson);
       }
       return files.length;
     } else {
       const filePath = path.join(this.dumpPath, SNAPSHOT_JSON);
-      writeJsonSync(filePath, data, { spaces: 2 });
+      writeJsonSync(filePath, data, this.sortJson);
       return 1;
     }
   }

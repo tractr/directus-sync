@@ -25,6 +25,9 @@ These options can be used with any command to configure the operation of `direct
   Display additional logging information. Useful for debugging or verifying what `directus-sync` is doing under the
   hood.
 
+- `--sort-json`  
+  Sort JSON keys when saving dump files (collections and snapshot) to produce stable diffs. Default is `false`.
+
 - `-u, --directus-url <directusUrl>`  
   Specify the Directus instance URL. Alternatively, set the `DIRECTUS_URL` environment variable.
 
@@ -115,6 +118,7 @@ module.exports = {
     clientOptions: {},  // see https://directus.io/docs/guides/connect/sdk#polyfilling
     restConfig: {}, // see https://docs.directus.io/packages/@directus/sdk/rest/interfaces/RestConfig.html
   },
+  sortJson: false,
   dumpPath: './directus-config',
   seedPath: './directus-config/seed',
   collectionsPath: 'collections',

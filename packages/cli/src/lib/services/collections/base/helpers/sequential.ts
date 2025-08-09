@@ -1,5 +1,5 @@
 export async function runSequentially<T>(
-  tasks: Array<() => Promise<T>>,
+  tasks: (() => Promise<T> | T)[],
 ): Promise<T[]> {
   const results: T[] = [];
   for (const task of tasks) {

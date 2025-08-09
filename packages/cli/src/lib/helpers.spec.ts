@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { zodParse } from './helpers';
+import { sortObjectDeep, zodParse } from './helpers';
 
 describe('zodParse', () => {
   it('should throw error if payload is invalid', () => {
@@ -38,5 +38,29 @@ describe('zodParse', () => {
     });
 
     expect(zodParse(payload, schema)).toEqual(payload);
+  });
+});
+
+describe('sortObjectDeep', () => {
+  it('should sort object keys deeply', () => {
+    const input = {
+      b: 2,
+      a: {
+        d: 4,
+        c: 3,
+        e: [
+          { z: 1, y: 2 },
+          { b: 2, a: 1 },
+        ],
+      },
+    };
+
+    const result = sortObjectDeep(input);
+
+    expect(Object.keys(result)).toEqual(['a', 'b']);
+    const { a } = result;
+    expect(Object.keys(a)).toEqual(['c', 'd', 'e']);
+    expect(a.e[0]).toEqual({ y: 2, z: 1 });
+    expect(a.e[1]).toEqual({ a: 1, b: 2 });
   });
 });
