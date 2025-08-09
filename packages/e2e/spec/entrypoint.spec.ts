@@ -41,6 +41,7 @@ import { removeTrackedItem } from './untrack/index.js';
 import {
   createOperationsWithConflicts,
   updateOperationsWithConflicts,
+  operationsWithDynamicFlowId,
 } from './operations/index.js';
 import { updateDefaultData } from './default-data/index.js';
 import { configPathInfo } from './config/index.js';
@@ -87,6 +88,7 @@ describe('Tests entrypoint ->', () => {
 
   updateOperationsWithConflicts(context);
   createOperationsWithConflicts(context);
+  operationsWithDynamicFlowId(context);
 
   collectionsOnDump(context);
   collectionsOnSave(context);

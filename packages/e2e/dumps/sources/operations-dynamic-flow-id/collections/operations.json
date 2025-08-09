@@ -1,0 +1,16 @@
+[
+  {
+    "name": "addo tres",
+    "key": "annus-paens",
+    "type": "log",
+    "position_x": 30,
+    "position_y": 3,
+    "options": {
+      "flow": "{{ dynamic_flow_id }}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "de6b5d32-5cc2-456a-a630-66d5bcbca1ba",
+    "_syncId": "4ca67907-c438-4a52-8ed9-e5a5df8e1e4f"
+  }
+]

@@ -76,8 +76,8 @@ export abstract class DataMapper<T> {
     if (!this.syncIdToLocalIdMappers) {
       const callback =
         (idMapper: IdMapperClient, field: string) => async (id: DirectusId) => {
-          if (id.toString().trim().startsWith('{{')) {
-            this.logger.info(
+          if (this.isDynamicId(id)) {
+            this.logger.debug(
               `Value '${id}' for field '${field}' is dynamic, skipping mapping.`,
             );
             return id;
@@ -102,6 +102,13 @@ export abstract class DataMapper<T> {
     }
 
     return this.syncIdToLocalIdMappers;
+  }
+
+  /**
+   * Returns true if the id is dynamic, i.e. it is a template.
+   */
+  protected isDynamicId(id: DirectusId): boolean {
+    return id.toString().trim().startsWith('{{');
   }
 
   /**

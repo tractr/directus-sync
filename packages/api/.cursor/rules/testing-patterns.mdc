@@ -1,0 +1,61 @@
+---
+description: Testing patterns and Jest configuration for the API extension
+globs: packages/api/src/**/*.spec.ts, packages/api/jest.config.cjs
+---
+
+# Testing Patterns Rules
+
+## Test Structure
+- Use describe blocks for organizing test suites by class/functionality
+- Use descriptive test names that explain the expected behavior
+- Group related tests within nested describe blocks when appropriate
+- Follow AAA pattern: Arrange, Act, Assert
+
+## Database Testing Setup
+- Use in-memory SQLite database for isolated testing
+- Create fresh database instance in `beforeEach` hook
+- Clean up database connections in `afterEach` hook
+- Initialize business logic classes with test database instance
+- Use `useNullAsDefault: true` for SQLite compatibility
+
+## Test Database Configuration
+```typescript
+beforeEach(() => {
+  database = Knex.knex({
+    client: 'sqlite3',
+    connection: { filename: ':memory:' },
+    useNullAsDefault: true,
+  });
+  businessLogic = new BusinessLogicClass(database);
+});
+
+afterEach(async () => {
+  await database.destroy();
+});
+```
+
+## Testing Business Logic
+- Test initialization methods (table creation, return values)
+- Test CRUD operations (create, read, update, delete)
+- Test error scenarios (duplicate keys, missing records)
+- Test edge cases (null values, empty results)
+- Verify database state after operations
+
+## Assertion Patterns
+- Use `expect().toBe()` for primitive values and booleans
+- Use `expect().toBeNull()` for null checks
+- Use `expect().toEqual()` for object comparisons
+- Test both positive and negative cases
+- Verify error handling with appropriate assertions
+
+## Mock Data
+- Use consistent test data across related tests
+- Use descriptive variable names for test data
+- Create reusable test fixtures when appropriate
+- Generate unique identifiers for isolation (UUIDs, timestamps)
+
+## Test Coverage Goals
+- Cover all public methods of business logic classes
+- Test error paths and exception handling
+- Verify initialization and cleanup procedures
+- Test boundary conditions and edge cases

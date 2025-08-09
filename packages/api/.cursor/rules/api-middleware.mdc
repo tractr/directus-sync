@@ -1,0 +1,69 @@
+---
+description: API middleware patterns and helper functions for request handling
+globs: packages/api/src/api/**/*.ts
+---
+
+# API Middleware & Helpers Rules
+
+## Authentication Middleware
+- Use `ensureIsAdminHandler` for all endpoints requiring admin access
+- Check `req.accountability.user` for user authentication
+- Check `req.accountability.admin` for admin permissions
+- Return 401 for unauthenticated users, 403 for insufficient permissions
+- Apply middleware at router level for all routes
+
+## Input Validation Helper
+- Use `validateInput` function with Zod schemas for all parameter validation
+- Combine multiple input sources: `{...req.params, ...req.body}` for POST requests
+- Handle Zod validation errors by extracting issue details
+- Transform ZodError into readable error messages with field paths
+- Throw standard Error objects for consistent error handling
+
+## Error Handling Middleware
+- Use `errorHandler` as final middleware in chain
+- Check `res.headersSent` before sending error responses
+- Distinguish between HTTP errors and generic errors
+- Use proper HTTP status codes (isHttpError check)
+- Return JSON error responses with message field
+
+## Logging Middleware
+- Use `logError` middleware for centralized error logging
+- Log only 5xx errors to avoid noise from client errors
+- Extract status code and message from HTTP errors
+- Use Pino logger instance from Directus context
+- Call `next(err)` to continue error chain
+
+## TypeScript Interfaces
+- Extend Express Request interface to include Directus accountability
+- Define accountability object with user and admin properties
+- Re-export Express Response and NextFunction types
+- Keep interfaces minimal and focused on extension needs
+
+## HTTP Error Creation
+- Use `createError` from `http-errors` library for standardized error responses
+- Pass error to `next()` function for middleware chain handling
+- Use appropriate HTTP status codes
+- Include descriptive error messages for debugging
+
+## Error Creation Patterns
+```typescript
+// Not found
+next(createError(404, 'No id map found'));
+
+// Conflict
+next(createError(409, 'Local id already exists')); 
+
+// Authentication required
+next(createError(401, 'You must be logged in to access this.'));
+
+// Insufficient permissions
+next(createError(403, 'You do not have permission to access this.'));
+```
+
+## Middleware Chain Order
+```typescript
+router.use(ensureIsAdminHandler);        // Authentication first
+// Route definitions here
+router.use(logError(logger));            // Log errors
+router.use(errorHandler);                // Handle errors last
+```

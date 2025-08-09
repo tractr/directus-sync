@@ -1,0 +1,42 @@
+---
+description: Specifications services architecture and change guidelines
+globs: packages/cli/src/lib/services/specifications/**/*.ts
+---
+
+# Specifications Services – architecture and change guidelines
+
+Audience: Cursor agents working on `packages/cli/src/lib/services/specifications/**`
+
+Scope: Fetches and stores API specifications (GraphQL SDL and OpenAPI) from the Directus instance to the local dump folder when enabled by config.
+
+Core module
+- `specifications-client.ts` (SpecificationsClient):
+  - Initialized with dump path and enable flag via `ConfigService.getSpecificationsConfig()`.
+  - Uses `MigrationClient` to request:
+    - GraphQL SDL for `item` and `system` scopes (`readGraphqlSdl`)
+    - OpenAPI spec (`readOpenApiSpec`)
+  - Saves results to files under the dump path:
+    - `item.graphql`
+    - `system.graphql`
+    - `openapi.json`
+  - Ensures directories exist and previous files are removed before write.
+
+Behavioral rules
+- Respect the `enabled` flag; no-ops when disabled (commands still call the client, which checks the flag).
+- Always use the injected `LOGGER` via `getChildLogger(base, 'specifications')` for consistent logs.
+- Never hardcode paths; always derive from `ConfigService`.
+
+Extending or changing behavior
+- If additional spec formats are needed, add new protected fetch and save methods; gate them behind config as appropriate.
+- Prefer streaming writes for very large payloads, but for current sizes, buffered writes are acceptable.
+
+Testing guidance (recommended)
+- Mock `MigrationClient` to return deterministic GraphQL and OpenAPI fixtures; assert files are written with expected contents and that `enabled=false` performs no writes.
+
+Common pitfalls to avoid
+- Writing when `enabled=false`
+- Forgetting to `mkdirpSync` before writes or to remove stale files
+- Not using `writeJsonSync` with spaces for OpenAPI to keep diffs readable
+
+References
+- Usage context: `https://tractr.github.io/directus-sync/docs/getting-started/usage/`
