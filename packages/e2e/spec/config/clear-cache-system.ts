@@ -9,5 +9,3 @@ export const clearCacheSystem = (context: Context) => {
     expect(Array.isArray(output)).toBeTrue();
   });
 };
-
-

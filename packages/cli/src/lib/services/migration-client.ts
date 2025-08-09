@@ -51,12 +51,23 @@ export class MigrationClient {
   async clearCache() {
     const directus = await this.get();
     await directus.request(clearCache());
-    // Clear system cache as well when endpoint is available
+    await this.tryClearSystemCache();
+    this.logger.debug('Cache cleared');
+  }
+
+  /**
+   * Best-effort clearing of the Directus system cache.
+   * Uses the SDK helper when available; otherwise logs a debug note.
+   */
+  protected async tryClearSystemCache() {
     try {
-      const clearSystem = (DirectusSdk as unknown as {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        clearSystemCache?: () => any;
-      }).clearSystemCache;
+      const directus = await this.get();
+      const clearSystem = (
+        DirectusSdk as unknown as {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          clearSystemCache?: () => any;
+        }
+      ).clearSystemCache;
       if (typeof clearSystem === 'function') {
         await directus.request(clearSystem());
         this.logger.debug('System cache cleared');
@@ -67,7 +78,6 @@ export class MigrationClient {
         'System cache clear not supported by this Directus version',
       );
     }
-    this.logger.debug('Cache cleared');
   }
 
   protected async createClient() {
