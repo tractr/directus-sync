@@ -14,7 +14,7 @@ export class PermissionsDataLoader extends DataLoader<DirectusPermission> {
       `${PERMISSIONS_COLLECTION}.json`,
     );
     const hooks = config.getCollectionHooksConfig(PERMISSIONS_COLLECTION);
-    super(filePath, migrationClient, hooks);
+    super(filePath, migrationClient, hooks, config);
   }
 
   protected getSortFunction(): (

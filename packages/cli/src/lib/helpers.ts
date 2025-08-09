@@ -4,7 +4,7 @@ import {
   readdirSync,
   readJsonSync,
   statSync,
-  writeJsonSync,
+  writeJsonSync as writeJsonSyncFs,
 } from 'fs-extra';
 import { z, ZodError, ZodSchema } from 'zod';
 import pino, { LoggerOptions } from 'pino';
@@ -154,7 +154,11 @@ export function sortObjectDeep<T>(value: T): T {
 /**
  * Write JSON to disk with stable key ordering.
  */
-export function writeOrderedJsonSync(filePath: string, data: unknown) {
-  const ordered = sortObjectDeep(data);
-  writeJsonSync(filePath, ordered, { spaces: 2 });
+export function writeJsonSync(
+  filePath: string,
+  data: unknown,
+  sort: boolean,
+) {
+  const payload = sort ? sortObjectDeep(data) : data;
+  writeJsonSyncFs(filePath, payload, { spaces: 2 });
 }

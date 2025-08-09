@@ -14,7 +14,7 @@ export class OperationsDataLoader extends DataLoader<DirectusOperation> {
       `${OPERATIONS_COLLECTION}.json`,
     );
     const hooks = config.getCollectionHooksConfig(OPERATIONS_COLLECTION);
-    super(filePath, migrationClient, hooks);
+    super(filePath, migrationClient, hooks, config);
   }
 
   protected getSortFunction(): (

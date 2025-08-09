@@ -15,6 +15,6 @@ export class TranslationsDataLoader extends DataLoader<DirectusTranslation> {
       `${TRANSLATIONS_COLLECTION}.json`,
     );
     const hooks = config.getCollectionHooksConfig(TRANSLATIONS_COLLECTION);
-    super(filePath, migrationClient, hooks);
+    super(filePath, migrationClient, hooks, config);
   }
 }

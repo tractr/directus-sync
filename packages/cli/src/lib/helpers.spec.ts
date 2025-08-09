@@ -48,7 +48,10 @@ describe('sortObjectDeep', () => {
       a: {
         d: 4,
         c: 3,
-        e: [{ z: 1, y: 2 }, { b: 2, a: 1 }],
+        e: [
+          { z: 1, y: 2 },
+          { b: 2, a: 1 },
+        ],
       },
     };
 

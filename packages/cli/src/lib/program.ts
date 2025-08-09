@@ -106,6 +106,10 @@ export function createProgram() {
       ', ',
     )})`,
   );
+  const sortJsonOption = new Option(
+    '--sort-json',
+    `sort JSON keys when saving files (default "${DefaultConfig.sortJson}")`,
+  );
 
   // Shared options
   const dumpPathOption = new Option(
@@ -169,6 +173,7 @@ export function createProgram() {
   program
     .version(getVersion())
     .addOption(debugOption)
+    .addOption(sortJsonOption)
     .addOption(directusUrlOption)
     .addOption(directusTokenOption)
     .addOption(directusEmailOption)

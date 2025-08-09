@@ -13,11 +13,7 @@ import {
 import { mkdirpSync, readJsonSync, removeSync } from 'fs-extra';
 import { LOGGER } from '../../constants';
 import pino from 'pino';
-import {
-  getChildLogger,
-  loadJsonFilesRecursively,
-  writeOrderedJsonSync,
-} from '../../helpers';
+import { getChildLogger, loadJsonFilesRecursively, writeJsonSync } from '../../helpers';
 import { ConfigService, SnapshotHooks } from '../config';
 import { Cacheable } from 'typescript-cacheable';
 
@@ -39,6 +35,8 @@ export class SnapshotClient {
 
   protected readonly hooks: SnapshotHooks;
 
+  protected readonly sortJson: boolean;
+
   constructor(
     config: ConfigService,
     @Inject(LOGGER) baseLogger: pino.Logger,
@@ -50,6 +48,7 @@ export class SnapshotClient {
     this.splitFiles = splitFiles;
     this.force = force;
     this.hooks = config.getSnapshotHooksConfig();
+    this.sortJson = config.shouldSortJson();
   }
 
   /**
@@ -147,12 +146,12 @@ export class SnapshotClient {
         const filePath = path.join(this.dumpPath, file.path);
         const dirPath = path.dirname(filePath);
         mkdirpSync(dirPath);
-        writeOrderedJsonSync(filePath, file.content);
+        writeJsonSync(filePath, file.content, this.sortJson);
       }
       return files.length;
     } else {
       const filePath = path.join(this.dumpPath, SNAPSHOT_JSON);
-      writeOrderedJsonSync(filePath, data);
+      writeJsonSync(filePath, data, this.sortJson);
       return 1;
     }
   }

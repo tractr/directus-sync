@@ -9,7 +9,7 @@ import path from 'path';
 import { mkdirpSync, removeSync } from 'fs-extra';
 import { LOGGER } from '../../constants';
 import pino from 'pino';
-import { getChildLogger, writeOrderedJsonSync } from '../../helpers';
+import { getChildLogger, writeJsonSync } from '../../helpers';
 import { ConfigService } from '../config';
 import { writeFileSync } from 'node:fs';
 
@@ -91,6 +91,6 @@ export class SpecificationsClient {
     mkdirpSync(this.dumpPath);
     const filePath = path.join(this.dumpPath, OPENAPI_FILENAME);
     removeSync(filePath);
-    writeOrderedJsonSync(filePath, data);
+    writeJsonSync(filePath, data, false);
   }
 }

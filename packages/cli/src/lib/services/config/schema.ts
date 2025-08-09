@@ -96,6 +96,8 @@ export const OptionsFields = {
       restConfig: RestConfigSchema.optional(),
     })
     .optional(),
+  // JSON output
+  sortJson: z.boolean(),
   // Pull, diff, push
   dumpPath: z.string(),
   maxPushRetries: z.number().or(z.string().transform(Number)),
@@ -144,6 +146,8 @@ export const ConfigFileOptionsSchema = z.object({
       restConfig: RestConfigSchema.optional(),
     })
     .optional(),
+  // JSON output
+  sortJson: OptionsFields.sortJson.optional(),
   // Dump config
   dumpPath: OptionsFields.dumpPath.optional(),
   maxPushRetries: OptionsFields.maxPushRetries.optional(),
