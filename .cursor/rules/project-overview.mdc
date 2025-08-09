@@ -37,6 +37,7 @@ Packages
 
 - `website` (Documentation)
   - Docusaurus site documenting installation, features, and how the sync works.
+  - When updating the CLI help outputs, build the whole project (`npm run build` at the root), then run `npm run update-help-outputs` to update the help outputs in the website.
 
 Other top-level
 - `docker/`: build/publish scripts and Dockerfile for distributing Directus with the extension.
