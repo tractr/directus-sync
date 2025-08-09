@@ -6,10 +6,10 @@ import {
   readOpenApiSpec,
 } from '@directus/sdk';
 import path from 'path';
-import { mkdirpSync, removeSync, writeJsonSync } from 'fs-extra';
+import { mkdirpSync, removeSync } from 'fs-extra';
 import { LOGGER } from '../../constants';
 import pino from 'pino';
-import { getChildLogger } from '../../helpers';
+import { getChildLogger, writeOrderedJsonSync } from '../../helpers';
 import { ConfigService } from '../config';
 import { writeFileSync } from 'node:fs';
 
@@ -91,6 +91,6 @@ export class SpecificationsClient {
     mkdirpSync(this.dumpPath);
     const filePath = path.join(this.dumpPath, OPENAPI_FILENAME);
     removeSync(filePath);
-    writeJsonSync(filePath, data, { spaces: 2 });
+    writeOrderedJsonSync(filePath, data);
   }
 }

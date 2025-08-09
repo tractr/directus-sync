@@ -10,10 +10,14 @@ import {
   SchemaDiffOutput,
   Snapshot,
 } from './interfaces';
-import { mkdirpSync, readJsonSync, removeSync, writeJsonSync } from 'fs-extra';
+import { mkdirpSync, readJsonSync, removeSync } from 'fs-extra';
 import { LOGGER } from '../../constants';
 import pino from 'pino';
-import { getChildLogger, loadJsonFilesRecursively } from '../../helpers';
+import {
+  getChildLogger,
+  loadJsonFilesRecursively,
+  writeOrderedJsonSync,
+} from '../../helpers';
 import { ConfigService, SnapshotHooks } from '../config';
 import { Cacheable } from 'typescript-cacheable';
 
@@ -143,12 +147,12 @@ export class SnapshotClient {
         const filePath = path.join(this.dumpPath, file.path);
         const dirPath = path.dirname(filePath);
         mkdirpSync(dirPath);
-        writeJsonSync(filePath, file.content, { spaces: 2 });
+        writeOrderedJsonSync(filePath, file.content);
       }
       return files.length;
     } else {
       const filePath = path.join(this.dumpPath, SNAPSHOT_JSON);
-      writeJsonSync(filePath, data, { spaces: 2 });
+      writeOrderedJsonSync(filePath, data);
       return 1;
     }
   }

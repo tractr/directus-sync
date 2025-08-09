@@ -1,7 +1,8 @@
 import { DirectusBaseType, WithSyncIdAndWithoutId } from './interfaces';
-import { readJsonSync, writeJsonSync } from 'fs-extra';
+import { readJsonSync } from 'fs-extra';
 import { CollectionHooks } from '../../config';
 import { MigrationClient } from '../../migration-client';
+import { writeOrderedJsonSync } from '../../../helpers';
 
 export abstract class DataLoader<DirectusType extends DirectusBaseType> {
   constructor(
@@ -33,7 +34,7 @@ export abstract class DataLoader<DirectusType extends DirectusBaseType> {
     const transformedData = onSave
       ? await onSave(data, await this.migrationClient.get())
       : data;
-    writeJsonSync(this.filePath, transformedData, { spaces: 2 });
+    writeOrderedJsonSync(this.filePath, transformedData);
   }
 
   /**
