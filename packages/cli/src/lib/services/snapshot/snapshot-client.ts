@@ -13,7 +13,11 @@ import {
 import { mkdirpSync, readJsonSync, removeSync } from 'fs-extra';
 import { LOGGER } from '../../constants';
 import pino from 'pino';
-import { getChildLogger, loadJsonFilesRecursively, writeJsonSync } from '../../helpers';
+import {
+  getChildLogger,
+  loadJsonFilesRecursively,
+  writeJsonSync,
+} from '../../helpers';
 import { ConfigService, SnapshotHooks } from '../config';
 import { Cacheable } from 'typescript-cacheable';
 

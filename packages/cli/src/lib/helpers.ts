@@ -154,11 +154,7 @@ export function sortObjectDeep<T>(value: T): T {
 /**
  * Write JSON to disk with stable key ordering.
  */
-export function writeJsonSync(
-  filePath: string,
-  data: unknown,
-  sort: boolean,
-) {
+export function writeJsonSync(filePath: string, data: unknown, sort: boolean) {
   const payload = sort ? sortObjectDeep(data) : data;
   writeJsonSyncFs(filePath, payload, { spaces: 2 });
 }
