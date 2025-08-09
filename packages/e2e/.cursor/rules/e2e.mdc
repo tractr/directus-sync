@@ -17,6 +17,10 @@ Running the tests
 - Then run the e2e test suite from `packages/e2e`: `npm test`.
 - To focus a single test, change `it('...')` to `fit('...')` in that spec; revert `fit` back to `it` once done.
 
+Log levels
+If you need to debug a test, you can change the log level to `debug` by setting the `LOG_LEVEL` environment variable to `debug` before running the tests,
+or by setting the LOG_LEVEL environment variable to `debug` in the `packages/e2e/.env` file. Don't forget to revert the log level to `fatal` after debugging.
+
 Execution model
 - Tests are sequential by design (avoid parallelism to prevent port and state conflicts).
 - `spec/start-server.ts` bootstraps env and starts Directus early when needed.

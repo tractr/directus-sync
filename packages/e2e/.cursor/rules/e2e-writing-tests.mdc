@@ -87,4 +87,4 @@ export const mySuite = (context: Context) => {
 ```
 
 Where to register
-- Export your suite from `spec/<area>/index.ts`, and ensure the top-level `spec/index.ts` imports that area’s index.
+- Export your suite from `spec/<area>/index.ts`, and ensure the top-level `spec/entrypoint.spec.ts` imports that area’s index.
