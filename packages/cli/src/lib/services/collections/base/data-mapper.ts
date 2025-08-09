@@ -76,6 +76,12 @@ export abstract class DataMapper<T> {
     if (!this.syncIdToLocalIdMappers) {
       const callback =
         (idMapper: IdMapperClient, field: string) => async (id: DirectusId) => {
+          if (id.toString().trim().startsWith('{{')) {
+            this.logger.info(
+              `Value '${id}' for field '${field}' is dynamic, skipping mapping.`,
+            );
+            return id;
+          }
           const idMap = await idMapper.getBySyncId(id.toString());
           if (!idMap) {
             this.logger.warn(
