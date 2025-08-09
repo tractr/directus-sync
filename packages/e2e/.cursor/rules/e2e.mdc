@@ -12,6 +12,11 @@ Environment and prerequisites
 - Requires `libvips` installed on the host (see README). Build CLI and extension before running tests: `npm run build` at repo root.
 - Jasmine executes compiled JS from `dist` with config `spec/support/jasmine.json`.
 
+Running the tests
+- From the repository root, build the CLI and API extension: `npm run build`.
+- Then run the e2e test suite from `packages/e2e`: `npm test`.
+- To focus a single test, change `it('...')` to `fit('...')` in that spec; revert `fit` back to `it` once done.
+
 Execution model
 - Tests are sequential by design (avoid parallelism to prevent port and state conflicts).
 - `spec/start-server.ts` bootstraps env and starts Directus early when needed.
