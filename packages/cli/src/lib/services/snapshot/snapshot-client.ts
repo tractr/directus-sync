@@ -15,7 +15,10 @@ import { loadJsonFilesRecursively, writeJsonSync } from '../../helpers';
 import { ConfigService, SnapshotHooks } from '../config';
 import { Cacheable } from 'typescript-cacheable';
 import { Logger, LoggerService } from '../logger';
-import { getDiffMessage, SnapshotDiff as DirectusSnapshotDiff } from './pretty-diff';
+import {
+  getDiffMessage,
+  SnapshotDiff as DirectusSnapshotDiff,
+} from './pretty-diff';
 
 const SNAPSHOT_JSON = 'snapshot.json';
 const INFO_JSON = 'info.json';
