@@ -34,6 +34,8 @@ export class SnapshotClient {
 
   protected readonly force: boolean;
 
+  protected readonly prettyDiff: boolean;
+
   protected readonly logger: Logger;
 
   protected readonly hooks: SnapshotHooks;
@@ -46,10 +48,12 @@ export class SnapshotClient {
     protected readonly migrationClient: MigrationClient,
   ) {
     this.logger = loggerService.getChild('snapshot');
-    const { dumpPath, splitFiles, force } = config.getSnapshotConfig();
+    const { dumpPath, splitFiles, force, prettyDiff } =
+      config.getSnapshotConfig();
     this.dumpPath = dumpPath;
     this.splitFiles = splitFiles;
     this.force = force;
+    this.prettyDiff = prettyDiff;
     this.hooks = config.getSnapshotHooksConfig();
     this.sortJson = config.shouldSortJson();
   }
@@ -122,8 +126,7 @@ export class SnapshotClient {
         this.logger.info('No changes in relations');
       }
 
-      const prettyPrint = false;
-      if (prettyPrint) {
+      if (this.prettyDiff) {
         this.logger.info(getDiffMessage(diff.diff as DirectusSnapshotDiff));
       } else {
         this.logger.debug(diff.diff, 'Diff');

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import type { Field, FieldMeta } from '@directus/types';
 import type { Diff } from 'deep-diff';
 import chalk from 'chalk';
@@ -15,14 +17,11 @@ const DiffKind = {
   /** indicates a change occurred within an array */
   ARRAY: 'A',
 } as const;
-export type SnapshotDiff = {
-  /** eslint-disable-next-line @typescript-eslint/no-explicit-any */
+export interface SnapshotDiff {
   collections: Record<string, any>[];
-  /** eslint-disable-next-line @typescript-eslint/no-explicit-any */
   fields: Record<string, any>[];
-  /** eslint-disable-next-line @typescript-eslint/no-explicit-any */
   relations: Record<string, any>[];
-};
+}
 // -------------------------------------------------------------------------------------------------
 
 /**
@@ -41,7 +40,7 @@ export function getDiffMessage(snapshotDiff: SnapshotDiff) {
 
         for (const change of diff) {
           if (change.kind === DiffKind.EDIT) {
-            const path = formatPath(change.path!);
+            const path = formatPath(change.path);
             lines.push(`    - Set ${path} to ${change.rhs}`);
           }
         }
@@ -61,11 +60,11 @@ export function getDiffMessage(snapshotDiff: SnapshotDiff) {
     const lines = [chalk.underline.bold('Fields:')];
 
     for (const { collection, field, diff } of snapshotDiff.fields) {
-      if (diff[0]?.kind === DiffKind.EDIT || isNestedMetaUpdate(diff[0]!)) {
+      if (diff[0]?.kind === DiffKind.EDIT || isNestedMetaUpdate(diff[0])) {
         lines.push(`  - ${chalk.magenta('Update')} ${collection}.${field}`);
 
         for (const change of diff) {
-          const path = formatPath(change.path!);
+          const path = formatPath(change.path);
 
           if (change.kind === DiffKind.EDIT) {
             lines.push(`    - Set ${path} to ${change.rhs}`);
@@ -105,7 +104,7 @@ export function getDiffMessage(snapshotDiff: SnapshotDiff) {
 
         for (const change of diff) {
           if (change.kind === DiffKind.EDIT) {
-            const path = formatPath(change.path!);
+            const path = formatPath(change.path);
             lines.push(`    - Set ${path} to ${change.rhs}`);
           }
         }

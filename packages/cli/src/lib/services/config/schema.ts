@@ -114,6 +114,8 @@ export const OptionsFields = {
   snapshotPath: z.string(),
   snapshot: z.boolean(),
   split: z.boolean(),
+  // Diff formatting
+  prettyDiff: z.boolean(),
   // Specifications
   specsPath: z.string(),
   specs: z.boolean(),

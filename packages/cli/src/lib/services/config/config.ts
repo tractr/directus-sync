@@ -65,6 +65,7 @@ export class ConfigService {
       splitFiles: this.requireOptions('split'),
       force: this.requireOptions('force'),
       enabled: this.requireOptions('snapshot'),
+      prettyDiff: this.requireOptions('prettyDiff'),
     };
   }
 

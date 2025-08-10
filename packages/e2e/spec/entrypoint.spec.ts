@@ -15,6 +15,7 @@ import {
   pushWithExistingUuid,
   pushWithUserPolicyAssignment,
   pushWithRolePolicyAssignmentChanges,
+  prettyDiffOutput,
 } from './pull-diff-push/index.js';
 import { sortJson } from './pull-diff-push/sort-json.js';
 import { pushWithDependencies } from './dependencies/index.js';
@@ -78,7 +79,7 @@ describe('Tests entrypoint ->', () => {
   pullBasic(context);
   pushFlushAndPush(context);
   pullWithNewData(context);
-  // Verify CLI JSON sorting option
+  prettyDiffOutput(context);
   sortJson(context);
   pushOnEmptyInstance(context);
   pushTwiceOnEmptyInstance(context);
