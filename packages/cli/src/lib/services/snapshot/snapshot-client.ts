@@ -1,4 +1,4 @@
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { MigrationClient } from '../migration-client';
 import { schemaApply, schemaDiff, schemaSnapshot } from '@directus/sdk';
 import path from 'path';
@@ -11,15 +11,10 @@ import {
   Snapshot,
 } from './interfaces';
 import { mkdirpSync, readJsonSync, removeSync } from 'fs-extra';
-import { LOGGER } from '../../constants';
-import pino from 'pino';
-import {
-  getChildLogger,
-  loadJsonFilesRecursively,
-  writeJsonSync,
-} from '../../helpers';
+import { loadJsonFilesRecursively, writeJsonSync } from '../../helpers';
 import { ConfigService, SnapshotHooks } from '../config';
 import { Cacheable } from 'typescript-cacheable';
+import { Logger, LoggerService } from '../logger';
 
 const SNAPSHOT_JSON = 'snapshot.json';
 const INFO_JSON = 'info.json';
@@ -35,7 +30,7 @@ export class SnapshotClient {
 
   protected readonly force: boolean;
 
-  protected readonly logger: pino.Logger;
+  protected readonly logger: Logger;
 
   protected readonly hooks: SnapshotHooks;
 
@@ -43,10 +38,10 @@ export class SnapshotClient {
 
   constructor(
     config: ConfigService,
-    @Inject(LOGGER) baseLogger: pino.Logger,
+    loggerService: LoggerService,
     protected readonly migrationClient: MigrationClient,
   ) {
-    this.logger = getChildLogger(baseLogger, 'snapshot');
+    this.logger = loggerService.getChild('snapshot');
     const { dumpPath, splitFiles, force } = config.getSnapshotConfig();
     this.dumpPath = dumpPath;
     this.splitFiles = splitFiles;

@@ -1,9 +1,7 @@
 import { DataMapper, Field, IdMappers } from '../base';
-import { Container, Inject, Service } from 'typedi';
-import pino from 'pino';
-import { getChildLogger } from '../../../helpers';
+import { Container, Service } from 'typedi';
+import { LoggerService } from '../../logger';
 import { PoliciesIdMapperClient } from '../policies';
-import { LOGGER } from '../../../constants';
 import { PERMISSIONS_COLLECTION } from './constants';
 import { DirectusPermission } from './interfaces';
 
@@ -14,7 +12,7 @@ export class PermissionsDataMapper extends DataMapper<DirectusPermission> {
     policy: Container.get(PoliciesIdMapperClient),
   };
 
-  constructor(@Inject(LOGGER) baseLogger: pino.Logger) {
-    super(getChildLogger(baseLogger, PERMISSIONS_COLLECTION));
+  constructor(loggerService: LoggerService) {
+    super(loggerService.getChild(PERMISSIONS_COLLECTION));
   }
 }

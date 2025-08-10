@@ -9,10 +9,12 @@ export type LogLevel =
   | 'fatal'
   | 'silent';
 
-export type LoggerConfig = {
-  transport: LoggerOptions['transport'];
-  level: LevelWithSilentOrString;
-};
+export type LoggerConfigTransport = LoggerOptions['transport'];
+export type LoggerConfigLevel = LevelWithSilentOrString;
+export interface LoggerConfig {
+  transport: LoggerConfigTransport;
+  level: LoggerConfigLevel;
+}
 
 export interface LoggerWorker {
   info(object_or_message: object | string, message?: string): void;

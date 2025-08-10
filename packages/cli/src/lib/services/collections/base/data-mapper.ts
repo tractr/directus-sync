@@ -4,9 +4,9 @@ import {
   IdMappers,
   WithSyncIdAndWithoutId,
 } from './interfaces';
-import pino from 'pino';
 import { IdMapperClient } from './id-mapper-client';
 import { applyMappers, bindMappers, Item, MapperRecord } from './helpers';
+import { Logger } from '../../logger';
 
 export abstract class DataMapper<T> {
   /**
@@ -29,7 +29,7 @@ export abstract class DataMapper<T> {
    */
   protected syncIdToLocalIdMappers: MapperRecord | undefined;
 
-  constructor(protected readonly logger: pino.Logger) {}
+  constructor(protected readonly logger: Logger) {}
 
   /**
    * Returns the items with the ids mapped to the sync ids,

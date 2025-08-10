@@ -1,10 +1,5 @@
-import { Inject, Service } from 'typedi';
-import { LOGGER } from '../../../constants';
-import pino from 'pino';
-import {
-  getChildLogger,
-  loadJsonFilesRecursivelyWithSchema,
-} from '../../../helpers';
+import { Service } from 'typedi';
+import { loadJsonFilesRecursivelyWithSchema } from '../../../helpers';
 import { ConfigService } from '../../config';
 import { Seed, SeedsFileSchema } from '../interfaces';
 import * as Fs from 'fs-extra';
@@ -13,16 +8,17 @@ import {
   DirectusNativeStructure,
   SupportedDirectusCollections,
 } from './directus-structure';
+import { LoggerService, Logger } from '../../logger';
 
 @Service({ global: true })
 export class SeedLoader {
-  protected readonly logger: pino.Logger;
+  protected readonly logger: Logger;
 
   constructor(
-    @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
+    protected readonly loggerService: LoggerService,
     protected readonly config: ConfigService,
   ) {
-    this.logger = getChildLogger(baseLogger, 'seed-loader');
+    this.logger = this.loggerService.getChild('seed-loader');
   }
 
   @Cacheable()

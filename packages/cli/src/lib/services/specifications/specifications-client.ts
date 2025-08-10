@@ -1,4 +1,4 @@
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { MigrationClient } from '../migration-client';
 import {
   OpenApiSpecOutput,
@@ -7,11 +7,10 @@ import {
 } from '@directus/sdk';
 import path from 'path';
 import { mkdirpSync, removeSync } from 'fs-extra';
-import { LOGGER } from '../../constants';
-import pino from 'pino';
-import { getChildLogger, writeJsonSync } from '../../helpers';
+import { writeJsonSync } from '../../helpers';
 import { ConfigService } from '../config';
 import { writeFileSync } from 'node:fs';
+import { Logger, LoggerService } from '../logger';
 
 const ITEM_GRAPHQL_FILENAME = 'item.graphql';
 const SYSTEM_GRAPHQL_FILENAME = 'system.graphql';
@@ -23,14 +22,14 @@ export class SpecificationsClient {
 
   protected readonly enabled: boolean;
 
-  protected readonly logger: pino.Logger;
+  protected readonly logger: Logger;
 
   constructor(
     config: ConfigService,
-    @Inject(LOGGER) baseLogger: pino.Logger,
+    loggerService: LoggerService,
     protected readonly migrationClient: MigrationClient,
   ) {
-    this.logger = getChildLogger(baseLogger, 'specifications');
+    this.logger = loggerService.getChild('specifications');
     const { dumpPath, enabled } = config.getSpecificationsConfig();
     this.dumpPath = dumpPath;
     this.enabled = enabled;

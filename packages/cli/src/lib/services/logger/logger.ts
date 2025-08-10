@@ -1,8 +1,8 @@
 import { LoggerWorker, LogLevel } from './interfaces';
 
-export abstract class Logger<T extends LoggerWorker> {
+export abstract class Logger implements LoggerWorker {
 
-  protected readonly abstract worker: T;
+  protected abstract readonly worker: LoggerWorker;
 
   protected log(
     level: LogLevel,
@@ -58,5 +58,5 @@ export abstract class Logger<T extends LoggerWorker> {
     this.worker.flush();
   }
 
-  abstract getChild(prefix: string): T;
+  abstract getChild(prefix: string): Logger;
 }

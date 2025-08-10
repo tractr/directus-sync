@@ -1,4 +1,4 @@
-import { DictionaryValues } from 'ts-essentials';
+import { ValueOf } from 'ts-essentials';
 import {
   CollectionRecord,
   CollectionsList,
@@ -16,34 +16,20 @@ import {
   TranslationsCollection,
   LoggerService,
 } from './services';
-import { createDumpFolders, getPinoTransport } from './helpers';
+import { createDumpFolders } from './helpers';
 import { Container, Token } from 'typedi';
-import { LOGGER_CONFIG } from './constants';
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function initContext(
   programOptions: object,
   commandOptions: object,
 ) {
-  // Set temporary logger. This allows the config process to log infos and errors
-  Container.set(LOGGER_CONFIG, {
-    transport: getPinoTransport(),
-    level: 'info',
-  });
-  const tempLogger = Container.get(LoggerService);
   // Get the config service
   const config = Container.get(ConfigService);
   // Set the options
   config.setOptions(programOptions, commandOptions);
-  // Flush previous logs
-  tempLogger.flush();
-  // Define the new logger config
-  Container.set(LOGGER_CONFIG, {
-    transport: getPinoTransport(),
-    level: config.getLoggerConfig().level,
-  });
-  // Drop the temporary logger. It will recreated on next call
-  Container.remove(LoggerService);
+  // Set the logger level from the config
+  Container.get(LoggerService).setLevel(config.getLoggerConfig().level);
 
   createDumpFolders();
 }
@@ -69,7 +55,7 @@ export function loadCollections() {
     presets: PresetsCollection,
   } as const satisfies CollectionRecord<unknown>;
   type CollectionInstance = InstanceType<
-    DictionaryValues<typeof collectionsConstructors>
+    ValueOf<typeof collectionsConstructors>
   >;
 
   // Get the collections to process

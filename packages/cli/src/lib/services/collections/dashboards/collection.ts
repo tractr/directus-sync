@@ -1,14 +1,12 @@
 import { DirectusCollection } from '../base';
-import pino from 'pino';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { DashboardsDataLoader } from './data-loader';
 import { DashboardsDataClient } from './data-client';
 import { DashboardsIdMapperClient } from './id-mapper-client';
 import { DashboardsDataDiffer } from './data-differ';
-import { getChildLogger } from '../../../helpers';
+import { LoggerService } from '../../logger';
 import { DASHBOARDS_COLLECTION } from './constants';
 import { DashboardsDataMapper } from './data-mapper';
-import { LOGGER } from '../../../constants';
 import { DirectusDashboard } from './interfaces';
 import { ConfigService } from '../../config';
 import { MigrationClient } from '../../migration-client';
@@ -20,7 +18,7 @@ export class DashboardsCollection extends DirectusCollection<DirectusDashboard> 
   protected readonly enableDelete = true;
 
   constructor(
-    @Inject(LOGGER) baseLogger: pino.Logger,
+    loggerService: LoggerService,
     dataDiffer: DashboardsDataDiffer,
     dataLoader: DashboardsDataLoader,
     dataClient: DashboardsDataClient,
@@ -30,7 +28,7 @@ export class DashboardsCollection extends DirectusCollection<DirectusDashboard> 
     migrationClient: MigrationClient,
   ) {
     super(
-      getChildLogger(baseLogger, DASHBOARDS_COLLECTION),
+      loggerService.getChild(DASHBOARDS_COLLECTION),
       dataDiffer,
       dataLoader,
       dataClient,

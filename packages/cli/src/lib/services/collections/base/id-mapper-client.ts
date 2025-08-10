@@ -1,6 +1,6 @@
 import { MigrationClient } from '../../migration-client';
 import { ExtensionClient, NO_ID_MAP_MESSAGE } from '../../extension-client';
-import pino from 'pino';
+import { Logger } from '../../logger';
 
 export interface IdMap {
   id: number;
@@ -24,7 +24,7 @@ export abstract class IdMapperClient extends ExtensionClient {
 
   constructor(
     migrationClient: MigrationClient,
-    protected readonly logger: pino.Logger,
+    protected readonly logger: Logger,
     protected readonly table: string,
   ) {
     super(migrationClient);

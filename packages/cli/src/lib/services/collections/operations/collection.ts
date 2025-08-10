@@ -1,14 +1,12 @@
 import { DirectusCollection } from '../base';
-import pino from 'pino';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { OperationsDataLoader } from './data-loader';
 import { OperationsDataClient } from './data-client';
 import { OperationsIdMapperClient } from './id-mapper-client';
 import { OperationsDataDiffer } from './data-differ';
-import { getChildLogger } from '../../../helpers';
+import { LoggerService } from '../../logger';
 import { OPERATIONS_COLLECTION } from './constants';
 import { OperationsDataMapper } from './data-mapper';
-import { LOGGER } from '../../../constants';
 import { DirectusOperation } from './interfaces';
 import { ConfigService } from '../../config';
 import { MigrationClient } from '../../migration-client';
@@ -20,7 +18,7 @@ export class OperationsCollection extends DirectusCollection<DirectusOperation> 
   protected readonly enableDelete = true;
 
   constructor(
-    @Inject(LOGGER) baseLogger: pino.Logger,
+    loggerService: LoggerService,
     dataDiffer: OperationsDataDiffer,
     dataLoader: OperationsDataLoader,
     dataClient: OperationsDataClient,
@@ -30,7 +28,7 @@ export class OperationsCollection extends DirectusCollection<DirectusOperation> 
     migrationClient: MigrationClient,
   ) {
     super(
-      getChildLogger(baseLogger, OPERATIONS_COLLECTION),
+      loggerService.getChild(OPERATIONS_COLLECTION),
       dataDiffer,
       dataLoader,
       dataClient,

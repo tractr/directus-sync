@@ -1,20 +1,15 @@
 import { DataClient, Query, WithoutIdAndSyncId } from '../base';
 import { createFlow, deleteFlow, readFlows, updateFlow } from '@directus/sdk';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { MigrationClient } from '../../migration-client';
 import { DirectusFlow } from './interfaces';
-import { LOGGER } from '../../../constants';
-import pino from 'pino';
-import { getChildLogger } from '../../../helpers';
+import { LoggerService } from '../../logger';
 import { FLOWS_COLLECTION } from './constants';
 
 @Service()
 export class FlowsDataClient extends DataClient<DirectusFlow> {
-  constructor(
-    @Inject(LOGGER) baseLogger: pino.Logger,
-    migrationClient: MigrationClient,
-  ) {
-    super(getChildLogger(baseLogger, FLOWS_COLLECTION), migrationClient);
+  constructor(loggerService: LoggerService, migrationClient: MigrationClient) {
+    super(loggerService.getChild(FLOWS_COLLECTION), migrationClient);
   }
 
   protected getDeleteCommand(itemId: string) {

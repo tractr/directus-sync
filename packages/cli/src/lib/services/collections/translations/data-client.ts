@@ -5,21 +5,16 @@ import {
   readTranslations,
   updateTranslation,
 } from '@directus/sdk';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { MigrationClient } from '../../migration-client';
 import { DirectusTranslation } from './interfaces';
-import { LOGGER } from '../../../constants';
-import pino from 'pino';
-import { getChildLogger } from '../../../helpers';
+import { LoggerService } from '../../logger';
 import { TRANSLATIONS_COLLECTION } from './constants';
 
 @Service()
 export class TranslationsDataClient extends DataClient<DirectusTranslation> {
-  constructor(
-    @Inject(LOGGER) baseLogger: pino.Logger,
-    migrationClient: MigrationClient,
-  ) {
-    super(getChildLogger(baseLogger, TRANSLATIONS_COLLECTION), migrationClient);
+  constructor(loggerService: LoggerService, migrationClient: MigrationClient) {
+    super(loggerService.getChild(TRANSLATIONS_COLLECTION), migrationClient);
   }
 
   protected getDeleteCommand(itemId: string) {

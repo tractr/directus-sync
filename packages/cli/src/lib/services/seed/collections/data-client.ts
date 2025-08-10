@@ -1,26 +1,24 @@
 import { DirectusId, Query } from '../../collections';
 import { DirectusUnknownType } from '../../interfaces';
 import { MigrationClient } from '../../migration-client';
-import pino from 'pino';
-import { getChildLogger } from '../../../helpers';
 import { Inject, Service } from 'typedi';
-import { LOGGER } from '../../../constants';
 import { COLLECTION, SCHEMA_CLIENT } from '../constants';
 import deepmerge from 'deepmerge';
 import { createOne, deleteOne, readMany, updateOne } from './requests';
 import { SchemaClient, Type } from '../global';
+import { LoggerService, Logger } from '../../logger';
 
 @Service()
 export class SeedDataClient {
-  protected readonly logger: pino.Logger;
+  protected readonly logger: Logger;
 
   constructor(
-    @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
+    protected readonly loggerService: LoggerService,
     protected readonly migrationClient: MigrationClient,
     @Inject(SCHEMA_CLIENT) protected readonly schemaClient: SchemaClient,
     @Inject(COLLECTION) protected readonly collection: string,
   ) {
-    this.logger = getChildLogger(baseLogger, collection);
+    this.logger = this.loggerService.getChild(collection);
   }
 
   /**

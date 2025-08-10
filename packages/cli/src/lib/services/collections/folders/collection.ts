@@ -1,14 +1,12 @@
 import { DirectusCollection } from '../base';
-import pino from 'pino';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { FoldersDataLoader } from './data-loader';
 import { FoldersDataClient } from './data-client';
 import { FoldersIdMapperClient } from './id-mapper-client';
 import { FoldersDataDiffer } from './data-differ';
-import { getChildLogger } from '../../../helpers';
+import { LoggerService } from '../../logger';
 import { FOLDERS_COLLECTION } from './constants';
 import { FoldersDataMapper } from './data-mapper';
-import { LOGGER } from '../../../constants';
 import { DirectusFolder } from './interfaces';
 import { ConfigService } from '../../config';
 import { MigrationClient } from '../../migration-client';
@@ -22,7 +20,7 @@ export class FoldersCollection extends DirectusCollection<DirectusFolder> {
   protected readonly preserveIds = true;
 
   constructor(
-    @Inject(LOGGER) baseLogger: pino.Logger,
+    loggerService: LoggerService,
     dataDiffer: FoldersDataDiffer,
     dataLoader: FoldersDataLoader,
     dataClient: FoldersDataClient,
@@ -32,7 +30,7 @@ export class FoldersCollection extends DirectusCollection<DirectusFolder> {
     migrationClient: MigrationClient,
   ) {
     super(
-      getChildLogger(baseLogger, FOLDERS_COLLECTION),
+      loggerService.getChild(FOLDERS_COLLECTION),
       dataDiffer,
       dataLoader,
       dataClient,

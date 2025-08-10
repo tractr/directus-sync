@@ -1,9 +1,7 @@
 import { DataMapper, Field, IdMappers } from '../base';
-import { Container, Inject, Service } from 'typedi';
-import pino from 'pino';
-import { getChildLogger } from '../../../helpers';
+import { Container, Service } from 'typedi';
+import { LoggerService } from '../../logger';
 import { DashboardsIdMapperClient } from '../dashboards';
-import { LOGGER } from '../../../constants';
 import { PANELS_COLLECTION } from './constants';
 import { DirectusPanel } from './interfaces';
 
@@ -17,7 +15,7 @@ export class PanelsDataMapper extends DataMapper<DirectusPanel> {
     dashboard: Container.get(DashboardsIdMapperClient),
   };
 
-  constructor(@Inject(LOGGER) baseLogger: pino.Logger) {
-    super(getChildLogger(baseLogger, PANELS_COLLECTION));
+  constructor(loggerService: LoggerService) {
+    super(loggerService.getChild(PANELS_COLLECTION));
   }
 }

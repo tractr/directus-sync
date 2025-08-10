@@ -1,14 +1,12 @@
 import { DirectusCollection } from '../base';
-import pino from 'pino';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { TranslationsDataLoader } from './data-loader';
 import { TranslationsDataClient } from './data-client';
 import { TranslationsIdMapperClient } from './id-mapper-client';
 import { TranslationsDataDiffer } from './data-differ';
-import { getChildLogger } from '../../../helpers';
+import { LoggerService } from '../../logger';
 import { TRANSLATIONS_COLLECTION } from './constants';
 import { TranslationsDataMapper } from './data-mapper';
-import { LOGGER } from '../../../constants';
 import { DirectusTranslation } from './interfaces';
 import { ConfigService } from '../../config';
 import { MigrationClient } from '../../migration-client';
@@ -20,7 +18,7 @@ export class TranslationsCollection extends DirectusCollection<DirectusTranslati
   protected readonly enableDelete = true;
 
   constructor(
-    @Inject(LOGGER) baseLogger: pino.Logger,
+    loggerService: LoggerService,
     dataDiffer: TranslationsDataDiffer,
     dataLoader: TranslationsDataLoader,
     dataClient: TranslationsDataClient,
@@ -30,7 +28,7 @@ export class TranslationsCollection extends DirectusCollection<DirectusTranslati
     migrationClient: MigrationClient,
   ) {
     super(
-      getChildLogger(baseLogger, TRANSLATIONS_COLLECTION),
+      loggerService.getChild(TRANSLATIONS_COLLECTION),
       dataDiffer,
       dataLoader,
       dataClient,

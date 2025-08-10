@@ -1,9 +1,7 @@
 import { DataMapper, Field, IdMappers } from '../base';
 
-import { Container, Inject, Service } from 'typedi';
-import pino from 'pino';
-import { getChildLogger } from '../../../helpers';
-import { LOGGER } from '../../../constants';
+import { Container, Service } from 'typedi';
+import { LoggerService } from '../../logger';
 import { SETTINGS_COLLECTION } from './constants';
 import { DirectusSettings } from './interfaces';
 import { RolesIdMapperClient } from '../roles';
@@ -26,7 +24,7 @@ export class SettingsDataMapper extends DataMapper<DirectusSettings> {
       storage_default_folder: Container.get(FoldersIdMapperClient),
     };
 
-  constructor(@Inject(LOGGER) baseLogger: pino.Logger) {
-    super(getChildLogger(baseLogger, SETTINGS_COLLECTION));
+  constructor(loggerService: LoggerService) {
+    super(loggerService.getChild(SETTINGS_COLLECTION));
   }
 }
