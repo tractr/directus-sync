@@ -10,7 +10,12 @@ import { z, ZodError, ZodSchema } from 'zod';
 import { Container } from 'typedi';
 import path from 'path';
 import { LOGGER_TRANSPORT } from './constants';
-import { ConfigService, LoggerService, LoggerConfigTransport, Logger } from './services';
+import {
+  ConfigService,
+  LoggerService,
+  LoggerConfigTransport,
+  Logger,
+} from './services';
 
 export function createDumpFolders() {
   const logger = Container.get(LoggerService);

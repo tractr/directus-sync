@@ -2,7 +2,9 @@ import { createProgram, Logger, LoggerService, LOGGER_TRANSPORT } from './lib';
 import { Container } from 'typedi';
 
 function getLogger(): Logger | Console {
-  return Container.has(LOGGER_TRANSPORT) ? Container.get(LoggerService) : console;
+  return Container.has(LOGGER_TRANSPORT)
+    ? Container.get(LoggerService)
+    : console;
 }
 
 export function run() {

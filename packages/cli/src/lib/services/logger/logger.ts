@@ -1,7 +1,6 @@
 import { LoggerWorker, LogLevel } from './interfaces';
 
 export abstract class Logger implements LoggerWorker {
-
   protected abstract readonly worker: LoggerWorker;
 
   protected log(

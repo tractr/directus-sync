@@ -17,7 +17,7 @@ export class RolesIdMapperClient extends IdMapperClient {
   constructor(migrationClient: MigrationClient, loggerService: LoggerService) {
     super(
       migrationClient,
-      loggerService.getChild(ROLES_COLLECTION), 
+      loggerService.getChild(ROLES_COLLECTION),
       ROLES_COLLECTION,
     );
   }

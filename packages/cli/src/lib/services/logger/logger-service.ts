@@ -24,5 +24,4 @@ export class LoggerService extends PinoLogger {
       },
     };
   }
-  
 }
