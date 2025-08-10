@@ -13,12 +13,11 @@ import {
 import Path from 'path';
 import { Cacheable } from 'typescript-cacheable';
 import { ConfigFileLoader } from './config-file-loader';
-import { getChildLogger, zodParse } from '../../helpers';
+import { zodParse } from '../../helpers';
 import deepmerge from 'deepmerge';
 import { DefaultConfig, DefaultConfigPaths } from './default-config';
 import { CollectionsList, OptionsSchema } from './schema';
-import { LOGGER } from '../../constants';
-import pino from 'pino';
+import { LoggerService } from '../logger';
 
 @Service({ global: true })
 export class ConfigService {
@@ -239,7 +238,7 @@ export class ConfigService {
    * See loader.ts file for more information
    */
   protected getLogger() {
-    const baseLogger = Container.get<pino.Logger>(LOGGER);
-    return getChildLogger(baseLogger, 'config');
+    const logger = Container.get(LoggerService);
+    return logger.getChild('config');
   }
 }

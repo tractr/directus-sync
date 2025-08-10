@@ -6,7 +6,7 @@ import {
   readPolicy,
   updatePolicy,
 } from '@directus/sdk';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { MigrationClient } from '../../migration-client';
 import {
   BaseDirectusPolicy,
@@ -14,19 +14,14 @@ import {
   DirectusPolicyAccess,
   PolicyRolesDiff,
 } from './interfaces';
-import { LOGGER } from '../../../constants';
-import pino from 'pino';
-import { getChildLogger } from '../../../helpers';
+import { LoggerService } from '../../logger';
 import { POLICIES_COLLECTION } from './constants';
 import deepmerge from 'deepmerge';
 
 @Service()
 export class PoliciesDataClient extends DataClient<DirectusPolicy> {
-  constructor(
-    @Inject(LOGGER) baseLogger: pino.Logger,
-    migrationClient: MigrationClient,
-  ) {
-    super(getChildLogger(baseLogger, POLICIES_COLLECTION), migrationClient);
+  constructor(loggerService: LoggerService, migrationClient: MigrationClient) {
+    super(loggerService.getChild(POLICIES_COLLECTION), migrationClient);
   }
 
   protected getDeleteCommand(itemId: string) {

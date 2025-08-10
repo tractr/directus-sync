@@ -1,21 +1,19 @@
-import Container, { ContainerInstance, Inject, Service } from 'typedi';
-import { LOGGER } from '../../../constants';
+import Container, { ContainerInstance, Service } from 'typedi';
 import { COLLECTION, META } from '../constants';
-import pino from 'pino';
-import { getChildLogger } from '../../../helpers';
+import { LoggerService, Logger } from '../../logger';
 import { Seed } from '../interfaces';
 import { SeedLoader } from './seed-loader';
 import { SeedCollection, SeedDataMapper } from '../collections';
 
 @Service({ global: true })
 export class SeedClient {
-  protected readonly logger: pino.Logger;
+  protected readonly logger: Logger;
 
   constructor(
-    @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
+    protected readonly loggerService: LoggerService,
     protected readonly seedLoader: SeedLoader,
   ) {
-    this.logger = getChildLogger(baseLogger, 'seed-client');
+    this.logger = this.loggerService.getChild('seed-client');
   }
 
   /**
@@ -101,7 +99,7 @@ export class SeedClient {
     const container = Container.of(collection);
     container.set(COLLECTION, collection);
     container.set(META, meta);
-    container.set(LOGGER, Container.get(LOGGER));
+    // Logger is global service; nothing to set here anymore.
 
     // Initialize the data mapper
     const dataMapper = container.get(SeedDataMapper);

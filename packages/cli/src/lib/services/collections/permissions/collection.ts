@@ -1,14 +1,12 @@
 import { DirectusCollection } from '../base';
-import pino from 'pino';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { PermissionsDataLoader } from './data-loader';
 import { PermissionsDataClient } from './data-client';
 import { PermissionsIdMapperClient } from './id-mapper-client';
 import { PermissionsDataDiffer } from './data-differ';
-import { getChildLogger } from '../../../helpers';
+import { LoggerService } from '../../logger';
 import { PERMISSIONS_COLLECTION } from './constants';
 import { PermissionsDataMapper } from './data-mapper';
-import { LOGGER } from '../../../constants';
 import { DirectusPermission } from './interfaces';
 import { ConfigService } from '../../config';
 import { MigrationClient } from '../../migration-client';
@@ -20,7 +18,7 @@ export class PermissionsCollection extends DirectusCollection<DirectusPermission
   protected readonly enableDelete = true;
 
   constructor(
-    @Inject(LOGGER) baseLogger: pino.Logger,
+    loggerService: LoggerService,
     dataDiffer: PermissionsDataDiffer,
     dataLoader: PermissionsDataLoader,
     dataClient: PermissionsDataClient,
@@ -30,7 +28,7 @@ export class PermissionsCollection extends DirectusCollection<DirectusPermission
     migrationClient: MigrationClient,
   ) {
     super(
-      getChildLogger(baseLogger, PERMISSIONS_COLLECTION),
+      loggerService.getChild(PERMISSIONS_COLLECTION),
       dataDiffer,
       dataLoader,
       dataClient,

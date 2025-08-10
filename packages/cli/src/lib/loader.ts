@@ -1,4 +1,4 @@
-import { DictionaryValues } from 'ts-essentials';
+import { ValueOf } from 'ts-essentials';
 import {
   CollectionRecord,
   CollectionsList,
@@ -14,38 +14,22 @@ import {
   RolesCollection,
   SettingsCollection,
   TranslationsCollection,
+  LoggerService,
 } from './services';
-import { createDumpFolders, getPinoTransport } from './helpers';
+import { createDumpFolders } from './helpers';
 import { Container, Token } from 'typedi';
-import Logger from 'pino';
-import pino from 'pino';
-import { LOGGER } from './constants';
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function initContext(
   programOptions: object,
   commandOptions: object,
 ) {
-  // Set temporary logger. This allows the config process to log infos and errors
-  const tempLogger = Logger({
-    transport: getPinoTransport(),
-    level: 'info',
-  });
-  Container.set(LOGGER, tempLogger);
   // Get the config service
   const config = Container.get(ConfigService);
   // Set the options
   config.setOptions(programOptions, commandOptions);
-  // Flush previous logs
-  tempLogger.flush();
-  // Define the logger
-  Container.set(
-    LOGGER,
-    Logger({
-      transport: getPinoTransport(),
-      level: config.getLoggerConfig().level,
-    }),
-  );
+  // Set the logger level from the config
+  Container.get(LoggerService).setLevel(config.getLoggerConfig().level);
 
   createDumpFolders();
 }
@@ -71,12 +55,12 @@ export function loadCollections() {
     presets: PresetsCollection,
   } as const satisfies CollectionRecord<unknown>;
   type CollectionInstance = InstanceType<
-    DictionaryValues<typeof collectionsConstructors>
+    ValueOf<typeof collectionsConstructors>
   >;
 
   // Get the collections to process
   const config = Container.get(ConfigService);
-  const logger: pino.Logger = Container.get(LOGGER);
+  const logger = Container.get(LoggerService);
   const collectionsToProcess = config.getCollectionsToProcess();
   const excludedCollections = CollectionsList.filter(
     (collection) => !collectionsToProcess.includes(collection),

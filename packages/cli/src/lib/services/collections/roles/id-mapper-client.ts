@@ -1,10 +1,8 @@
 import { IdMap, IdMapperClient } from '../base';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { ROLES_COLLECTION } from './constants';
 import { MigrationClient } from '../../migration-client';
-import { LOGGER } from '../../../constants';
-import pino from 'pino';
-import { getChildLogger } from '../../../helpers';
+import { LoggerService } from '../../logger';
 import { readMe } from '@directus/sdk';
 
 @Service()
@@ -16,13 +14,10 @@ export class RolesIdMapperClient extends IdMapperClient {
 
   protected adminRoleId: string | undefined;
 
-  constructor(
-    migrationClient: MigrationClient,
-    @Inject(LOGGER) baseLogger: pino.Logger,
-  ) {
+  constructor(migrationClient: MigrationClient, loggerService: LoggerService) {
     super(
       migrationClient,
-      getChildLogger(baseLogger, ROLES_COLLECTION),
+      loggerService.getChild(ROLES_COLLECTION),
       ROLES_COLLECTION,
     );
   }

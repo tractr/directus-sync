@@ -7,14 +7,18 @@ import {
   writeJsonSync as writeJsonSyncFs,
 } from 'fs-extra';
 import { z, ZodError, ZodSchema } from 'zod';
-import pino, { LoggerOptions } from 'pino';
 import { Container } from 'typedi';
 import path from 'path';
-import { LOGGER, LOGGER_TRANSPORT } from './constants';
-import { ConfigService } from './services';
+import { LOGGER_TRANSPORT } from './constants';
+import {
+  ConfigService,
+  LoggerService,
+  LoggerConfigTransport,
+  Logger,
+} from './services';
 
 export function createDumpFolders() {
-  const logger: pino.Logger = Container.get(LOGGER);
+  const logger = Container.get(LoggerService);
   const config = Container.get(ConfigService);
 
   const collectionsConfig = config.getCollectionsConfig();
@@ -31,25 +35,10 @@ export function createDumpFolders() {
 }
 
 /**
- * Helper for getting a child logger that adds a prefix to the log messages.
- */
-export function getChildLogger(
-  baseLogger: pino.Logger,
-  prefix: string,
-): pino.Logger {
-  return baseLogger.child(
-    {},
-    {
-      msgPrefix: `[${prefix}] `,
-    },
-  );
-}
-
-/**
  * Log message to debug or info, depending on the debug flag
  */
 export function debugOrInfoLogger(
-  logger: pino.Logger,
+  logger: Logger,
 ): (info: boolean, message: string) => void {
   return (info: boolean, message: string) => {
     if (info) {
@@ -121,7 +110,7 @@ export function zodParse<T extends ZodSchema>(
   }
 }
 
-export function getPinoTransport(): LoggerOptions['transport'] {
+export function getPinoTransport(): LoggerConfigTransport {
   // Allow to override the log output when running as a programmatic way (not CLI, i.e. tests)
   if (Container.has(LOGGER_TRANSPORT)) {
     return Container.get(LOGGER_TRANSPORT);

@@ -1,10 +1,13 @@
 import { Container } from 'typedi';
-import pino from 'pino';
-import { ConfigService, MigrationClient, SeedClient } from '../../services';
-import { LOGGER } from '../../constants';
+import {
+  ConfigService,
+  MigrationClient,
+  SeedClient,
+  LoggerService,
+} from '../../services';
 
 export async function runSeedPush() {
-  const logger: pino.Logger = Container.get(LOGGER);
+  const logger = Container.get(LoggerService);
   const seedClient = Container.get(SeedClient);
 
   const config = Container.get(ConfigService);

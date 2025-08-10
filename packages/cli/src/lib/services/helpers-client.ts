@@ -1,10 +1,8 @@
 import { ExtensionClient } from './extension-client';
 import { MigrationClient } from './migration-client';
-import { Inject, Service } from 'typedi';
-import { LOGGER } from '../constants';
-import pino from 'pino';
+import { Service } from 'typedi';
 import { ConfigService } from './config';
-import { getChildLogger } from '../helpers';
+import { LoggerService, Logger } from './logger';
 
 interface DeletedPermission {
   policy: string;
@@ -15,15 +13,15 @@ interface DeletedPermission {
 
 @Service({ global: true })
 export class HelpersClient extends ExtensionClient {
-  protected readonly logger: pino.Logger;
+  protected readonly logger: Logger;
 
   constructor(
     migrationClient: MigrationClient,
     protected readonly config: ConfigService,
-    @Inject(LOGGER) baseLogger: pino.Logger,
+    loggerService: LoggerService,
   ) {
     super(migrationClient);
-    this.logger = getChildLogger(baseLogger, 'helpers-client');
+    this.logger = loggerService.getChild('helpers-client');
   }
 
   async removePermissionDuplicates() {

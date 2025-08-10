@@ -1,8 +1,6 @@
 import { DataMapper, Field, IdMappers } from '../base';
-import { Container, Inject, Service } from 'typedi';
-import pino from 'pino';
-import { getChildLogger } from '../../../helpers';
-import { LOGGER } from '../../../constants';
+import { Container, Service } from 'typedi';
+import { LoggerService } from '../../logger';
 import { PRESETS_COLLECTION } from './constants';
 import { DirectusPreset } from './interfaces';
 import { RolesIdMapperClient } from '../roles';
@@ -14,7 +12,7 @@ export class PresetsDataMapper extends DataMapper<DirectusPreset> {
     role: Container.get(RolesIdMapperClient),
   };
 
-  constructor(@Inject(LOGGER) baseLogger: pino.Logger) {
-    super(getChildLogger(baseLogger, PRESETS_COLLECTION));
+  constructor(loggerService: LoggerService) {
+    super(loggerService.getChild(PRESETS_COLLECTION));
   }
 }

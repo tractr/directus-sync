@@ -13,12 +13,12 @@ import {
 import { DataClient } from './data-client';
 import { DataLoader } from './data-loader';
 import { DataDiffer } from './data-differ';
-import pino from 'pino';
 import { DataMapper } from './data-mapper';
 import { CollectionHooks } from '../../config';
 import { MigrationClient } from '../../migration-client';
 import { unwrapDirectusRequestError } from './helpers';
 import { debugOrInfoLogger } from '../../../helpers';
+import { Logger } from '../../logger';
 
 /**
  * This class is responsible for merging the data from a dump to a target table.
@@ -50,7 +50,7 @@ export abstract class DirectusCollection<
   protected readonly debugOrInfo: ReturnType<typeof debugOrInfoLogger>;
 
   constructor(
-    protected readonly logger: pino.Logger,
+    protected readonly logger: Logger,
     protected readonly dataDiffer: DataDiffer<DirectusType>,
     protected readonly dataLoader: DataLoader<DirectusType>,
     protected readonly dataClient: DataClient<DirectusType>,

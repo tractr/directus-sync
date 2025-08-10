@@ -1,14 +1,12 @@
 import { DirectusCollection } from '../base';
-import pino from 'pino';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { PanelsDataLoader } from './data-loader';
 import { PanelsDataClient } from './data-client';
 import { PanelsIdMapperClient } from './id-mapper-client';
 import { PanelsDataDiffer } from './data-differ';
-import { getChildLogger } from '../../../helpers';
+import { LoggerService } from '../../logger';
 import { PANELS_COLLECTION } from './constants';
 import { PanelsDataMapper } from './data-mapper';
-import { LOGGER } from '../../../constants';
 import { DirectusPanel } from './interfaces';
 import { ConfigService } from '../../config';
 import { MigrationClient } from '../../migration-client';
@@ -20,7 +18,7 @@ export class PanelsCollection extends DirectusCollection<DirectusPanel> {
   protected readonly enableDelete = true;
 
   constructor(
-    @Inject(LOGGER) baseLogger: pino.Logger,
+    loggerService: LoggerService,
     dataDiffer: PanelsDataDiffer,
     dataLoader: PanelsDataLoader,
     dataClient: PanelsDataClient,
@@ -30,7 +28,7 @@ export class PanelsCollection extends DirectusCollection<DirectusPanel> {
     migrationClient: MigrationClient,
   ) {
     super(
-      getChildLogger(baseLogger, PANELS_COLLECTION),
+      loggerService.getChild(PANELS_COLLECTION),
       dataDiffer,
       dataLoader,
       dataClient,

@@ -1,20 +1,15 @@
 import { IdMapperClient } from '../base';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { PANELS_COLLECTION } from './constants';
 import { MigrationClient } from '../../migration-client';
-import { LOGGER } from '../../../constants';
-import pino from 'pino';
-import { getChildLogger } from '../../../helpers';
+import { LoggerService } from '../../logger';
 
 @Service()
 export class PanelsIdMapperClient extends IdMapperClient {
-  constructor(
-    migrationClient: MigrationClient,
-    @Inject(LOGGER) baseLogger: pino.Logger,
-  ) {
+  constructor(migrationClient: MigrationClient, loggerService: LoggerService) {
     super(
       migrationClient,
-      getChildLogger(baseLogger, PANELS_COLLECTION),
+      loggerService.getChild(PANELS_COLLECTION),
       PANELS_COLLECTION,
     );
   }

@@ -6,21 +6,16 @@ import {
   readPermissions,
   updatePermission,
 } from '@directus/sdk';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { MigrationClient } from '../../migration-client';
 import { BaseDirectusPermission, DirectusPermission } from './interfaces';
-import { LOGGER } from '../../../constants';
-import pino from 'pino';
-import { getChildLogger } from '../../../helpers';
+import { LoggerService } from '../../logger';
 import { PERMISSIONS_COLLECTION } from './constants';
 
 @Service()
 export class PermissionsDataClient extends DataClient<DirectusPermission> {
-  constructor(
-    @Inject(LOGGER) baseLogger: pino.Logger,
-    migrationClient: MigrationClient,
-  ) {
-    super(getChildLogger(baseLogger, PERMISSIONS_COLLECTION), migrationClient);
+  constructor(loggerService: LoggerService, migrationClient: MigrationClient) {
+    super(loggerService.getChild(PERMISSIONS_COLLECTION), migrationClient);
   }
 
   /**

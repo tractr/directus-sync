@@ -11,9 +11,9 @@ import { IdMap, IdMapperClient } from './id-mapper-client';
 import { diff } from 'deep-object-diff';
 import { DataLoader } from './data-loader';
 import { DataClient } from './data-client';
-import pino from 'pino';
 import { DataMapper } from './data-mapper';
 import { chunks, runSequentially } from './helpers';
+import { Logger } from '../../logger';
 
 export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
   /**
@@ -32,7 +32,7 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
   ] = ['id', '_syncId'];
 
   constructor(
-    protected readonly logger: pino.Logger,
+    protected readonly logger: Logger,
     protected readonly dataLoader: DataLoader<DirectusType>,
     protected readonly dataClient: DataClient<DirectusType>,
     protected readonly dataMapper: DataMapper<DirectusType>,

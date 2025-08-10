@@ -1,8 +1,6 @@
 import { Inject, Service } from 'typedi';
-import { LOGGER } from '../../../constants';
 import { COLLECTION, META, SCHEMA_CLIENT } from '../constants';
-import pino from 'pino';
-import { debugOrInfoLogger, getChildLogger } from '../../../helpers';
+import { debugOrInfoLogger } from '../../../helpers';
 import { SeedMeta, SeedData } from '../interfaces';
 import { SeedDataMapper } from './data-mapper';
 import {
@@ -10,6 +8,7 @@ import {
   SeedIdMapperClient,
   SeedIdMapperClientFactory,
 } from '../global';
+import { LoggerService, Logger } from '../../logger';
 import { SeedDataClient } from './data-client';
 import {
   DirectusId,
@@ -21,12 +20,12 @@ import { DirectusUnknownType } from '../../interfaces';
 
 @Service()
 export class SeedCollection {
-  protected readonly logger: pino.Logger;
+  protected readonly logger: Logger;
   protected readonly debugOrInfo: ReturnType<typeof debugOrInfoLogger>;
   protected readonly idMapper: SeedIdMapperClient;
 
   constructor(
-    @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
+    protected readonly loggerService: LoggerService,
     @Inject(COLLECTION) protected readonly collection: string,
     @Inject(META) protected readonly meta: SeedMeta,
     protected readonly dataMapper: SeedDataMapper,
@@ -35,7 +34,7 @@ export class SeedCollection {
     protected readonly dataDiffer: SeedDataDiffer,
     @Inject(SCHEMA_CLIENT) protected readonly schemaClient: SchemaClient,
   ) {
-    this.logger = getChildLogger(baseLogger, collection);
+    this.logger = this.loggerService.getChild(collection);
     this.debugOrInfo = debugOrInfoLogger(this.logger);
     this.idMapper = this.idMapperFactory.forCollection(collection);
   }

@@ -55,7 +55,7 @@ Commands catalogue and expected flow
 
 Dependency injection and logging
 - Always retrieve services via `Container.get(...)` (e.g., `MigrationClient`, `SnapshotClient`, `SpecificationsClient`, `SeedClient`, `HelpersClient`).
-- Retrieve the logger via the `LOGGER` token and use `pino` levels appropriately: `.info` for user-facing progress, `.debug` for optional branches (e.g., snapshot disabled).
+- Retrieve the logger via the `LoggerService` and use a child logger using the service name as prefix: `.info` for user-facing progress, `.debug` for optional branches (e.g., snapshot disabled).
 
 Collections loading and ordering
 - Use `loadCollections()` from `loader.ts`. Do not import collection classes directly in commands.

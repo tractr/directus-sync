@@ -1,11 +1,10 @@
 import { Container } from 'typedi';
 import { ConfigService, MigrationClient, SnapshotClient } from '../services';
 import { loadCollections } from '../loader';
-import pino from 'pino';
-import { LOGGER } from '../constants';
+import { LoggerService } from '../services';
 
 export async function runDiff() {
-  const logger: pino.Logger = Container.get(LOGGER);
+  const logger = Container.get(LoggerService);
   const config = Container.get(ConfigService);
   const snapshotConfig = config.getSnapshotConfig();
 

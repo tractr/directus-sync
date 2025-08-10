@@ -11,17 +11,15 @@ import {
   RestConfig,
   serverInfo,
 } from '@directus/sdk';
-import { Inject, Service } from 'typedi';
-import pino from 'pino';
-import { LOGGER } from '../constants';
+import { Service } from 'typedi';
+import { LoggerService, Logger } from './logger';
 import { ConfigService, isDirectusConfigWithToken } from './config';
-import { getChildLogger } from '../helpers';
 import { compareVersions } from 'compare-versions';
 import { Cacheable } from 'typescript-cacheable';
 import { DirectusSchema } from './interfaces';
 @Service({ global: true })
 export class MigrationClient {
-  protected readonly logger: pino.Logger;
+  protected readonly logger: Logger;
 
   protected adminRoleId: string | undefined;
 
@@ -33,9 +31,9 @@ export class MigrationClient {
 
   constructor(
     protected readonly config: ConfigService,
-    @Inject(LOGGER) baseLogger: pino.Logger,
+    loggerService: LoggerService,
   ) {
-    this.logger = getChildLogger(baseLogger, 'migration-client');
+    this.logger = loggerService.getChild('migration-client');
   }
 
   async get() {

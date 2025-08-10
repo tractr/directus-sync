@@ -26,7 +26,7 @@ Key abstractions (base)
 Cross-cutting services
 - `MigrationClient`: Provides authenticated Directus SDK client and version checks.
 - `ConfigService`: Supplies hooks, preserveIds decisions, and dump paths.
-- `LOGGER`/`pino`: Consistent logging; use `getChildLogger(base, '<collection>')` for per-collection loggers.
+- `LoggerService`: Consistent logging; use `getChild('<collection>')` for per-collection loggers.
 
 Per-collection modules
 - Each collection has its own directory with: `constants.ts`, `interfaces.ts`, `collection.ts`, `data-client.ts`, `data-differ.ts`, `data-mapper.ts`, `data-loader.ts`, `id-mapper-client.ts`, and `index.ts` (barrel).

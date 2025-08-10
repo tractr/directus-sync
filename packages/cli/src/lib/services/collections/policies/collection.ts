@@ -1,14 +1,12 @@
 import { DirectusCollection } from '../base';
-import pino from 'pino';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { PoliciesDataLoader } from './data-loader';
 import { PoliciesDataClient } from './data-client';
 import { PoliciesIdMapperClient } from './id-mapper-client';
 import { PoliciesDataDiffer } from './data-differ';
-import { getChildLogger } from '../../../helpers';
+import { LoggerService } from '../../logger';
 import { POLICIES_COLLECTION } from './constants';
 import { PoliciesDataMapper } from './data-mapper';
-import { LOGGER } from '../../../constants';
 import { DirectusPolicy } from './interfaces';
 import { ConfigService } from '../../config';
 import { MigrationClient } from '../../migration-client';
@@ -20,7 +18,7 @@ export class PoliciesCollection extends DirectusCollection<DirectusPolicy> {
   protected readonly enableDelete = true;
 
   constructor(
-    @Inject(LOGGER) baseLogger: pino.Logger,
+    loggerService: LoggerService,
     dataDiffer: PoliciesDataDiffer,
     dataLoader: PoliciesDataLoader,
     dataClient: PoliciesDataClient,
@@ -30,7 +28,7 @@ export class PoliciesCollection extends DirectusCollection<DirectusPolicy> {
     migrationClient: MigrationClient,
   ) {
     super(
-      getChildLogger(baseLogger, POLICIES_COLLECTION),
+      loggerService.getChild(POLICIES_COLLECTION),
       dataDiffer,
       dataLoader,
       dataClient,

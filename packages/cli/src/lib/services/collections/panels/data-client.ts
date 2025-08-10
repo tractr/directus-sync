@@ -5,21 +5,16 @@ import {
   readPanels,
   updatePanel,
 } from '@directus/sdk';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { MigrationClient } from '../../migration-client';
 import { DirectusPanel } from './interfaces';
-import { LOGGER } from '../../../constants';
-import pino from 'pino';
-import { getChildLogger } from '../../../helpers';
+import { LoggerService } from '../../logger';
 import { PANELS_COLLECTION } from './constants';
 
 @Service()
 export class PanelsDataClient extends DataClient<DirectusPanel> {
-  constructor(
-    @Inject(LOGGER) baseLogger: pino.Logger,
-    migrationClient: MigrationClient,
-  ) {
-    super(getChildLogger(baseLogger, PANELS_COLLECTION), migrationClient);
+  constructor(loggerService: LoggerService, migrationClient: MigrationClient) {
+    super(loggerService.getChild(PANELS_COLLECTION), migrationClient);
   }
 
   protected getDeleteCommand(itemId: string) {
