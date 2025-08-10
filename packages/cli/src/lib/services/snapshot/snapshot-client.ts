@@ -15,6 +15,7 @@ import { loadJsonFilesRecursively, writeJsonSync } from '../../helpers';
 import { ConfigService, SnapshotHooks } from '../config';
 import { Cacheable } from 'typescript-cacheable';
 import { Logger, LoggerService } from '../logger';
+import { getDiffMessage, SnapshotDiff as DirectusSnapshotDiff } from './pretty-diff';
 
 const SNAPSHOT_JSON = 'snapshot.json';
 const INFO_JSON = 'info.json';
@@ -117,7 +118,13 @@ export class SnapshotClient {
       } else {
         this.logger.info('No changes in relations');
       }
-      this.logger.debug(diff, 'Diff');
+
+      const prettyPrint = false;
+      if (prettyPrint) {
+        this.logger.info(getDiffMessage(diff.diff as DirectusSnapshotDiff));
+      } else {
+        this.logger.debug(diff.diff, 'Diff');
+      }
     }
   }
 
