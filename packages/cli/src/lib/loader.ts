@@ -14,12 +14,11 @@ import {
   RolesCollection,
   SettingsCollection,
   TranslationsCollection,
+  LoggerService,
 } from './services';
 import { createDumpFolders, getPinoTransport } from './helpers';
 import { Container, Token } from 'typedi';
-import Logger from 'pino';
-import pino from 'pino';
-import { LOGGER } from './constants';
+import { LOGGER_CONFIG } from './constants';
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function initContext(
@@ -27,25 +26,24 @@ export async function initContext(
   commandOptions: object,
 ) {
   // Set temporary logger. This allows the config process to log infos and errors
-  const tempLogger = Logger({
+  Container.set(LOGGER_CONFIG, {
     transport: getPinoTransport(),
     level: 'info',
   });
-  Container.set(LOGGER, tempLogger);
+  const tempLogger = Container.get(LoggerService);
   // Get the config service
   const config = Container.get(ConfigService);
   // Set the options
   config.setOptions(programOptions, commandOptions);
   // Flush previous logs
   tempLogger.flush();
-  // Define the logger
-  Container.set(
-    LOGGER,
-    Logger({
-      transport: getPinoTransport(),
-      level: config.getLoggerConfig().level,
-    }),
-  );
+  // Define the new logger config
+  Container.set(LOGGER_CONFIG, {
+    transport: getPinoTransport(),
+    level: config.getLoggerConfig().level,
+  });
+  // Drop the temporary logger. It will recreated on next call
+  Container.remove(LoggerService);
 
   createDumpFolders();
 }
@@ -76,7 +74,7 @@ export function loadCollections() {
 
   // Get the collections to process
   const config = Container.get(ConfigService);
-  const logger: pino.Logger = Container.get(LOGGER);
+  const logger = Container.get(LoggerService);
   const collectionsToProcess = config.getCollectionsToProcess();
   const excludedCollections = CollectionsList.filter(
     (collection) => !collectionsToProcess.includes(collection),
