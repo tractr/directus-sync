@@ -35,7 +35,7 @@
   "dependencies": {
     "@directus/sdk": "^19.0.1",
     "case": "^1.6.3",
-    "chalk": "^5.5.0",
+    "chalk": "^4.1.2",
     "commander": "^13.1.0",
     "compare-versions": "^6.1.1",
     "deep-object-diff": "^1.1.9",
