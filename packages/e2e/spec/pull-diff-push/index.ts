@@ -12,3 +12,4 @@ export * from './push-with-existing-uuid.js';
 export * from './push-with-user-policy-assignment.js';
 export * from './push-with-role-policy-assignment-changes.js';
 export * from './sort-json.js';
+export * from './pretty-diff-output.js';

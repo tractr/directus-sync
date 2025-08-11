@@ -9,5 +9,6 @@ Options:
   --no-snapshot                                   should pull and push the Directus schema (default "true")
   --no-split                                      should split the schema snapshot into multiple files (default "true")
   -f, --force                                     force the diff of schema, even if the Directus version is different (default "false")
+  --pretty-diff                                   display a human readable schema diff instead of the raw JSON (default "false")
   -h, --help                                      display help for command
 ```

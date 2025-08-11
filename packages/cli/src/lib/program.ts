@@ -170,6 +170,11 @@ export function createProgram() {
     `force the diff of schema, even if the Directus version is different (default "${DefaultConfig.force}")`,
   );
 
+  const prettyDiffOption = new Option(
+    '--pretty-diff',
+    `display a human readable schema diff instead of the raw JSON (default "${DefaultConfig.prettyDiff}")`,
+  );
+
   program
     .version(getVersion())
     .addOption(debugOption)
@@ -210,6 +215,7 @@ export function createProgram() {
     .addOption(noSnapshotOption)
     .addOption(noSplitOption)
     .addOption(forceOption)
+    .addOption(prettyDiffOption)
     .action(wrapAction(program, runDiff));
 
   program

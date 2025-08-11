@@ -13,3 +13,4 @@ export {
   On,
 } from './interfaces';
 export * from './snapshot-client';
+export * from './pretty-diff';

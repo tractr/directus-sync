@@ -21,6 +21,7 @@ export const DefaultConfig: Pick<
   | 'snapshotPath'
   | 'snapshot'
   | 'split'
+  | 'prettyDiff'
   | 'specsPath'
   | 'specs'
   | 'seedPath'
@@ -43,6 +44,8 @@ export const DefaultConfig: Pick<
   snapshotPath: 'snapshot',
   snapshot: true,
   split: true,
+  // Diff formatting
+  prettyDiff: false,
   // Specifications
   specsPath: 'specs',
   specs: true,
