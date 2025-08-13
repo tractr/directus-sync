@@ -53,4 +53,3 @@ export async function getFileAsBlob(object: FileItem) {
 
   return new Blob([file], { type });
 }
-
