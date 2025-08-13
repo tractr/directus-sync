@@ -18,8 +18,12 @@ export const DirectusNativeStructure = {
         collection: 'directus_folders',
         field: 'folder',
       },
+      {
+        collection: 'directus_users',
+        field: 'uploaded_by',
+      },
     ],
-    ignoreOnUpdate: [],
+    ignoreOnUpdate: ['_file_path'],
   },
 } as const;
 

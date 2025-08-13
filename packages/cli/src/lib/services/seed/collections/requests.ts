@@ -19,6 +19,7 @@ import {
 import { DirectusSchema, DirectusUnknownType } from '../../interfaces';
 import { DIRECTUS_COLLECTIONS_PREFIX } from '../constants';
 import { DirectusId } from '../../collections';
+import { FileItem, fileItemToFormData } from './helpers';
 
 type S = DirectusSchema;
 type C = RegularCollections<S>;
@@ -27,7 +28,7 @@ type Q = Query<S, C>;
 // TODO: Improve directus query type
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type AnyQuery = any;
-type AnyItem = DirectusUnknownType | DirectusUser | DirectusFile;
+type AnyItem = DirectusUnknownType | DirectusUser | FileItem;
 
 function isDirectusCollection(collection: string): boolean {
   return collection.startsWith(DIRECTUS_COLLECTIONS_PREFIX);
@@ -49,7 +50,7 @@ export function readMany(collection: string, query: AnyQuery) {
   );
 }
 
-export function createOne(collection: string, item: AnyItem) {
+export async function createOne(collection: string, item: AnyItem) {
   if (!isDirectusCollection(collection)) {
     return createItem<S, C, Q>(collection, item);
   }
@@ -57,7 +58,8 @@ export function createOne(collection: string, item: AnyItem) {
   if (collection === 'directus_users') {
     return createUser(item);
   } else if (collection === 'directus_files') {
-    const formData = objectToFormData(item);
+    console.log('createOne', item);
+    const formData = await fileItemToFormData(item as FileItem);
     return uploadFiles(formData);
   }
 
@@ -100,12 +102,4 @@ export function deleteOne(collection: string, id: DirectusId) {
   throw new Error(
     `Unsupported collection: ${collection}. Check the "directus-sync push" command instead.`,
   );
-}
-
-export function objectToFormData(object: AnyItem) {
-  const formData = new FormData();
-  for (const [key, value] of Object.entries(object)) {
-    formData.append(key, value as string | Blob);
-  }
-  return formData;
 }
