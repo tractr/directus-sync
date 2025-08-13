@@ -14,19 +14,26 @@ export interface FileItem extends DirectusFile {
 export async function fileItemToFormData(object: FileItem) {
   const formData = new FormData();
   const file = await getFileAsBlob(object);
-  formData.append('file', file);
+
   for (const [key, value] of Object.entries(object)) {
     if (key === '_file_path') {
       continue;
     }
+
+    const prefixedKey = `file_1_${key}`;
     if (typeof value === 'string') {
-      formData.append(key, value);
+      formData.append(prefixedKey, value);
     } else if (typeof value === 'object' && value !== null) {
-      formData.append(key, JSON.stringify(value));
+      formData.append(prefixedKey, JSON.stringify(value));
     } else {
-      formData.append(key, value?.toString() || '');
+      formData.append(prefixedKey, value?.toString() || '');
     }
   }
+
+  formData.append('file', file);
+
+  console.log(formData);
+
   return formData;
 }
 

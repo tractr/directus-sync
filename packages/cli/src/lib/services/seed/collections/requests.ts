@@ -58,7 +58,6 @@ export async function createOne(collection: string, item: AnyItem) {
   if (collection === 'directus_users') {
     return createUser(item);
   } else if (collection === 'directus_files') {
-    console.log('createOne', item);
     const formData = await fileItemToFormData(item as FileItem);
     return uploadFiles(formData);
   }
