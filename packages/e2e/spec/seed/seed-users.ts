@@ -1,8 +1,8 @@
-import { DirectusRole, DirectusUser } from '@directus/sdk';
-import { Context, debug, getAllItems, info } from '../helpers/index.js';
+import { readRoles, readUsers } from '@directus/sdk';
+import { Context, debug, info } from '../helpers/index.js';
 
 export const seedUsers = (context: Context) => {
-  it('seed push for directus_users and verify roles', async () => {
+  fit('seed push for directus_users and verify roles', async () => {
     // Init sync client
     const sync = await context.getSync('sources/seed-users');
     const directus = context.getDirectus();
@@ -38,8 +38,8 @@ export const seedUsers = (context: Context) => {
     expect(createdUsers.length).toEqual(2);
 
     // Fetch users and roles
-    const users = await getAllItems<DirectusUser>(client, 'directus_users');
-    const roles = await getAllItems<DirectusRole>(client, 'directus_roles');
+    const users = await client.request(readUsers());
+    const roles = await client.request(readRoles());
 
     const adminRole = roles.find((r) => r.name === 'Administrator');
     expect(adminRole).toBeDefined();
