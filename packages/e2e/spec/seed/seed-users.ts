@@ -1,3 +1,4 @@
+import { DirectusRole, DirectusUser } from '@directus/sdk';
 import { Context, debug, getAllItems, info } from '../helpers/index.js';
 
 export const seedUsers = (context: Context) => {
@@ -37,18 +38,18 @@ export const seedUsers = (context: Context) => {
     expect(createdUsers.length).toEqual(2);
 
     // Fetch users and roles
-    const users = await getAllItems<any>(client, 'directus_users');
-    const roles = await getAllItems<any>(client, 'directus_roles');
+    const users = await getAllItems<DirectusUser>(client, 'directus_users');
+    const roles = await getAllItems<DirectusRole>(client, 'directus_roles');
 
     const adminRole = roles.find((r) => r.name === 'Administrator');
     expect(adminRole).toBeDefined();
 
     const john = users.find((u) => u.email === 'john.doe@example.com');
     expect(john).toBeDefined();
-    expect(john.role).toEqual(adminRole.id);
+    expect(john?.role).toEqual(adminRole?.id);
 
     const jane = users.find((u) => u.email === 'jane.smith@example.com');
     expect(jane).toBeDefined();
-    expect(jane.role === null || jane.role === undefined).toBeTrue();
+    expect(jane?.role === null || jane?.role === undefined).toBeTrue();
   });
 };
