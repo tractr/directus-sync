@@ -55,7 +55,7 @@ export async function getFileAsBlob(object: FileItem) {
 
   const file = Fs.readFileSync(object._file_path);
   const fileType = await fileTypeFromFile(object._file_path);
-  const type = object.type || fileType?.mime || 'application/octet-stream';
+  const type = object.type ?? fileType?.mime ?? 'application/octet-stream';
 
   return new Blob([file], { type });
 }
