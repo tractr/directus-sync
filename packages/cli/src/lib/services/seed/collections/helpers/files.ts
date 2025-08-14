@@ -1,6 +1,6 @@
 import { DirectusFile } from '@directus/sdk';
 import * as Fs from 'fs-extra';
-import { fileTypeFromFile } from 'file-type';
+import { lookup as mimeLookup } from 'mime-types';
 
 export interface FileItem extends DirectusFile {
   _file_path: string;
@@ -11,9 +11,9 @@ export interface FileItem extends DirectusFile {
  * @param object - The FileItem to convert
  * @returns The FormData object
  */
-export async function fileItemToFormData(object: FileItem) {
+export function fileItemToFormData(object: FileItem) {
   const formData = new FormData();
-  const file = await getFileAsBlob(object);
+  const file = getFileAsBlob(object);
 
   // Add properties first (https://github.com/directus/directus/discussions/10130#discussioncomment-2216554)
   for (const [key, value] of Object.entries(object)) {
@@ -26,7 +26,7 @@ export async function fileItemToFormData(object: FileItem) {
     } else if (typeof value === 'object' && value !== null) {
       formData.append(key, JSON.stringify(value));
     } else {
-      formData.append(key, value?.toString() || '');
+      formData.append(key, value?.toString() ?? '');
     }
   }
 
@@ -42,7 +42,7 @@ export async function fileItemToFormData(object: FileItem) {
  * @returns The Blob
  */
 
-export async function getFileAsBlob(object: FileItem) {
+export function getFileAsBlob(object: FileItem) {
   if (!object._file_path) {
     throw new Error('File path (key _file_path) is not defined');
   }
@@ -54,8 +54,10 @@ export async function getFileAsBlob(object: FileItem) {
   }
 
   const file = Fs.readFileSync(object._file_path);
-  const fileType = await fileTypeFromFile(object._file_path);
-  const type = object.type ?? fileType?.mime ?? 'application/octet-stream';
 
+  const type =
+    object.type ??
+    (mimeLookup(object._file_path) || undefined) ??
+    'application/octet-stream';
   return new Blob([file], { type });
 }

@@ -72,7 +72,7 @@ export class SeedDataClient {
    */
   async create<T extends DirectusUnknownType>(data: Partial<T>): Promise<T> {
     const directus = await this.migrationClient.get();
-    return await directus.request<T>(await createOne(this.collection, data));
+    return await directus.request<T>(createOne(this.collection, data));
   }
 
   /**

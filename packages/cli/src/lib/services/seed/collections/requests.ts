@@ -50,7 +50,7 @@ export function readMany(collection: string, query: AnyQuery) {
   );
 }
 
-export async function createOne(collection: string, item: AnyItem) {
+export function createOne(collection: string, item: AnyItem) {
   if (!isDirectusCollection(collection)) {
     return createItem<S, C, Q>(collection, item);
   }
@@ -58,7 +58,7 @@ export async function createOne(collection: string, item: AnyItem) {
   if (collection === 'directus_users') {
     return createUser(item);
   } else if (collection === 'directus_files') {
-    const formData = await fileItemToFormData(item as FileItem);
+    const formData = fileItemToFormData(item as FileItem);
     return uploadFiles(formData);
   }
 
