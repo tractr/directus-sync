@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.3.0](https://github.com/tractr/directus-sync/compare/directus-sync@3.2.3...directus-sync@3.3.0) (2025-08-14)
+
+
+### Bug Fixes
+
+* **cli:** skipping mapping of dynamic IDs in DataMapper ([#172](https://github.com/tractr/directus-sync/issues/172)) ([bd71532](https://github.com/tractr/directus-sync/commit/bd715326ffb8868be20d95933e421f2e7b1eaf9c))
+* **cli:** splitting too long existing ids request in data-differ ([#171](https://github.com/tractr/directus-sync/issues/171)) ([e953b9f](https://github.com/tractr/directus-sync/commit/e953b9f489919da64b083cc13899a62bcbc5899b))
+
+
+### Features
+
+* **cli:** add --no-collections option ([#169](https://github.com/tractr/directus-sync/issues/169)) ([0720447](https://github.com/tractr/directus-sync/commit/07204475d11846ba9d4288b67890b8ddcf0b6f31))
+* **cli:** add abstract layer over pino logger for extensibility ([#176](https://github.com/tractr/directus-sync/issues/176)) ([e06a4c8](https://github.com/tractr/directus-sync/commit/e06a4c8bb938b38ff6fbdf056c776066287dc7af))
+* **cli:** add option to sort json fields on save ([#175](https://github.com/tractr/directus-sync/issues/175)) ([1784c26](https://github.com/tractr/directus-sync/commit/1784c26e0a9c42eaecd276236fefe2757d98e1a4)), closes [#152](https://github.com/tractr/directus-sync/issues/152)
+* **cli:** allow syncing directus files with `seed` command ([#178](https://github.com/tractr/directus-sync/issues/178)) ([29b26a5](https://github.com/tractr/directus-sync/commit/29b26a5093fc49e1e3f4f5920d44059bdeffacd0))
+* **cli:** clear system cache when available to avoid stale schema ([#135](https://github.com/tractr/directus-sync/issues/135)) ([b7e7053](https://github.com/tractr/directus-sync/commit/b7e7053f691dc385cc6f83759026b775414e0723))
+* **cli:** implement --pretty-diff option for human-readable schema diffs ([#177](https://github.com/tractr/directus-sync/issues/177)) ([85a4c9d](https://github.com/tractr/directus-sync/commit/85a4c9d2d6cb2c5849eba35cc7c24bc82b351ee7))
+
+
+
+
+
 ## [3.2.3](https://github.com/tractr/directus-sync/compare/directus-sync@3.2.2...directus-sync@3.2.3) (2025-02-05)
 
 
