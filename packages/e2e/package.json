@@ -23,6 +23,7 @@
   "license": "GPL-3.0",
   "devDependencies": {
     "@faker-js/faker": "^9.4.0",
+    "@napi-rs/snappy-linux-x64-gnu": "^7.3.1",
     "@types/fs-extra": "^11.0.4",
     "@types/getenv": "^1.0.3",
     "@types/jasmine": "^5.1.5",
