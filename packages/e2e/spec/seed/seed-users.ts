@@ -2,7 +2,7 @@ import { readRoles, readUsers } from '@directus/sdk';
 import { Context, debug, info } from '../helpers/index.js';
 
 export const seedUsers = (context: Context) => {
-  fit('seed push for directus_users and verify roles', async () => {
+  it('seed push for directus_users and verify roles', async () => {
     // Init sync client
     const sync = await context.getSync('sources/seed-users');
     const directus = context.getDirectus();
