@@ -11,6 +11,20 @@ export const DirectusNativeStructure = {
     ],
     ignoreOnUpdate: ['password'],
   },
+  directus_files: {
+    primaryField: { name: 'id', type: Type.UUID },
+    relations: [
+      {
+        collection: 'directus_folders',
+        field: 'folder',
+      },
+      {
+        collection: 'directus_users',
+        field: 'uploaded_by',
+      },
+    ],
+    ignoreOnUpdate: ['_file_path'],
+  },
 } as const;
 
 export type SupportedDirectusCollections = keyof typeof DirectusNativeStructure;

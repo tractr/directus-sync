@@ -35,11 +35,8 @@ export class MigrationClient {
   ) {
     this.logger = loggerService.getChild('migration-client');
   }
-
   async get() {
-    if (!this.client) {
-      this.client = await this.createClient();
-    }
+    this.client ??= await this.createClient();
     return this.client;
   }
 

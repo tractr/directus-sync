@@ -1,5 +1,6 @@
 import {
   DirectusUser,
+  DirectusFile,
   readItems,
   readUsers,
   RegularCollections,
@@ -10,10 +11,15 @@ import {
   updateUser,
   deleteItem,
   deleteUser,
+  readFiles,
+  uploadFiles,
+  updateFile,
+  deleteFile,
 } from '@directus/sdk';
 import { DirectusSchema, DirectusUnknownType } from '../../interfaces';
 import { DIRECTUS_COLLECTIONS_PREFIX } from '../constants';
 import { DirectusId } from '../../collections';
+import { FileItem, fileItemToFormData } from './helpers';
 
 type S = DirectusSchema;
 type C = RegularCollections<S>;
@@ -22,7 +28,7 @@ type Q = Query<S, C>;
 // TODO: Improve directus query type
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type AnyQuery = any;
-type AnyItem = DirectusUnknownType | DirectusUser;
+type AnyItem = DirectusUnknownType | DirectusUser | FileItem;
 
 function isDirectusCollection(collection: string): boolean {
   return collection.startsWith(DIRECTUS_COLLECTIONS_PREFIX);
@@ -35,6 +41,8 @@ export function readMany(collection: string, query: AnyQuery) {
 
   if (collection === 'directus_users') {
     return readUsers(query as Query<S, DirectusUser>);
+  } else if (collection === 'directus_files') {
+    return readFiles(query as Query<S, DirectusFile>);
   }
 
   throw new Error(
@@ -49,6 +57,9 @@ export function createOne(collection: string, item: AnyItem) {
 
   if (collection === 'directus_users') {
     return createUser(item);
+  } else if (collection === 'directus_files') {
+    const formData = fileItemToFormData(item as FileItem);
+    return uploadFiles(formData);
   }
 
   throw new Error(
@@ -67,6 +78,8 @@ export function updateOne(
 
   if (collection === 'directus_users') {
     return updateUser(id as string, item as Partial<DirectusUser>);
+  } else if (collection === 'directus_files') {
+    return updateFile(id as string, item as Partial<DirectusFile>);
   }
 
   throw new Error(
@@ -81,6 +94,8 @@ export function deleteOne(collection: string, id: DirectusId) {
 
   if (collection === 'directus_users') {
     return deleteUser(id as string);
+  } else if (collection === 'directus_files') {
+    return deleteFile(id as string);
   }
 
   throw new Error(
