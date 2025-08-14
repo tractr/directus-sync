@@ -2,11 +2,9 @@ import { DirectusId, WithSyncId, IdMap } from '../../collections';
 import { DirectusUnknownType } from '../../interfaces';
 import { SeedDataClient } from './data-client';
 import { SeedDataMapper } from './data-mapper';
-import pino from 'pino';
 import { Inject, Service } from 'typedi';
-import { LOGGER } from '../../../constants';
 import { COLLECTION, META, SCHEMA_CLIENT } from '../constants';
-import { getChildLogger } from '../../../helpers';
+import { LoggerService, Logger } from '../../logger';
 import { diff } from 'deep-object-diff';
 import { SeedMeta } from '../interfaces';
 import { Cacheable } from 'typescript-cacheable';
@@ -18,11 +16,11 @@ import {
 
 @Service()
 export class SeedDataDiffer {
-  protected readonly logger: pino.Logger;
+  protected readonly logger: Logger;
   protected readonly idMapper: SeedIdMapperClient;
 
   constructor(
-    @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
+    protected readonly loggerService: LoggerService,
     @Inject(COLLECTION) protected readonly collection: string,
     @Inject(META) protected readonly meta: SeedMeta,
     protected readonly dataClient: SeedDataClient,
@@ -30,7 +28,7 @@ export class SeedDataDiffer {
     protected readonly idMapperFactory: SeedIdMapperClientFactory,
     @Inject(SCHEMA_CLIENT) protected readonly schemaClient: SchemaClient,
   ) {
-    this.logger = getChildLogger(baseLogger, collection);
+    this.logger = this.loggerService.getChild(collection);
     this.idMapper = this.idMapperFactory.forCollection(collection);
   }
 

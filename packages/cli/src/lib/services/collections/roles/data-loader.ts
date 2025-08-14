@@ -14,6 +14,6 @@ export class RolesDataLoader extends DataLoader<DirectusRole> {
       `${ROLES_COLLECTION}.json`,
     );
     const hooks = config.getCollectionHooksConfig(ROLES_COLLECTION);
-    super(filePath, migrationClient, hooks);
+    super(filePath, migrationClient, hooks, config);
   }
 }

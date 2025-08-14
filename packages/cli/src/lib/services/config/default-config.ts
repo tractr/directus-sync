@@ -10,15 +10,18 @@ const defaultDumpPath = './directus-config';
 export const DefaultConfig: Pick<
   Options,
   | 'debug'
+  | 'sortJson'
   | 'dumpPath'
   | 'maxPushRetries'
   | 'collectionsPath'
   | 'excludeCollections'
   | 'onlyCollections'
+  | 'collections'
   | 'preserveIds'
   | 'snapshotPath'
   | 'snapshot'
   | 'split'
+  | 'prettyDiff'
   | 'specsPath'
   | 'specs'
   | 'seedPath'
@@ -27,6 +30,7 @@ export const DefaultConfig: Pick<
 > = {
   // Global
   debug: false,
+  sortJson: false,
   // Pull, diff, push
   dumpPath: defaultDumpPath,
   maxPushRetries: 20,
@@ -34,11 +38,14 @@ export const DefaultConfig: Pick<
   collectionsPath: 'collections',
   excludeCollections: [],
   onlyCollections: [],
+  collections: true,
   preserveIds: [],
   // Snapshot
   snapshotPath: 'snapshot',
   snapshot: true,
   split: true,
+  // Diff formatting
+  prettyDiff: false,
   // Specifications
   specsPath: 'specs',
   specs: true,

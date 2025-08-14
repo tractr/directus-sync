@@ -1,0 +1,72 @@
+---
+description: CLI services architecture and design patterns for collections, loaders, clients, differs, mappers, and helpers
+globs: packages/cli/src/lib/services/**/*.ts,packages/cli/src/lib/helpers.ts,packages/cli/src/lib/constants.ts
+---
+
+# CLI Architecture and Design Patterns
+
+This rule documents the internal structure and design patterns of `packages/cli` to help Cursor provide accurate, consistent suggestions.
+
+## Layered Structure (per collection)
+
+Each Directus system collection is implemented as a small module composed of:
+
+- `collection.ts` (extends `DirectusCollection`): orchestrates pull/diff/push
+- `data-loader.ts` (extends `DataLoader`): reads/writes JSON dumps + hooks
+- `data-client.ts` (extends `DataClient`): performs CRUD via Directus SDK
+- `data-differ.ts` (extends `DataDiffer`): computes diffs, dangling ids
+- `data-mapper.ts` (extends `DataMapper`): id mapping + field ignores
+- `id-mapper-client.ts` (extends `IdMapperClient`): SyncID↔LocalID mapping
+- `constants.ts`, `interfaces.ts`, `index.ts`
+
+All classes are `@Service()` singletons (typedi) and use the root `LOGGER` with per-collection child loggers from `getChildLogger`.
+
+## Helpers
+
+- `helpers/apply-mapper.ts`: recursive mappers application; see `apply-mapper.spec.ts` for behavior and errors
+- `helpers/chunks.ts`: generator that yields fixed-size chunks of arrays
+- `helpers/sequential.ts`: `runSequentially(tasks)` runs async tasks in strict order and returns their results
+- Prefer importing from the helpers barrel: `import { chunks } from './helpers'`
+
+## Config & Hooks
+
+- `services/config` resolves CLI/config-file options and exposes per-collection hooks:
+  - `onQuery(baseQuery)`
+  - `onLoad(items, client)`
+  - `onSave(items, client)`
+- `preserveIds` may be enabled for eligible UUID-based collections
+
+## Conventions
+
+- Always create a child logger with the collection prefix via `getChildLogger`
+- Keep collection constants in `constants.ts` (e.g., `OPERATIONS_COLLECTION`)
+- Use barrel `index.ts` files to export public surfaces (helpers, per-collection module)
+- Use `limit: -1` for Directus reads unless a specific cap is needed
+- For batched reads, build chunks once, then loop, e.g.:
+  - `const idsChunks = [...chunks(localIds, this.maxIdsPerRequest)]`
+  - use `limit: -1` in batch queries
+
+## Adding a New Collection Module
+
+1. Create `constants.ts`, `interfaces.ts`
+2. Implement `data-loader.ts` (file path, sorting override if needed)
+3. Implement `data-client.ts` (CRUD and any collection-specific logic)
+4. Implement `data-mapper.ts` with `fieldsToIgnore` and `idMappers`
+5. Implement `data-differ.ts`; override `getExistingIds()` if more fields are required to read `id`
+6. Implement `id-mapper-client.ts`
+7. Implement `collection.ts` (wire classes, config, migration client)
+8. Export from the module `index.ts`
+
+## Testing
+
+- Unit tests use `ts-jest` with `tsconfig.spec.json`
+- Place tests alongside implementation (e.g., `helpers/*.spec.ts`)
+- Prefer testing pure helpers/classes; avoid heavy DI when possible
+- For mapping logic, mirror `apply-mapper.spec.ts` style
+
+## Error Handling & Logging
+
+- `DataDiffer.checkDanglingAndDeleteOverlap` logs errors and throws when overlap occurs
+- Mapping skips dynamic placeholders to prevent runtime failures
+- Use `debugOrInfoLogger` for user-facing summaries and debug verbosity
+

@@ -1,0 +1,78 @@
+---
+description: TypeScript coding standards and patterns for the API extension
+globs: packages/api/src/**/*.ts
+---
+
+# TypeScript Standards Rules
+
+## Type Definitions
+- Use interfaces for object shapes and data structures
+- Prefer interfaces over type aliases for extensibility
+- Export interfaces from appropriate modules (database entities from `/database`)
+- Use proper primitive types: `string`, `number`, `boolean`, `Date`
+- Define optional properties with `?` operator when appropriate
+
+## Function Signatures
+- Use async/await for all asynchronous operations
+- Return specific types rather than `any` or implicit types
+- Use Promise wrappers for async functions: `Promise<Type>`
+- Handle null/undefined explicitly in return types: `Type | null`
+- Use generic types for reusable functions when beneficial
+
+## Import/Export Patterns
+- Use named exports for classes, interfaces, and functions
+- Barrel exports from index files: `export * from './module'`
+- Import only what's needed to reduce bundle size
+- Group imports: external libraries first, then internal modules
+- Use destructuring for multiple imports from same module
+
+## Error Handling Types
+- Use typed error objects from `http-errors` library
+- Implement proper error catching with specific error types
+- Use union types for functions that can return errors or data
+- Handle Zod validation errors with proper type checking
+- Throw typed errors with descriptive messages
+
+## Class Patterns
+- Use `protected readonly` for constructor-injected dependencies
+- Prefer `protected` over `private` for class members for better testability and extensibility
+- Implement proper access modifiers (public, protected, private)
+- Use static methods for utility functions that don't need instance state
+- Define method return types explicitly
+- Use constructor parameter properties for dependency injection
+
+## Async/Await Standards
+- Always use try/catch blocks for error handling in async functions
+- Use `await` for all Promise operations
+- Avoid mixing Promise chains with async/await
+- Handle rejections appropriately in all async operations
+- Use proper typing for async function return values
+
+## Code Example
+```typescript
+export interface DataEntity {
+  id: number;
+  name: string;
+  createdAt: Date;
+  optionalField?: string;
+}
+
+export class BusinessService {
+  constructor(
+    protected readonly database: Knex,
+    protected readonly logger: pino.Logger
+  ) {}
+
+  async findById(id: string): Promise<DataEntity | null> {
+    try {
+      const result = await this.database('table')
+        .where({ id })
+        .first();
+      return result || null;
+    } catch (error) {
+      this.logger.error('Failed to find entity', error);
+      throw new Error('Database operation failed');
+    }
+  }
+}
+```

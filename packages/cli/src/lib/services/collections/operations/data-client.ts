@@ -7,21 +7,16 @@ import {
   updateOperation,
   updateOperations,
 } from '@directus/sdk';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { MigrationClient } from '../../migration-client';
 import { DirectusOperation } from './interfaces';
-import { LOGGER } from '../../../constants';
-import pino from 'pino';
-import { getChildLogger } from '../../../helpers';
+import { LoggerService } from '../../logger';
 import { OPERATIONS_COLLECTION } from './constants';
 
 @Service()
 export class OperationsDataClient extends DataClient<DirectusOperation> {
-  constructor(
-    @Inject(LOGGER) baseLogger: pino.Logger,
-    migrationClient: MigrationClient,
-  ) {
-    super(getChildLogger(baseLogger, OPERATIONS_COLLECTION), migrationClient);
+  constructor(loggerService: LoggerService, migrationClient: MigrationClient) {
+    super(loggerService.getChild(OPERATIONS_COLLECTION), migrationClient);
   }
 
   protected getDeleteCommand(itemId: string) {

@@ -21,9 +21,11 @@
   },
   "license": "GPL-3.0",
   "devDependencies": {
+    "@types/deep-diff": "^1.0.5",
     "@types/fs-extra": "^11.0.4",
     "@types/http-errors": "^2.0.4",
     "@types/jest": "^29.5.14",
+    "@types/mime-types": "^3.0.1",
     "@types/node": "22.13.1",
     "jest": "^29.7.0",
     "ts-essentials": "^10.0.4",
@@ -34,6 +36,7 @@
   "dependencies": {
     "@directus/sdk": "^19.0.1",
     "case": "^1.6.3",
+    "chalk": "^4.1.2",
     "commander": "^13.1.0",
     "compare-versions": "^6.1.1",
     "deep-object-diff": "^1.1.9",
@@ -41,6 +44,7 @@
     "dotenv": "^16.4.7",
     "fs-extra": "^11.3.0",
     "http-errors": "^2.0.0",
+    "mime-types": "^3.0.1",
     "pino": "^9.6.0",
     "pino-pretty": "^13.0.0",
     "reflect-metadata": "^0.2.2",

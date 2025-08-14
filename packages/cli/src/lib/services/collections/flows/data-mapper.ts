@@ -1,10 +1,8 @@
 import { DataMapper, Field, IdMappers } from '../base';
-import { Container, Inject, Service } from 'typedi';
-import pino from 'pino';
-import { getChildLogger } from '../../../helpers';
+import { Container, Service } from 'typedi';
+import { LoggerService } from '../../logger';
 import { FLOWS_COLLECTION } from './constants';
 import { OperationsIdMapperClient } from '../operations';
-import { LOGGER } from '../../../constants';
 import { DirectusFlow } from './interfaces';
 
 @Service()
@@ -18,7 +16,7 @@ export class FlowsDataMapper extends DataMapper<DirectusFlow> {
     operation: Container.get(OperationsIdMapperClient),
   };
 
-  constructor(@Inject(LOGGER) baseLogger: pino.Logger) {
-    super(getChildLogger(baseLogger, FLOWS_COLLECTION));
+  constructor(loggerService: LoggerService) {
+    super(loggerService.getChild(FLOWS_COLLECTION));
   }
 }

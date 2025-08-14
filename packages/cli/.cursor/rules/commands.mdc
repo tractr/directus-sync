@@ -1,0 +1,96 @@
+---
+description: CLI commands orchestration and program wiring guidelines
+globs: packages/cli/src/lib/commands/**/*.ts,packages/cli/src/lib/program.ts,packages/cli/src/run.ts
+---
+
+# CLI Commands – architecture and change guidelines
+
+Audience: Cursor agents working on `packages/cli/src/lib/commands/*` and `packages/cli/src/lib/program.ts`
+
+Scope: Orchestration layer for high-level CLI flows (pull, diff, push, seed, helpers). Commands wire services together, enforce ordering, and respect configuration. Business logic lives in services, not in commands.
+
+Key responsibilities
+- Initialize and dispose CLI context (via `wrapAction()` and `initContext()`/`disposeContext()`)
+- Resolve configuration through `ConfigService` (never parse argv directly here)
+- Fetch services via `typedi` `Container`
+- Orchestrate operations in the correct order, with logging
+- Enforce retries and gating (e.g., snapshot enabled, max retries)
+
+Command lifecycle and patterns
+- Context management (defined in `loader.ts`):
+  - `wrapAction(program, action)`: builds a commander action that initializes context with cleaned program/command options, runs the action, then disposes context.
+  - `initContext(programOptions, commandOptions)`: sets a temp logger, injects `LOGGER`, configures `ConfigService` with options, replaces logger using `getLoggerConfig()`, ensures dump folders exist.
+  - `disposeContext()`: placeholder for future cleanup.
+
+- Global error/exit handling occurs in `src/run.ts`. Commands should throw errors and return promises; do not call `process.exit`.
+
+Commands catalogue and expected flow
+- `runPull()`:
+  - Validate Directus version and clear cache (`MigrationClient`).
+  - If snapshot is enabled (`ConfigService.getSnapshotConfig().enabled`), call `SnapshotClient.pull()`, else log debug.
+  - Always call `SpecificationsClient.pull()`.
+  - Load collections via `loadCollections()` and call `collection.pull()` for each, then `collection.postProcessPull()` for each.
+
+- `runDiff()`:
+  - Validate Directus version and clear cache (`MigrationClient`).
+  - If snapshot enabled, `SnapshotClient.diff()`, else debug log.
+  - Load collections and call `collection.diff()` for each.
+
+- `runPush()`:
+  - Validate Directus version and clear cache (`MigrationClient`).
+  - If snapshot enabled:
+    - First `PingClient.test()` to ensure the Directus endpoint extension is reachable.
+    - Log and call `SnapshotClient.push()`.
+  - Load collections.
+  - Log and run collections cleanup: `collection.cleanUp()` for each.
+  - Retry loop until stable: iterate collections calling `collection.push()`. If any returns `true` (needs retry), repeat. Enforce `maxPushRetries` from `ConfigService.getPushConfig()`; throw if exceeded.
+
+- Seed subcommands (`src/lib/commands/seed/*`):
+  - `runSeedDiff()`: validate version + clear cache, then `SeedClient.diff()`.
+  - `runSeedPush()`: validate version + clear cache, log cleanup and `SeedClient.cleanUp()`, then retry loop `SeedClient.push()` with `maxPushRetries` enforcement.
+
+- Helpers (`src/lib/commands/helpers/*`):
+  - `runUntrack()`: `HelpersClient.untrack()`.
+  - `runRemovePermissionDuplicates()`: `HelpersClient.removePermissionDuplicates()`.
+
+Dependency injection and logging
+- Always retrieve services via `Container.get(...)` (e.g., `MigrationClient`, `SnapshotClient`, `SpecificationsClient`, `SeedClient`, `HelpersClient`).
+- Retrieve the logger via the `LoggerService` and use a child logger using the service name as prefix: `.info` for user-facing progress, `.debug` for optional branches (e.g., snapshot disabled).
+
+Collections loading and ordering
+- Use `loadCollections()` from `loader.ts`. Do not import collection classes directly in commands.
+- `loadCollections()` respects configured include/exclude lists and a fixed sequence. Keep orchestration order aligned with service expectations.
+
+Program definition (`program.ts`) rules
+- Define global options once (debug, directus auth, config path) and share common options across commands (dump path, collections, snapshot, specs, retries, etc.).
+- Use `wrapAction(program, runX)` when wiring actions to ensure context is configured.
+- Use `cleanProgramOptions` / `cleanCommandOptions` to avoid defaults overriding config-file values (notably: remove `true` flags like `snapshot`, `split`, `specs`).
+- Use `Option.env(...)` for auth-related flags to support environment variables.
+- Prefer parser helpers (e.g., comma-separated lists) and keep types consistent with schemas in `services/config/schema.ts`.
+
+Adding a new command
+1) Implement orchestration in `src/lib/commands/<name>.ts` using the patterns above.
+2) Inject and use services; do not embed business logic here.
+3) Add the command to `createProgram()` in `program.ts`, define options, and wire `.action(wrapAction(program, run<Name>))`.
+4) If the command processes collections, load them via `loadCollections()` and call the appropriate method consistently across all collections.
+5) Respect snapshot/specs gating and retries if applicable.
+6) Log key steps with `logger.info` and optional branches with `logger.debug`.
+
+Testing guidance
+- Tests are recommended but not mandatory. If added, prefer integration-style tests that exercise the command flow with mocked services and verify:
+  - Migration validation and cache clearing are called
+  - Snapshot/specs gating behavior
+  - Collections are loaded and processed in order
+  - Retry loops honor `maxPushRetries`
+  - Errors bubble to `run.ts` handler (no direct exits in commands)
+
+Common pitfalls to avoid
+- Skipping `MigrationClient.validateDirectusVersion()` or `.clearCache()` before operations
+- Bypassing `wrapAction()` / `initContext()` (leads to missing logger/config)
+- Reading process args or env directly in commands (use `ConfigService` getters)
+- Importing collections directly instead of using `loadCollections()`
+- Performing heavy business logic or cross-service mutations in commands
+- Calling `process.exit` in commands (centralized in `run.ts`)
+
+References
+- Installation and overall context: `https://tractr.github.io/directus-sync/docs/getting-started/usage/`

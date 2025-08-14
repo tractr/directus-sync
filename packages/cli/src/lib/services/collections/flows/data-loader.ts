@@ -14,6 +14,6 @@ export class FlowsDataLoader extends DataLoader<DirectusFlow> {
       `${FLOWS_COLLECTION}.json`,
     );
     const hooks = config.getCollectionHooksConfig(FLOWS_COLLECTION);
-    super(filePath, migrationClient, hooks);
+    super(filePath, migrationClient, hooks, config);
   }
 }

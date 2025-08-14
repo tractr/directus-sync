@@ -13,12 +13,11 @@ import {
 import Path from 'path';
 import { Cacheable } from 'typescript-cacheable';
 import { ConfigFileLoader } from './config-file-loader';
-import { getChildLogger, zodParse } from '../../helpers';
+import { zodParse } from '../../helpers';
 import deepmerge from 'deepmerge';
 import { DefaultConfig, DefaultConfigPaths } from './default-config';
 import { CollectionsList, OptionsSchema } from './schema';
-import { LOGGER } from '../../constants';
-import pino from 'pino';
+import { LoggerService } from '../logger';
 
 @Service({ global: true })
 export class ConfigService {
@@ -42,6 +41,11 @@ export class ConfigService {
   }
 
   @Cacheable()
+  shouldSortJson() {
+    return this.requireOptions('sortJson');
+  }
+
+  @Cacheable()
   getCollectionsConfig() {
     const dumpPath = Path.resolve(this.requireOptions('dumpPath'));
     const collectionsSubPath = this.requireOptions('collectionsPath');
@@ -61,6 +65,7 @@ export class ConfigService {
       splitFiles: this.requireOptions('split'),
       force: this.requireOptions('force'),
       enabled: this.requireOptions('snapshot'),
+      prettyDiff: this.requireOptions('prettyDiff'),
     };
   }
 
@@ -153,6 +158,10 @@ export class ConfigService {
 
   @Cacheable()
   getCollectionsToProcess() {
+    const collections = this.requireOptions('collections');
+    if (!collections) {
+      return [];
+    }
     const exclude = this.requireOptions('excludeCollections');
     const only = this.requireOptions('onlyCollections');
     const list = only.length > 0 ? only : CollectionsList;
@@ -230,7 +239,7 @@ export class ConfigService {
    * See loader.ts file for more information
    */
   protected getLogger() {
-    const baseLogger = Container.get<pino.Logger>(LOGGER);
-    return getChildLogger(baseLogger, 'config');
+    const logger = Container.get(LoggerService);
+    return logger.getChild('config');
   }
 }

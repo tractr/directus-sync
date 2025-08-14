@@ -15,7 +15,9 @@ import {
   pushWithExistingUuid,
   pushWithUserPolicyAssignment,
   pushWithRolePolicyAssignmentChanges,
+  prettyDiffOutput,
 } from './pull-diff-push/index.js';
+import { sortJson } from './pull-diff-push/sort-json.js';
 import { pushWithDependencies } from './dependencies/index.js';
 import {
   collectionsOnDump,
@@ -30,6 +32,7 @@ import {
   excludeSomeCollections,
   includeSomeCollections,
   noSnapshot,
+  noCollections,
 } from './exclude-include/index.js';
 import {
   insertDuplicatedPermissions,
@@ -40,11 +43,12 @@ import { removeTrackedItem } from './untrack/index.js';
 import {
   createOperationsWithConflicts,
   updateOperationsWithConflicts,
+  operationsWithDynamicFlowId,
 } from './operations/index.js';
 import { updateDefaultData } from './default-data/index.js';
 import { configPathInfo } from './config/index.js';
 import { groupAndFieldNamesConflict } from './snapshot/index.js';
-import { seedPushOnEmptyInstance } from './seed/index.js';
+import { seedPushOnEmptyInstance, seedUsers, seedFiles } from './seed/index.js';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
@@ -75,6 +79,8 @@ describe('Tests entrypoint ->', () => {
   pullBasic(context);
   pushFlushAndPush(context);
   pullWithNewData(context);
+  prettyDiffOutput(context);
+  sortJson(context);
   pushOnEmptyInstance(context);
   pushTwiceOnEmptyInstance(context);
   pushWithExistingUuid(context);
@@ -86,6 +92,7 @@ describe('Tests entrypoint ->', () => {
 
   updateOperationsWithConflicts(context);
   createOperationsWithConflicts(context);
+  operationsWithDynamicFlowId(context);
 
   collectionsOnDump(context);
   collectionsOnSave(context);
@@ -99,6 +106,7 @@ describe('Tests entrypoint ->', () => {
   excludeSomeCollections(context);
   includeSomeCollections(context);
   noSnapshot(context);
+  noCollections(context);
 
   configPathInfo(context);
 
@@ -111,4 +119,6 @@ describe('Tests entrypoint ->', () => {
   removeTrackedItem(context);
 
   seedPushOnEmptyInstance(context);
+  seedUsers(context);
+  seedFiles(context);
 });

@@ -1,5 +1,4 @@
 import { Container } from 'typedi';
-import pino from 'pino';
 import {
   ConfigService,
   MigrationClient,
@@ -7,10 +6,10 @@ import {
   SnapshotClient,
 } from '../services';
 import { loadCollections } from '../loader';
-import { LOGGER } from '../constants';
+import { LoggerService } from '../services';
 
 export async function runPush() {
-  const logger: pino.Logger = Container.get(LOGGER);
+  const logger = Container.get(LoggerService);
   const config = Container.get(ConfigService);
   const snapshotConfig = config.getSnapshotConfig();
 

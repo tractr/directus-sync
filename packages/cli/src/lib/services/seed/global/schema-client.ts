@@ -1,14 +1,12 @@
-import { Inject, Service } from 'typedi';
-import { LOGGER } from '../../../constants';
+import { Service } from 'typedi';
 import { DIRECTUS_COLLECTIONS_PREFIX, SCHEMA_CLIENT } from '../constants';
-import { getChildLogger } from '../../../helpers';
-import pino from 'pino';
 import { Cacheable } from 'typescript-cacheable';
 import { SnapshotClient, Type } from '../../snapshot';
 import {
   DirectusNativeStructure,
   SupportedDirectusCollections,
 } from './directus-structure';
+import { LoggerService, Logger } from '../../logger';
 
 // Re-export the enum for easier access
 export { Type };
@@ -16,13 +14,13 @@ export { Type };
 // TypeDI doest not detect SchemaClient identifier automatically. Need to set it manually using id option.
 @Service({ global: true, id: SCHEMA_CLIENT })
 export class SchemaClient {
-  protected readonly logger: pino.Logger;
+  protected readonly logger: Logger;
 
   constructor(
-    @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
+    protected readonly loggerService: LoggerService,
     protected readonly snapshotClient: SnapshotClient,
   ) {
-    this.logger = getChildLogger(baseLogger, 'schema-client');
+    this.logger = this.loggerService.getChild('schema-client');
   }
 
   /**

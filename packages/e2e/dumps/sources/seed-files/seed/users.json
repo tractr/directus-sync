@@ -1,0 +1,22 @@
+{
+  "collection": "directus_users",
+  "meta": {
+    "insert_order": 1
+  },
+  "data": [
+    {
+      "_sync_id": "user-1",
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "john.doe@example.com",
+      "role": "_sync_default_admin_role"
+    },
+    {
+      "_sync_id": "user-2",
+      "first_name": "Jane",
+      "last_name": "Smith",
+      "email": "jane.smith@example.com",
+      "password": "password"
+    }
+  ]
+}

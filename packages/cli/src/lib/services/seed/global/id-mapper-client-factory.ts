@@ -1,14 +1,12 @@
 import { IdMapperClient } from '../../collections';
 import { MigrationClient } from '../../migration-client';
-import pino from 'pino';
-import { Inject, Service } from 'typedi';
-import { LOGGER } from '../../../constants';
-import { getChildLogger } from '../../../helpers';
+import { Service } from 'typedi';
 import { Cacheable } from 'typescript-cacheable';
 import {
   CUSTOM_COLLECTIONS_MAPPING_PREFIX,
   DIRECTUS_COLLECTIONS_PREFIX,
 } from '../constants';
+import { LoggerService } from '../../logger';
 
 export class SeedIdMapperClient extends IdMapperClient {}
 
@@ -20,7 +18,7 @@ export class SeedIdMapperClient extends IdMapperClient {}
 export class SeedIdMapperClientFactory {
   constructor(
     private readonly migrationClient: MigrationClient,
-    @Inject(LOGGER) private readonly baseLogger: pino.Logger,
+    private readonly loggerService: LoggerService,
   ) {}
 
   /**
@@ -35,7 +33,7 @@ export class SeedIdMapperClientFactory {
 
     return new SeedIdMapperClient(
       this.migrationClient,
-      getChildLogger(this.baseLogger, collection),
+      this.loggerService.getChild(collection),
       storedTableName,
     );
   }

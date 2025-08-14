@@ -1,4 +1,4 @@
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { MigrationClient } from '../migration-client';
 import { schemaApply, schemaDiff, schemaSnapshot } from '@directus/sdk';
 import path from 'path';
@@ -10,12 +10,15 @@ import {
   SchemaDiffOutput,
   Snapshot,
 } from './interfaces';
-import { mkdirpSync, readJsonSync, removeSync, writeJsonSync } from 'fs-extra';
-import { LOGGER } from '../../constants';
-import pino from 'pino';
-import { getChildLogger, loadJsonFilesRecursively } from '../../helpers';
+import { mkdirpSync, readJsonSync, removeSync } from 'fs-extra';
+import { loadJsonFilesRecursively, writeJsonSync } from '../../helpers';
 import { ConfigService, SnapshotHooks } from '../config';
 import { Cacheable } from 'typescript-cacheable';
+import { Logger, LoggerService } from '../logger';
+import {
+  getDiffMessage,
+  SnapshotDiff as DirectusSnapshotDiff,
+} from './pretty-diff';
 
 const SNAPSHOT_JSON = 'snapshot.json';
 const INFO_JSON = 'info.json';
@@ -31,21 +34,28 @@ export class SnapshotClient {
 
   protected readonly force: boolean;
 
-  protected readonly logger: pino.Logger;
+  protected readonly prettyDiff: boolean;
+
+  protected readonly logger: Logger;
 
   protected readonly hooks: SnapshotHooks;
 
+  protected readonly sortJson: boolean;
+
   constructor(
     config: ConfigService,
-    @Inject(LOGGER) baseLogger: pino.Logger,
+    loggerService: LoggerService,
     protected readonly migrationClient: MigrationClient,
   ) {
-    this.logger = getChildLogger(baseLogger, 'snapshot');
-    const { dumpPath, splitFiles, force } = config.getSnapshotConfig();
+    this.logger = loggerService.getChild('snapshot');
+    const { dumpPath, splitFiles, force, prettyDiff } =
+      config.getSnapshotConfig();
     this.dumpPath = dumpPath;
     this.splitFiles = splitFiles;
     this.force = force;
+    this.prettyDiff = prettyDiff;
     this.hooks = config.getSnapshotHooksConfig();
+    this.sortJson = config.shouldSortJson();
   }
 
   /**
@@ -115,7 +125,12 @@ export class SnapshotClient {
       } else {
         this.logger.info('No changes in relations');
       }
-      this.logger.debug(diff, 'Diff');
+
+      if (this.prettyDiff) {
+        this.logger.info(getDiffMessage(diff.diff as DirectusSnapshotDiff));
+      } else {
+        this.logger.debug(diff.diff, 'Diff');
+      }
     }
   }
 
@@ -143,12 +158,12 @@ export class SnapshotClient {
         const filePath = path.join(this.dumpPath, file.path);
         const dirPath = path.dirname(filePath);
         mkdirpSync(dirPath);
-        writeJsonSync(filePath, file.content, { spaces: 2 });
+        writeJsonSync(filePath, file.content, this.sortJson);
       }
       return files.length;
     } else {
       const filePath = path.join(this.dumpPath, SNAPSHOT_JSON);
-      writeJsonSync(filePath, data, { spaces: 2 });
+      writeJsonSync(filePath, data, this.sortJson);
       return 1;
     }
   }

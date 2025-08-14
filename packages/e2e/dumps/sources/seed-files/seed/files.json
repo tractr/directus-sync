@@ -1,0 +1,34 @@
+{
+  "collection": "directus_files",
+  "meta": {
+    "insert_order": 2
+  },
+  "data": [
+    {
+      "_sync_id": "file-1",
+      "_file_path": "./logo.jpg",
+      "storage": "local",
+      "filename_download": "the-file-1.jpg",
+      "title": "File 1",
+      "tags": ["tag-1", "tag-2"],
+      "description": "File 1 description",
+      "folder": "92d60c0c-30b8-49d9-bd63-11008fa652af",
+      "uploaded_by": "user-1",
+      "metadata": {
+        "test": "value"
+      }
+    },
+    {
+      "_sync_id": "file-2",
+      "_file_path": "./logo.jpg",
+      "storage": "local",
+      "filename_download": "the-file-2.jpg",
+      "title": "File 2",
+      "tags": ["tag-2", "tag-3"],
+      "description": "File 2 description",
+      "metadata": {
+        "test": "value-2"
+      }
+    }
+  ]
+}

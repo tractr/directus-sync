@@ -1,0 +1,44 @@
+---
+description: Development workflow and debugging patterns for the API extension
+globs: packages/api/src/**/*.ts,packages/api/package.json
+---
+
+# Development Workflow Rules
+
+## Extension Development Setup
+- Use `npm run dev` for development with watch mode and no minification
+- Use `npm run link /path/to/directus/extensions` to link to Directus instance
+- Build extension with `npm run build` for production deployment
+- Run tests with `npm test` using Jest configuration
+
+## Directus Extension Configuration
+- Extension type is `endpoint` as defined in package.json
+- Entry point is `src/index.ts`, build output is `dist/index.js`
+- Target Directus host version `^11.0.0` or compatible
+- Use ES modules (`"type": "module"` in package.json)
+
+## Development Dependencies
+- Use `@directus/extensions-sdk` for build tooling and type definitions
+- Include proper type definitions for all external libraries
+- Use Jest with TypeScript support for testing
+- Include Pino for logging (matches Directus logger interface)
+
+## Logging Standards
+- Use logger provided by Directus extension context
+- Log initialization events (table creation, startup)
+- Log errors with appropriate levels (error for 5xx, info for operations)
+- Avoid logging sensitive data (IDs, user information)
+- Use structured logging with descriptive messages
+
+## Database Connection Handling
+- Database connection is provided by Directus extension context
+- Use the same connection for all database operations
+- No need to manage connection lifecycle (handled by Directus)
+- Use transactions for multi-step operations when needed
+
+## Error Debugging
+- Use descriptive error messages that help identify the issue
+- Include relevant context in error messages (table name, ID, operation)
+- Log errors before throwing or passing to error handler
+- Use HTTP status codes that match the error type
+- Provide consistent error response format

@@ -1,0 +1,49 @@
+---
+description: Directus endpoint extension architecture and patterns for the API module
+globs: packages/api/src/**/*.ts
+---
+
+# Directus Extension Architecture Rules
+
+## Extension Type & Structure
+- This is a Directus **endpoint extension** that provides custom API routes
+- Follow Directus extension patterns using `defineEndpoint` from `@directus/extensions-sdk`
+- Main entry point is `src/index.ts` which exports the router configuration
+- Organize code in layers: `/api` (middleware/helpers), `/database` (business logic)
+
+## Router & Endpoint Patterns
+- Use Express router provided by Directus extension context
+- All endpoints MUST be admin-only (use `ensureIsAdminHandler` middleware)
+- Follow RESTful conventions:
+  - GET endpoints for retrieval
+  - POST endpoints for creation
+  - DELETE endpoints for removal
+- Path structure: `/table/:table/sync_id/:sync_id` or `/table/:table/local_id/:local_id`
+
+## Request Handling Standards
+- ALWAYS validate inputs using Zod schemas with `validateInput` helper
+- Handle errors with proper HTTP status codes (404, 409, 500)
+- Use `next(error)` for error propagation to error handler middleware
+- Return JSON responses with appropriate status codes
+- Use async/await for all database operations
+
+## Business Logic Organization
+- Keep business logic in separate classes in `/database` directory
+- Classes should accept database connection and logger in constructor
+- Implement proper initialization methods (e.g., `init()` for table creation)
+- Use Knex.js for all database operations
+- Export classes from `/database/index.ts`
+
+## Error Handling Requirements
+- Use `http-errors` library for creating HTTP errors
+- Implement centralized error handling with `errorHandler` middleware
+- Log errors using Pino logger with `logError` middleware
+- Check for existing headers before sending responses
+- Use early returns for error conditions to avoid nested logic
+
+## Input Validation
+- Use Zod for runtime type validation
+- Create specific schemas for each endpoint's expected inputs
+- Combine `req.params` and `req.body` when validating POST requests
+- Handle validation errors gracefully with descriptive messages
+- Use TypeScript interfaces that match Zod schemas

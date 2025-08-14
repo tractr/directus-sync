@@ -1,14 +1,12 @@
 import { DirectusCollection } from '../base';
-import pino from 'pino';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { RolesDataLoader } from './data-loader';
 import { RolesDataClient } from './data-client';
 import { RolesIdMapperClient } from './id-mapper-client';
 import { RolesDataDiffer } from './data-differ';
-import { getChildLogger } from '../../../helpers';
+import { LoggerService } from '../../logger';
 import { ROLES_COLLECTION } from './constants';
 import { RolesDataMapper } from './data-mapper';
-import { LOGGER } from '../../../constants';
 import { DirectusRole } from './interfaces';
 import { ConfigService } from '../../config';
 import { MigrationClient } from '../../migration-client';
@@ -20,7 +18,7 @@ export class RolesCollection extends DirectusCollection<DirectusRole> {
   protected readonly enableDelete = true;
 
   constructor(
-    @Inject(LOGGER) baseLogger: pino.Logger,
+    loggerService: LoggerService,
     dataDiffer: RolesDataDiffer,
     dataLoader: RolesDataLoader,
     dataClient: RolesDataClient,
@@ -30,7 +28,7 @@ export class RolesCollection extends DirectusCollection<DirectusRole> {
     migrationClient: MigrationClient,
   ) {
     super(
-      getChildLogger(baseLogger, ROLES_COLLECTION),
+      loggerService.getChild(ROLES_COLLECTION),
       dataDiffer,
       dataLoader,
       dataClient,

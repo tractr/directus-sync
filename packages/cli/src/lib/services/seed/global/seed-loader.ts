@@ -1,10 +1,5 @@
-import { Inject, Service } from 'typedi';
-import { LOGGER } from '../../../constants';
-import pino from 'pino';
-import {
-  getChildLogger,
-  loadJsonFilesRecursivelyWithSchema,
-} from '../../../helpers';
+import { Service } from 'typedi';
+import { loadJsonFilesRecursivelyWithSchema } from '../../../helpers';
 import { ConfigService } from '../../config';
 import { Seed, SeedsFileSchema } from '../interfaces';
 import * as Fs from 'fs-extra';
@@ -13,16 +8,18 @@ import {
   DirectusNativeStructure,
   SupportedDirectusCollections,
 } from './directus-structure';
+import { LoggerService, Logger } from '../../logger';
+import path from 'path';
 
 @Service({ global: true })
 export class SeedLoader {
-  protected readonly logger: pino.Logger;
+  protected readonly logger: Logger;
 
   constructor(
-    @Inject(LOGGER) protected readonly baseLogger: pino.Logger,
+    protected readonly loggerService: LoggerService,
     protected readonly config: ConfigService,
   ) {
-    this.logger = getChildLogger(baseLogger, 'seed-loader');
+    this.logger = this.loggerService.getChild('seed-loader');
   }
 
   @Cacheable()
@@ -35,13 +32,20 @@ export class SeedLoader {
       if (!Fs.pathExistsSync(path)) {
         this.logger.warn(`Seed path does not exist: ${path}`);
       }
-      seeds.push(
-        ...loadJsonFilesRecursivelyWithSchema(
-          path,
-          SeedsFileSchema,
-          'Load seeds',
-        ).flat(2),
+
+      const rawSeeds = loadJsonFilesRecursivelyWithSchema(
+        path,
+        SeedsFileSchema,
+        'Load seeds',
+      ).flat(2);
+
+      // Apply absolute file path to data
+      const folderPath = this.getFolderPath(path);
+      const seedsWithAbsoluteFilePath = rawSeeds.map((seed) =>
+        this.applyFilePathToData(seed, folderPath),
       );
+
+      seeds.push(...seedsWithAbsoluteFilePath);
     }
 
     // Order seeds by meta.insert_order
@@ -117,5 +121,35 @@ export class SeedLoader {
     return SupportedDirectusCollections.includes(
       collection as SupportedDirectusCollections,
     );
+  }
+
+  /**
+   * Returns the directory path if a file path is provided
+   * Otherwise, returns the path as is
+   * Test with Fs
+   */
+  protected getFolderPath(filePath: string): string {
+    return Fs.pathExistsSync(filePath) && Fs.statSync(filePath).isFile()
+      ? path.dirname(filePath)
+      : filePath;
+  }
+
+  /**
+   * If the seed has a file path _file_path, replace it with the absolute path
+   */
+  protected applyFilePathToData(seed: Seed, folderPath: string): Seed {
+    const data = seed.data.map((item) => {
+      if (item._file_path) {
+        const isAbsolute = path.isAbsolute(item._file_path);
+        item._file_path = isAbsolute
+          ? item._file_path
+          : path.join(folderPath, item._file_path);
+      }
+      return item;
+    });
+    return {
+      ...seed,
+      data,
+    };
   }
 }

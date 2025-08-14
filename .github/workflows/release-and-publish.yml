@@ -17,10 +17,10 @@ jobs:
         run: |
           git config --global user.email "tractr-bot@tractr.net"
           git config --global user.name "tractr-bot"
-      - name: Use Node.js 18.x
+      - name: Use Node.js 22.x
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: '22.x'
           registry-url: 'https://registry.npmjs.org/'
       - run: npm ci
       - run: npm run lint
@@ -34,10 +34,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GH_TOKEN }}
-      - name: Use Node.js 18.x
+      - name: Use Node.js 22.x
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: '22.x'
           registry-url: 'https://registry.npmjs.org/'
       - run: npm ci
       - run: npm run build

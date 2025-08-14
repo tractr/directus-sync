@@ -1,0 +1,58 @@
+---
+description: Database layer patterns and Knex.js usage for business logic classes
+globs: packages/api/src/database/**/*.ts
+---
+
+# Database Layer Rules
+
+## Class Structure
+- Business logic classes should accept `Knex` database connection in constructor
+- Store database connection as `protected readonly database: Knex`
+- Include logger parameter for classes that need logging (e.g., `protected readonly logger: pino.Logger`)
+- Implement `init()` method for table creation/schema setup when needed
+
+## Table Management
+- Use descriptive table names with clear prefixes (e.g., `directus_sync_id_map`)
+- Check table existence with `database.schema.hasTable()` before creation
+- Return boolean from `init()` indicating if table was created
+- Use proper column types and constraints in schema definitions
+- Add appropriate indexes for query performance
+
+## Query Patterns
+- Use parameterized queries to prevent SQL injection
+- Handle null results explicitly (return `null` when no records found)
+- Use transactions for multi-step operations
+- Implement proper error handling for database operations
+- Use `first()` for single record queries, return typed results
+
+## Interface Definitions
+- Define TypeScript interfaces for database entities (e.g., `IdMap`)
+- Include all table columns in interface definitions
+- Use proper types (string, number, Date) for each column
+- Export interfaces from the database layer for reuse
+
+## Testing Approach
+- Use in-memory SQLite database for unit tests
+- Create fresh database instance for each test case
+- Clean up database connections in `afterEach` hooks
+- Test both success and error scenarios
+- Verify table creation and data persistence
+
+## Example Patterns
+```typescript
+export class BusinessLogicClass {
+  protected readonly tableName = 'directus_prefix_table_name';
+  
+  constructor(protected readonly database: Knex) {}
+  
+  async init(): Promise<boolean> {
+    if (!(await this.database.schema.hasTable(this.tableName))) {
+      await this.database.schema.createTable(this.tableName, (table) => {
+        // Define schema
+      });
+      return true;
+    }
+    return false;
+  }
+}
+```

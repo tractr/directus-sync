@@ -1,0 +1,80 @@
+---
+description: Collections services architecture and extension guidelines
+globs: packages/cli/src/lib/services/collections/**/*.ts
+---
+
+# Collections Services – architecture and change guidelines
+
+Audience: Cursor agents working on `packages/cli/src/lib/services/collections/**`
+
+Scope: This layer defines how each Directus collection is pulled, diffed, pushed, and cleaned. It encapsulates collection-specific logic via a consistent set of base abstractions and typed services. Follow these rules to add or modify collections safely.
+
+Key abstractions (base)
+- `DirectusCollection<T>`: Orchestrates per-collection pull/diff/push/cleanup.
+  - Pull: query REST, map IDs via `IdMapperClient`, remove `id`, temp-store, log.
+  - Post-process: map nested/local ids to SyncIDs and drop ignored fields via `DataMapper`, then persist via `DataLoader`.
+  - Diff: uses `DataDiffer` to produce `toCreate`, `toUpdate`, `toDelete`, `unchanged`, `dangling` and logs them.
+  - Push: runs create/update/delete sequences; returns whether a retry is needed (when dependencies unresolved).
+  - Cleanup: removes dangling id-maps and clears id-mapper caches.
+  - Flags: `enableCreate|enableUpdate|enableDelete`, `preserveIds` (use original ids as SyncIDs for stable restoration).
+- `DataLoader<T>`: Reads/writes JSON dump files; applies collection hooks `onLoad`/`onSave`; sorts by `_syncId` before save.
+- `DataClient<T>`: Wraps Directus REST SDK calls (query/create/update/delete). Supports multi-step insert/update/delete via command arrays. Handles collections that may return a single object.
+- `DataDiffer<T>`: Computes create/update/delete sets using deep diff and id maps; detects and validates dangling ids; supports customizable existence checks.
+- `DataMapper<T>`: Maps nested ids between local and SyncIDs with pluggable `IdMapperClient` mappers; supports ignoring fields; builds and caches mapping functions both directions.
+- `IdMapperClient`: Talks to the API extension endpoints; caches lookups; supports CRUD on id maps; provides `getAll` for dangling detection.
+
+Cross-cutting services
+- `MigrationClient`: Provides authenticated Directus SDK client and version checks.
+- `ConfigService`: Supplies hooks, preserveIds decisions, and dump paths.
+- `LoggerService`: Consistent logging; use `getChild('<collection>')` for per-collection loggers.
+
+Per-collection modules
+- Each collection has its own directory with: `constants.ts`, `interfaces.ts`, `collection.ts`, `data-client.ts`, `data-differ.ts`, `data-mapper.ts`, `data-loader.ts`, `id-mapper-client.ts`, and `index.ts` (barrel).
+- Example specialties:
+  - `flows`: Overrides `create()` to break the flows↔operations dependency cycle by creating flows without the `operation` relation, then updating later.
+  - `permissions`: `DataClient.query()` filters out admin virtual rows (no `id`), and `getInsertCommand()` removes pre-existing duplicates before creating.
+  - `operations`: Reads `preserveIds` from config (`config.shouldPreserveIds('operations')`).
+
+Collections orchestration contract
+- `pull()` then `postProcessPull()` are separate steps; commands call them in order (see `runPull`). Do not collapse them.
+- `push()` must return a boolean telling if a retry is needed. Use this to resolve inter-collection dependencies over multiple iterations.
+- `cleanUp()` must delete dangling id-maps before any push attempt to avoid mismatches.
+
+Hooks integration
+- Hooks are fetched per collection using `config.getCollectionHooksConfig('<collection>')` and passed into `DataLoader`/`DirectusCollection`.
+- Supported hooks: `onLoad`, `onDump`, `onSave`, `onQuery` (see `services/config/schema.ts`). Hooks can transform data and queries.
+
+ID mapping rules
+- When pulling: For each item, lookup id map by local id; if missing, create it (optionally use item id as `_syncId` when `preserveIds` is true). Carry `_syncId` in memory.
+- Before saving dumps: Convert nested local ids to SyncIDs via `DataMapper`; drop fields configured in `DataMapper.fieldsToIgnore`.
+- On push:
+  - create: Try `mapSyncIdToLocalId`; if unresolved, defer to next round. Handle unique violations to rebuild missing id-maps when `preserveIds` is true.
+  - update: `mapSyncIdToLocalId(diff)` and apply.
+  - delete: delete resource then remove id-map by `sync_id`.
+
+Adding a new collection
+1) Create a new directory under `services/collections/<name>/` with the standard files.
+2) Implement `constants.ts` (collection name), `interfaces.ts` (Directus type), `id-mapper-client.ts` (table name matches extension endpoint), `data-loader.ts` (file path and hooks), `data-client.ts` (REST commands), `data-mapper.ts` (id mappers and ignored fields), `data-differ.ts` (inherit default, override if needed), and `collection.ts` (flags and config integration).
+3) Export from the collection `index.ts` and from `services/collections/index.ts`.
+4) Update `loader.ts` ordering and ensure `ConfigService.getCollectionsToProcess()` covers inclusion/exclusion.
+5) If ids must be stable, use `preserveIds` via config or hardcode when appropriate (as in flows).
+6) Add or adjust `getIdMapperClientByName()` if needed by helpers.
+
+Error handling
+- Wrap Directus API errors via `unwrapDirectusRequestError()` where applicable; log with actionable messages.
+- When detecting dangling vs delete overlap, log each and throw to prevent destructive operations.
+
+Testing guidance (recommended, not mandatory)
+- Unit-test `DataMapper` mappers and ignored fields (see base helpers tests).
+- For specialized clients (e.g., permissions), verify command sequencing and filtering.
+- Consider integration tests driving a collection through pull → postProcessPull → diff → push with mocked clients.
+
+Common pitfalls to avoid
+- Mutating input data instead of producing transformed copies in mappers/loader
+- Returning relative dump paths (must come from `ConfigService` getters)
+- Doing heavy logic in `collection.ts` instead of delegating to base classes/services
+- Failing to return `true` from `push()` when a retry is actually needed
+- Forgetting to clear id-mapper caches during `cleanUp()`
+
+References
+- Usage and context: `https://tractr.github.io/directus-sync/docs/features/synchronization/`

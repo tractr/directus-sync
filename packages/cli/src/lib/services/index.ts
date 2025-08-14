@@ -8,3 +8,4 @@ export * from './snapshot';
 export * from './specifications';
 export * from './collections';
 export * from './seed';
+export * from './logger';

@@ -1,3 +1,4 @@
+import * as DirectusSdk from '@directus/sdk';
 import {
   authentication,
   AuthenticationClient,
@@ -10,17 +11,15 @@ import {
   RestConfig,
   serverInfo,
 } from '@directus/sdk';
-import { Inject, Service } from 'typedi';
-import pino from 'pino';
-import { LOGGER } from '../constants';
+import { Service } from 'typedi';
+import { LoggerService, Logger } from './logger';
 import { ConfigService, isDirectusConfigWithToken } from './config';
-import { getChildLogger } from '../helpers';
 import { compareVersions } from 'compare-versions';
 import { Cacheable } from 'typescript-cacheable';
 import { DirectusSchema } from './interfaces';
 @Service({ global: true })
 export class MigrationClient {
-  protected readonly logger: pino.Logger;
+  protected readonly logger: Logger;
 
   protected adminRoleId: string | undefined;
 
@@ -32,15 +31,12 @@ export class MigrationClient {
 
   constructor(
     protected readonly config: ConfigService,
-    @Inject(LOGGER) baseLogger: pino.Logger,
+    loggerService: LoggerService,
   ) {
-    this.logger = getChildLogger(baseLogger, 'migration-client');
+    this.logger = loggerService.getChild('migration-client');
   }
-
   async get() {
-    if (!this.client) {
-      this.client = await this.createClient();
-    }
+    this.client ??= await this.createClient();
     return this.client;
   }
 
@@ -50,7 +46,33 @@ export class MigrationClient {
   async clearCache() {
     const directus = await this.get();
     await directus.request(clearCache());
+    await this.tryClearSystemCache();
     this.logger.debug('Cache cleared');
+  }
+
+  /**
+   * Best-effort clearing of the Directus system cache.
+   * Uses the SDK helper when available; otherwise logs a debug note.
+   */
+  protected async tryClearSystemCache() {
+    try {
+      const directus = await this.get();
+      const clearSystem = (
+        DirectusSdk as unknown as {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          clearSystemCache?: () => any;
+        }
+      ).clearSystemCache;
+      if (typeof clearSystem === 'function') {
+        await directus.request(clearSystem());
+        this.logger.debug('System cache cleared');
+      }
+    } catch (err) {
+      this.logger.debug(
+        { err: (err as Error).message },
+        'System cache clear not supported by this Directus version',
+      );
+    }
   }
 
   protected async createClient() {

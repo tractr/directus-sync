@@ -1,14 +1,12 @@
 import { DirectusCollection, WithSyncIdAndWithoutId } from '../base';
-import pino from 'pino';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { FlowsDataLoader } from './data-loader';
 import { FlowsDataClient } from './data-client';
 import { FlowsIdMapperClient } from './id-mapper-client';
 import { FlowsDataDiffer } from './data-differ';
-import { getChildLogger } from '../../../helpers';
+import { LoggerService } from '../../logger';
 import { FLOWS_COLLECTION } from './constants';
 import { FlowsDataMapper } from './data-mapper';
-import { LOGGER } from '../../../constants';
 import { DirectusFlow } from './interfaces';
 import { ConfigService } from '../../config';
 import { MigrationClient } from '../../migration-client';
@@ -22,7 +20,7 @@ export class FlowsCollection extends DirectusCollection<DirectusFlow> {
   protected readonly preserveIds = true;
 
   constructor(
-    @Inject(LOGGER) baseLogger: pino.Logger,
+    loggerService: LoggerService,
     dataDiffer: FlowsDataDiffer,
     dataLoader: FlowsDataLoader,
     dataClient: FlowsDataClient,
@@ -32,7 +30,7 @@ export class FlowsCollection extends DirectusCollection<DirectusFlow> {
     migrationClient: MigrationClient,
   ) {
     super(
-      getChildLogger(baseLogger, FLOWS_COLLECTION),
+      loggerService.getChild(FLOWS_COLLECTION),
       dataDiffer,
       dataLoader,
       dataClient,

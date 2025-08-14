@@ -1,0 +1,51 @@
+---
+description: Snapshot services architecture and change guidelines
+globs: packages/cli/src/lib/services/snapshot/**/*.ts
+---
+
+# Snapshot Services – architecture and change guidelines
+
+Audience: Cursor agents working on `packages/cli/src/lib/services/snapshot/**`
+
+Scope: Manage Directus schema snapshots. Fetch snapshot from instance, save to disk (single file or decomposed files), compute diffs against local dump, and apply changes to the instance.
+
+Core module
+- `snapshot-client.ts` (SnapshotClient):
+  - Config: initialized with `{ dumpPath, splitFiles, force }` and `hooks` via `ConfigService`.
+  - Pull: `getSnapshot()` then optional `hooks.onSave`, then `saveData()`.
+  - Diff: load local snapshot (decomposed or single), optional `hooks.onLoad`, then request `schemaDiff(force)`.
+  - Push: compute diff; if non-empty, apply via `schemaApply`.
+  - File formats:
+    - Single file: `snapshot.json`
+    - Decomposed structure:
+      - `info.json` (metadata minus collections/fields/relations)
+      - `collections/<name>[suffix].json`
+      - `fields/<collection>/<field>[suffix].json`
+      - `relations/<collection>/<field>[suffix].json`
+  - Suffixing: `getSuffix()` ensures case-insensitive uniqueness for file names.
+
+Hooks
+- `hooks.onSave(snapshot)` can transform before writing to disk.
+- `hooks.onLoad(snapshot)` can transform before diffing/pushing to the server.
+
+Behavioral rules
+- Always respect `splitFiles` when saving and loading.
+- When diff result is empty or missing (`undefined` in some Directus versions), log that no changes are needed.
+- Use the injected `LOGGER` via `getChildLogger(base, 'snapshot')` for logging.
+
+Extending or changing behavior
+- If new decomposition strategies are needed, implement them alongside the current one without breaking compatibility.
+- Keep `getSuffix()` behavior stable to avoid noisy diffs on case-insensitive file systems.
+
+Testing guidance (recommended)
+- Verify decompose/compose round-trips produce identical snapshots.
+- Mock `MigrationClient` to test pull/diff/push flows and `force` behavior.
+- Test hook transformations are applied at the correct stages (onSave/onLoad).
+
+Common pitfalls to avoid
+- Forgetting to clear the dump directory before saving (stale files)
+- Not handling the "no diff returned" case from the Directus API
+- Writing without respecting `splitFiles` or `force` configuration
+
+References
+- Usage context: `https://tractr.github.io/directus-sync/docs/features/hooks`

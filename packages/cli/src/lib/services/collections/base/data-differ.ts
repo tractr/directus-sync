@@ -11,10 +11,17 @@ import { IdMap, IdMapperClient } from './id-mapper-client';
 import { diff } from 'deep-object-diff';
 import { DataLoader } from './data-loader';
 import { DataClient } from './data-client';
-import pino from 'pino';
 import { DataMapper } from './data-mapper';
+import { chunks, runSequentially } from './helpers';
+import { Logger } from '../../logger';
 
 export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
+  /**
+   * The maximum number of ids to request at once.
+   * This is used to avoid overwhelming the server with too many requests.
+   */
+  protected maxIdsPerRequest = 100;
+
   /**
    * These field will be ignored when comparing the data from the dump with the data from the target table.
    */
@@ -25,7 +32,7 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
   ] = ['id', '_syncId'];
 
   constructor(
-    protected readonly logger: pino.Logger,
+    protected readonly logger: Logger,
     protected readonly dataLoader: DataLoader<DirectusType>,
     protected readonly dataClient: DataClient<DirectusType>,
     protected readonly dataMapper: DataMapper<DirectusType>,
@@ -128,15 +135,20 @@ export abstract class DataDiffer<DirectusType extends DirectusBaseType> {
   protected async getExistingIds(
     localIds: string[],
   ): Promise<{ id: DirectusId }[]> {
-    return await this.dataClient.query({
-      filter: {
-        id: {
-          _in: localIds,
-        },
-      },
-      limit: -1,
-      fields: ['id'],
-    } as Query<DirectusType>);
+    const idsChunks = [...chunks(localIds, this.maxIdsPerRequest)];
+    const tasks = idsChunks.map(
+      (idsChunk) => () =>
+        this.dataClient.query({
+          filter: {
+            id: {
+              _in: idsChunk,
+            },
+          },
+          limit: -1,
+          fields: ['id'],
+        } as Query<DirectusType>),
+    );
+    return await runSequentially(tasks).then((results) => results.flat());
   }
 
   /**

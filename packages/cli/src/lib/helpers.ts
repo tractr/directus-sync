@@ -4,16 +4,21 @@ import {
   readdirSync,
   readJsonSync,
   statSync,
+  writeJsonSync as writeJsonSyncFs,
 } from 'fs-extra';
 import { z, ZodError, ZodSchema } from 'zod';
-import pino, { LoggerOptions } from 'pino';
 import { Container } from 'typedi';
 import path from 'path';
-import { LOGGER, LOGGER_TRANSPORT } from './constants';
-import { ConfigService } from './services';
+import { LOGGER_TRANSPORT } from './constants';
+import {
+  ConfigService,
+  LoggerService,
+  LoggerConfigTransport,
+  Logger,
+} from './services';
 
 export function createDumpFolders() {
-  const logger: pino.Logger = Container.get(LOGGER);
+  const logger = Container.get(LoggerService);
   const config = Container.get(ConfigService);
 
   const collectionsConfig = config.getCollectionsConfig();
@@ -30,25 +35,10 @@ export function createDumpFolders() {
 }
 
 /**
- * Helper for getting a child logger that adds a prefix to the log messages.
- */
-export function getChildLogger(
-  baseLogger: pino.Logger,
-  prefix: string,
-): pino.Logger {
-  return baseLogger.child(
-    {},
-    {
-      msgPrefix: `[${prefix}] `,
-    },
-  );
-}
-
-/**
  * Log message to debug or info, depending on the debug flag
  */
 export function debugOrInfoLogger(
-  logger: pino.Logger,
+  logger: Logger,
 ): (info: boolean, message: string) => void {
   return (info: boolean, message: string) => {
     if (info) {
@@ -120,7 +110,7 @@ export function zodParse<T extends ZodSchema>(
   }
 }
 
-export function getPinoTransport(): LoggerOptions['transport'] {
+export function getPinoTransport(): LoggerConfigTransport {
   // Allow to override the log output when running as a programmatic way (not CLI, i.e. tests)
   if (Container.has(LOGGER_TRANSPORT)) {
     return Container.get(LOGGER_TRANSPORT);
@@ -131,4 +121,29 @@ export function getPinoTransport(): LoggerOptions['transport'] {
       colorize: true,
     },
   };
+}
+
+/**
+ * Recursively sort object keys to ensure stable JSON output.
+ * Arrays are processed element-wise. Primitives are returned as-is.
+ */
+export function sortObjectDeep<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map((item) => sortObjectDeep(item)) as unknown as T;
+  }
+  if (value !== null && typeof value === 'object') {
+    const entries = Object.entries(value as Record<string, unknown>)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([k, v]) => [k, sortObjectDeep(v)]);
+    return Object.fromEntries(entries) as unknown as T;
+  }
+  return value;
+}
+
+/**
+ * Write JSON to disk with stable key ordering.
+ */
+export function writeJsonSync(filePath: string, data: unknown, sort: boolean) {
+  const payload = sort ? sortObjectDeep(data) : data;
+  writeJsonSyncFs(filePath, payload, { spaces: 2 });
 }

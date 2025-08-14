@@ -1,0 +1,62 @@
+---
+description: Helpers services (utility endpoints) architecture and change guidelines
+globs: packages/cli/src/lib/services/*-client.ts
+---
+
+# Services Clients – architecture and change guidelines
+
+Audience: Cursor agents working on client classes: `helpers-client.ts`, `extension-client.ts`, `ping-client.ts`, `migration-client.ts`
+
+Scope: HTTP and SDK client layer used across the CLI. Includes a Directus REST/auth client (`MigrationClient`), a base extension HTTP client (`ExtensionClient`), health-check client (`PingClient`), and a thin utility client (`HelpersClient`).
+
+Core modules
+- `helpers-client.ts` (HelpersClient):
+  - Extends `ExtensionClient` to make HTTP calls to the Directus extension endpoints.
+  - Uses `ConfigService` for parameters:
+    - `getRemovePermissionDuplicatesConfig()` → `{ keep: 'first'|'last' }`
+    - `getUntrackConfig()` → `{ collection, id }`
+  - Methods:
+    - `removePermissionDuplicates()`: DELETE `/helpers/permissions/duplicates` with body `{ keep }`. Logs a summary per result entry (policy, collection, action, ids count).
+    - `untrack()`: DELETE `/table/:collection/local_id/:id`. Logs success.
+
+- `extension-client.ts` (ExtensionClient):
+  - Base HTTP client for the Directus extension (`/directus-extension-sync` path prefix).
+  - `fetch(uri, method, payload, options)`: Attaches `Authorization: Bearer <token>` and JSON headers, handles JSON/text responses, and throws helpful `http-errors` with 404 guidance if the extension is missing.
+  - Caches `getUrlAndToken()` and `getFetch()` via `@Cacheable()` to reduce overhead.
+
+- `ping-client.ts` (PingClient):
+  - Health-check against the extension using a fake id-map request; success if server returns the canonical "no id map" error.
+  - Used before snapshot push to ensure the extension is installed and reachable.
+
+- `migration-client.ts` (MigrationClient):
+  - Creates and caches a Directus SDK client configured with REST and authentication.
+  - Auth: uses token when provided; otherwise logs in with email/password and stores the access token.
+  - `clearCache()`: calls Directus `clearCache()`.
+  - Version checks: retrieves `serverInfo().version` and validates compatibility using `compare-versions`.
+
+Behavioral rules
+- Always use `getChildLogger(base, 'helpers-client')` and log at info level for user-visible actions.
+- Do not embed business logic or heuristics here; this client should only orchestrate extension calls and logging.
+- Derive all inputs from `ConfigService`; do not read env or argv directly.
+ - For `ExtensionClient.fetch`, preserve helpful error messages; do not swallow errors. Keep 404 guidance message intact.
+ - For `MigrationClient`, never store credentials or tokens outside the Directus client; obtain tokens via SDK and `setToken`.
+
+Extending behavior
+- Add new helper methods to mirror new server-side endpoints; keep them single-responsibility and declarative.
+- For bulk operations returning arrays, iterate results and log concise summaries.
+ - If adding new extension clients, subclass `ExtensionClient` to inherit auth/fetch behavior and prefix handling.
+
+Testing guidance (recommended)
+- Mock `ExtensionClient.fetch` and assert correct endpoints, HTTP methods, payloads, and logging behavior.
+ - For `MigrationClient`, mock Directus SDK methods (`createDirectus`, `login`, `setToken`, requests) to validate auth paths (token vs credentials) and version checks.
+ - For `PingClient`, ensure behavior when extension is present vs missing; assert it throws unexpected errors.
+
+Common pitfalls to avoid
+- Hardcoding endpoint paths that diverge from the API extension
+- Swallowing errors; allow exceptions to bubble up to command-level handlers
+- Logging secrets or sensitive values
+ - Building Directus REST calls manually instead of using the SDK in `MigrationClient`
+ - Forgetting to remove trailing slash from URL in `ExtensionClient.getUrlAndToken`
+
+References
+- Usage context: `https://tractr.github.io/directus-sync/docs/getting-started/usage/`

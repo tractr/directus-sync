@@ -1,0 +1,90 @@
+---
+description: How to write e2e tests using Context and DirectusSync
+globs: packages/e2e/spec/**/*.ts
+---
+
+# How to write an E2E test
+
+This guide shows how to structure an end-to-end test using the helpers in `packages/e2e/spec/helpers`, referencing `pull-diff-push/pull-and-push-with-changes.ts`.
+
+Boilerplate
+- Use a factory function that takes a `Context` and defines one or more `it(...)` blocks (do not create a top-level `describe` with its own lifecycle; rely on the central `entrypoint.spec.ts`).
+- Export the factory from the suite `index.ts` so it is included by the top-level barrel and imported/called in `spec/entrypoint.spec.ts`.
+
+Lifecycle
+- `Context.init()` is called by the test runner bootstrap (see `spec/start-server.ts`).
+- In your suite, call `await context.setup()` at the start of each spec to reset SQLite and login as admin.
+- Use `context.dispose()` in global teardown if you create a dedicated server, but the shared bootstrap handles start/stop.
+
+CLI access via DirectusSync
+- Get a CLI wrapper with `const sync = await context.getSync('temp/<test-name>'[, configPath]);`.
+  - Using a `temp/*` dump path triggers auto-clean before the test.
+  - `configPath` points to a file under `packages/e2e/configs/*` if you need custom hooks/options.
+- Run commands and capture logs:
+  - `await sync.pull()` / `await sync.push()` / `await sync.diff()`
+  - Returns array of `{ level, msg }` log entries (string messages expected by assertions).
+
+Example outline (based on pull-and-push-with-changes)
+1) Seed baseline state by pushing a known dump:
+   - `const syncInit = await context.getSync('sources/one-item-per-collection');`
+   - `await syncInit.push();`
+2) Create a new `DirectusSync` on an updated dump and run `diff()`:
+   - `const sync = await context.getSync('sources/one-item-per-collection-updated');`
+   - `const diffOutput = await sync.diff();`
+   - Assert snapshot shows no schema changes and per-collection update counts using `debug()`/`info()` helpers and `getDefaultItemsCount()`.
+3) Run `push()` and assert Directus activities contain only updates (no creates/deletes), using `context.getDirectus().getActivities(sinceDate)`.
+4) Run a final `diff()` to confirm everything is up to date.
+
+Assertions
+- Prefer checking normalized logs with the `debug()` and `info()` helpers imported from `helpers`.
+- Use `getSystemCollectionsNames()` to iterate collections and `getDefaultItemsCount(collection)` to compute expected counts.
+- For server-side verification, use `DirectusClient` helpers (e.g., `getActivities`, `getByLocalId`, `getSyncIdMaps`).
+
+Data and dumps
+- Place reusable dumps under `packages/e2e/dumps/sources/*`; reference them by folder name when calling `getSync('sources/...')`.
+- For on-the-fly dumps, use `temp/<name>` to ensure directories are cleared before writing.
+
+Do/Don't
+- Do keep tests deterministic; seed all needed data and don’t rely on previous suites.
+- Do run CLI commands sequentially (wrapper prevents concurrent runs).
+- Don’t mix Directus SDK mutations during an in-flight CLI command.
+- Don’t depend on wall-clock timing; use readiness checks and activities filters by timestamp.
+
+Quick template
+```ts
+import { Context, debug, info, getSystemCollectionsNames, getDefaultItemsCount } from '../helpers/index.js';
+
+export const mySuite = (context: Context) => {
+  it('does something end-to-end', async () => {
+    await context.setup();
+    const directus = context.getDirectus();
+
+    const syncInit = await context.getSync('sources/example-baseline');
+    await syncInit.push();
+
+    const sync = await context.getSync('sources/example-changes');
+    const diffOutput = await sync.diff();
+    expect(diffOutput).toContain(debug('[snapshot] No changes to apply'));
+
+    const collections = getSystemCollectionsNames();
+    for (const c of collections) {
+      expect(diffOutput).toContain(info(`[${c}] To update: 1 item(s)`));
+      expect(diffOutput).toContain(debug(`[${c}] To create: 0 item(s)`));
+    }
+
+    const before = new Date();
+    const pushOutput = await sync.push();
+    const activities = await directus.getActivities(before);
+    expect(activities.filter(a => a.action === 'create')).toEqual([]);
+    expect(activities.filter(a => a.action === 'delete')).toEqual([]);
+
+    const finalDiff = await sync.diff();
+    for (const c of collections) {
+      expect(finalDiff).toContain(debug(`[${c}] To update: 0 item(s)`));
+    }
+  });
+};
+```
+
+Where to register
+- Export your suite from `spec/<area>/index.ts`. For new targeted checks, you can also import the factory directly in `spec/entrypoint.spec.ts` and call it with the shared `Context` (see `pull-diff-push/sort-json.ts`).

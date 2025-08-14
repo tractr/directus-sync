@@ -106,6 +106,10 @@ export function createProgram() {
       ', ',
     )})`,
   );
+  const sortJsonOption = new Option(
+    '--sort-json',
+    `sort JSON keys when saving files (default "${DefaultConfig.sortJson}")`,
+  );
 
   // Shared options
   const dumpPathOption = new Option(
@@ -130,6 +134,10 @@ export function createProgram() {
     '-o, --only-collections <onlyCollections>',
     `comma separated list of collections to include in the process (default to all)`,
   ).argParser(commaSeparatedList);
+  const noCollectionsOption = new Option(
+    '--no-collections',
+    `should pull and push the collections (default "${DefaultConfig.collections}")`,
+  );
   const preserveIdsOption = new Option(
     '--preserve-ids <preserveIds>',
     `comma separated list of collections that preserve their original ids (default to none). Use "*" or "all" to preserve all ids, if applicable.`,
@@ -162,9 +170,15 @@ export function createProgram() {
     `force the diff of schema, even if the Directus version is different (default "${DefaultConfig.force}")`,
   );
 
+  const prettyDiffOption = new Option(
+    '--pretty-diff',
+    `display a human readable schema diff instead of the raw JSON (default "${DefaultConfig.prettyDiff}")`,
+  );
+
   program
     .version(getVersion())
     .addOption(debugOption)
+    .addOption(sortJsonOption)
     .addOption(directusUrlOption)
     .addOption(directusTokenOption)
     .addOption(directusEmailOption)
@@ -178,6 +192,7 @@ export function createProgram() {
     .addOption(collectionsPathOption)
     .addOption(excludeCollectionsOption)
     .addOption(onlyCollectionsOption)
+    .addOption(noCollectionsOption)
     .addOption(preserveIdsOption)
     .addOption(snapshotPathOption)
     .addOption(noSnapshotOption)
@@ -195,10 +210,12 @@ export function createProgram() {
     .addOption(collectionsPathOption)
     .addOption(excludeCollectionsOption)
     .addOption(onlyCollectionsOption)
+    .addOption(noCollectionsOption)
     .addOption(snapshotPathOption)
     .addOption(noSnapshotOption)
     .addOption(noSplitOption)
     .addOption(forceOption)
+    .addOption(prettyDiffOption)
     .action(wrapAction(program, runDiff));
 
   program
@@ -208,6 +225,7 @@ export function createProgram() {
     .addOption(collectionsPathOption)
     .addOption(excludeCollectionsOption)
     .addOption(onlyCollectionsOption)
+    .addOption(noCollectionsOption)
     .addOption(preserveIdsOption)
     .addOption(snapshotPathOption)
     .addOption(noSnapshotOption)

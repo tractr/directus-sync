@@ -1,9 +1,10 @@
-import { createProgram, LOGGER } from './lib';
-import pino from 'pino';
+import { createProgram, Logger, LoggerService, LOGGER_TRANSPORT } from './lib';
 import { Container } from 'typedi';
 
-function getLogger(): pino.Logger | Console {
-  return Container.has(LOGGER) ? Container.get(LOGGER) : console;
+function getLogger(): Logger | Console {
+  return Container.has(LOGGER_TRANSPORT)
+    ? Container.get(LoggerService)
+    : console;
 }
 
 export function run() {

@@ -1,0 +1,56 @@
+---
+description: Repository overview and package responsibilities
+globs: packages/**/*, website/**/*, docker/**/*, *.md, lerna.json
+---
+
+# Repository Overview
+
+Monorepo providing a Directus endpoint extension, a CLI for syncing schema/data, an e2e test harness, and documentation.
+
+High-level flow
+- The CLI connects to a Directus instance and orchestrates pull/diff/push/seed/specs operations.
+- The API extension exposes endpoints used by the CLI for SyncID↔LocalID mapping and helpers.
+- E2E tests spin up a Directus server locally and validate the full flow (CLI + extension) end-to-end.
+
+Packages
+- `packages/api` (Directus endpoint extension)
+  - Exposes `/directus-extension-sync` routes for SyncID mapping and helpers (e.g., permissions deduplication).
+  - Uses Express-style router via Directus SDK, Zod validation, and Knex for a small mapping table.
+  - Key files: `src/index.ts` (routes), `src/api/*` (middleware/helpers), `src/database/*` (IdMapper, Permissions).
+
+- `packages/cli` (Directus Sync CLI)
+  - Orchestrates schema and system collections synchronization; supports seed data and API specifications dump.
+  - Structure:
+    - `services/config`: options resolution (defaults → config file → CLI flags), Zod validation.
+    - `services/collections`: per-collection pull/diff/push with id mapping.
+    - `services/snapshot`: schema snapshot pull/diff/push.
+    - `services/seed`: seed files loader/differ/pusher with dynamic id mapping.
+    - `services/specifications`: GraphQL/OpenAPI dump.
+    - `services/*-client.ts`: Directus SDK client, extension HTTP client, health checks.
+    - `commands` + `program.ts`: command wiring and execution.
+  - Technologies: TypeScript, typedi (DI), pino (logging), Zod, @directus/sdk.
+
+- `packages/e2e` (End-to-end tests)
+  - Jasmine-based tests against a locally started Directus server.
+  - Helpers start the server, create a Directus client, and run CLI commands programmatically, asserting logs and state.
+  - See `spec/helpers/sdk/*`, `spec/pull-diff-push/*`.
+
+- `website` (Documentation)
+  - Docusaurus site documenting installation, features, and how the sync works.
+  - When updating the CLI help outputs, build the whole project (`npm run build` at the root), then run `npm run update-help-outputs` to update the help outputs in the website.
+
+Other top-level
+- `docker/`: build/publish scripts and Dockerfile for distributing Directus with the extension.
+- `lerna.json`: monorepo management.
+- `DOCUMENTATION.md`, `CHANGELOG.md`, etc.: project docs and changelog.
+
+Conventions (brief)
+- TypeScript across packages; DI via `typedi`; logging via `pino`; validation via `zod`.
+- Keep business logic in services; commands/endpoints orchestrate only.
+- Follow per-package rules under `.cursor/rules/` for detailed guidance.
+
+Checks
+- Before committing, run `npm run lint` to run the linter and fix any issues.
+- Before pushing, run `npm run test` to run the tests and fix any issues.
+- Before pushing, run `npm run build` to build the project and fix any issues.
+- Before pushing, run `npm run docs:update` to update the help outputs in the website.

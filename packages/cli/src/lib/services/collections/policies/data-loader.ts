@@ -14,6 +14,6 @@ export class PoliciesDataLoader extends DataLoader<DirectusPolicy> {
       `${POLICIES_COLLECTION}.json`,
     );
     const hooks = config.getCollectionHooksConfig(POLICIES_COLLECTION);
-    super(filePath, migrationClient, hooks);
+    super(filePath, migrationClient, hooks, config);
   }
 }

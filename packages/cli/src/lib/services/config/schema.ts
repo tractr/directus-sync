@@ -96,6 +96,8 @@ export const OptionsFields = {
       restConfig: RestConfigSchema.optional(),
     })
     .optional(),
+  // JSON output
+  sortJson: z.boolean(),
   // Pull, diff, push
   dumpPath: z.string(),
   maxPushRetries: z.number().or(z.string().transform(Number)),
@@ -103,6 +105,7 @@ export const OptionsFields = {
   collectionsPath: z.string(),
   excludeCollections: z.array(CollectionEnum).optional(),
   onlyCollections: z.array(CollectionEnum).optional(),
+  collections: z.boolean(),
   preserveIds: z.union([
     z.array(CollectionPreservableIdEnum).optional(),
     z.enum(['all', '*']),
@@ -111,6 +114,8 @@ export const OptionsFields = {
   snapshotPath: z.string(),
   snapshot: z.boolean(),
   split: z.boolean(),
+  // Diff formatting
+  prettyDiff: z.boolean(),
   // Specifications
   specsPath: z.string(),
   specs: z.boolean(),
@@ -143,6 +148,8 @@ export const ConfigFileOptionsSchema = z.object({
       restConfig: RestConfigSchema.optional(),
     })
     .optional(),
+  // JSON output
+  sortJson: OptionsFields.sortJson.optional(),
   // Dump config
   dumpPath: OptionsFields.dumpPath.optional(),
   maxPushRetries: OptionsFields.maxPushRetries.optional(),
@@ -150,6 +157,7 @@ export const ConfigFileOptionsSchema = z.object({
   collectionsPath: OptionsFields.collectionsPath.optional(),
   excludeCollections: OptionsFields.excludeCollections.optional(),
   onlyCollections: OptionsFields.onlyCollections.optional(),
+  collections: OptionsFields.collections.optional(),
   preserveIds: OptionsFields.preserveIds.optional(),
   // Snapshot config
   snapshotPath: OptionsFields.snapshotPath.optional(),
