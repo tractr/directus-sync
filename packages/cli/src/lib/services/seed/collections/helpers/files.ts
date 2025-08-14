@@ -15,24 +15,23 @@ export async function fileItemToFormData(object: FileItem) {
   const formData = new FormData();
   const file = await getFileAsBlob(object);
 
+  // Add properties first (https://github.com/directus/directus/discussions/10130#discussioncomment-2216554)
   for (const [key, value] of Object.entries(object)) {
     if (key === '_file_path') {
       continue;
     }
 
-    const prefixedKey = `file_1_${key}`;
     if (typeof value === 'string') {
-      formData.append(prefixedKey, value);
+      formData.append(key, value);
     } else if (typeof value === 'object' && value !== null) {
-      formData.append(prefixedKey, JSON.stringify(value));
+      formData.append(key, JSON.stringify(value));
     } else {
-      formData.append(prefixedKey, value?.toString() || '');
+      formData.append(key, value?.toString() || '');
     }
   }
 
+  // Add file last
   formData.append('file', file);
-
-  console.log(formData);
 
   return formData;
 }
