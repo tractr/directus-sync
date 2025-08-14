@@ -221,6 +221,53 @@ The `directus_roles` collection is not managed by the `seed push` but by the `pu
 The seed of the `directus_users` collection is experimental and may change in the future.
 :::
 
+### Directus Files
+
+This is an example of a seed file for the `directus_files` collection:
+
+```json
+{
+    "collection": "directus_files",
+    "meta": {
+        "insert_order": 2
+    },
+    "data": [
+        {
+            "_sync_id": "file-1",
+            "_file_path": "./logo.jpg",
+            "storage": "local",
+            "filename_download": "the-file-1.jpg",
+            "title": "File 1",
+            "tags": ["tag-1", "tag-2"],
+            "description": "File 1 description",
+            "folder": "92d60c0c-30b8-49d9-bd63-11008fa652af",
+            "uploaded_by": "user-1",
+            "metadata": { "test": "value" }
+        },
+        {
+            "_sync_id": "file-2",
+            "_file_path": "./logo.jpg",
+            "storage": "local",
+            "filename_download": "the-file-2.jpg",
+            "title": "File 2",
+            "tags": ["tag-2", "tag-3"],
+            "description": "File 2 description",
+            "metadata": { "test": "value-2" }
+        }
+    ]
+}
+```
+
+**Notes:**
+
+- `_file_path`: path to the local file to upload. Use a relative path from the seed file location or an absolute path. The file must exist.
+
+- `uploaded_by` (_optional_): reference a user by that user's seed `_sync_id` (e.g., `"user-1"` from your `directus_users` seed). Ensure insert order respects dependencies: create users before files (e.g., `directus_users` with `insert_order: 1`, `directus_files` with `insert_order: 2`)
+
+- `folder` (_optional_): reference a folder by its `_syncId` as defined in `collections/folders.json` (system collections dump).
+
+- Available properties are listed in the [Directus documentation](https://directus.io/docs/api/files#upload-a-file).
+
 ### Many-to-Many Relations
 
 Many-to-many relations have to be handled manually.
