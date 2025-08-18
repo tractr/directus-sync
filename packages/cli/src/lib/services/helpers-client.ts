@@ -58,7 +58,7 @@ export class HelpersClient extends ExtensionClient {
 
     // Poll until ready or timeout
     while (Date.now() < endAt) {
-      const ready = await this.checkServerHealth().catch(() => false);
+      const ready = await this.checkServerStatus().catch(() => false);
       consecutiveSuccesses = ready ? consecutiveSuccesses + 1 : 0;
       if (consecutiveSuccesses >= successes) {
         this.logger.info('Server is ready');
@@ -71,12 +71,15 @@ export class HelpersClient extends ExtensionClient {
     throw new Error(`Timeout waiting for server to be ready after ${timeout}s`);
   }
 
-  protected async checkServerHealth() {
+  protected async checkServerStatus() {
     try {
       const client = await this.migrationClient.get();
       const result = await client.request(serverHealth());
-      return result?.status === 'ok';
-    } catch {
+      const isOk = result?.status === 'ok';
+      this.logger.debug(`Server status: ${result?.status}`);
+      return isOk;
+    } catch (e) {
+      this.logger.debug(`Error checking server status: ${e}`);
       return false;
     }
   }
