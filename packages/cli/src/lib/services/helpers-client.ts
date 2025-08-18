@@ -45,19 +45,22 @@ export class HelpersClient extends ExtensionClient {
   }
 
   async waitServerReady() {
-    const { interval, timeout } = this.config.getWaitForServerReadyConfig();
+    const { interval, timeout, successes } =
+      this.config.getWaitForServerReadyConfig();
     const intervalMs = interval * 1000;
     const timeoutMs = timeout * 1000;
     const endAt = Date.now() + timeoutMs;
+    let consecutiveSuccesses = 0;
 
     this.logger.info(
-      `Waiting for server to be ready (timeout ${timeout}s, interval ${interval}s)`,
+      `Waiting for server to be ready (timeout ${timeout}s, interval ${interval}s, successes ${successes})`,
     );
 
     // Poll until ready or timeout
     while (Date.now() < endAt) {
       const ready = await this.checkServerHealth().catch(() => false);
-      if (ready) {
+      consecutiveSuccesses = ready ? consecutiveSuccesses + 1 : 0;
+      if (consecutiveSuccesses >= successes) {
         this.logger.info('Server is ready');
         return;
       }

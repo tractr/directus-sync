@@ -300,6 +300,10 @@ export function createProgram() {
       '--timeout <timeout>',
       `timeout in seconds (default "${DefaultConfig.timeout}")`,
     )
+    .option(
+      '--successes <successes>',
+      `number of consecutive successes required (default "${DefaultConfig.successes}")`,
+    )
     .action(wrapAction(program, runWaitServerReady));
 
   return program;

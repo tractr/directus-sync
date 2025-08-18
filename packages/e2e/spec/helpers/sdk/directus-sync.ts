@@ -69,7 +69,7 @@ export class DirectusSync {
     );
   }
 
-  waitServerReady(interval = 5, timeout = 90) {
+  waitServerReady(interval = 5, timeout = 90, successes = 1) {
     return this.runCliCommand(
       'helpers',
       'wait-server-ready',
@@ -77,6 +77,8 @@ export class DirectusSync {
       String(interval),
       '--timeout',
       String(timeout),
+      '--successes',
+      String(successes),
     );
   }
 

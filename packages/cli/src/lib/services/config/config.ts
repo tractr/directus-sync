@@ -136,6 +136,7 @@ export class ConfigService {
     return {
       interval: this.requireOptions('interval'),
       timeout: this.requireOptions('timeout'),
+      successes: this.requireOptions('successes'),
     };
   }
 
