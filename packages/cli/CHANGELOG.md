@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.4.0](https://github.com/tractr/directus-sync/compare/directus-sync@3.3.0...directus-sync@3.4.0) (2025-08-18)
+
+
+### Features
+
+* **cli:** add `wait-server-ready` command to wait for Directus server to be ready ([#182](https://github.com/tractr/directus-sync/issues/182)) ([ba9d37b](https://github.com/tractr/directus-sync/commit/ba9d37b936440129da344ef5ba9bce70f3d1f133))
+
+
+
+
+
 # [3.3.0](https://github.com/tractr/directus-sync/compare/directus-sync@3.2.3...directus-sync@3.3.0) (2025-08-14)
 
 
