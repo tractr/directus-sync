@@ -79,7 +79,7 @@ export class HelpersClient extends ExtensionClient {
       this.logger.debug(`Server status: ${result?.status}`);
       return isOk;
     } catch (e) {
-      this.logger.debug(`Error checking server status: ${e}`);
+      this.logger.debug(`Error checking server status: ${e as Error}`);
       return false;
     }
   }
