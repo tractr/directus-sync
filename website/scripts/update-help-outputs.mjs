@@ -14,6 +14,10 @@ const commands = [
     command: 'helpers remove-permission-duplicates',
     filename: 'helpers-remove-permission-duplicates.md',
   },
+  {
+    command: 'helpers wait-server-ready',
+    filename: 'helpers-wait-server-ready.md',
+  },
 ];
 const outputDir = path.join('docs/help-outputs');
 

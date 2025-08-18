@@ -69,6 +69,19 @@ export class DirectusSync {
     );
   }
 
+  waitServerReady(interval = 5, timeout = 90, successes = 1) {
+    return this.runCliCommand(
+      'helpers',
+      'wait-server-ready',
+      '--interval',
+      String(interval),
+      '--timeout',
+      String(timeout),
+      '--successes',
+      String(successes),
+    );
+  }
+
   seedPush(args?: string[]) {
     return this.runCliCommand(
       'seed',
@@ -133,7 +146,7 @@ export class DirectusSync {
     Container.reset();
 
     // Remove the log file (disable next line for debugging)
-    // rmSync(logFilePath, { force: true });
+    fs.rmSync(logFilePath, { force: true });
 
     // Allow running another command
     this.running = false;
