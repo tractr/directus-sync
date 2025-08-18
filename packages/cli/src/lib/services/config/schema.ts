@@ -126,6 +126,9 @@ export const OptionsFields = {
   id: z.string().optional(),
   // Remove Permission Duplicates
   keep: z.enum(['first', 'last']).optional(),
+  // Wait for server ready
+  interval: z.number().or(z.string().transform(Number)).optional(),
+  timeout: z.number().or(z.string().transform(Number)).optional(),
   // Hooks
   hooks: OptionsHooksSchema.optional(),
   // Seed

@@ -40,6 +40,7 @@ import {
   removePermissionDuplicates,
 } from './permissions/index.js';
 import { removeTrackedItem } from './untrack/index.js';
+import { waitServerReady } from './server/index.js';
 import {
   createOperationsWithConflicts,
   updateOperationsWithConflicts,
@@ -117,6 +118,7 @@ describe('Tests entrypoint ->', () => {
   groupAndFieldNamesConflict(context);
 
   removeTrackedItem(context);
+  waitServerReady(context);
 
   seedPushOnEmptyInstance(context);
   seedUsers(context);

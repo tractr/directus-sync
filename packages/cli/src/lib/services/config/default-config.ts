@@ -27,6 +27,8 @@ export const DefaultConfig: Pick<
   | 'seedPath'
   | 'force'
   | 'keep'
+  | 'interval'
+  | 'timeout'
 > = {
   // Global
   debug: false,
@@ -55,4 +57,7 @@ export const DefaultConfig: Pick<
   force: false,
   // Remove Permission Duplicates
   keep: 'last',
+  // Helpers: wait for server ready
+  interval: 5,
+  timeout: 90,
 };

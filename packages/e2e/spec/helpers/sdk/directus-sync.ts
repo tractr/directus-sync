@@ -69,6 +69,17 @@ export class DirectusSync {
     );
   }
 
+  waitServerReady(interval = 5, timeout = 90) {
+    return this.runCliCommand(
+      'helpers',
+      'wait-server-ready',
+      '--interval',
+      String(interval),
+      '--timeout',
+      String(timeout),
+    );
+  }
+
   seedPush(args?: string[]) {
     return this.runCliCommand(
       'seed',

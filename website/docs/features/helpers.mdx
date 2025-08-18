@@ -4,6 +4,7 @@ sidebar_position: 5
 
 import HelpUntrack from '../help-outputs/helpers-untrack.md';
 import HelpRemovePermissionDuplicates from '../help-outputs/helpers-remove-permission-duplicates.md';
+import HelpWaitServerReady from '../help-outputs/helpers-wait-server-ready.md';
 
 # Helpers
 
@@ -48,3 +49,17 @@ This command will keep the `last` (or `first`) permission found and remove the o
 **Available Options**
 
 <HelpRemovePermissionDuplicates />
+
+## Wait for Server Ready
+
+Wait until the Directus server reports healthy on its health endpoint. Polls every X seconds until ready or until the timeout is reached.
+
+```shell
+npx directus-sync helpers wait-server-ready --interval <seconds> --timeout <seconds>
+```
+
+By default, `interval` is 5 seconds and `timeout` is 90 seconds.
+
+**Available Options**
+
+<HelpWaitServerReady />

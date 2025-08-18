@@ -132,6 +132,14 @@ export class ConfigService {
   }
 
   @Cacheable()
+  getWaitForServerReadyConfig() {
+    return {
+      interval: this.requireOptions('interval'),
+      timeout: this.requireOptions('timeout'),
+    };
+  }
+
+  @Cacheable()
   getConfigFileLoaderConfig() {
     return this.requireOptions('configPath');
   }

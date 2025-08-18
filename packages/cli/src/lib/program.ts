@@ -11,6 +11,7 @@ import {
   runPush,
   runRemovePermissionDuplicates,
   runUntrack,
+  runWaitServerReady,
 } from './index';
 import { runSeedPush, runSeedDiff } from './commands/seed';
 
@@ -285,9 +286,21 @@ export function createProgram() {
     .option(
       '--keep <keep>',
       `the permission to keep in case of conflict: "first" or "last" (default "${DefaultConfig.keep}")`,
-      'last',
     )
     .action(wrapAction(program, runRemovePermissionDuplicates));
+
+  helpers
+    .command('wait-server-ready')
+    .description('wait until the Directus server is ready (health endpoint)')
+    .option(
+      '--interval <interval>',
+      `seconds between checks (default "${DefaultConfig.interval}")`,
+    )
+    .option(
+      '--timeout <timeout>',
+      `timeout in seconds (default "${DefaultConfig.timeout}")`,
+    )
+    .action(wrapAction(program, runWaitServerReady));
 
   return program;
 }
