@@ -9,7 +9,10 @@ import { FoldersIdMapperClient } from '../folders';
 
 @Service()
 export class SettingsDataMapper extends DataMapper<DirectusSettings> {
-  protected fieldsToIgnore: Field<DirectusSettings, 'public_favicon' | 'project_id'>[] = [
+  protected fieldsToIgnore: Field<
+    DirectusSettings,
+    'public_favicon' | 'project_id'
+  >[] = [
     // These fields are not relevant meanwhile assets are not supported
     'project_logo',
     'public_foreground',

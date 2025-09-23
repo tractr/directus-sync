@@ -12,6 +12,7 @@ export function getSettings(
   | 'public_background'
   | 'public_favicon'
   | 'project_url'
+  | 'project_id'
 > &
   DirectusSettingsExtra {
   return {
@@ -56,5 +57,6 @@ export function getSettings(
       ],
     },
     visual_editor_urls: [faker.internet.url()],
+    accepted_terms: faker.datatype.boolean(),
   };
 }

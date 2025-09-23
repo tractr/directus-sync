@@ -269,6 +269,7 @@ export const pushFlushAndPush = (context: Context) => {
         theme_dark_overrides: settings.theme_dark_overrides,
         project_logo: null,
         project_url: null,
+        project_id: null,
         public_background: null,
         public_favicon: null,
         public_foreground: null,

@@ -12,7 +12,7 @@ async function writeJSON(path, data) {
 }
 
 const actual = '11.8.0';
-const next = '11.8.0';
+const next = '11.9.0';
 
 if (actual === next) {
   console.log('Nothing to upgrade');

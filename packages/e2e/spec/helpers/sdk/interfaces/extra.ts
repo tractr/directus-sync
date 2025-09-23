@@ -9,4 +9,5 @@ export interface DirectusSettingsExtra {
   public_registration_role: string | null;
   public_registration_email_filter: object | string | null;
   visual_editor_urls: string[] | null;
+  accepted_terms: boolean;
 }
