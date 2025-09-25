@@ -17,7 +17,7 @@ export class KeyvClient {
 
   protected getClient(namespaceSuffix: string) {
     return new Keyv({
-      namespace: `${env['CACHE_NAMESPACE']}${namespaceSuffix}`,
+      namespace: `${env.CACHE_NAMESPACE as string}${namespaceSuffix}`,
     });
   }
 
