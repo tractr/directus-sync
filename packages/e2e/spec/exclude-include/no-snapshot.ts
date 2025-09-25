@@ -38,7 +38,7 @@ export const noSnapshot = (context: Context) => {
     expect(output).not.toContain(debug('[snapshot] No changes to apply'));
   });
 
-  it('should not diff schema from Directus', async () => {
+  it('should not push schema to Directus', async () => {
     // Init sync client
     const sync = await context.getSync('sources/one-item-per-collection');
 

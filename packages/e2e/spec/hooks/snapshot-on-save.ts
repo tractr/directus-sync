@@ -26,9 +26,7 @@ export const snapshotOnSave = (context: Context) => {
     const collectionFiles = fs.readdirSync(
       Path.join(snapshotPath, 'collections'),
     );
-    expect(collectionFiles).toEqual([
-      'test_model.json',
-    ]);
+    expect(collectionFiles).toEqual(['test_model.json']);
 
     const fields = fs.readdirSync(
       Path.join(snapshotPath, 'fields', 'test_model'),
