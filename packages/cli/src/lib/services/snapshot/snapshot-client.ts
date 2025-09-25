@@ -8,6 +8,7 @@ import {
   RawSchemaDiffOutput,
   Relation,
   SchemaDiffOutput,
+  RecordWithCollection,
   Snapshot,
 } from './interfaces';
 import { mkdirpSync, readJsonSync, removeSync } from 'fs-extra';
@@ -26,6 +27,12 @@ const COLLECTIONS_DIR = 'collections';
 const FIELDS_DIR = 'fields';
 const RELATIONS_DIR = 'relations';
 
+interface FiltrableSnapshot {
+  collections: RecordWithCollection[];
+  fields: RecordWithCollection[];
+  relations: RecordWithCollection[];
+}
+
 @Service({ global: true })
 export class SnapshotClient {
   protected readonly dumpPath: string;
@@ -41,6 +48,8 @@ export class SnapshotClient {
   protected readonly hooks: SnapshotHooks;
 
   protected readonly sortJson: boolean;
+
+  protected readonly ignoredCollection = 'directus_sync_id_map';
 
   constructor(
     config: ConfigService,
@@ -141,21 +150,20 @@ export class SnapshotClient {
   async getSnapshot(): Promise<Snapshot> {
     const directus = await this.migrationClient.get();
     const snapshot = await directus.request<Snapshot>(schemaSnapshot()); // Get better types
-    return this.cleanSnapshot(snapshot);
+    return this.removeIgnoredCollection(snapshot);
   }
 
   /**
-   * Remove some items from the snapshot, directus_sync collection for example
+   * Remove some items from the snapshot or diff, directus_sync collection for example
    */
-  protected cleanSnapshot(snapshot: Snapshot): Snapshot {
-    const name = 'directus_sync_id_map';
-    snapshot.collections =
-      snapshot.collections?.filter((c) => c.collection !== name) ?? [];
-    snapshot.fields =
-      snapshot.fields?.filter((f) => f.collection !== name) ?? [];
-    snapshot.relations =
-      snapshot.relations?.filter((r) => r.collection !== name) ?? [];
-    return snapshot;
+  protected removeIgnoredCollection<T extends FiltrableSnapshot>(input: T): T {
+    const name = this.ignoredCollection;
+    input.collections =
+      input.collections?.filter((c) => c.collection !== name) ?? [];
+    input.fields = input.fields?.filter((f) => f.collection !== name) ?? [];
+    input.relations =
+      input.relations?.filter((r) => r.collection !== name) ?? [];
+    return input;
   }
 
   /**
@@ -276,9 +284,16 @@ export class SnapshotClient {
     const transformedSnapshot = onLoad
       ? await onLoad(snapshot, await this.migrationClient.get())
       : snapshot;
-    return (await directus.request(
+
+    const diff = (await directus.request(
       schemaDiff(transformedSnapshot, this.force),
     )) as SchemaDiffOutput | undefined;
+
+    // Filter ignored collection
+    if (diff?.diff) {
+      diff.diff = this.removeIgnoredCollection(diff.diff);
+    }
+    return diff;
   }
 
   /**
