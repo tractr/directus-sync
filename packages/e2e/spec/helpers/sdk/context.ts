@@ -18,7 +18,6 @@ export class Context {
     await this.sqlite.reset();
     this.directus.reset();
     await this.directus.loginAsAdmin();
-    await this.directus.clearCache();
   }
   async teardown() {
     // nothing to teardown
