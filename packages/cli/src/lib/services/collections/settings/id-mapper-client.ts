@@ -37,6 +37,7 @@ export class SettingsIdMapperClient extends IdMapperClient {
   /**
    * Force settings placeholder for singleton.
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async create(localId: string | number, _syncId?: string): Promise<string> {
     return await super.create(localId, this.settingsPlaceholder);
   }
