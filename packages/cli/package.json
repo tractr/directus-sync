@@ -50,6 +50,6 @@
     "reflect-metadata": "^0.2.2",
     "typedi": "^0.10.0",
     "typescript-cacheable": "^3.0.3",
-    "zod": "^3.24.1"
+    "zod": "^4.1.11"
   }
 }
