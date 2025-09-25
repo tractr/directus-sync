@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.4.1](https://github.com/tractr/directus-sync/compare/directus-sync@3.4.0...directus-sync@3.4.1) (2025-09-25)
+
+
+### Bug Fixes
+
+* **cli:** directus 11.9.0 compatibility ([#186](https://github.com/tractr/directus-sync/issues/186)) ([262f53e](https://github.com/tractr/directus-sync/commit/262f53e73ee5261aace35004d1ab149aeb6fa4d2))
+* update zod version ([#188](https://github.com/tractr/directus-sync/issues/188)) ([a77244e](https://github.com/tractr/directus-sync/commit/a77244e0aebbb3d819bafc2b164697fbb66202db))
+
+
+
+
+
 # [3.4.0](https://github.com/tractr/directus-sync/compare/directus-sync@3.3.0...directus-sync@3.4.0) (2025-08-18)
 
 

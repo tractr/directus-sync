@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.5](https://github.com/tractr/directus-sync/compare/directus-extension-sync@3.0.4...directus-extension-sync@3.0.5) (2025-09-25)
+
+
+### Bug Fixes
+
+* update zod version ([#188](https://github.com/tractr/directus-sync/issues/188)) ([a77244e](https://github.com/tractr/directus-sync/commit/a77244e0aebbb3d819bafc2b164697fbb66202db))
+
+
+
+
+
 ## [3.0.4](https://github.com/tractr/directus-sync/compare/directus-extension-sync@3.0.3...directus-extension-sync@3.0.4) (2025-08-14)
 
 **Note:** Version bump only for package directus-extension-sync
