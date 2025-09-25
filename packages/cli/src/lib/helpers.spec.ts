@@ -21,7 +21,9 @@ describe('zodParse', () => {
       'User details: [phone] Invalid input: expected string, received undefined',
     );
     // With no error context
-    expect(() => zodParse(payload, schema)).toThrowError('[phone] Invalid input: expected string, received undefined');
+    expect(() => zodParse(payload, schema)).toThrowError(
+      '[phone] Invalid input: expected string, received undefined',
+    );
   });
 
   it('should return payload if payload is valid', () => {
