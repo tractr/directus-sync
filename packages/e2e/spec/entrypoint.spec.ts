@@ -48,7 +48,7 @@ import {
 } from './operations/index.js';
 import { updateDefaultData } from './default-data/index.js';
 import { configPathInfo } from './config/index.js';
-import { groupAndFieldNamesConflict } from './snapshot/index.js';
+import { groupAndFieldNamesConflict, syncIdMap } from './snapshot/index.js';
 import { seedPushOnEmptyInstance, seedUsers, seedFiles } from './seed/index.js';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
@@ -116,6 +116,7 @@ describe('Tests entrypoint ->', () => {
   pullAndPushPublicPermissions(context);
 
   groupAndFieldNamesConflict(context);
+  syncIdMap(context);
 
   removeTrackedItem(context);
   waitServerReady(context);

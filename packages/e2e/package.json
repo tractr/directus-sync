@@ -12,7 +12,8 @@
     "directus-sync": "directus-sync",
     "bootstrap": "./bootstrap.sh",
     "test": "npm run build && rm -f ./logs/*.log && jasmine",
-    "upgrade": "zx upgrade-directus-version.mjs && zx update-dumps-from-current-version.mjs"
+    "upgrade": "zx upgrade-directus-version.mjs && zx update-dumps-from-current-version.mjs",
+    "detect-duplicated-test-names": "node detect-duplicated-test-names.mjs"
   },
   "keywords": [],
   "author": "Edouard Demotes-Mainard <edouard@tractr.net>",
@@ -27,7 +28,7 @@
     "@types/getenv": "^1.0.3",
     "@types/jasmine": "^5.1.5",
     "@types/uuid": "^10.0.0",
-    "directus": "11.9.3",
+    "directus": "11.10.0",
     "directus-sync": "file:../cli",
     "dotenv": "^16.4.7",
     "fs-extra": "^11.3.0",

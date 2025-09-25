@@ -10,6 +10,7 @@ import {
   RestClient,
   serverPing,
   readActivities,
+  clearCache,
 } from '@directus/sdk';
 import { SystemCollection } from './interfaces/index.js';
 import getenv from 'getenv';
@@ -118,6 +119,10 @@ export class DirectusClient {
 
   async ping() {
     return this.client.request(serverPing());
+  }
+
+  async clearCache() {
+    await this.client.request(clearCache());
   }
 
   protected createClient() {

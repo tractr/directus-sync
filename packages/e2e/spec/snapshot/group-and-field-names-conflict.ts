@@ -21,8 +21,7 @@ export const groupAndFieldNamesConflict = (context: Context) => {
     const collectionsPath = Path.join(dumpPath, 'snapshot', 'collections');
     const collectionsFiles = Fs.readdirSync(collectionsPath);
 
-    expect(collectionsFiles).toHaveSize(3);
-    expect(collectionsFiles).toContain('directus_sync_id_map.json');
+    expect(collectionsFiles).toHaveSize(2);
     expect(collectionsFiles).toContain('Profile.json');
     expect(collectionsFiles).toContain('profile_2.json');
 

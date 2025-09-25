@@ -3,7 +3,7 @@ import Path from 'path';
 import fs from 'fs-extra';
 
 export const snapshotOnSave = (context: Context) => {
-  it('ensure on load hook can change the snapshot', async () => {
+  it('ensure on save hook can change the snapshot', async () => {
     // Init sync client and load the snapshot
     const syncInit = await context.getSync(
       'sources/snapshot-with-custom-model',
@@ -26,10 +26,7 @@ export const snapshotOnSave = (context: Context) => {
     const collectionFiles = fs.readdirSync(
       Path.join(snapshotPath, 'collections'),
     );
-    expect(collectionFiles).toEqual([
-      'directus_sync_id_map.json',
-      'test_model.json',
-    ]);
+    expect(collectionFiles).toEqual(['test_model.json']);
 
     const fields = fs.readdirSync(
       Path.join(snapshotPath, 'fields', 'test_model'),
