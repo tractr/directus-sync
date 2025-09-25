@@ -28,7 +28,8 @@ async function findDuplicatedTestNames(specRootDir) {
 
   // Matches: it('name', ...), it("name", ...), it.only('name', ...), it.skip("name", ...)
   // Capture group 2 is the test name.
-  const itCallRegex = /\bit(?:\.\w+)?\s*\(\s*(["'`])([^"'`\\]*(?:\\.[^"'`\\]*)*)\1\s*,/g;
+  const itCallRegex =
+    /\bit(?:\.\w+)?\s*\(\s*(["'`])([^"'`\\]*(?:\\.[^"'`\\]*)*)\1\s*,/g;
 
   for await (const filePath of walkDirectory(specRootDir)) {
     const content = await readFile(filePath, 'utf8');
@@ -63,11 +64,15 @@ async function main() {
     const { duplicates, total } = await findDuplicatedTestNames(specRootDir);
 
     if (duplicates.length === 0) {
-      console.log(`No duplicated test names found in ${specRootDir} (scanned ${total} names).`);
+      console.log(
+        `No duplicated test names found in ${specRootDir} (scanned ${total} names).`,
+      );
       process.exit(0);
     }
 
-    console.warn(`Found ${duplicates.length} duplicated test name(s) in ${specRootDir}:`);
+    console.warn(
+      `Found ${duplicates.length} duplicated test name(s) in ${specRootDir}:`,
+    );
     for (const [name, locations] of duplicates) {
       console.warn(`\n- "${name}" appears ${locations.length} times:`);
       for (const { file, line } of locations) {
@@ -84,5 +89,3 @@ async function main() {
 }
 
 await main();
-
-

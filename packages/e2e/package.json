@@ -12,7 +12,8 @@
     "directus-sync": "directus-sync",
     "bootstrap": "./bootstrap.sh",
     "test": "npm run build && rm -f ./logs/*.log && jasmine",
-    "upgrade": "zx upgrade-directus-version.mjs && zx update-dumps-from-current-version.mjs"
+    "upgrade": "zx upgrade-directus-version.mjs && zx update-dumps-from-current-version.mjs",
+    "detect-duplicated-test-names": "node detect-duplicated-test-names.mjs"
   },
   "keywords": [],
   "author": "Edouard Demotes-Mainard <edouard@tractr.net>",
