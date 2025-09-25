@@ -149,9 +149,12 @@ export class SnapshotClient {
    */
   protected cleanSnapshot(snapshot: Snapshot): Snapshot {
     const name = 'directus_sync_id_map';
-    snapshot.collections = snapshot.collections?.filter(c => c.collection !== name) ?? [];
-    snapshot.fields = snapshot.fields?.filter(f => f.collection !== name) ?? [];
-    snapshot.relations = snapshot.relations?.filter(r => r.collection !== name) ?? [];
+    snapshot.collections =
+      snapshot.collections?.filter((c) => c.collection !== name) ?? [];
+    snapshot.fields =
+      snapshot.fields?.filter((f) => f.collection !== name) ?? [];
+    snapshot.relations =
+      snapshot.relations?.filter((r) => r.collection !== name) ?? [];
     return snapshot;
   }
 
