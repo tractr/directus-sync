@@ -64,16 +64,19 @@ export class DirectusClient {
     return this.client;
   }
   async loginAsAdmin() {
-    const token = await this.client.login(
-      getenv.string('ADMIN_EMAIL'),
-      getenv.string('ADMIN_PASSWORD'),
-    );
+    const token = await this.client.login({
+      email: getenv.string('ADMIN_EMAIL'),
+      password: getenv.string('ADMIN_PASSWORD'),
+    });
     await this.client.setToken(token.access_token);
     this.isLogged = true;
     return token;
   }
   async loginAsUser(email: string, password: string) {
-    const token = await this.client.login(email, password);
+    const token = await this.client.login({
+      email,
+      password,
+    });
     await this.client.setToken(token.access_token);
     this.isLogged = true;
     return token;

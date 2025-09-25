@@ -17,21 +17,21 @@
     "update-help-outputs": "node scripts/update-help-outputs.mjs"
   },
   "dependencies": {
-    "@docusaurus/core": "3.7.0",
-    "@docusaurus/preset-classic": "3.7.0",
-    "@docusaurus/theme-mermaid": "3.7.0",
-    "@mdx-js/react": "^3.1.0",
+    "@docusaurus/core": "3.9.0",
+    "@docusaurus/preset-classic": "3.9.0",
+    "@docusaurus/theme-mermaid": "3.9.0",
+    "@mdx-js/react": "^3.1.1",
     "clsx": "^2.1.1",
     "prism-react-renderer": "^2.4.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "3.7.0",
-    "@docusaurus/tsconfig": "3.7.0",
-    "@docusaurus/types": "3.7.0",
+    "@docusaurus/module-type-aliases": "3.9.0",
+    "@docusaurus/tsconfig": "3.9.0",
+    "@docusaurus/types": "3.9.0",
     "directus-sync": "file:../packages/cli",
-    "typescript": "~5.7.3"
+    "typescript": "~5.9.2"
   },
   "browserslist": {
     "production": [

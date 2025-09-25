@@ -28,16 +28,16 @@
     "update-dependencies": "npx npm-check-updates -u --root -ws"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.7.1",
-    "@commitlint/config-conventional": "^19.7.1",
-    "@eslint/eslintrc": "^3.2.0",
-    "@eslint/js": "^9.19.0",
-    "@typescript-eslint/eslint-plugin": "^8.23.0",
-    "@typescript-eslint/parser": "^8.23.0",
-    "eslint-config-prettier": "^10.0.1",
+    "@commitlint/cli": "^20.0.0",
+    "@commitlint/config-conventional": "^20.0.0",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.36.0",
+    "@typescript-eslint/eslint-plugin": "^8.44.1",
+    "@typescript-eslint/parser": "^8.44.1",
+    "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
-    "lerna": "^8.1.9",
-    "prettier": "^3.4.2",
-    "typescript": "^5.7.3"
+    "lerna": "^9.0.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.2"
   }
 }

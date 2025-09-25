@@ -91,7 +91,10 @@ export class MigrationClient {
     }
     // Otherwise, login and return the token
     else {
-      const response = await client.login(config.email, config.password);
+      const response = await client.login({
+        email: config.email,
+        password: config.password,
+      });
 
       // Check if the token is defined
       if (!response.access_token) {
