@@ -5,6 +5,7 @@ export * from './directus-client.js';
 export * from './directus-server.js';
 export * from './directus-sync.js';
 export * from './sqlite-client.js';
+export * from './keyv-client.js';
 export * from './collections.js';
 export * from './helpers.js';
 export * from './context.js';
