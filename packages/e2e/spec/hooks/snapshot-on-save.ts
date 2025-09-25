@@ -3,7 +3,7 @@ import Path from 'path';
 import fs from 'fs-extra';
 
 export const snapshotOnSave = (context: Context) => {
-  it('ensure on load hook can change the snapshot', async () => {
+  it('ensure on save hook can change the snapshot', async () => {
     // Init sync client and load the snapshot
     const syncInit = await context.getSync(
       'sources/snapshot-with-custom-model',
