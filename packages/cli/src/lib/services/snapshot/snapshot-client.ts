@@ -10,6 +10,7 @@ import {
   SchemaDiffOutput,
   RecordWithCollection,
   Snapshot,
+  StrictSchemaDiffOutput,
 } from './interfaces';
 import { mkdirpSync, readJsonSync, removeSync } from 'fs-extra';
 import { loadJsonFilesRecursively, writeJsonSync } from '../../helpers';
@@ -89,7 +90,7 @@ export class SnapshotClient {
    */
   async push() {
     const diff = await this.diffSnapshot();
-    if (!diff?.diff) {
+    if (!this.hasDiff(diff)) {
       this.logger.debug('No changes to apply');
     } else {
       const directus = await this.migrationClient.get();
@@ -103,7 +104,7 @@ export class SnapshotClient {
    */
   async diff() {
     const diff = await this.diffSnapshot();
-    if (!diff?.diff) {
+    if (!this.hasDiff(diff)) {
       this.logger.debug('No changes to apply');
     } else {
       const { collections, fields, relations } = diff.diff;
@@ -294,6 +295,23 @@ export class SnapshotClient {
       diff.diff = this.removeIgnoredCollection(diff.diff);
     }
     return diff;
+  }
+
+  protected hasDiff(diff: SchemaDiffOutput | null | undefined): diff is StrictSchemaDiffOutput {
+    if (!diff?.diff) {
+      return false;
+    }
+    if (Object.keys(diff.diff).length === 0) {
+      return false;
+    }
+    if (
+      diff.diff.collections.length === 0 &&
+      diff.diff.fields.length === 0 &&
+      diff.diff.relations.length === 0
+    ) {
+      return false;
+    }
+    return true;
   }
 
   /**

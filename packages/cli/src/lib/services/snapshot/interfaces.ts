@@ -12,6 +12,10 @@ export interface SchemaDiffOutput {
   hash: string;
   diff: SnapshotDiffDiff | null | undefined;
 }
+export interface StrictSchemaDiffOutput {
+  hash: string;
+  diff: SnapshotDiffDiff;
+}
 
 export interface SnapshotDiffDiff {
   collections: RecordWithCollection[];
