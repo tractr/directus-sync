@@ -39,7 +39,7 @@ export const pushWithDependencies = (context: Context) => {
       );
       expect(diffOutput).toContain(
         debug(
-          `[${collection}] Unchanged: ${getDefaultItemsCount(collection)} item(s)`,
+          `[${collection}] Unchanged: ${getDefaultItemsCount(collection, true)} item(s)`,
         ),
       );
     }
@@ -91,7 +91,7 @@ export const pushWithDependencies = (context: Context) => {
     }
   });
 
-  it('push with settings dependencies on an empty instance', async () => {
+  it('push with settings dependencies on an empty instance (folder)', async () => {
     // Init sync client
     const sync = await context.getSync(
       'sources/dependencies-settings-default-folder',
@@ -102,7 +102,7 @@ export const pushWithDependencies = (context: Context) => {
     const pushOutput = await sync.push();
     expect(pushOutput).toContain(debug('[snapshot] No changes to apply'));
     expect(pushOutput).toContain(info('[folders] Created 1 items'));
-    expect(pushOutput).toContain(info('[settings] Created 1 items'));
+    expect(pushOutput).toContain(info('[settings] Updated 1 items'));
 
     const { settings, folders } = await readAllSystemCollections(client);
     expect(settings.length).toEqual(1);
@@ -111,7 +111,7 @@ export const pushWithDependencies = (context: Context) => {
     expect(settings[0]?.storage_default_folder).toEqual(folders[0]?.id);
   });
 
-  it('push with settings dependencies on an empty instance', async () => {
+  it('push with settings dependencies on an empty instance (role)', async () => {
     // Init sync client
     const sync = await context.getSync(
       'sources/dependencies-settings-default-role',
@@ -122,7 +122,7 @@ export const pushWithDependencies = (context: Context) => {
     const pushOutput = await sync.push();
     expect(pushOutput).toContain(debug('[snapshot] No changes to apply'));
     expect(pushOutput).toContain(info('[roles] Created 1 items'));
-    expect(pushOutput).toContain(info('[settings] Created 1 items'));
+    expect(pushOutput).toContain(info('[settings] Updated 1 items'));
 
     const { settings, roles } = await readAllSystemCollections(client);
     expect(settings.length).toEqual(1);

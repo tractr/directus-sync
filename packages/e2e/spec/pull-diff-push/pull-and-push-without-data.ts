@@ -32,7 +32,7 @@ export const pullAndPushWithoutData = (context: Context) => {
     ]);
 
     keys.forEach((key) => {
-      expect(collections[key]).toEqual([]);
+      expect(collections[key]).withContext(key).toEqual([]);
     });
   });
 
@@ -46,7 +46,7 @@ export const pullAndPushWithoutData = (context: Context) => {
     const all = await readAllSystemCollections(client);
     const keys = Object.keys(all) as SystemCollection[];
     keys.forEach((key) => {
-      expect(all[key]).toEqual([]);
+      expect(all[key]).withContext(key).toEqual([]);
     });
   });
 
@@ -70,7 +70,7 @@ export const pullAndPushWithoutData = (context: Context) => {
       expect(output).toContain(debug(`[${collection}] To delete: 0 item(s)`));
       expect(output).toContain(
         debug(
-          `[${collection}] Unchanged: ${getDefaultItemsCount(collection)} item(s)`,
+          `[${collection}] Unchanged: ${getDefaultItemsCount(collection, true)} item(s)`,
         ),
       );
     }

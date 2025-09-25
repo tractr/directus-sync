@@ -4,6 +4,7 @@ import {
   getDefaultItemsCount,
   getSystemCollectionsNames,
   info,
+  isSingletonCollectionWithDefault,
   readAllSystemCollections,
 } from '../helpers/index.js';
 
@@ -25,6 +26,11 @@ export const pullAndPushWithDeletions = (context: Context) => {
     expect(diffOutput).toContain(debug('[snapshot] No changes to apply'));
 
     for (const collection of collections) {
+      const isSingleton = isSingletonCollectionWithDefault(collection);
+      const updated = isSingleton ? 1 : 0;
+      const deleted = isSingleton ? 0 : 1;
+      const unchanged = getDefaultItemsCount(collection);
+
       expect(diffOutput).toContain(
         debug(`[${collection}] Dangling id maps: 0 item(s)`),
       );
@@ -32,15 +38,17 @@ export const pullAndPushWithDeletions = (context: Context) => {
         debug(`[${collection}] To create: 0 item(s)`),
       );
       expect(diffOutput).toContain(
-        debug(`[${collection}] To update: 0 item(s)`),
-      );
-      expect(diffOutput).toContain(
-        info(`[${collection}] To delete: 1 item(s)`),
-      );
-      expect(diffOutput).toContain(
-        debug(
-          `[${collection}] Unchanged: ${getDefaultItemsCount(collection)} item(s)`,
+        (updated ? info : debug)(
+          `[${collection}] To update: ${updated} item(s)`,
         ),
+      );
+      expect(diffOutput).toContain(
+        (deleted ? info : debug)(
+          `[${collection}] To delete: ${deleted} item(s)`,
+        ),
+      );
+      expect(diffOutput).toContain(
+        debug(`[${collection}] Unchanged: ${unchanged} item(s)`),
       );
     }
 
@@ -50,8 +58,7 @@ export const pullAndPushWithDeletions = (context: Context) => {
     // Ensure that no activities were created
     const data = await readAllSystemCollections(client);
     for (const collection of collections) {
-      const count = collection === 'settings' ? 1 : 0;
-      expect(data[collection].length).withContext(collection).toEqual(count);
+      expect(data[collection].length).withContext(collection).toEqual(0);
     }
 
     // Analyze the output
@@ -66,6 +73,10 @@ export const pullAndPushWithDeletions = (context: Context) => {
 
     expect(pushOutput).toContain(debug('[snapshot] No changes to apply'));
     for (const collection of collections) {
+      const isSingleton = isSingletonCollectionWithDefault(collection);
+      const updated = isSingleton ? 1 : 0;
+      const deleted = expectCount(collection);
+
       expect(pushOutput)
         .withContext(collection)
         .toContain(debug(`[${collection}] Deleted 0 dangling items`));
@@ -74,19 +85,28 @@ export const pullAndPushWithDeletions = (context: Context) => {
         .toContain(debug(`[${collection}] Created 0 items`));
       expect(pushOutput)
         .withContext(collection)
-        .toContain(debug(`[${collection}] Updated 0 items`));
+        .toContain(
+          (updated ? info : debug)(`[${collection}] Updated ${updated} items`),
+        );
+
+      // No deletion for settings
       if (collection !== 'settings') {
-        const amount = expectCount(collection);
         expect(pushOutput)
           .withContext(collection)
           .toContain(
-            (amount ? info : debug)(`[${collection}] Deleted ${amount} items`),
+            (deleted ? info : debug)(
+              `[${collection}] Deleted ${deleted} items`,
+            ),
           );
       }
 
       // Nothing created, updated or deleted
       expect(pushOutput).not.toContain(info(`[${collection}] Created 1 items`));
-      expect(pushOutput).not.toContain(info(`[${collection}] Updated 1 items`));
+      if (collection !== 'settings') {
+        expect(pushOutput).not.toContain(
+          info(`[${collection}] Updated 1 items`),
+        );
+      }
     }
 
     // --------------------------------------------------------------------
