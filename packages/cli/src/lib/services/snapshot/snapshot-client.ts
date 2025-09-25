@@ -297,7 +297,9 @@ export class SnapshotClient {
     return diff;
   }
 
-  protected hasDiff(diff: SchemaDiffOutput | null | undefined): diff is StrictSchemaDiffOutput {
+  protected hasDiff(
+    diff: SchemaDiffOutput | null | undefined,
+  ): diff is StrictSchemaDiffOutput {
     if (!diff?.diff) {
       return false;
     }
