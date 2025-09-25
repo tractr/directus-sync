@@ -27,7 +27,6 @@ export const snapshotOnSave = (context: Context) => {
       Path.join(snapshotPath, 'collections'),
     );
     expect(collectionFiles).toEqual([
-      'directus_sync_id_map.json',
       'test_model.json',
     ]);
 
