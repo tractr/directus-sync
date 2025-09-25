@@ -32,7 +32,12 @@ export class SqliteClient {
   async reset() {
     const baseTables = await getTables(this.baseDb);
     const testTables = await getTables(this.testDb);
+    const tablesToKeep = [...new Set([...baseTables, 'directus_sync_id_map'])];
+    
     await truncateTables(this.testDb, testTables);
+    
+    await dropExtraTables(this.testDb, tablesToKeep);
+
     await copyTables(this.baseDb, this.testDb, baseTables);
   }
 }
@@ -60,6 +65,28 @@ async function truncateTables(db: sqlite3.Database, tables: string[]) {
   for (const table of tables) {
     await truncateTable(db, table);
   }
+}
+
+async function dropExtraTables(db: sqlite3.Database, references: string[]) {
+  const tables = await getTables(db);
+  for (const table of tables) {
+    if (!references.includes(table)) {
+      await dropTable(db, table);
+    }
+  }
+}
+
+function dropTable(db: sqlite3.Database, table: string) {
+
+  return new Promise<void>((resolve, reject) => {
+    db.run(`DROP TABLE IF EXISTS ${table}`, (error) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      }
+    });
+  });
 }
 
 function truncateTable(db: sqlite3.Database, table: string) {
