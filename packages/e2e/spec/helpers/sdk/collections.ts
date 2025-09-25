@@ -52,10 +52,9 @@ export function excludeDefaultSystemCollectionsEntries(
   for (const key of keys) {
     // Consider settings as default from its properties, not its sync id
     if (key === 'settings') {
-      collections[key] = (
-        collections[key] as DirectusSettings<Schema>[]
+      collections[key] = (collections[key] as DirectusSettings<Schema>[])
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      )?.filter(notDefaultSettings) as any;
+        ?.filter(notDefaultSettings) as any;
       continue;
     }
 
