@@ -32,6 +32,7 @@
     "public_registration_role": "52183adc-3e8e-4746-abd2-ee8dfc58efd5",
     "public_registration_email_filter": null,
     "visual_editor_urls": null,
-    "_syncId": "26aa9eb5-11af-44cb-9f5b-073c55b57974"
+    "accepted_terms": false,
+    "_syncId": "_sync_default_settings"
   }
 ]

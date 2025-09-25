@@ -100,8 +100,12 @@ export const excludeSomeCollections = (context: Context) => {
     // Ensure that activities were not created
     const activities = await directus.getActivities(beforePushDate);
     const expectCount = (collection: string) => {
-      // No activities for presets
-      return ['presets', ...collectionsToExclude].includes(collection) ? 0 : 1;
+      // No activities for presets and settings
+      return ['presets', 'settings', ...collectionsToExclude].includes(
+        collection,
+      )
+        ? 0
+        : 1;
     };
     for (const collection of systemCollections) {
       const created = activities.filter(

@@ -3,8 +3,12 @@ import {
   SystemCollectionsContentWithSyncId,
   SystemCollectionsNames,
   SystemCollectionsRecord,
+  Schema,
 } from './interfaces/index.js';
 import fs from 'fs-extra';
+import { notDefaultSettings } from './helpers.js';
+
+import { DirectusSettings } from '@directus/sdk';
 
 export function getSystemCollectionsPaths(
   dumpPath: string,
@@ -46,6 +50,15 @@ export function excludeDefaultSystemCollectionsEntries(
     collections,
   ) as (keyof SystemCollectionsContentWithSyncId)[];
   for (const key of keys) {
+    // Consider settings as default from its properties, not its sync id
+    if (key === 'settings') {
+      collections[key] = (collections[key] as DirectusSettings<Schema>[])
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ?.filter(notDefaultSettings) as any;
+      continue;
+    }
+
+    // For roles and policies, consider them as default from their sync id
     collections[key] = collections[key]?.filter(
       (item) => !item._syncId.startsWith('_sync_default_'),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -70,13 +83,28 @@ export function getSystemCollectionsNames(): SystemCollectionsNames {
   ];
 }
 
-export function getDefaultItemsCount(collection: string) {
+/**
+ * Use `countSingleton` to excludes the settings from this count as it is a singleton collection
+ */
+export function getDefaultItemsCount(
+  collection: string,
+  countSingleton = false,
+) {
   switch (collection) {
     case 'policies':
       return 2;
     case 'roles':
       return 1;
+    case 'settings':
+      return countSingleton ? 1 : 0;
     default:
       return 0;
   }
+}
+
+/**
+ * Returns true if the collection is a singleton collection with default items
+ */
+export function isSingletonCollectionWithDefault(collection: string) {
+  return collection === 'settings';
 }

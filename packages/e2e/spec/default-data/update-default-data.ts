@@ -5,6 +5,7 @@ import {
   getSystemCollectionsNames,
   info,
   readAllSystemCollections,
+  isSingletonCollectionWithDefault,
 } from '../helpers/index.js';
 
 export const updateDefaultData = (context: Context) => {
@@ -19,21 +20,24 @@ export const updateDefaultData = (context: Context) => {
     expect(diffOutput).toContain(debug('[snapshot] No changes to apply'));
 
     for (const collection of collections) {
+      const isSingleton = isSingletonCollectionWithDefault(collection);
+      const update = getDefaultItemsCount(collection);
+      const unchanged = isSingleton ? 1 : 0;
+
       expect(diffOutput).toContain(
         debug(`[${collection}] Dangling id maps: 0 item(s)`),
       );
       expect(diffOutput).toContain(
         debug(`[${collection}] To create: 0 item(s)`),
       );
-      const amount = getDefaultItemsCount(collection);
       expect(diffOutput).toContain(
-        (amount ? info : debug)(`[${collection}] To update: ${amount} item(s)`),
+        (update ? info : debug)(`[${collection}] To update: ${update} item(s)`),
       );
       expect(diffOutput).toContain(
         debug(`[${collection}] To delete: 0 item(s)`),
       );
       expect(diffOutput).toContain(
-        debug(`[${collection}] Unchanged: 0 item(s)`),
+        debug(`[${collection}] Unchanged: ${unchanged} item(s)`),
       );
     }
 

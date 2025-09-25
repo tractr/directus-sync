@@ -62,6 +62,7 @@ import {
   FixPolicy,
   FixSettings,
   notDefaultPolicies,
+  notDefaultSettings,
   notDefaultRoles,
   notNullId,
   notSystemPermissions,
@@ -206,6 +207,10 @@ export async function readAllSystemCollections(
     readPermissions(),
   )) as unknown as FixPermission<DirectusPermission<Schema>>[];
 
+  const settings = [
+    await client.request(readSettings()),
+  ] as unknown as FixSettings<DirectusSettings<Schema>>[];
+
   return {
     dashboards: await client.request(readDashboards()),
     flows: await client.request(readFlows()),
@@ -216,9 +221,9 @@ export async function readAllSystemCollections(
     policies: keepDefault ? policies : policies.filter(notDefaultPolicies),
     presets: await client.request(readPresets()),
     roles: keepDefault ? roles : roles.filter(notDefaultRoles),
-    settings: [await client.request(readSettings())].filter(
-      notNullId,
-    ) as unknown as FixSettings<DirectusSettings<Schema>>[],
+    settings: keepDefault
+      ? settings.filter(notNullId)
+      : settings.filter(notNullId).filter(notDefaultSettings),
     translations: await client.request(readTranslations()),
   };
 }

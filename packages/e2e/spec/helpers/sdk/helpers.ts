@@ -2,6 +2,7 @@ import {
   DirectusPermission,
   DirectusPolicy,
   DirectusRole,
+  DirectusSettings,
 } from '@directus/sdk';
 import {
   FixPermission,
@@ -33,6 +34,16 @@ export function notDefaultPolicies(
     '$t:admin_policy_description',
     '$t:public_description',
   ].every((text) => !(policy.description ?? '').includes(text));
+}
+
+export function notDefaultSettings(
+  settings: DirectusSettings<Schema>,
+): boolean {
+  return !(
+    settings.project_name === 'Directus' &&
+    settings.project_color === '#6644FF' &&
+    settings.mapbox_key === null
+  );
 }
 
 export function notNullId<T extends { id: string | number | null }>(

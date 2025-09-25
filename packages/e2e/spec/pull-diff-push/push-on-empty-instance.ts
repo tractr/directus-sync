@@ -4,6 +4,7 @@ import {
   getDefaultItemsCount,
   getSystemCollectionsNames,
   info,
+  isSingletonCollectionWithDefault,
 } from '../helpers/index.js';
 
 export const pushOnEmptyInstance = (context: Context) => {
@@ -17,14 +18,18 @@ export const pushOnEmptyInstance = (context: Context) => {
     expect(diffOutput).toContain(debug('[snapshot] No changes to apply'));
 
     for (const collection of collections) {
+      const isSingleton = isSingletonCollectionWithDefault(collection);
+      const create = isSingleton ? 0 : 1;
+      const update = isSingleton ? 1 : 0;
+
       expect(diffOutput).toContain(
         debug(`[${collection}] Dangling id maps: 0 item(s)`),
       );
       expect(diffOutput).toContain(
-        info(`[${collection}] To create: 1 item(s)`),
+        (create ? info : debug)(`[${collection}] To create: ${create} item(s)`),
       );
       expect(diffOutput).toContain(
-        debug(`[${collection}] To update: 0 item(s)`),
+        (update ? info : debug)(`[${collection}] To update: ${update} item(s)`),
       );
       expect(diffOutput).toContain(
         debug(`[${collection}] To delete: 0 item(s)`),
@@ -51,16 +56,24 @@ export const pushOnEmptyInstance = (context: Context) => {
         (a) =>
           a.action === 'create' && a.collection === `directus_${collection}`,
       );
-      expect(created.length).withContext(collection).toEqual(1);
+      const isSingleton = isSingletonCollectionWithDefault(collection);
+      expect(created.length)
+        .withContext(collection)
+        .toEqual(isSingleton ? 0 : 1);
     }
 
     // Analyze the output
     expect(pushOutput).toContain(debug('[snapshot] No changes to apply'));
     for (const collection of collections) {
+      const isSingleton = isSingletonCollectionWithDefault(collection);
+      const create = isSingleton ? 0 : 1;
+
       expect(pushOutput).toContain(
         debug(`[${collection}] Deleted 0 dangling items`),
       );
-      expect(pushOutput).toContain(info(`[${collection}] Created 1 items`));
+      expect(pushOutput).toContain(
+        (create ? info : debug)(`[${collection}] Created ${create} items`),
+      );
       expect(pushOutput).toContain(debug(`[${collection}] Updated 0 items`));
       if (collection !== 'settings') {
         expect(pushOutput).toContain(debug(`[${collection}] Deleted 0 items`));
