@@ -140,7 +140,19 @@ export class SnapshotClient {
   @Cacheable()
   async getSnapshot(): Promise<Snapshot> {
     const directus = await this.migrationClient.get();
-    return await directus.request<Snapshot>(schemaSnapshot()); // Get better types
+    const snapshot = await directus.request<Snapshot>(schemaSnapshot()); // Get better types
+    return this.cleanSnapshot(snapshot);
+  }
+
+  /**
+   * Remove some items from the snapshot, directus_sync collection for example
+   */
+  protected cleanSnapshot(snapshot: Snapshot): Snapshot {
+    const name = 'directus_sync_id_map';
+    snapshot.collections = snapshot.collections?.filter(c => c.collection !== name) ?? [];
+    snapshot.fields = snapshot.fields?.filter(f => f.collection !== name) ?? [];
+    snapshot.relations = snapshot.relations?.filter(r => r.collection !== name) ?? [];
+    return snapshot;
   }
 
   /**
