@@ -63,7 +63,7 @@ export const ClientConfigSchema = z.object({
     .object({
       URL: z.instanceof(URL).optional(),
       WebSocket: z.function().optional(),
-      fetch: z.function().returns(z.instanceof(Promise)).optional(),
+      fetch: z.function().output(z.instanceof(Promise)).optional(),
       logger: z
         .object({
           log: z.function(),

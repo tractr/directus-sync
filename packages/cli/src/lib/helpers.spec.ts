@@ -12,16 +12,16 @@ describe('zodParse', () => {
 
     const schema = z.object({
       name: z.string().min(3).max(50),
-      email: z.string().email(),
+      email: z.email(),
       phone: z.string().min(10).max(10),
       address: z.string().min(10).max(100),
     });
 
     expect(() => zodParse(payload, schema, 'User details')).toThrowError(
-      'User details: [phone] Required',
+      'User details: [phone] Invalid input: expected string, received undefined',
     );
     // With no error context
-    expect(() => zodParse(payload, schema)).toThrowError('[phone] Required');
+    expect(() => zodParse(payload, schema)).toThrowError('[phone] Invalid input: expected string, received undefined');
   });
 
   it('should return payload if payload is valid', () => {
@@ -33,7 +33,7 @@ describe('zodParse', () => {
 
     const schema = z.object({
       name: z.string().min(3).max(50),
-      email: z.string().email(),
+      email: z.email(),
       address: z.string().min(10).max(100),
     });
 
