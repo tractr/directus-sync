@@ -32,12 +32,16 @@
     "public_registration_role": "52183adc-3e8e-4746-abd2-ee8dfc58efd5",
     "public_registration_email_filter": null,
     "visual_editor_urls": null,
-    "accepted_terms": false,
     "mcp_enabled": false,
     "mcp_allow_deletes": false,
     "mcp_prompts_collection": null,
     "mcp_system_prompt_enabled": true,
     "mcp_system_prompt": null,
+    "project_owner": null,
+    "project_usage": null,
+    "org_name": null,
+    "product_updates": null,
+    "project_status": null,
     "_syncId": "_sync_default_settings"
   }
 ]

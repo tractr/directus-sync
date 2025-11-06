@@ -1,5 +1,21 @@
 {
   "version": 1,
-  "directus": "11.12.0",
-  "vendor": "sqlite"
+  "directus": "11.13.0",
+  "vendor": "sqlite",
+  "systemFields": [
+    {
+      "collection": "directus_activity",
+      "field": "timestamp",
+      "schema": {
+        "is_indexed": true
+      }
+    },
+    {
+      "collection": "directus_revisions",
+      "field": "parent",
+      "schema": {
+        "is_indexed": true
+      }
+    }
+  ]
 }

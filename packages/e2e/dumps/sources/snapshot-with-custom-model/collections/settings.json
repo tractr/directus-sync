@@ -40,12 +40,16 @@
       ]
     },
     "visual_editor_urls": null,
-    "accepted_terms": false,
     "mcp_enabled": false,
     "mcp_allow_deletes": false,
     "mcp_prompts_collection": null,
     "mcp_system_prompt_enabled": true,
     "mcp_system_prompt": null,
+    "project_owner": null,
+    "project_usage": null,
+    "org_name": null,
+    "product_updates": null,
+    "project_status": null,
     "_syncId": "_sync_default_settings"
   }
 ]
