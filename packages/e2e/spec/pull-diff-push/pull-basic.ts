@@ -215,12 +215,16 @@ export const pullBasic = (context: Context) => {
         public_registration_email_filter:
           settings.public_registration_email_filter,
         visual_editor_urls: settings.visual_editor_urls,
-        accepted_terms: settings.accepted_terms,
         mcp_enabled: settings.mcp_enabled,
         mcp_allow_deletes: settings.mcp_allow_deletes,
         mcp_prompts_collection: settings.mcp_prompts_collection,
         mcp_system_prompt_enabled: settings.mcp_system_prompt_enabled,
         mcp_system_prompt: settings.mcp_system_prompt,
+        project_owner: settings.project_owner,
+        project_usage: settings.project_usage,
+        org_name: settings.org_name,
+        product_updates: settings.product_updates,
+        project_status: settings.project_status,
       },
     ]);
     expect(collections.translations).toEqual([

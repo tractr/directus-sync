@@ -9,10 +9,14 @@ export interface DirectusSettingsExtra {
   public_registration_role: string | null;
   public_registration_email_filter: object | string | null;
   visual_editor_urls: string[] | null;
-  accepted_terms: boolean;
   mcp_enabled: boolean;
   mcp_allow_deletes: boolean;
   mcp_prompts_collection: string | null;
   mcp_system_prompt_enabled: boolean;
   mcp_system_prompt: string | null;
+  project_owner: string | null;
+  project_usage: string | null;
+  org_name: string | null;
+  product_updates: boolean;
+  project_status: string | null;
 }

@@ -57,11 +57,15 @@ export function getSettings(
       ],
     },
     visual_editor_urls: [faker.internet.url()],
-    accepted_terms: faker.datatype.boolean(),
     mcp_enabled: faker.datatype.boolean(),
     mcp_allow_deletes: faker.datatype.boolean(),
     mcp_prompts_collection: faker.lorem.word(),
     mcp_system_prompt_enabled: faker.datatype.boolean(),
     mcp_system_prompt: faker.lorem.sentence({ min: 6, max: 10 }),
+    project_owner: faker.internet.email(),
+    project_usage: faker.lorem.word(),
+    org_name: faker.lorem.word(),
+    product_updates: faker.datatype.boolean(),
+    project_status: faker.lorem.word(),
   };
 }
