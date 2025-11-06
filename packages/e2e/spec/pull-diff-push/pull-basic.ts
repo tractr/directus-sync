@@ -215,7 +215,6 @@ export const pullBasic = (context: Context) => {
         public_registration_email_filter:
           settings.public_registration_email_filter,
         visual_editor_urls: settings.visual_editor_urls,
-        accepted_terms: settings.accepted_terms,
         mcp_enabled: settings.mcp_enabled,
         mcp_allow_deletes: settings.mcp_allow_deletes,
         mcp_prompts_collection: settings.mcp_prompts_collection,
