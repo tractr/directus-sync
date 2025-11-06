@@ -63,5 +63,10 @@ export function getSettings(
     mcp_prompts_collection: faker.lorem.word(),
     mcp_system_prompt_enabled: faker.datatype.boolean(),
     mcp_system_prompt: faker.lorem.sentence({ min: 6, max: 10 }),
+    project_owner: faker.internet.email(),
+    project_usage: faker.lorem.word(),
+    org_name: faker.lorem.word(),
+    product_updates: faker.lorem.word(),
+    project_status: faker.lorem.word(),
   };
 }

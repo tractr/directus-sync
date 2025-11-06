@@ -15,4 +15,9 @@ export interface DirectusSettingsExtra {
   mcp_prompts_collection: string | null;
   mcp_system_prompt_enabled: boolean;
   mcp_system_prompt: string | null;
+  project_owner: string | null;
+  project_usage: string | null;
+  org_name: string | null;
+  product_updates: string | null;
+  project_status: string | null;
 }
