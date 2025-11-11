@@ -129,5 +129,9 @@ await $`git push`;
 console.log(chalk.yellow(`Pushing the new Docker images`));
 await $`cd docker && ./build-and-push.mjs`;
 
+// Deploy the website
+console.log(chalk.yellow(`Deploying the documentation website`));
+await $`npm run docs:deploy`;
+
 // Finish
 console.log(chalk.green(`Done!`));
