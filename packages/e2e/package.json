@@ -28,7 +28,7 @@
     "@types/getenv": "^1.0.3",
     "@types/jasmine": "^5.1.5",
     "@types/uuid": "^10.0.0",
-    "directus": "11.13.2",
+    "directus": "11.13.3",
     "directus-sync": "file:../cli",
     "dotenv": "^16.4.7",
     "fs-extra": "^11.3.0",
