@@ -11,8 +11,8 @@ async function writeJSON(path, data) {
   await writeFileSync(path, JSON.stringify(data, null, 2));
 }
 
-const actual = '11.13.3';
-const next = '11.13.3';
+const actual = '11.13.4';
+const next = '11.13.4';
 
 if (actual === next) {
   console.log('Nothing to upgrade');
