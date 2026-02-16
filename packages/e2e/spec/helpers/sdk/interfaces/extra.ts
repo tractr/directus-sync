@@ -19,4 +19,7 @@ export interface DirectusSettingsExtra {
   org_name: string | null;
   product_updates: boolean;
   project_status: string | null;
+  ai_openai_api_key: string | null;
+  ai_anthropic_api_key: string | null;
+  ai_system_prompt: string | null;
 }

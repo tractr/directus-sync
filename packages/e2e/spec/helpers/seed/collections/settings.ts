@@ -67,5 +67,8 @@ export function getSettings(
     org_name: faker.lorem.word(),
     product_updates: faker.datatype.boolean(),
     project_status: faker.lorem.word(),
+    ai_openai_api_key: faker.string.alphanumeric(32),
+    ai_anthropic_api_key: faker.string.alphanumeric(32),
+    ai_system_prompt: faker.lorem.sentence({ min: 6, max: 10 }),
   };
 }

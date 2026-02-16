@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "directus": "11.13.4",
+  "directus": "11.14.0",
   "vendor": "sqlite",
   "systemFields": [
     {
