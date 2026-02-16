@@ -225,6 +225,9 @@ export const pullBasic = (context: Context) => {
         org_name: settings.org_name,
         product_updates: settings.product_updates,
         project_status: settings.project_status,
+        ai_openai_api_key: settings.ai_openai_api_key,
+        ai_anthropic_api_key: settings.ai_anthropic_api_key,
+        ai_system_prompt: settings.ai_system_prompt,
       },
     ]);
     expect(collections.translations).toEqual([
