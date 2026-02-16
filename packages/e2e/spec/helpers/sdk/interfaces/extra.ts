@@ -1,5 +1,3 @@
-
-
 // interface OpenAICompatibleHeader {
 // 	header: string;
 // 	value: string;
