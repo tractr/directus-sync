@@ -1,7 +1,6 @@
 import { DirectusSettings } from '@directus/sdk';
 import { faker } from '@faker-js/faker';
 import { DirectusSettingsExtra, Schema } from '../../sdk/index.js';
-import { v } from '@faker-js/faker/dist/airline-CLphikKp.js';
 
 export function getSettings(
   publicRole: string | null = null,
