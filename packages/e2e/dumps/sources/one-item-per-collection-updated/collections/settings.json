@@ -45,6 +45,21 @@
     "ai_openai_api_key": null,
     "ai_anthropic_api_key": null,
     "ai_system_prompt": null,
+    "ai_google_api_key": null,
+    "ai_openai_compatible_api_key": null,
+    "ai_openai_compatible_base_url": null,
+    "ai_openai_compatible_name": null,
+    "ai_openai_compatible_models": null,
+    "ai_openai_compatible_headers": null,
+    "ai_openai_allowed_models": ["gpt-5-nano", "gpt-5-mini", "gpt-5"],
+    "ai_anthropic_allowed_models": ["claude-haiku-4-5", "claude-sonnet-4-5"],
+    "ai_google_allowed_models": [
+      "gemini-3-pro-preview",
+      "gemini-3-flash-preview",
+      "gemini-2.5-pro",
+      "gemini-2.5-flash"
+    ],
+    "collaborative_editing_enabled": false,
     "_syncId": "_sync_default_settings"
   }
 ]

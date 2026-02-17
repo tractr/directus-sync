@@ -1,6 +1,6 @@
 # Directus Sync
 
-![Directus 11.14.1](https://img.shields.io/badge/Directus-11.14.1-64f?style=for-the-badge&logo=directus)
+![Directus 11.15.0](https://img.shields.io/badge/Directus-11.15.0-64f?style=for-the-badge&logo=directus)
 [![Donate](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/Directus-Sync/donate)
 [![Discord](https://img.shields.io/badge/Discord-Join-5865F2?style=for-the-badge&logo=discord)](https://discord.gg/4vGzHPQmud)
 

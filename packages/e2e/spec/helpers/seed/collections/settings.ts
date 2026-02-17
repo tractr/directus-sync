@@ -70,5 +70,32 @@ export function getSettings(
     ai_openai_api_key: faker.string.alphanumeric(32),
     ai_anthropic_api_key: faker.string.alphanumeric(32),
     ai_system_prompt: faker.lorem.sentence({ min: 6, max: 10 }),
+    ai_google_api_key: faker.string.alphanumeric(32),
+    ai_openai_compatible_api_key: faker.string.alphanumeric(32),
+    ai_openai_compatible_base_url: faker.internet.url(),
+    ai_openai_compatible_name: faker.lorem.word(),
+    ai_openai_compatible_models: [
+      {
+        id: faker.string.alphanumeric(32),
+        name: faker.lorem.word(),
+        context: faker.number.int({ min: 1, max: 10 }),
+        output: faker.number.int({ min: 1, max: 10 }),
+        attachment: faker.datatype.boolean(),
+        reasoning: faker.datatype.boolean(),
+        providerOptions: {
+          [faker.lorem.word()]: faker.lorem.word(),
+        },
+      },
+    ],
+    ai_openai_compatible_headers: [
+      {
+        header: faker.lorem.word(),
+        value: faker.lorem.word(),
+      },
+    ],
+    ai_openai_allowed_models: [faker.lorem.word()],
+    ai_anthropic_allowed_models: [faker.lorem.word()],
+    ai_google_allowed_models: [faker.lorem.word()],
+    collaborative_editing_enabled: faker.datatype.boolean(),
   };
 }

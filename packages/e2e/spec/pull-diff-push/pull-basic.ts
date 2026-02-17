@@ -228,6 +228,16 @@ export const pullBasic = (context: Context) => {
         ai_openai_api_key: settings.ai_openai_api_key,
         ai_anthropic_api_key: settings.ai_anthropic_api_key,
         ai_system_prompt: settings.ai_system_prompt,
+        ai_google_api_key: settings.ai_google_api_key,
+        ai_openai_compatible_api_key: settings.ai_openai_compatible_api_key,
+        ai_openai_compatible_base_url: settings.ai_openai_compatible_base_url,
+        ai_openai_compatible_name: settings.ai_openai_compatible_name,
+        ai_openai_compatible_models: settings.ai_openai_compatible_models,
+        ai_openai_compatible_headers: settings.ai_openai_compatible_headers,
+        ai_openai_allowed_models: settings.ai_openai_allowed_models,
+        ai_anthropic_allowed_models: settings.ai_anthropic_allowed_models,
+        ai_google_allowed_models: settings.ai_google_allowed_models,
+        collaborative_editing_enabled: settings.collaborative_editing_enabled,
       },
     ]);
     expect(collections.translations).toEqual([
