@@ -94,7 +94,7 @@ RUN npm install
 RUN mkdir -p ./directus
 RUN cd node_modules && find . -maxdepth 1 -type d -name "directus-extension-*" -exec mv {} ../directus \;
 
-FROM directus/directus:11.14.1
+FROM directus/directus:11.15.0
 # Copy third party extensions
 COPY --from=third-party-ext /extensions/directus ./extensions
 ```
