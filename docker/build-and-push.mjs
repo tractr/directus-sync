@@ -1,6 +1,6 @@
 #!/usr/bin/env zx
 
-const latestDirectusVersion = '11.15.2';
+const latestDirectusVersion = '11.15.3';
 const [major, minor, patch] = latestDirectusVersion.split('.');
 const directusVersions = [
   'latest',
