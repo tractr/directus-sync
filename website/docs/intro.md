@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Introduction
 
-![Directus 11.15.1](https://img.shields.io/badge/Directus-11.15.1-64f?style=for-the-badge&logo=directus)
+![Directus 11.15.2](https://img.shields.io/badge/Directus-11.15.2-64f?style=for-the-badge&logo=directus)
 
 :::important
 Latest version of `directus-sync` introduces breaking changes and is not compatible with Directus 10.x.x.
