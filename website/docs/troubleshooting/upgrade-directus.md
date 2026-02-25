@@ -1,5 +1,5 @@
 ---
-sidebar_position: 7
+sidebar_position: 6
 ---
 
 # Clear cache after Directus upgrades
@@ -16,4 +16,4 @@ If you still observe stale schema behavior after upgrade, try clearing caches di
 
 :::info
 Reference: [Issue #135](https://github.com/tractr/directus-sync/issues/135)
-:::info
+:::

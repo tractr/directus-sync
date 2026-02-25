@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 # Large Data Sets Errors
@@ -34,3 +34,7 @@ When the ID list becomes too large, the Directus API may return a Response objec
 3. If running in Docker or behind a proxy, make sure your web server isn't imposing additional limits:
    - For Nginx: Increase `large_client_header_buffers` setting
    - For Apache: Adjust `LimitRequestFieldSize` and `LimitRequestFields` directives
+
+:::info
+Reference: [Issue #164](https://github.com/tractr/directus-sync/issues/164)
+:::

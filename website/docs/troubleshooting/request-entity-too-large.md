@@ -28,7 +28,3 @@ To resolve this issue:
 1. Increase the `MAX_PAYLOAD_SIZE` environment variable in your Directus instance configuration. See [Directus Configuration Options](https://directus.io/docs/configuration/security-limits#limits-optimizations) for more details.
 
 2. If you're using a reverse proxy (like Nginx), you may also need to increase the `client_max_body_size` setting. 
-
-:::info
-Reference: [Issue #164](https://github.com/tractr/directus-sync/issues/164)
-:::
