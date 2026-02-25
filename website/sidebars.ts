@@ -56,6 +56,7 @@ const sidebars: SidebarsConfig = {
         'troubleshooting/firewall-configurations',
         'troubleshooting/collections-prefix',
         'troubleshooting/request-entity-too-large',
+        'troubleshooting/non-deterministic-ordering',
         'troubleshooting/large-data-sets',
         'troubleshooting/upgrade-directus',
       ],
