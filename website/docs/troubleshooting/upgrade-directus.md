@@ -14,6 +14,6 @@ Directus Sync now clears both the regular cache and, when available in your Dire
 
 If you still observe stale schema behavior after upgrade, try clearing caches directly in Directus admin (Settings → System → Cache) and re-run the command.
 
-References: [Issue #135](https://github.com/tractr/directus-sync/issues/135)
-
-
+:::info
+Reference: [Issue #135](https://github.com/tractr/directus-sync/issues/135)
+:::info
