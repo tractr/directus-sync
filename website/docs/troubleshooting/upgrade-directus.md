@@ -1,8 +1,12 @@
 ---
-sidebar_position: 7
+sidebar_position: 6
 ---
 
-# Cache clearing after Directus upgrades
+# Clear cache after Directus upgrades
+
+:::success
+This has been fixed in [version 3.3.0](https://github.com/tractr/directus-sync/releases/tag/directus-sync%403.3.0).
+:::
 
 When upgrading Directus, schema-related caches can persist and cause stale metadata (e.g., old FK constraint names).
 
@@ -10,6 +14,6 @@ Directus Sync now clears both the regular cache and, when available in your Dire
 
 If you still observe stale schema behavior after upgrade, try clearing caches directly in Directus admin (Settings → System → Cache) and re-run the command.
 
-References: [Issue #135](https://github.com/tractr/directus-sync/issues/135)
-
-
+:::info
+Reference: [Issue #135](https://github.com/tractr/directus-sync/issues/135)
+:::
