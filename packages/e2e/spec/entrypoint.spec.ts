@@ -33,6 +33,7 @@ import {
   includeSomeCollections,
   noSnapshot,
   noCollections,
+  noCollectionsConfigFile,
 } from './exclude-include/index.js';
 import {
   insertDuplicatedPermissions,
@@ -108,6 +109,7 @@ describe('Tests entrypoint ->', () => {
   includeSomeCollections(context);
   noSnapshot(context);
   noCollections(context);
+  noCollectionsConfigFile(context);
 
   configPathInfo(context);
 
