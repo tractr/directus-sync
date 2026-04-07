@@ -47,15 +47,8 @@
     "ai_openai_compatible_name": null,
     "ai_openai_compatible_models": null,
     "ai_openai_compatible_headers": null,
-    "ai_openai_allowed_models": [
-      "gpt-5-nano",
-      "gpt-5-mini",
-      "gpt-5"
-    ],
-    "ai_anthropic_allowed_models": [
-      "claude-haiku-4-5",
-      "claude-sonnet-4-5"
-    ],
+    "ai_openai_allowed_models": ["gpt-5-nano", "gpt-5-mini", "gpt-5"],
+    "ai_anthropic_allowed_models": ["claude-haiku-4-5", "claude-sonnet-4-5"],
     "ai_google_allowed_models": [
       "gemini-3-pro-preview",
       "gemini-3-flash-preview",
