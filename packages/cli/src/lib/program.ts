@@ -26,6 +26,9 @@ function cleanProgramOptions(programOptions: Record<string, unknown>) {
  * Remove some default values from the command options that overrides the config file
  */
 function cleanCommandOptions(commandOptions: Record<string, unknown>) {
+  if (commandOptions.collections === true) {
+    delete commandOptions.collections;
+  }
   if (commandOptions.snapshot === true) {
     delete commandOptions.snapshot;
   }
