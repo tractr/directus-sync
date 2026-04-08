@@ -81,9 +81,7 @@ export const pushWithNoSyncPolicyRoles = (context: Context) => {
   });
 
   it('should not dump role attachments on pull when --no-sync-policy-roles is set', async () => {
-    const sync = await context.getSync(
-      'temp/pull-with-no-sync-policy-roles',
-    );
+    const sync = await context.getSync('temp/pull-with-no-sync-policy-roles');
     const directus = context.getDirectus();
     const client = directus.get();
 
@@ -109,11 +107,12 @@ export const pushWithNoSyncPolicyRoles = (context: Context) => {
       f.endsWith('.json'),
     );
     const dumped = await Promise.all(
-      files.map((f) =>
-        fs.readJSON(path.join(collectionsDir, f)) as Promise<{
-          name?: string;
-          roles?: unknown[];
-        }>,
+      files.map(
+        (f) =>
+          fs.readJSON(path.join(collectionsDir, f)) as Promise<{
+            name?: string;
+            roles?: unknown[];
+          }>,
       ),
     );
     const ourPolicy = dumped.find((p) => p.name === policy.name);
