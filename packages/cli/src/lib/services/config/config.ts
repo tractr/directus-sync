@@ -178,6 +178,11 @@ export class ConfigService {
   }
 
   @Cacheable()
+  shouldSyncPolicyRoles() {
+    return this.requireOptions('syncPolicyRoles');
+  }
+
+  @Cacheable()
   shouldPreserveIds(collection: CollectionPreservableIdName) {
     const preserveIds = this.requireOptions('preserveIds');
     return (

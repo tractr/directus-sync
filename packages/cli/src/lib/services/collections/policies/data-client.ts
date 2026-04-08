@@ -17,10 +17,15 @@ import {
 import { LoggerService } from '../../logger';
 import { POLICIES_COLLECTION } from './constants';
 import deepmerge from 'deepmerge';
+import { ConfigService } from '../../config';
 
 @Service()
 export class PoliciesDataClient extends DataClient<DirectusPolicy> {
-  constructor(loggerService: LoggerService, migrationClient: MigrationClient) {
+  constructor(
+    loggerService: LoggerService,
+    migrationClient: MigrationClient,
+    protected readonly config: ConfigService,
+  ) {
     super(loggerService.getChild(POLICIES_COLLECTION), migrationClient);
   }
 
@@ -33,9 +38,15 @@ export class PoliciesDataClient extends DataClient<DirectusPolicy> {
   }
 
   protected getQueryCommand(query: Query<DirectusPolicy>) {
+    // When role-policy attachments sync is disabled, omit the roles fields
+    // entirely from the dump so they are neither tracked nor diffed.
+    // See https://github.com/tractr/directus-sync/issues/199
+    const extraFields = this.config.shouldSyncPolicyRoles()
+      ? ['*', 'roles.role', 'roles.sort']
+      : ['*'];
     return readPolicies(
       deepmerge<Query<BaseDirectusPolicy>>(query, {
-        fields: ['*', 'roles.role', 'roles.sort'],
+        fields: extraFields,
       }),
     );
   }
@@ -44,6 +55,13 @@ export class PoliciesDataClient extends DataClient<DirectusPolicy> {
     itemId: string,
     diffItem: Partial<WithoutIdAndSyncId<DirectusPolicy>>,
   ) {
+    // When role-policy attachments sync is disabled, drop the roles diff
+    // entirely so existing attachments on the target are left untouched.
+    // See https://github.com/tractr/directus-sync/issues/199
+    if (!this.config.shouldSyncPolicyRoles() && diffItem.roles) {
+      const { roles: _ignored, ...rest } = diffItem as Partial<DirectusPolicy>;
+      diffItem = rest as Partial<WithoutIdAndSyncId<DirectusPolicy>>;
+    }
     // Explicit update of the roles field (many-to-many relation)
     // Issue : https://github.com/tractr/directus-sync/issues/148
     if (diffItem.roles) {

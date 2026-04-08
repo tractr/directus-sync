@@ -17,6 +17,7 @@ export const DefaultConfig: Pick<
   | 'excludeCollections'
   | 'onlyCollections'
   | 'collections'
+  | 'syncPolicyRoles'
   | 'preserveIds'
   | 'snapshotPath'
   | 'snapshot'
@@ -42,6 +43,7 @@ export const DefaultConfig: Pick<
   excludeCollections: [],
   onlyCollections: [],
   collections: true,
+  syncPolicyRoles: true,
   preserveIds: [],
   // Snapshot
   snapshotPath: 'snapshot',

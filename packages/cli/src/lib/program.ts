@@ -38,6 +38,9 @@ function cleanCommandOptions(commandOptions: Record<string, unknown>) {
   if (commandOptions.specs === true) {
     delete commandOptions.specs;
   }
+  if (commandOptions.syncPolicyRoles === true) {
+    delete commandOptions.syncPolicyRoles;
+  }
   return commandOptions;
 }
 
@@ -142,6 +145,10 @@ export function createProgram() {
     '--no-collections',
     `should pull and push the collections (default "${DefaultConfig.collections}")`,
   );
+  const noSyncPolicyRolesOption = new Option(
+    '--no-sync-policy-roles',
+    `should sync the role ↔ policy attachments (directus_access entries linking roles and policies). Disable to leave existing role-policy assignments on the target untouched (default "${DefaultConfig.syncPolicyRoles}")`,
+  );
   const preserveIdsOption = new Option(
     '--preserve-ids <preserveIds>',
     `comma separated list of collections that preserve their original ids (default to none). Use "*" or "all" to preserve all ids, if applicable.`,
@@ -197,6 +204,7 @@ export function createProgram() {
     .addOption(excludeCollectionsOption)
     .addOption(onlyCollectionsOption)
     .addOption(noCollectionsOption)
+    .addOption(noSyncPolicyRolesOption)
     .addOption(preserveIdsOption)
     .addOption(snapshotPathOption)
     .addOption(noSnapshotOption)
@@ -215,6 +223,7 @@ export function createProgram() {
     .addOption(excludeCollectionsOption)
     .addOption(onlyCollectionsOption)
     .addOption(noCollectionsOption)
+    .addOption(noSyncPolicyRolesOption)
     .addOption(snapshotPathOption)
     .addOption(noSnapshotOption)
     .addOption(noSplitOption)
@@ -230,6 +239,7 @@ export function createProgram() {
     .addOption(excludeCollectionsOption)
     .addOption(onlyCollectionsOption)
     .addOption(noCollectionsOption)
+    .addOption(noSyncPolicyRolesOption)
     .addOption(preserveIdsOption)
     .addOption(snapshotPathOption)
     .addOption(noSnapshotOption)
