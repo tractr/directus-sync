@@ -5,6 +5,7 @@ Options:
   -x, --exclude-collections <excludeCollections>  comma separated list of collections to exclude from the process (default to none)
   -o, --only-collections <onlyCollections>        comma separated list of collections to include in the process (default to all)
   --no-collections                                should pull and push the collections (default "true")
+  --no-sync-policy-roles                          should sync the role ↔ policy attachments (directus_access entries linking roles and policies). Disable to leave existing role-policy assignments on the target untouched (default "true")
   --snapshot-path <snapshotPath>                  the path for the schema snapshot dump, relative to the dump path (default "snapshot")
   --no-snapshot                                   should pull and push the Directus schema (default "true")
   --no-split                                      should split the schema snapshot into multiple files (default "true")
