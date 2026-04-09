@@ -106,6 +106,7 @@ export const OptionsFields = {
   excludeCollections: z.array(CollectionEnum).optional(),
   onlyCollections: z.array(CollectionEnum).optional(),
   collections: z.boolean(),
+  syncPolicyRoles: z.boolean(),
   preserveIds: z.union([
     z.array(CollectionPreservableIdEnum).optional(),
     z.enum(['all', '*']),
@@ -162,6 +163,7 @@ export const ConfigFileOptionsSchema = z.object({
   excludeCollections: OptionsFields.excludeCollections.optional(),
   onlyCollections: OptionsFields.onlyCollections.optional(),
   collections: OptionsFields.collections.optional(),
+  syncPolicyRoles: OptionsFields.syncPolicyRoles.optional(),
   preserveIds: OptionsFields.preserveIds.optional(),
   // Snapshot config
   snapshotPath: OptionsFields.snapshotPath.optional(),

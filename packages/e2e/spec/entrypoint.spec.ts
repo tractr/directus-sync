@@ -15,6 +15,7 @@ import {
   pushWithExistingUuid,
   pushWithUserPolicyAssignment,
   pushWithRolePolicyAssignmentChanges,
+  pushWithNoSyncPolicyRoles,
   prettyDiffOutput,
 } from './pull-diff-push/index.js';
 import { sortJson } from './pull-diff-push/sort-json.js';
@@ -33,6 +34,7 @@ import {
   includeSomeCollections,
   noSnapshot,
   noCollections,
+  noCollectionsConfigFile,
 } from './exclude-include/index.js';
 import {
   insertDuplicatedPermissions,
@@ -87,6 +89,7 @@ describe('Tests entrypoint ->', () => {
   pushWithExistingUuid(context);
   pushWithUserPolicyAssignment(context);
   pushWithRolePolicyAssignmentChanges(context);
+  pushWithNoSyncPolicyRoles(context);
   updateDefaultData(context);
 
   pushWithDependencies(context);
@@ -108,6 +111,7 @@ describe('Tests entrypoint ->', () => {
   includeSomeCollections(context);
   noSnapshot(context);
   noCollections(context);
+  noCollectionsConfigFile(context);
 
   configPathInfo(context);
 
