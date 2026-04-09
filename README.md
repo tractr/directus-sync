@@ -1,7 +1,7 @@
 # Directus Sync
 
 ![Directus 11.16.1](https://img.shields.io/badge/Directus-11.16.1-64f?style=for-the-badge&logo=directus)
-[![Donate](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/Directus-Sync/donate)
+[![Buy Me a Coffee](https://img.shields.io/badge/buy_me_a_coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/directus_sync)
 [![Discord](https://img.shields.io/badge/Discord-Join-5865F2?style=for-the-badge&logo=discord)](https://discord.gg/4vGzHPQmud)
 
 > [!IMPORTANT]
@@ -107,7 +107,7 @@ financially**. Your contributions enable us to dedicate more time to feature dev
 and potentially provide priority support. Even small donations can significantly impact our ability to improve and
 expand the tool. By supporting Directus Sync, **you're investing in your team's efficiency** and the project's future.
 
-[![Donate](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/Directus-Sync/donate)
+[![Buy Me a Coffee](https://img.shields.io/badge/buy_me_a_coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/directus_sync)
 
 ## Support
 
