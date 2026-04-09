@@ -15,6 +15,7 @@ import {
   pushWithExistingUuid,
   pushWithUserPolicyAssignment,
   pushWithRolePolicyAssignmentChanges,
+  pushWithNoSyncPolicyRoles,
   prettyDiffOutput,
 } from './pull-diff-push/index.js';
 import { sortJson } from './pull-diff-push/sort-json.js';
@@ -88,6 +89,7 @@ describe('Tests entrypoint ->', () => {
   pushWithExistingUuid(context);
   pushWithUserPolicyAssignment(context);
   pushWithRolePolicyAssignmentChanges(context);
+  pushWithNoSyncPolicyRoles(context);
   updateDefaultData(context);
 
   pushWithDependencies(context);
