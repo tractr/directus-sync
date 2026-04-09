@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.5.0](https://github.com/tractr/directus-sync/compare/directus-sync@3.4.1...directus-sync@3.5.0) (2026-04-09)
+
+
+### Bug Fixes
+
+* respect collections: false from config file ([#198](https://github.com/tractr/directus-sync/issues/198)) ([#200](https://github.com/tractr/directus-sync/issues/200)) ([fe4b746](https://github.com/tractr/directus-sync/commit/fe4b746efbb66e03e8c4f1aeea408d7dd219c096))
+
+
+### Features
+
+* **cli:** add --no-sync-policy-roles flag ([#203](https://github.com/tractr/directus-sync/issues/203)) ([d3008a2](https://github.com/tractr/directus-sync/commit/d3008a2a8d798ed66d24f314301d573e105246b2)), closes [#199](https://github.com/tractr/directus-sync/issues/199)
+
+
+
+
+
 ## [3.4.1](https://github.com/tractr/directus-sync/compare/directus-sync@3.4.0...directus-sync@3.4.1) (2025-09-25)
 
 
