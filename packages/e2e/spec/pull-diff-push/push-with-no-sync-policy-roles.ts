@@ -4,7 +4,13 @@ import {
   readPolicy,
   updatePolicy,
 } from '@directus/sdk';
-import { Context, getPolicy, newRole, Schema } from '../helpers/index.js';
+import {
+  Context,
+  getDumpedSystemCollectionsContents,
+  getPolicy,
+  newRole,
+  Schema,
+} from '../helpers/index.js';
 
 /**
  * Regression test for https://github.com/tractr/directus-sync/issues/199
@@ -96,26 +102,10 @@ export const pushWithNoSyncPolicyRoles = (context: Context) => {
     await sync.pull(['--no-sync-policy-roles']);
 
     // Read back the dumped policy file and assert no roles attachments
-    const fs = await import('fs-extra');
-    const path = await import('path');
-    const collectionsDir = path.resolve(
-      sync.getDumpPath(),
-      'collections',
-      'policies',
+    const { policies } = getDumpedSystemCollectionsContents(sync.getDumpPath());
+    const ourPolicy = policies?.find(
+      (p: { name?: string }) => p.name === policy.name,
     );
-    const files = (await fs.readdir(collectionsDir)).filter((f) =>
-      f.endsWith('.json'),
-    );
-    const dumped = await Promise.all(
-      files.map(
-        (f) =>
-          fs.readJSON(path.join(collectionsDir, f)) as Promise<{
-            name?: string;
-            roles?: unknown[];
-          }>,
-      ),
-    );
-    const ourPolicy = dumped.find((p) => p.name === policy.name);
     expect(ourPolicy).toBeDefined();
     // roles must be absent or empty (we did not query them)
     expect(ourPolicy?.roles ?? []).toEqual([]);
