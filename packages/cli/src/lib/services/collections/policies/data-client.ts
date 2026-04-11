@@ -41,8 +41,9 @@ export class PoliciesDataClient extends DataClient<DirectusPolicy> {
     // When role-policy attachments sync is disabled, omit the roles fields
     // entirely from the dump so they are neither tracked nor diffed.
     // See https://github.com/tractr/directus-sync/issues/199
+    // Include roles.user so we can detect and skip user-attached accesses.
     const extraFields = this.config.shouldSyncPolicyRoles()
-      ? ['*', 'roles.role', 'roles.sort']
+      ? ['*', 'roles.role', 'roles.user', 'roles.sort']
       : ['*'];
     return readPolicies(
       deepmerge<Query<BaseDirectusPolicy>>(query, {

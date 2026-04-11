@@ -1,8 +1,8 @@
-import { DataMapper, Field, IdMappers } from '../base';
+import { DataMapper, Field, IdMappers, WithSyncIdAndWithoutId } from '../base';
 import { Container, Service } from 'typedi';
 import { LoggerService } from '../../logger';
 import { POLICIES_COLLECTION } from './constants';
-import { DirectusPolicy } from './interfaces';
+import { DirectusPolicy, DirectusPolicyAccess } from './interfaces';
 import { RolesIdMapperClient } from '../roles';
 import { ConfigService } from '../../config';
 
@@ -26,5 +26,21 @@ export class PoliciesDataMapper extends DataMapper<DirectusPolicy> {
       this.fieldsToIgnore = ['users', 'permissions', 'roles'];
       this.idMappers = {};
     }
+  }
+
+  async mapIdsToSyncIdAndRemoveIgnoredFields(
+    items: WithSyncIdAndWithoutId<DirectusPolicy>[],
+  ): Promise<WithSyncIdAndWithoutId<DirectusPolicy>[]> {
+    const filtered = items.map((item) =>
+      Array.isArray(item.roles)
+        ? {
+            ...item,
+            roles: (item.roles as Partial<DirectusPolicyAccess>[]).filter(
+              (a) => !(a.role === null && a.user != null),
+            ),
+          }
+        : item,
+    );
+    return super.mapIdsToSyncIdAndRemoveIgnoredFields(filtered);
   }
 }
