@@ -28,7 +28,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@directus/extensions-sdk": "13.0.1",
+    "@directus/extensions-sdk": "17.1.2",
     "@types/http-errors": "^2.0.4",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.1",

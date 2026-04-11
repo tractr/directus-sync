@@ -108,6 +108,13 @@ replaceInFile(
   `FROM directus/directus:${next}`,
 );
 
+// Lint the code
+console.log(chalk.yellow(`Linting the code`));
+await $`npm run lint`;
+// Format the code
+console.log(chalk.yellow(`Formatting the code`));
+await $`npm run format`;
+
 // Commit the changes
 console.log(chalk.yellow(`Committing the changes`));
 const answer = (
@@ -121,6 +128,9 @@ if (answer !== 'yes' && answer !== 'y') {
   console.log(chalk.red(`Aborting`));
   process.exit(1);
 }
+
+// Add the changes
+console.log(chalk.yellow(`Adding the changes`));
 await $`git add -A`;
 await $`git commit -m "chore: directus ${next} compatibility"`;
 await $`git push`;
