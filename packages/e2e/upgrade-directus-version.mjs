@@ -11,7 +11,7 @@ async function writeJSON(path, data) {
   await writeFileSync(path, JSON.stringify(data, null, 2));
 }
 
-const actual = '11.17.0';
+const actual = '11.17.1';
 const next = '11.17.1';
 
 if (actual === next) {

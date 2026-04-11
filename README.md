@@ -1,6 +1,6 @@
 # Directus Sync
 
-![Directus 11.17.0](https://img.shields.io/badge/Directus-11.17.0-64f?style=for-the-badge&logo=directus)
+![Directus 11.17.1](https://img.shields.io/badge/Directus-11.17.1-64f?style=for-the-badge&logo=directus)
 [![Buy Me a Coffee](https://img.shields.io/badge/buy_me_a_coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/directus_sync)
 [![Discord](https://img.shields.io/badge/Discord-Join-5865F2?style=for-the-badge&logo=discord)](https://discord.gg/4vGzHPQmud)
 
