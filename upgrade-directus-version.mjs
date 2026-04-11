@@ -25,9 +25,9 @@ console.log(chalk.magenta(`Upgrading Directus from ${actual} to ${next}`));
 
 // Ensure we starts on the main branch
 console.log(chalk.yellow(`Checking out main branch`));
-await $`git checkout .`;
-await $`git checkout main`;
-await $`git pull`;
+// await $`git checkout .`;
+// await $`git checkout main`;
+// await $`git pull`;
 
 // Update packages
 console.log(chalk.yellow(`Updating packages`));
