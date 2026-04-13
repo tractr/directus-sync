@@ -38,7 +38,7 @@ export class PoliciesDataMapper extends DataMapper<DirectusPolicy> {
             roles: (item.roles as Partial<DirectusPolicyAccess>[]).filter(
               (a) => !(a.role === null && a.user != null),
             ),
-          }
+          } as WithSyncIdAndWithoutId<DirectusPolicy>
         : item,
     );
     return super.mapIdsToSyncIdAndRemoveIgnoredFields(filtered);
