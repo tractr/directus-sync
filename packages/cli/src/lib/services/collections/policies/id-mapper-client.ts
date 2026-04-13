@@ -120,6 +120,9 @@ export class PoliciesIdMapperClient extends IdMapperClient {
           filter: {
             _and: [
               { roles: { role: { _null: true } } },
+              // Exclude user-attached accesses (role=null, user=uuid) so they
+              // are not mistaken for the public policy access (role=null, user=null).
+              { roles: { user: { _null: true } } },
               {
                 _or: [
                   { roles: { sort: { _eq: 1 } } },

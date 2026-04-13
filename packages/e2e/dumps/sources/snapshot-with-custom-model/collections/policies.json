@@ -10,6 +10,7 @@
     "roles": [
       {
         "role": "_sync_default_admin_role",
+        "user": null,
         "sort": null
       }
     ],
@@ -26,6 +27,7 @@
     "roles": [
       {
         "role": null,
+        "user": null,
         "sort": 1
       }
     ],
@@ -42,6 +44,7 @@
     "roles": [
       {
         "role": "5acb1b4a-64bb-484a-9e76-76ed9b13251e",
+        "user": null,
         "sort": 1
       }
     ],

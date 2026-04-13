@@ -144,6 +144,7 @@ export const pullBasic = (context: Context) => {
           policy.roles.map(async (role) => {
             return {
               role: (await directus.getByLocalId('roles', role.role)).sync_id,
+              user: role.user,
               sort: role.sort,
             };
           }),
