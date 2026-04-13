@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.5.1](https://github.com/tractr/directus-sync/compare/directus-sync@3.5.0...directus-sync@3.5.1) (2026-04-13)
+
+
+### Bug Fixes
+
+* filter user attached policy accesses on pull ([#207](https://github.com/tractr/directus-sync/issues/207)) ([01db43b](https://github.com/tractr/directus-sync/commit/01db43bacd28bf33ad0ea8909c47e1b8050ec98d))
+
+
+
+
+
 # [3.5.0](https://github.com/tractr/directus-sync/compare/directus-sync@3.4.1...directus-sync@3.5.0) (2026-04-09)
 
 
