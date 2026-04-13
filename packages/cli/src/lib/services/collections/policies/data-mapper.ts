@@ -33,12 +33,12 @@ export class PoliciesDataMapper extends DataMapper<DirectusPolicy> {
   ): Promise<WithSyncIdAndWithoutId<DirectusPolicy>[]> {
     const filtered = items.map((item) =>
       Array.isArray(item.roles)
-        ? {
+        ? ({
             ...item,
             roles: (item.roles as Partial<DirectusPolicyAccess>[]).filter(
               (a) => !(a.role === null && a.user != null),
             ),
-          } as WithSyncIdAndWithoutId<DirectusPolicy>
+          } as WithSyncIdAndWithoutId<DirectusPolicy>)
         : item,
     );
     return super.mapIdsToSyncIdAndRemoveIgnoredFields(filtered);

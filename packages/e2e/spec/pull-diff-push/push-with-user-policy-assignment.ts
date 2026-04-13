@@ -1,8 +1,4 @@
-import {
-  createUser,
-  DirectusPolicy,
-  readUser,
-} from '@directus/sdk';
+import { createUser, DirectusPolicy, readUser } from '@directus/sdk';
 import {
   Context,
   getDumpedSystemCollectionsContents,
@@ -94,11 +90,10 @@ export const pushWithUserPolicyAssignment = (context: Context) => {
     type DumpAccess = { role: string | null; user?: string | null };
     const userAttachedInDump = (policies ?? []).flatMap(
       (p: Record<string, unknown>) =>
-        (
-          (p.roles as unknown as DumpAccess[] | undefined) ?? []
-        ).filter((r) => r.role === null && r.user != null),
+        ((p.roles as unknown as DumpAccess[] | undefined) ?? []).filter(
+          (r) => r.role === null && r.user != null,
+        ),
     );
     expect(userAttachedInDump.length).toBe(0);
   });
-
 };
