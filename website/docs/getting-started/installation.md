@@ -6,7 +6,7 @@ sidebar_position: 1
 
 The `directus-extension-sync` is an essential extension required for using the `directus-sync` CLI. It manages the mapping between synchronization identifiers (SyncIDs) and Directus's internal entity IDs.
 
-There are four different ways to install the extension. Choose the one that best fits your setup:
+There are five different ways to install the extension. Choose the one that best fits your setup:
 
 ## Option 1: NPM Installation
 
@@ -18,7 +18,35 @@ npm install directus-extension-sync
 
 Then, restart Directus.
 
-## Option 2: Pre-built Docker Image
+## Option 2: Official Directus Docker Image
+
+This method combines NPM installation for the extension, and Directus installation on docker:
+
+1. Create a sub folder `npm_extensions` in the folder where `docker-compose.yml` is, and navigate to it. Then run:
+
+```bash
+npm install directus-extension-sync
+```
+
+2. Create a sub folder `extensions` in the folder where `docker-compose.yml` is, and navigate to it. Then run:
+
+```bash
+ln -s ../npm_extensions/node_modules/directus-extension-sync directus-extension-sync
+```
+
+This will create a symlink in the extension's folder
+
+3. Bind mount the symlink to the extensions folder in the docker container. Optionally, bind mount the `extensions` folder entirely in the host if you want to have other custom extensions as well. Example of `docker-compose.yml`:
+
+```yml
+directus:
+  image: directus/directus:latest
+  volumes:
+    - ./extensions/directus-extension-sync:/directus/extensions/directus-extension-sync
+    - ./extensions:/directus/extensions
+```
+
+## Option 3: Pre-built Docker Image
 
 You can use the pre-built Docker image with this extension pre-installed.
 
@@ -65,7 +93,7 @@ volumes:
     driver: local
 ```
 
-## Option 3: Custom Docker Image
+## Option 4: Custom Docker Image
 
 To build your own Docker image with the extension, follow these steps:
 
@@ -117,7 +145,7 @@ For more details and discussion about this approach, see [this GitHub issue](htt
 Make sure to use the latest versions of both Directus and the extension. You can check the latest versions on [NPM](https://www.npmjs.com/package/directus-extension-sync) and [Docker Hub](https://hub.docker.com/r/directus/directus).
 :::
 
-## Option 4: Directus Marketplace
+## Option 5: Directus Marketplace
 
 Unfortunately, the extension is not available in the Directus Marketplace out of the box. Directus Marketplace does not support extensions that require a database connection.
 
